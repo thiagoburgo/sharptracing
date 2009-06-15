@@ -1,0 +1,486 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{000DDDBA-3FF7-48FE-A53D-54E5F68D3C91}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DrawEngine.SharpTracingUI</RootNamespace>
+    <AssemblyName>DrawEngine.SharpTracingUI</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ICSharpCode.NRefactory, Version=3.0.0.3437, Culture=neutral, PublicKeyToken=efe927acf176eea2, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\SharpDevelop\bin\ICSharpCode.NRefactory.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AnimationViewForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AnimationViewForm.Designer.cs">
+      <DependentUpon>AnimationViewForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Frame.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\Frame.designer.cs">
+      <DependentUpon>Frame.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\FrameView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\FrameView.designer.cs">
+      <DependentUpon>FrameView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DocumentWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DocumentWindow.Designer.cs">
+      <DependentUpon>DocumentWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrameViewForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrameViewForm.designer.cs">
+      <DependentUpon>FrameViewForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FullScreenView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FullScreenView.Designer.cs">
+      <DependentUpon>FullScreenView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="AnimationViewForm.resx">
+      <DependentUpon>AnimationViewForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\Frame.resx">
+      <DependentUpon>Frame.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\FrameView.resx">
+      <DependentUpon>FrameView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DocumentWindow.resx">
+      <DependentUpon>DocumentWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrameViewForm.resx">
+      <DependentUpon>FrameViewForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FullScreenView.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FullScreenView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PropertyWindow.resx">
+      <DependentUpon>PropertyWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\RenderControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>RenderControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ScriptingForm.resx">
+      <DependentUpon>ScriptingForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Test\TestPerlinNoise.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>TestPerlinNoise.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ToolBoxWindow.resx">
+      <DependentUpon>ToolBoxWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\TreeViewScenes.resx">
+      <DependentUpon>TreeViewScenes.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TreeViewSceneWindow.resx">
+      <DependentUpon>TreeViewSceneWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="PropertyWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PropertyWindow.Designer.cs">
+      <DependentUpon>PropertyWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\RenderControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\RenderControl.Designer.cs">
+      <DependentUpon>RenderControl.cs</DependentUpon>
+    </Compile>
+    <None Include="Settings.cs_" />
+    <Compile Include="ScriptingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ScriptingForm.Designer.cs">
+      <DependentUpon>ScriptingForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="ScriptingTemplate.cs" />
+    <Compile Include="Test\TestPerlinNoise.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Test\TestPerlinNoise.Designer.cs">
+      <DependentUpon>TestPerlinNoise.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ToolBoxWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ToolBoxWindow.Designer.cs">
+      <DependentUpon>ToolBoxWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\TreeViewScenes.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\TreeViewScenes.Designer.cs">
+      <DependentUpon>TreeViewScenes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TreeViewSceneWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TreeViewSceneWindow.Designer.cs">
+      <DependentUpon>TreeViewSceneWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UndoEngineImpl.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Standard\dividerart.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Standard\Edit_Redo.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Standard\Edit_Undo.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Standard\ExpandSpaceHS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Standard\member.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Standard\NewDocumentHS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Standard\NewWindow.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Standard\openHS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Standard\Paste.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Standard\PasteHS.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Standard\PasteHS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Standard\SaveAllHS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Standard\saveHS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Standard\ShowGridlines2HS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Standard\AlignObjectsBottomHS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Standard\AlignObjectsCenteredHorizontalHS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Standard\AlignObjectsCenteredVerticalHS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Standard\AlignObjectsLeftHS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Standard\AlignObjectsRightHS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Standard\AlignObjectsTopHS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Standard\AlignToGridHS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Standard\BringForwardHS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Standard\BringToFrontHS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Standard\Copy.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Standard\Cut.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Standard\Delete.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Docking\DockPaneCaption.AutoHideYes.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Docking\DockPaneCaption.CloseDisabled.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Docking\DockPaneCaption.CloseEnabled.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Docking\DockPaneCaption.OptionsDisabled.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Docking\DockPaneCaption.OptionsEnabled.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Docking\DockPaneStrip.CloseDisabled.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Docking\DockPaneStrip.CloseEnabled.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Docking\DockPaneStrip.OptionsDisabled.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Docking\DockPaneStrip.OptionsEnabled.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Docking\DockPaneStrip.OverflowDisabled.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Docking\DockPaneStrip.OverflowEnabled.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Docking\File.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Docking\Form.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Docking\Mouse.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Docking\msenv22.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Docking\New.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Docking\Open.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Docking\OpenFolder.ICO" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Docking\OutputWindow.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Docking\PropertyWindow.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Docking\Reference.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Docking\References.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Docking\SolutionExplorer.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Docking\TaskListWindow.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Docking\ToolboxWindow.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Docking\XmlFile.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Docking\ArrowDown.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Docking\ArrowUp.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Docking\Bitmap.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Docking\BlankIcon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Docking\ClosedFolder.ICO" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Docking\CSFile.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Docking\CSProject.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Docking\DockPaneCaption.AutoHideNo.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="remover.gif" />
+    <None Include="Resources\fechar.png" />
+    <None Include="Resources\render.ico" />
+    <None Include="Resources\shell32_16752.ico" />
+    <None Include="Resources\shell32_290.ico" />
+    <None Include="Resources\shell32_246.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Alsing.SyntaxBox\Alsing.SyntaxBox.NET.csproj">
+      <Project>{19EF75B2-B414-4EB0-9486-160FAF93E62C}</Project>
+      <Name>Alsing.SyntaxBox.NET</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AviFile\AviFile.csproj">
+      <Project>{ABB32A29-AF50-47FA-B243-5FD75A5ABA54}</Project>
+      <Name>AviFile</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DrawEngine.PluginEngine\DrawEngine.PluginEngine.csproj">
+      <Project>{5799B702-01EE-470A-B927-C3BF0891F118}</Project>
+      <Name>DrawEngine.PluginEngine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DrawEngine.Renderer.Animator\DrawEngine.Renderer.Animator.csproj">
+      <Project>{C4981C4F-E9C8-4E93-91D2-FC1DA279DD20}</Project>
+      <Name>DrawEngine.Renderer.Animator</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DrawEngine.Renderer\DrawEngine.Renderer.csproj">
+      <Project>{2D552805-05C6-452F-8ECB-79C3E68B89FF}</Project>
+      <Name>DrawEngine.Renderer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ToolboxUI\ToolboxUI.csproj">
+      <Project>{206D4408-3592-436C-8CE2-7BEE5D0AA404}</Project>
+      <Name>ToolboxUI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WinFormsUI\WinFormsUI.csproj">
+      <Project>{C75532C4-765B-418E-B09B-46D36B2ABDB1}</Project>
+      <Name>WinFormsUI</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

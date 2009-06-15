@@ -1,0 +1,33 @@
+using System;
+using System.Collections.Generic;
+using DrawEngine.Renderer.Algebra;
+using DrawEngine.Renderer.Lights;
+
+namespace DrawEngine.Renderer.PhotonMapping
+{
+    public class PointPhotonSource : PhotonSource
+    {
+        public PointPhotonSource(PointLight light, float power, int max_photons) : base(light, power, max_photons) { }
+        private Random rdn = new Random();
+        public override bool GenerateNextPhoton()
+        {
+            if (nShots < MaxPhotons)
+            {
+                double x, y, z;
+                do
+                {
+                    x = (-1 + 2 * rdn.NextDouble());
+                    y = (-1 + 2 * rdn.NextDouble());
+                    z = (-1 + 2 * rdn.NextDouble());
+                } while (x * x + y * y + z * z > 1);
+
+                nShots++;
+                this.current_photon.Direction =
+                    new Vector3D((float)x, (float)y, (float)z).Normalized;
+                return true;
+            }
+            return false;
+        }
+
+    }
+}

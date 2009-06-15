@@ -1,0 +1,154 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using DrawEngine.Renderer.Algebra;
+using DrawEngine.Renderer.Materials;
+using DrawEngine.Renderer.PhotonMapping;
+using DrawEngine.Renderer.BasicStructures;
+using DrawEngine.Renderer.Shaders;
+
+namespace DrawEngine.Renderer.Tracers {
+    public enum EnlightenmentType {
+        Direct,
+        Indirect,
+        Caustics
+    }
+    public class PhotonTracer : RayCasting {
+        private int maxRecursions = 500;
+        private float irradianceArea = 1.5f;
+        private int irradiancePhotonNumber = 1000000;
+
+        private int currentRecursions;
+        private int storedDirect;
+        private int storedIndirect;
+        private int storedCaustic;
+
+        private readonly int maxPhotons;
+
+        private readonly PhotonMap directEnlightenment;
+        private readonly PhotonMap indirectEnlightenment;
+        private readonly PhotonMap causticsEnlightenment;
+
+        public PhotonTracer(Scene scene, int maxPhotons)
+            : base(scene) {
+            this.scene = scene;
+            this.maxPhotons = maxPhotons;
+
+            this.directEnlightenment = new PhotonMap(maxPhotons);
+            this.indirectEnlightenment = new PhotonMap(maxPhotons);
+            this.causticsEnlightenment = new PhotonMap(maxPhotons);
+        }
+        public int MaxRecursions {
+            get { return this.maxRecursions; }
+            set { this.maxRecursions = value; }
+        }
+        public float IrradianceArea {
+            get { return this.irradianceArea; }
+            set { this.irradianceArea = value; }
+        }
+        public int IrradiancePhotonNumber {
+            get { return this.irradiancePhotonNumber; }
+            set { this.irradiancePhotonNumber = value; }
+        }
+        public override void Render(System.Drawing.Graphics g) {
+
+        }
+        public void TracePhoton(Ray ray, RGBColor power, int depth, EnlightenmentType enlightenmentType) {
+            Intersection intersection;
+            if(this.scene.FindIntersection(ray, out intersection) && (depth > MaxRecursions)) {
+                Material material = intersection.HitPrimitive.Material;
+                this.scene.Shader = material.CreateShader(scene);
+                RGBColor color = this.scene.Shader.Shade(ray, intersection);
+                Ray rRay = new Ray();
+
+                float colorAverage = color.Average;
+
+                // Compute the diffuse reflection probability
+                float probDiffuse = material.KDiff * colorAverage;
+
+                // Compute the specular reflection probability
+                float probSpecular = material.KSpec * colorAverage;
+
+                // Compute the transmission probability
+                float probTransmit = material.KTrans * colorAverage;
+
+                if(depth < MaxRecursions) {
+                    Random rdn = new Random(((int)DateTime.Now.Ticks) ^ 47);
+                    double randomValue = rdn.NextDouble();
+                    if(randomValue <= probDiffuse) {
+                        rRay.Origin = intersection.HitPoint;
+                        rRay.Direction = RayCasting.ReflectedDiffuse(intersection.Normal);
+                        // Compute the diffuse power
+                        RGBColor diffusePower = (power * color) / probDiffuse;
+                        TracePhoton(rRay, diffusePower, depth + 1, EnlightenmentType.Indirect);
+                    }
+                    else if(randomValue <= probDiffuse + probTransmit) {
+                        #region Model
+                        //mu_0 = unif(0,1);
+                        //if( mu_0 < (kr) )
+                        //   Reflect a ray
+                        //else if( mu_0 < (kr + kt) )
+                        //   F_r = Fresnel term
+                        //   mu_1 = unif(0,1);
+                        //   if( mu_1 < F_r )
+                        //      Reflect a ray
+                        //   else
+                        //      Refract a ray
+                        //else if( mu_0 < (kr + kt + kd) )
+                        //   Diffusely scatter
+                        //else
+                        //   absorb 
+                        #endregion
+                        //Example: Diffuse square light
+                        //• Generate random position p on square
+                        //• Generate diffuse direction d
+                        //• Emit photon from p in direction d
+                        //// Generate diffuse direction
+                        //u = random();
+                        //v = 2*π*random();
+                        //d = vector(cos(v)Math.Sqrt(u) ,sin(v)Math.Sqrt(u) ,Math.Sqrt(1-u) );
+
+                        rRay.Origin = intersection.HitPoint;
+                        rRay.Direction = RayCasting.Reflected(intersection.Normal, ray.Direction);
+                        // Compute the diffuse power
+                        RGBColor specularPower = (power * color) / probSpecular;
+                        TracePhoton(rRay, specularPower, depth + 1, EnlightenmentType.Indirect);
+                    }else if(randomValue <= probDiffuse + probSpecular + probTransmit) {
+                        Vector3D T;
+                        float eta = this.scene.RefractIndex * 1 / material.RefractIndex;
+                        if(Refracted(intersection.Normal, ray.Direction, out T, eta)) {
+                            rRay.Origin = intersection.HitPoint;
+                            rRay.Direction = T;
+                            rRay.PrevRefractIndex = material.RefractIndex;
+                            // Compute the diffuse power
+                            RGBColor transPower = (power * color) / probTransmit;
+                            TracePhoton(rRay, transPower, depth + 1, EnlightenmentType.Caustics);
+                        }
+                    }else {
+                        storePhoton(intersection.HitPoint, ray.Direction, power, enlightenmentType);
+                    }
+                }
+            }
+        }
+
+        private void storePhoton(Point3D position, Vector3D direction, RGBColor energy, EnlightenmentType enlightenmentType) {
+
+            switch(enlightenmentType) {
+                case EnlightenmentType.Direct:
+                    storedDirect++;
+                    directEnlightenment.Store(energy, position, direction);
+                    break;
+                case EnlightenmentType.Indirect:
+                    storedIndirect++;
+                    directEnlightenment.Store(energy, position, direction);
+                    break;
+                case EnlightenmentType.Caustics:
+                    storedCaustic++;
+                    causticsEnlightenment.Store(energy, position, direction);
+                    break;
+            }
+        }
+    }
+}

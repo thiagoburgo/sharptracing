@@ -1,0 +1,49 @@
+using System;
+using System.Collections.Generic;
+using DrawEngine.Renderer.Algebra;
+using DrawEngine.Renderer.Lights;
+
+namespace DrawEngine.Renderer.PhotonMapping {
+    public class PointPhotonSource : AbstractPhotonSource {
+        public PointPhotonSource(OminiLight light, int max_photons) : base(light, max_photons) {}
+
+        public override bool GenerateNextPhoton() {
+            Random rdn = new Random();
+            float x, y, z;
+            if (nShot < max_photons) {
+                do {
+                    x = (float) (-1 + 2*rdn.NextDouble());
+                    y = (float) (-1 + 2*rdn.NextDouble());
+                    z = (float) (-1 + 2*rdn.NextDouble());
+                } while (x*x + y*y + z*z > 1);
+
+                nShot++;
+                rdn = new Random(nShot);
+                this.current_photon.Position = this.light.Location;
+                this.current_photon.Direction = new Vector3D(x, y, z);
+                this.current_photon.Direction.Normalize();
+                return true;
+            }
+            return false;
+        }
+
+        public override IEnumerable<Photon> Photons {
+            get {
+                Random rdn = new Random();
+                float x, y, z;
+                while (nShot < max_photons) {
+                    do {
+                        x = (float) (-1 + 2*rdn.NextDouble());
+                        y = (float) (-1 + 2*rdn.NextDouble());
+                        z = (float) (-1 + 2*rdn.NextDouble());
+                    } while (x*x + y*y + z*z > 1);
+                    nShot++;
+                    this.current_photon.Position = this.light.Location;
+                    this.current_photon.Direction = new Vector3D(x, y, z);
+                    this.current_photon.Direction.Normalize();
+                    yield return this.current_photon;
+                }
+            }
+        }
+    }
+}
