@@ -1,0 +1,985 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="DrawEngine.Renderer.Algebra.EquationSolver" Collapsed="true">
+    <Position X="51.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAIAAAAAABAAAAAAQBAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>Algebra\EquationSolver.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Algebra.MathUtil" Collapsed="true">
+    <Position X="40.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAAAgAAAAAAAAAAAAAQAAQAAgAAAAAAAAAA=</HashCode>
+      <FileName>Algebra\MathUtil.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Algebra.Design.VectorOrPointEditor" Collapsed="true">
+    <Position X="53" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Algebra\Design\VectorOrPointEditor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Algebra.Design.VectorOrPointTypeConverter" Collapsed="true">
+    <Position X="40.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAAAAAAAAAAAAAAACAAAAIAAAAAAAA=</HashCode>
+      <FileName>Algebra\Design\VectorOrPointTypeConverter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Algebra.Design.VectorPoint3DControl" Collapsed="true">
+    <Position X="42.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACIACAACAAAIACAAACCAAAQQAAAAAAAAAAAYAU=</HashCode>
+      <FileName>Algebra\Design\VectorPoint3DControl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.BasicStructures.Design.RGBColorConverter" Collapsed="true">
+    <Position X="42.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAgAAAAAABAAAAABAoAAAAAACAACAAAAIAxAAAAAI=</HashCode>
+      <FileName>BasicStructures\Design\RGBColorConverter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.BasicStructures.Design.RGBColorEditor" Collapsed="true">
+    <Position X="44.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAAAAIAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BasicStructures\Design\RGBColorEditor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Cameras.Camera" Collapsed="true">
+    <Position X="11" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAgIQQAAAABYEAAIwhAQAMAAEQAcAAQBEAgAAAKI=</HashCode>
+      <FileName>Cameras\Camera.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DrawEngine.Renderer.Cameras.PinholeCamera" Collapsed="true">
+    <Position X="8.75" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Cameras\PinholeCamera.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Cameras.SphericalCamera" Collapsed="true">
+    <Position X="11" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Cameras\SphericalCamera.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Cameras.ThinLensCamera" Collapsed="true">
+    <Position X="13.25" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Cameras\ThinLensCamera.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Cameras.Design.DefaultCameraEditor" Collapsed="true">
+    <Position X="49.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Cameras\Design\DefaultCameraEditor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Cameras.Design.ListBoxDefaultCameraControl" Collapsed="true">
+    <Position X="44.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAACAAAAEAAECAAAACAAAIAAAAAAAACAAAAAA=</HashCode>
+      <FileName>Cameras\Design\ListBoxDefaultCameraControl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Design.NameableCollectionEditor&lt;TMember&gt;" Collapsed="true">
+    <Position X="46" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Design\NameableCollectionEditor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Design.NameableCollectionForm&lt;TMember&gt;" Collapsed="true">
+    <Position X="47.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAABAAAAAAgAAAAEAAAQABBAEAAAAACAAEAAI=</HashCode>
+      <FileName>Design\NameableCollectionForm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Design.ObjectChooseType" Collapsed="true">
+    <Position X="53" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIQAACAEADEQAACAAEACAAABBIAAAAAAAQAAAAA=</HashCode>
+      <FileName>Design\ObjectChooseType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.DistributedRayTracer" Collapsed="true">
+    <Position X="15.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAABAgAAAAAAA=</HashCode>
+      <FileName>DistributedRayTracer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.CancelNameChageEventArgs" Collapsed="true">
+    <Position X="40.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAA=</HashCode>
+      <FileName>INameable.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.NameableCollection&lt;T&gt;" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="44.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AGIAAEAAAAAAARAUCAAARAQAAABAAAAACAgAAABQIAA=</HashCode>
+      <FileName>NameableCollection.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DrawEngine.Renderer.PhotonTracer" Collapsed="true">
+    <Position X="10.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAAAAAAAAAAAAAAAIABAAIBgQAAAAAAA=</HashCode>
+      <FileName>PhotonTracer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.RayCasting" Collapsed="true">
+    <Position X="13" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAgAAAAIQAAAAAAAAAABAAACAAAAA=</HashCode>
+      <FileName>RayCasting.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.RayTracer" Collapsed="true">
+    <Position X="13" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAABAAAAAAAAA=</HashCode>
+      <FileName>RayTracer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Scene" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="46" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QEICgJAgAAAQBAQAAAQEQgQgWFoEQEgQAABEQEBCDEA=</HashCode>
+      <FileName>Scene.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DrawEngine.Renderer.SceneManager" Collapsed="true">
+    <Position X="47.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAAIAAAAgAAAAIAAAAAAAAAAAAAAAEgAAAA=</HashCode>
+      <FileName>SceneManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.UnifiedScenesRepository" Collapsed="true">
+    <Position X="51.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAIAAAAAAgAAAAIAAAAAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>UnifiedScenesRepository.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Filters.PerlinNoiseFilter" Collapsed="true">
+    <Position X="42.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAgAAAAAAgAAAAAAAhAAAAAQAAAAAgEgAAAAAQAA=</HashCode>
+      <FileName>Filters\PerlinNoiseFilter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Importers.AbstractLoaderModel" Collapsed="true">
+    <Position X="9" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAgAAAACAAAAAAAAAQAQgAEAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Importers\AbstractLoaderModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DrawEngine.Renderer.Importers.DataReader3DS" Collapsed="true">
+    <Position X="47.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACQAgKCwgAgIAIAIBAAACAIAAAAAAAAAAAgAAEA=</HashCode>
+      <FileName>Importers\DataReader3DS.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Importers.Loader3DSModel" Collapsed="true">
+    <Position X="46" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IACAgDAEAABAgAsIAACAAAAAAAIAAEEACCBAAAACAAA=</HashCode>
+      <FileName>Importers\Loader3DSModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Importers.LoaderByuModel" Collapsed="true">
+    <Position X="5.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIgAAAAACAAAAAAAACAAkAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>Importers\LoaderByuModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Importers.LoaderObjModel" Collapsed="true">
+    <Position X="8" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAACAAAAAAAACAAkAAAACAAAAAAACACAAAAA=</HashCode>
+      <FileName>Importers\LoaderObjModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Importers.LoaderOffModel" Collapsed="true">
+    <Position X="10.25" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAIAAAAAAAAAACAAkAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Importers\LoaderOffModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Importers.LoaderPlyModel" Collapsed="true">
+    <Position X="12.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAACQAAAAAAACAAkAAAAAAAAAAAgAAAAAAAA=</HashCode>
+      <FileName>Importers\LoaderPlyModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Lights.Design.LightChooseType" Collapsed="true">
+    <Position X="51.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIQAACAEADEQAACAAEACAAAABAAAAAAAAQAAIAA=</HashCode>
+      <FileName>Lights\Design\LightChooseType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Lights.Design.LightCollectionEditor" Collapsed="true">
+    <Position X="53" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Lights\Design\LightCollectionEditor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Lights.Design.LightCollectionForm" Collapsed="true">
+    <Position X="40.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABIAAADAAABEQgACAAkACAAIBlAAAAAAAAAEEAAI=</HashCode>
+      <FileName>Lights\Design\LightCollectionForm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Lights.Light" Collapsed="true">
+    <Position X="6.75" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAIAABAAAAAkAAIAJAQAEAAEQAGAAABEgAAAAAA=</HashCode>
+      <FileName>Lights\Light.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DrawEngine.Renderer.Lights.LightDictionary" Collapsed="true">
+    <Position X="42.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAIAAAAAAAgEAAAACAEABAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Lights\LightDictionary.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Lights.PointLight" Collapsed="true">
+    <Position X="5.5" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAABAAAAAEAAIABAAAEAAAAAEAAAAEAAAAAAA=</HashCode>
+      <FileName>Lights\PointLight.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Lights.SpotLight" Collapsed="true">
+    <Position X="7.75" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAIAABABIAAEASIABAEAEAAAAAEAgBAEAAAAEAA=</HashCode>
+      <FileName>Lights\SpotLight.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Materials.CookTorranceMaterial" Collapsed="true">
+    <Position X="0.5" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAABAAAAAAAA=</HashCode>
+      <FileName>Materials\CookTorranceMaterial.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Materials.Material" Collapsed="true">
+    <Position X="1.75" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AADCAAEgAAABIAAEAAgAAAQIAoAEQkCgAAJQIAQA8AA=</HashCode>
+      <FileName>Materials\Material.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DrawEngine.Renderer.Materials.PhongMaterial" Collapsed="true">
+    <Position X="2.75" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Materials\PhongMaterial.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Materials.Design.MaterialTreeViewEditorControl" Collapsed="true">
+    <Position X="53" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAACACRACAACAACAAAACAAAAAAAAAAAAAABAAQA=</HashCode>
+      <FileName>Materials\Design\MaterialTreeViewEditorControl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Materials.Design.MaterialSelectorEditor" Collapsed="true">
+    <Position X="51.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Materials\Design\MaterialTypeEditor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.PhotonMapping.PhotonMap" Collapsed="true">
+    <Position X="44.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>PhotonMapping\PhotonMap.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.PhotonMapping.PhotonSource" Collapsed="true">
+    <Position X="15.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAAAAAAAAgQAAAMAAEABEEAAAEAIAAA=</HashCode>
+      <FileName>PhotonMapping\PhotonSource.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.PhotonMapping.PointPhotonSource" Collapsed="true">
+    <Position X="15.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAABA=</HashCode>
+      <FileName>PhotonMapping\PointPhotonSource.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Properties.Resources" Collapsed="true">
+    <Position X="40.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAAAAAAAABEAABAQAAAAIACAAAAAAAAIA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Properties.Settings" Collapsed="true">
+    <Position X="49.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Renderers.RenderStrategy" Collapsed="true">
+    <Position X="13.5" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAAIAAAAAAAQAAAAAAAAAAAAA=</HashCode>
+      <FileName>Renderers\RenderStrategy.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Renderers.ScanlineRenderStrategy" Collapsed="true">
+    <Position X="13.5" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAA=</HashCode>
+      <FileName>Renderers\ScanlineRenderStrategy.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.RenderObjects.Box" Collapsed="true">
+    <Position X="18" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAQBAAIAAAgAEgiACMMABGABcAAAEEEAAIAkEGLJAAA=</HashCode>
+      <FileName>RenderObjects\Box.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DrawEngine.Renderer.RenderObjects.Cone" Collapsed="true">
+    <Position X="22.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAQBACIAFgAgAAQAAEIABEIAUgAAAkGAAAIEQAhIAAA=</HashCode>
+      <FileName>RenderObjects\Cone.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DrawEngine.Renderer.RenderObjects.CubeFlake" Collapsed="true">
+    <Position X="27" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAACAAAAAAAAEAAgGIAQIAgAEAAAAAAAAAIAAI=</HashCode>
+      <FileName>RenderObjects\CubeFlake.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.RenderObjects.CubeMap" Collapsed="true">
+    <Position X="42.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>hAASAEAAFQAAgAAKEAAECEAgAAgAEACkAAAAAAQAAAA=</HashCode>
+      <FileName>RenderObjects\CubeMap.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.RenderObjects.Cylinder" Collapsed="true">
+    <Position X="33.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEABAAIAFgAAABQAIEIAREgAUgAAAkEACAIEAEhoAAQ=</HashCode>
+      <FileName>RenderObjects\Cylinder.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DrawEngine.Renderer.RenderObjects.Disc" Collapsed="true">
+    <Position X="36" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAJAAIACAAAAAAgAEIAJEgAUAAIAEEEAAAEBAAIAAA=</HashCode>
+      <FileName>RenderObjects\Disc.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DrawEngine.Renderer.RenderObjects.Ellipsoid" Collapsed="true">
+    <Position X="2.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAIBAAIAFgACAAAAAEIABEAAVgAAIEEAAAIEAAhAAAA=</HashCode>
+      <FileName>RenderObjects\Ellipsoid.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DrawEngine.Renderer.RenderObjects.Plane" Collapsed="true">
+    <Position X="6.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABABAAIAAAAAAAAAAEIABEgAUAAIAEEEAAAEBAAQAAA=</HashCode>
+      <FileName>RenderObjects\Plane.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DrawEngine.Renderer.RenderObjects.Primitive" Collapsed="true">
+    <Position X="20.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEgDAAAAAAAAAAAEwEESAEQAUAAEQEAAAABAAABAAAA=</HashCode>
+      <FileName>RenderObjects\Primitive.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DrawEngine.Renderer.RenderObjects.Quadrangle" Collapsed="true">
+    <Position X="13.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABABAIrwhQAA8EwAQEIIJEoQUAAIAGEAAgAkABIIAAE=</HashCode>
+      <FileName>RenderObjects\Quadrangle.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DrawEngine.Renderer.RenderObjects.Quadric" Collapsed="true">
+    <Position X="15.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAEAAAEAAQAAAAEC+YQEAvmEBAAA=</HashCode>
+      <FileName>RenderObjects\Quadric.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.RenderObjects.Sphere" Collapsed="true">
+    <Position X="20.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAJAAIACAAAAAAEAEIABEAAUQAAAEEAAAAEAAAIAAA=</HashCode>
+      <FileName>RenderObjects\Sphere.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DrawEngine.Renderer.RenderObjects.SphereFlake" Collapsed="true">
+    <Position X="24.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABEAEAAAABAAAAAEBAAGIAQABgAEAAAAAAAAAIAAA=</HashCode>
+      <FileName>RenderObjects\SphereFlake.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.RenderObjects.Torus" Collapsed="true">
+    <Position X="29.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAABAAIAAAAAAAAAAUIAVEEAUAAAIUEAAAMEAAhIAAA=</HashCode>
+      <FileName>RenderObjects\Torus.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DrawEngine.Renderer.RenderObjects.Triangle" Collapsed="true">
+    <Position X="31.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIABEALoAAYQ4ABAjkIAREgicFUKYGEIkiIEEBAQAAA=</HashCode>
+      <FileName>RenderObjects\Triangle.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DrawEngine.Renderer.RenderObjects.TriangleModel" Collapsed="true">
+    <Position X="38.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABgAIAACBAAAIJAFICBUgEUAAIIEEACAIEAAAAAAA=</HashCode>
+      <FileName>RenderObjects\TriangleModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DrawEngine.Renderer.RenderObjects.CSG.DifferencePrimitive" Collapsed="true">
+    <Position X="4.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABEAAAAAAAAAAIAEAAAEAAQAAAAEAAAABAAAAAAAA=</HashCode>
+      <FileName>RenderObjects\CSG\DifferencePrimitive.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DrawEngine.Renderer.RenderObjects.CSG.IntersectionPrimitive" Collapsed="true">
+    <Position X="9" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABEAAAAAAAAAAIAEAAAEAAQAAAAEAAAABAAAAAAAA=</HashCode>
+      <FileName>RenderObjects\CSG\IntersectionPrimitive.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DrawEngine.Renderer.RenderObjects.CSG.UnionPrimitive" Collapsed="true">
+    <Position X="11.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABEAAAAAAAAAAAAEAAAEAAQAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>RenderObjects\CSG\UnionPrimitive.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DrawEngine.Renderer.RenderObjects.Design.CubeMapEditorForm" Collapsed="true">
+    <Position X="44.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAALAAAKAQABEAAACAAACCAAAABAASAAAAkAQAAAA=</HashCode>
+      <FileName>RenderObjects\Design\CubeMapEditorForm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.RenderObjects.Design.CubeMapUIEditor" Collapsed="true">
+    <Position X="46" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>RenderObjects\Design\CubeMapUIEditor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.RenderObjects.Design.LoadingModelDialog" Collapsed="true">
+    <Position X="47.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQCAAAQAiBAAAAAQAGAAIACAAAAIAAAgAAAABACAAM=</HashCode>
+      <FileName>RenderObjects\Design\LoadingModelDialog.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.RenderObjects.Design.ModelFileEditor" Collapsed="true">
+    <Position X="42.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAABAAAAAAAAAIAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>RenderObjects\Design\ModelFileEditor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.RenderObjects.Design.PrimitiveChooseType" Collapsed="true">
+    <Position X="47.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIQAACAEADEQAACAAEACAAAABAAAAAAAAQAAIAA=</HashCode>
+      <FileName>RenderObjects\Design\PrimitiveChooseType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.RenderObjects.Design.PrimitiveCollectionEditor" Collapsed="true">
+    <Position X="49.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>RenderObjects\Design\PrimitiveCollectionEditor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.RenderObjects.Design.PrimitiveCollectionForm" Collapsed="true">
+    <Position X="51.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABIAAADAABBEQgASAAEACAAABlAAAAAAAAAEEAAI=</HashCode>
+      <FileName>RenderObjects\Design\PrimitiveCollectionForm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Samplers.RegularGridSampler" Collapsed="true">
+    <Position X="10.5" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Samplers\RegularGridSampler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Samplers.Sampler" Collapsed="true">
+    <Position X="10.5" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAACAAAAAAAAACAABAAAAAQAAAAAAAAAAAQAEAAAA=</HashCode>
+      <FileName>Samplers\Sampler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Shaders.CookTorranceShader" Collapsed="true">
+    <Position X="0.75" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAABEAAAQAAAABAQAAAAAAAAAAIAAAQAHFQQABA=</HashCode>
+      <FileName>Shaders\CookTorranceShader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Shaders.PerlinNoiseShader" Collapsed="true">
+    <Position X="3" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAEAAAAA=</HashCode>
+      <FileName>Shaders\PerlinNoiseShader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Shaders.PhongShader" Collapsed="true">
+    <Position X="5.25" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAARAABQQARA=</HashCode>
+      <FileName>Shaders\PhongShader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Shaders.Shader" Collapsed="true">
+    <Position X="3" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAAQAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Shaders\Shader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.SpatialSubdivision.AccelerationStructure&lt;T&gt;" Collapsed="true">
+    <Position X="4" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>SpatialSubdivision\AccelerationStructure.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.SpatialSubdivision.IntersectableAccelerationStructure&lt;T&gt;" Collapsed="true">
+    <Position X="4" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SpatialSubdivision\IntersectableAccelerationStructure.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DrawEngine.Renderer.SpatialSubdivision.KDTreeV2&lt;T&gt;" Collapsed="true">
+    <Position X="1.75" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAYAEBAgAAAAAAACkAQAAQAAgAAAAAACgAAAAEBA=</HashCode>
+      <FileName>SpatialSubdivision\KDTree.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DrawEngine.Renderer.SpatialSubdivision.NoAccerelationStructure&lt;T&gt;" Collapsed="true">
+    <Position X="5.25" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SpatialSubdivision\NoAccerelationStructure.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.SpatialSubdivision.Octree&lt;T&gt;" Collapsed="true">
+    <Position X="7.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEIEACAAAAQAAAoABkIAUBQgwEEEIACEEAAAAAA=</HashCode>
+      <FileName>SpatialSubdivision\Octree.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DrawEngine.Renderer.SpatialSubdivision.PrimitiveKDTree" Collapsed="true">
+    <Position X="3" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>SpatialSubdivision\PrimitiveKDTree.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.SpatialSubdivision.TriangleKDTree" Collapsed="true">
+    <Position X="0.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAIABAAAEAAgAAEAAAAkAAAAAAA=</HashCode>
+      <FileName>SpatialSubdivision\TriangleKDTree.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DrawEngine.Renderer.SpatialSubdivision.KDTree.HPoint" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="40.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAIIAEgAAAAAAAAABAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>SpatialSubdivision\KDTree\HPoint.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DrawEngine.Renderer.SpatialSubdivision.KDTree.HRect" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="42.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAQAAAEgAAAAABAAAAAAAAACAABAQAAABA=</HashCode>
+      <FileName>SpatialSubdivision\KDTree\HRect.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DrawEngine.Renderer.SpatialSubdivision.KDTree.KDTree&lt;T&gt;" Collapsed="true">
+    <Position X="44.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAACAAEAAAAAAQAQAEAAAAAAAAhAAQgABA=</HashCode>
+      <FileName>SpatialSubdivision\KDTree\KDTree.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.SpatialSubdivision.KDTree.KeyDuplicateException" Collapsed="true">
+    <Position X="46" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SpatialSubdivision\KDTree\KeyDuplicateException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.SpatialSubdivision.KDTree.KeyMissingException" Collapsed="true">
+    <Position X="47.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SpatialSubdivision\KDTree\KeyMissingException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.SpatialSubdivision.KDTree.KeySizeException" Collapsed="true">
+    <Position X="49.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SpatialSubdivision\KDTree\KeySizeException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.SpatialSubdivision.KDTree.MainTeste" Collapsed="true">
+    <Position X="49.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>SpatialSubdivision\KDTree\MainTeste.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.SpatialSubdivision.KDTree.NearestNeighborList&lt;T&gt;" Collapsed="true">
+    <Position X="51.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABQAEQAIAAAIAAAAAAAAAQAAAAAQAAAAAAAAAQAAAA=</HashCode>
+      <FileName>SpatialSubdivision\KDTree\NearestNeighborList.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.SpatialSubdivision.KDTree.PriorityQueue&lt;T&gt;" Collapsed="true">
+    <Position X="53" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIQEAAQAAAAAAAABAIABAQAAAAAACIAAgAQAABAEAA=</HashCode>
+      <FileName>SpatialSubdivision\KDTree\PriorityQueue.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Util.FastBitmap" Collapsed="true">
+    <Position X="53" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAABAAAAAQAQAABAEAAAAAAEACAAAAAAAAAAAA=</HashCode>
+      <FileName>Util\FastBitmap.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Util.NameFactory" Collapsed="true">
+    <Position X="49.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Util\NameFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DrawEngine.Renderer.Util.ObjectXMLSerializer&lt;T&gt;" Collapsed="true">
+    <Position X="40.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgIAQABAAACACAAAAAABABEAAAAAAgAAAAAAAAAA=</HashCode>
+      <FileName>Util\ObjectXMLSerializer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PictureBoxScroll.PicturePanel" Collapsed="true">
+    <Position X="46" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQiAABAAACAAAAAAAACAAAACEAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Util\PicturePanel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="DrawEngine.Renderer.Algebra.BarycentricCoordinate" Collapsed="true">
+    <Position X="40.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAgAAAAAgAQAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Algebra\BarycentricCoordinate.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="DrawEngine.Renderer.Algebra.Dominant" Collapsed="true">
+    <Position X="44.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABgAAAAAAA=</HashCode>
+      <FileName>Algebra\Dominant.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="DrawEngine.Renderer.Algebra.Matrix3D" Collapsed="true">
+    <Position X="51.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAYBQAACAAAQAAAE6AEDACAAAQAAALJAAEAEAAgAAiA=</HashCode>
+      <FileName>Algebra\Matrix3D.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="DrawEngine.Renderer.Algebra.OrthoNormalBasis" Collapsed="true">
+    <Position X="53" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAACAQAAAAARAAAAAAAAAABqAAAAAAIE=</HashCode>
+      <FileName>Algebra\OrthonormalBasis.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="DrawEngine.Renderer.Algebra.Point2D" Collapsed="true">
+    <Position X="42.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAQAAAAEYAUAAAAAAAAAAAAAAAAAAAAAYiA=</HashCode>
+      <FileName>Algebra\Point2D.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="DrawEngine.Renderer.Algebra.Point3D" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="44.25" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIEAAQAAAAE6AcABAAAEQAAAIEAAAAEAAAAYmM=</HashCode>
+      <FileName>Algebra\Point3D.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Struct>
+  <Struct Name="DrawEngine.Renderer.Algebra.UVCoordinate" Collapsed="true">
+    <Position X="53" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAASAAA=</HashCode>
+      <FileName>Algebra\UVCoordinate.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="DrawEngine.Renderer.Algebra.Vector2D" Collapsed="true">
+    <Position X="40.75" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAIAACEcgcAAABAAAAAAIAAAAAAAAAAYiA=</HashCode>
+      <FileName>Algebra\Vector2D.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="DrawEngine.Renderer.Algebra.Vector3D" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="42.5" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAIgMEAAAIAAAE+gcARAFAEQIAAIEAAAAEACEAYiM=</HashCode>
+      <FileName>Algebra\Vector3D.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Struct>
+  <Struct Name="DrawEngine.Renderer.BasicStructures.HSBColor" Collapsed="true">
+    <Position X="46" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAACAAAAAAAEYAUAAgAEAAAAAAAgQYAAIEOAAAA=</HashCode>
+      <FileName>BasicStructures\HSBColor.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="DrawEngine.Renderer.BasicStructures.Intersection" Collapsed="true">
+    <Position X="47.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAAAAAAAAEAAAABAAAAAAIAAAAQAAAQAAAAgA=</HashCode>
+      <FileName>BasicStructures\Intersection.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="DrawEngine.Renderer.BasicStructures.Ray" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="47.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAIAAEACIABAAAEAAABAEAAABEAAggAAA=</HashCode>
+      <FileName>BasicStructures\Ray.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Struct>
+  <Struct Name="DrawEngine.Renderer.BasicStructures.RGBColor" Collapsed="true">
+    <Position X="49.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>Y/o/AYVfQXu0I7Om8R0Q11WVFIBxxgSLibRtnTUZl4U=</HashCode>
+      <FileName>BasicStructures\RGBColor.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="DrawEngine.Renderer.BasicStructures.Texture" Collapsed="true">
+    <Position X="51.25" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAhAAAABAAAAAAMAAAAAEAAAAAAAgAAAAAAAAAAIAA=</HashCode>
+      <FileName>BasicStructures\Texture.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="DrawEngine.Renderer.Importers.PointerToVertex" Collapsed="true">
+    <Position X="46" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAA4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Importers\PointerToVertex.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="DrawEngine.Renderer.PhotonMapping.Photon" Collapsed="true">
+    <Position X="40.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAAAkACAAAAAAAAAAAAABAAAAAAAAAAA=</HashCode>
+      <FileName>PhotonMapping\Photon.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="DrawEngine.Renderer.RenderObjects.BoundBox" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="42.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAIAAAAAAAAECAIkDEgBMAAIAREAAAAEAAAIAiA=</HashCode>
+      <FileName>RenderObjects\BoundBox.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Struct>
+  <Struct Name="DrawEngine.Renderer.SpatialSubdivision.KDTree.KeyValuePair&lt;TKey, TValue&gt;" Collapsed="true">
+    <Position X="49.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAEAAAAAAAAACAAAAAgAAAAAAA=</HashCode>
+      <FileName>SpatialSubdivision\KDTree\KeyValuePair.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Interface Name="DrawEngine.Renderer.Algebra.ITransformable3D" Collapsed="true">
+    <Position X="49.5" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAIABAQAEAAAAAEAAAAEAAAAAAA=</HashCode>
+      <FileName>Algebra\ITransformable3D.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DrawEngine.Renderer.BasicStructures.IIntersectable" Collapsed="true">
+    <Position X="46" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BasicStructures\IItersectable.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DrawEngine.Renderer.INameable" Collapsed="true">
+    <Position X="47.75" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAQAAAAAAAAAAAAAA=</HashCode>
+      <FileName>INameable.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DrawEngine.Renderer.RenderObjects.IBoundBox" Collapsed="true">
+    <Position X="42.5" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>RenderObjects\IBoundBox.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DrawEngine.Renderer.RenderObjects.CSG.IConstrutive" Collapsed="true">
+    <Position X="44.25" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>RenderObjects\CSG\IConstrutive.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DrawEngine.Renderer.SpatialSubdivision.IAccelerationStructure&lt;T&gt;" Collapsed="true">
+    <Position X="40.75" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SpatialSubdivision\IAccelerationStructure.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="DrawEngine.Renderer.Algebra.Component" Collapsed="true">
+    <Position X="40.75" Y="12" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYAE=</HashCode>
+      <FileName>Algebra\Dominant.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="DrawEngine.Renderer.Importers.ElementMesh" Collapsed="true">
+    <Position X="42.5" Y="12" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAAAJAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Importers\LoaderPlyModel.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="DrawEngine.Renderer.Importers.ModelType" Collapsed="true">
+    <Position X="44.25" Y="12" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAAIAAAACAAAAAAAAAAAABAAAAAAAEAAAA=</HashCode>
+      <FileName>Importers\ModelType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="DrawEngine.Renderer.RenderObjects.ShadeType" Collapsed="true">
+    <Position X="47.75" Y="12" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>RenderObjects\TriangleModel.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="DrawEngine.Renderer.Util.SerializedFormats" Collapsed="true">
+    <Position X="46" Y="12" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>Util\ObjectXMLSerializer.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Delegate Name="DrawEngine.Renderer.NameChangedEventHandler" Collapsed="true">
+    <Position X="40.75" Y="13" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAAQAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>INameable.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="DrawEngine.Renderer.NameChangingEventHandler" Collapsed="true">
+    <Position X="42.5" Y="13" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>INameable.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="DrawEngine.Renderer.SceneRenderingEventHandler" Collapsed="true">
+    <Position X="44.25" Y="13" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAABAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>RayCasting.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Font Name="Tahoma" Size="8.25" />
+</ClassDiagram>
