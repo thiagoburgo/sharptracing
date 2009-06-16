@@ -76,7 +76,7 @@ namespace PhotonVisualization
             //{
             //    sceneName = dialog.FileName;
             //}
-            PhotonTracer tracer = new PhotonTracer(Scene.Load(sceneName), 100000);
+            PhotonTracer tracer = new PhotonTracer(Scene.Load(sceneName), 500000);
             tracer.Render(null);
 
             Photon[] photons = tracer.IndirectEnlightenment.Photons;
@@ -87,7 +87,7 @@ namespace PhotonVisualization
             // Lock the vertex buffer. 
             // Lock returns an array of positionColored objects.
             CustomVertex.PositionColored[] vertices = (CustomVertex.PositionColored[])this.m_VertexBuffer.Lock(0, 0);
-            for(int i = 1; i < photons.Length; i++){
+            for(int i = 1; i < photons.Length && photons[i] != null; i++){
                 vertices[i].X = photons[i].Position.X;
                 vertices[i].Y = photons[i].Position.Y;
                 vertices[i].Z = photons[i].Position.Z;
