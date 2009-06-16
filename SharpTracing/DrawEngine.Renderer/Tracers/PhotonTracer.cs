@@ -61,12 +61,12 @@ namespace DrawEngine.Renderer.Tracers
                     this.TracePhoton(photon, 0, EnlightenmentType.Direct);
                     emittedPhotons++;
                 }
-                float inv_emittedPhotons = 1.0f / emittedPhotons;
-                this.causticsEnlightenment.ScalePhotonPower(inv_emittedPhotons);
-                this.IndirectEnlightenment.ScalePhotonPower(inv_emittedPhotons);
+                //float inv_emittedPhotons = 1.0f / emittedPhotons;
+                //this.causticsEnlightenment.ScalePhotonPower(inv_emittedPhotons);
+                //this.IndirectEnlightenment.ScalePhotonPower(inv_emittedPhotons);
             }
-            this.causticsEnlightenment.Balance();
-            this.IndirectEnlightenment.Balance();
+            //this.causticsEnlightenment.Balance();
+            //this.IndirectEnlightenment.Balance();
         }
         public override void Render(Graphics g)
         {
@@ -167,32 +167,41 @@ namespace DrawEngine.Renderer.Tracers
                 Material material = intersection.HitPrimitive.Material;
                 this.scene.Shader = material.CreateShader(this.scene);
                 RGBColor color = this.scene.Shader.Shade(photon, intersection);
-                
-                float probDiff = Prob(photon.Power, material.KDiff);
-                float probSpec = Prob(photon.Power, material.KSpec);
+
+                //float avgPower = photon.Power.Average;
+                //float probDiff = avgPower * material.KDiff;
+                //float probSpec = avgPower * material.KSpec;
+                //float avgPower = photon.Power.Average;
+                RGBColor mixColor = (photon.Power * material.DiffuseColor);
+                float maxColor = Max(mixColor.R, mixColor.G, mixColor.B);
+                float probDiff = maxColor * material.KDiff;
+                float probSpec = maxColor * material.KSpec;
                 Photon rPhoton = new Photon();
                 Random rdn = new Random(((int)DateTime.Now.Ticks) ^ 47);
                 double randomValue = rdn.NextDouble();
                 if(randomValue <= probDiff) {
-                    rPhoton.Direction = ReflectedDiffuse(intersection.Normal);
+                    this.storePhoton(photon, enlightenmentType);
+                    rPhoton.Direction = ReflectedDiffuse(intersection.Normal).Normalized;
                     rPhoton.Position = intersection.HitPoint;
-                    rPhoton.Power = material.KDiff * color;
+                    rPhoton.Power = (material.DiffuseColor * photon.Power) / probDiff;
                     this.TracePhoton(rPhoton, depth + 1, EnlightenmentType.Indirect);
                 }
                 else if(randomValue <= probSpec + probDiff) {
-                    
+
                 } else{
                     //Absorb
                     this.storePhoton(photon, enlightenmentType);
-                }
+                } 
+               
             }
         }
         private void storePhoton(Photon photon, EnlightenmentType enlightenmentType)
         {
             switch(enlightenmentType){
                 //case EnlightenmentType.Direct:
-                    //Do nothing - Classic RayTracing
-                //    break;
+                //    //Do nothing - Classic RayTracing
+                //    ;
+                //break;
                 case EnlightenmentType.Indirect:
                     this.storedIndirect++;
                     this.indirectEnlightenment.Store(photon);
