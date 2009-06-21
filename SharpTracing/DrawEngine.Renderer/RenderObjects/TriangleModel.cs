@@ -291,7 +291,7 @@ namespace DrawEngine.Renderer.RenderObjects
                 this.triangles = this.loader.Load();
                 this.loader.Dispose();
                 this.boundBox = this.loader.BoundBox;
-                float len = (float)Math.Abs(this.boundBox.PMax.Y - this.boundBox.PMin.Y);
+                float len = Math.Abs(this.boundBox.PMax.Y - this.boundBox.PMin.Y);
                 this.boundBox.Scale(50 / len);
                 //this.boundBox.Translate(-this.boundBox.Center.ToVector3D());
                 foreach(Triangle t in this.triangles){

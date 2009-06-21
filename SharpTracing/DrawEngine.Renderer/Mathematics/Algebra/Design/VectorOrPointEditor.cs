@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Drawing.Design;
 using System.Security.Permissions;
 using System.Windows.Forms.Design;
-using DrawEngine.Renderer.Algebra;
 
 namespace DrawEngine.Renderer.Mathematics.Algebra.Design
 {

@@ -1,12 +1,14 @@
 using System.Collections.Generic;
+using System.Linq;
 using DrawEngine.Renderer.BasicStructures;
+using DrawEngine.Renderer.RenderObjects;
 
 namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
 {
-    public abstract class IntersectableAccelerationStructure<T> : AccelerationStructure<T>, IIntersectable
+    public abstract class IntersectableAccelerationStructure<T> : AccelerationStructure<T>
             where T : IIntersectable
     {
-        public IntersectableAccelerationStructure(IList<T> accelerationUnits) : base(accelerationUnits) {}
+        protected IntersectableAccelerationStructure(IList<T> accelerationUnits) : base(accelerationUnits) {}
 
         #region IIntersectable Members
         /// <summary>
@@ -22,7 +24,7 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
             Intersection intersection_comp;
             bool hit = false;
             foreach(T hitPrimitive in this.AccelerationUnits){
-                if(hitPrimitive.FindIntersection(ray, out intersection_comp)
+                if(hitPrimitive.Visible && hitPrimitive.FindIntersection(ray, out intersection_comp)
                    && intersection_comp.TMin < intersection.TMin){
                     intersection = intersection_comp;
                     hit = true;

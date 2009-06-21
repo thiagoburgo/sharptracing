@@ -27,8 +27,8 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
         private float weightDivisionQuality;
         private float weightSum;
         // Constructors
-        public KDTreeIntersectableManager() : this(new List<T>()) {}
-        public KDTreeIntersectableManager(IList<T> content) : base(content)
+        protected KDTreeIntersectableManager() : this(new List<T>()) {}
+        protected KDTreeIntersectableManager(IList<T> content) : base(content)
         {
             this.Root = new Leaf(content);
             this.Content = content;
@@ -146,7 +146,7 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
                 Intersection intersect_comp;
                 for(int i = 0; i < leaf.Content.Count; i++){
                     T obj = leaf.Content[i];
-                    if(obj.FindIntersection(ray, out intersect_comp) && intersect_comp.TMin < firstIntersection.TMin){
+                    if(obj.Visible && obj.FindIntersection(ray, out intersect_comp) && intersect_comp.TMin < firstIntersection.TMin) {
                         firstIntersection = intersect_comp;
                         hit = true;
                     }

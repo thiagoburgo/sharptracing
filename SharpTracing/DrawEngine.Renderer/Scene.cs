@@ -18,12 +18,11 @@ using DrawEngine.Renderer.Shaders;
 using DrawEngine.Renderer.SpatialSubdivision.Acceleration;
 using DrawEngine.Renderer.Util;
 
-namespace DrawEngine.Renderer
-{
+namespace DrawEngine.Renderer {
     [XmlRoot("Scene", IsNullable = false), Serializable]
     public class Scene : INameable, IIntersectable //, ISerializable
     {
-        private AccelerationStructure<Primitive> accelerationStructure;
+        private IntersectableAccelerationStructure<Primitive> accelerationStructure;
         private RGBColor backgroundColor = RGBColor.Black;
         private NameableCollection<Camera> cameras;
         private Camera defaultCamera;
@@ -38,6 +37,7 @@ namespace DrawEngine.Renderer
         private RenderStrategy renderStrategy;
         private Sampler sampler;
         private Shader shader;
+        private bool visible = true;
 
         #region EVENTOS
         private bool isSoftShadowActive;
@@ -45,29 +45,26 @@ namespace DrawEngine.Renderer
         private int softShadowSamples;
         public event NameChangedEventHandler OnNameChanged;
         public event NameChangingEventHandler OnNameChanging;
-        public string Name
-        {
+        public string Name {
             get { return this.name; }
-            set
-            {
-                if(this.OnNameChanging != null){
+            set {
+                if(this.OnNameChanging != null) {
                     CancelNameChageEventArgs cancel = new CancelNameChageEventArgs(value);
                     this.OnNameChanging(this, cancel);
-                    if(cancel.Cancel){
+                    if(cancel.Cancel) {
                         throw new ArgumentException("Name changing cancelled!");
                     }
                 }
                 string oldName = this.name;
                 this.name = value;
-                if(this.OnNameChanged != null){
+                if(this.OnNameChanged != null) {
                     this.OnNameChanged(this, oldName);
                 }
             }
         }
         #endregion
 
-        public Scene(RGBColor iamb, NameableCollection<Light> lights, Camera defaultCamera, float refractIndice)
-        {
+        public Scene(RGBColor iamb, NameableCollection<Light> lights, Camera defaultCamera, float refractIndice) {
             this.IAmb = iamb;
             this.RefractIndex = refractIndice;
             this.Lights = new NameableCollection<Light>(lights);
@@ -76,7 +73,7 @@ namespace DrawEngine.Renderer
             this.materials = new NameableCollection<Material>();
             this.DefaultCamera = defaultCamera;
             this.Cameras = new NameableCollection<Camera>();
-            if(defaultCamera != null){
+            if(defaultCamera != null) {
                 this.Cameras.Add(defaultCamera);
             }
             this.sampler = new RegularGridSampler();
@@ -86,10 +83,9 @@ namespace DrawEngine.Renderer
             this.softShadowSamples = 36;
             //this.cameras.CollectionChanged += new NotifyCollectionChangedEventHandler<Camera>(cameras_CollectionChanged);
         }
-        public Scene() : this(RGBColor.White, new NameableCollection<Light>(), null, 1.0f) {}
-        public Scene(Scene toCopy)
-        {
-            if(toCopy != null){
+        public Scene() : this(RGBColor.White, new NameableCollection<Light>(), null, 1.0f) { }
+        public Scene(Scene toCopy) {
+            if(toCopy != null) {
                 this.defaultCamera = toCopy.defaultCamera;
                 this.IAmb = toCopy.iAmb;
                 this.refractIndex = toCopy.refractIndex;
@@ -103,7 +99,7 @@ namespace DrawEngine.Renderer
                 this.IsEnvironmentMapped = toCopy.IsEnvironmentMapped;
                 this.EnvironmentMap = toCopy.environmentMap;
                 this.backgroundColor = toCopy.backgroundColor;
-                if(toCopy.sampler != null){
+                if(toCopy.sampler != null) {
                     this.sampler = new RegularGridSampler(toCopy.sampler.SamplesX, toCopy.sampler.SamplesY);
                 }
             }
@@ -117,170 +113,146 @@ namespace DrawEngine.Renderer
         public bool IsEnvironmentMapped { get; set; }
         [Category("Appereance"), DefaultValue(null), TypeConverter(typeof(ExpandableObjectConverter)),
          Editor(typeof(CubeMapUIEditor), typeof(UITypeEditor))]
-        
-        public EnvironmentMap EnvironmentMap
-        {
+
+        public EnvironmentMap EnvironmentMap {
             get { return this.environmentMap; }
             set { this.environmentMap = value; }
         }
         [Category("Appereance")]
-        public RGBColor BackgroundColor
-        {
+        public RGBColor BackgroundColor {
             get { return this.backgroundColor; }
             set { this.backgroundColor = value; }
         }
         [Category("Shadow")]
-        public bool IsShadowActive
-        {
+        public bool IsShadowActive {
             get { return this.isShadowActive; }
             set { this.isShadowActive = value; }
         }
         [Category("Shadow")]
-        public bool IsSoftShadowActive
-        {
+        public bool IsSoftShadowActive {
             get { return this.isSoftShadowActive; }
             set { this.isSoftShadowActive = value; }
         }
         [Category("Shadow")]
-        public int SoftShadowSamples
-        {
+        public int SoftShadowSamples {
             get { return this.softShadowSamples; }
             set { this.softShadowSamples = value; }
         }
         [Category("Viewer"), TypeConverter(typeof(ExpandableObjectConverter))]
-        public Sampler Sampler
-        {
+        public Sampler Sampler {
             get { return this.sampler; }
             set { this.sampler = value; }
         }
         [XmlIgnore, Category("Viewer")]
-        public Shader Shader
-        {
+        public Shader Shader {
             get { return this.shader; }
             set { this.shader = value; }
         }
         [XmlIgnore, Category("Viewer")]
-        public RenderStrategy RenderStrategy
-        {
+        public RenderStrategy RenderStrategy {
             get { return this.renderStrategy; }
             set { this.renderStrategy = value; }
         }
         [Category("Appereance")]
-        public RGBColor IAmb
-        {
+        public RGBColor IAmb {
             get { return this.iAmb; }
             set { this.iAmb = value; }
         }
         [Category("Collections"),]
-        public NameableCollection<Light> Lights
-        {
+        public NameableCollection<Light> Lights {
             get { return this.lights; }
-            set
-            {
-                if(value != null){
+            set {
+                if(value != null) {
                     this.lights = value;
                 }
             }
         }
         [Category("Collections")]
-        public NameableCollection<Material> Materials
-        {
+        public NameableCollection<Material> Materials {
             get { return this.materials; }
-            set
-            {
-                if(value != null){
+            set {
+                if(value != null) {
                     this.materials = value;
                 }
             }
         }
         [XmlIgnore, Category("Viewer"), TypeConverter(typeof(ExpandableObjectConverter)),
          Editor(typeof(DefaultCameraEditor), typeof(UITypeEditor))]
-        public Camera DefaultCamera
-        {
-            get
-            {
-                if(this.defaultCamera == null && this.defaultCameraName == null){
+        public Camera DefaultCamera {
+            get {
+                if(this.defaultCamera == null && this.defaultCameraName == null) {
                     PinholeCamera camera = new PinholeCamera();
                     this.cameras.Add(camera);
                     this.DefaultCamera = camera;
                 }
                 return this.defaultCamera;
             }
-            set
-            {
-                if(value != null){
+            set {
+                if(value != null) {
                     this.defaultCamera = value;
                     this.defaultCameraName = value.Name;
                 }
             }
         }
         [Browsable(false), XmlElement("DefaultCamera")]
-        public string DefaultCameraName
-        {
+        public string DefaultCameraName {
             get { return this.defaultCameraName; }
             set { this.defaultCameraName = value; }
         }
         [Category("Collections")]
-        public NameableCollection<Camera> Cameras
-        {
+        public NameableCollection<Camera> Cameras {
             get { return this.cameras; }
-            set
-            {
-                if(value != null){
+            set {
+                if(value != null) {
                     this.cameras = value;
                 }
             }
         }
         [Category("Collections")]
-        public NameableCollection<Primitive> Primitives
-        {
+        public NameableCollection<Primitive> Primitives {
             get { return this.primitives; }
-            set
-            {
-                if(value != null){
+            set {
+                if(value != null) {
                     this.primitives = value;
                     this.AccelerationStructure = new KDTreePrimitiveManager(this.primitives);
                 }
             }
         }
         [XmlIgnore]
-        public AccelerationStructure<Primitive> AccelerationStructure
-        {
+        public IntersectableAccelerationStructure<Primitive> AccelerationStructure {
             get { return this.accelerationStructure; }
-            set
-            {
+            set {
                 this.accelerationStructure = value;
                 this.accelerationStructure.AccelerationUnits = this.primitives;
             }
         }
         [Category("Appereance"), DefaultValue(1.0f)]
-        public float RefractIndex
-        {
+        public float RefractIndex {
             get { return this.refractIndex; }
             set { this.refractIndex = value > 0.0f ? value : 1; }
         }
 
         #region IIntersectable Members
-        public bool FindIntersection(Ray ray, out Intersection intersection)
-        {
+        public bool FindIntersection(Ray ray, out Intersection intersection) {
             //this.AccelerationStructure.Optimize();
-            return ((IIntersectable)this.AccelerationStructure).FindIntersection(ray, out intersection);
+            return this.AccelerationStructure.FindIntersection(ray, out intersection);
+        }
+        public bool Visible {
+            get { return this.visible; }
+            set { this.visible = value; }
         }
         #endregion
 
         #region INameable Members
-        public int Compare(INameable x, INameable y)
-        {
+        public int Compare(INameable x, INameable y) {
             return x.Name.CompareTo(y.Name);
         }
         #endregion
 
-        public void Save(string sceneName)
-        {
+        public void Save(string sceneName) {
             ObjectXMLSerializer<Scene>.Save(this, sceneName, SerializedFormats.Document);
         }
-        public static Scene Load(string scenePath)
-        {
+        public static Scene Load(string scenePath) {
             return ObjectXMLSerializer<Scene>.Load(scenePath, SerializedFormats.Document);
         }
     }

@@ -1,4 +1,3 @@
-using DrawEngine.Renderer.Algebra;
 using DrawEngine.Renderer.Mathematics.Algebra;
 using DrawEngine.Renderer.RenderObjects;
 

@@ -2,7 +2,6 @@ using System;
 using System.ComponentModel;
 using System.Drawing.Design;
 using System.Windows.Forms;
-using DrawEngine.Renderer.Algebra;
 
 namespace DrawEngine.Renderer.Mathematics.Algebra.Design
 {

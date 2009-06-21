@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using DrawEngine.Renderer;
 using DrawEngine.Renderer.PhotonMapping;
+using DrawEngine.Renderer.RenderObjects;
 using DrawEngine.Renderer.Tracers;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
@@ -70,14 +71,25 @@ namespace PhotonVisualization
         // Create a vertex buffer for the device.
         public void CreateVertexBuffer()
         {
-            String sceneName = @"D:\Models & Textures\cornellBox2.1.xml";
-            //OpenFileDialog dialog = new OpenFileDialog();
-            //if (dialog.ShowDialog() == DialogResult.OK)
-            //{
-            //    sceneName = dialog.FileName;
-            //}
-            PhotonTracer tracer = new PhotonTracer(Scene.Load(sceneName), 500000);
-            tracer.Render(null);
+            //String sceneName = @"D:\Models & Textures\CornellBox5_Sphere_SphereFlake2.xml";
+            String sceneName = @"D:\Models & Textures\CornellBox5_Sphere_SphereFlake2.xml"; 
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Filter = "Scene Files|*.xml;*.scn";
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                sceneName = dialog.FileName;
+            } else{
+                return;
+            }
+            Scene scene = Scene.Load(sceneName);
+            
+            foreach(Primitive primitive in scene.Primitives){
+                if(primitive is TriangleModel){
+                    ((TriangleModel)primitive).Load();
+                }
+            }
+            PhotonTracer tracer = new PhotonTracer(scene, 1000000);
+            tracer.ScatterPhotons();
 
             Photon[] photons = tracer.IndirectEnlightenment.Photons;
             this.NUM_POINTS = photons.Length;
@@ -105,7 +117,11 @@ namespace PhotonVisualization
             this.m_VertexBuffer.Unlock();
         }
         #endregion // D3D Setup Code
-
+        protected override void OnPaint(PaintEventArgs e) {
+            this.Render();
+            Application.DoEvents();
+            base.OnPaint(e);
+        }
         #region "D3D Drawing Code"
         // Draw.
         public void Render()

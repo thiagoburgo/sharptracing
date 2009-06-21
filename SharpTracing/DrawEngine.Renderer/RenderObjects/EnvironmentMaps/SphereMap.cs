@@ -2,7 +2,6 @@ using System;
 using System.ComponentModel;
 using System.Drawing.Design;
 using System.IO;
-using DrawEngine.Renderer.Algebra;
 using DrawEngine.Renderer.BasicStructures;
 using DrawEngine.Renderer.Mathematics.Algebra;
 using DrawEngine.Renderer.RenderObjects.EnvironmentMaps.Design;

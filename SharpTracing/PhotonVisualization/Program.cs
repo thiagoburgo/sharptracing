@@ -18,13 +18,14 @@ namespace PhotonVisualization
             RenderForm frm = new RenderForm();
             // Initialize Direct3D.
             if(frm.InitializeGraphics()){
-                frm.Show();
+                //frm.Show();
+                Application.Run(frm);
                 // While the form is valid,
                 // render the scene and process messages.
-                while(frm.Created){
-                    frm.Render();
-                    Application.DoEvents();
-                }
+                //while(frm.Created){
+                //    frm.Render();
+                //    Application.DoEvents();
+                //}
             }
         }
     }

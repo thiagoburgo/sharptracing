@@ -57,6 +57,7 @@ namespace DrawEngine.SharpTracingUI
             get { return this.renderType; }
             set
             {
+                this.renderType = value;
                 switch(this.renderType){
                     case RenderType.RayTracer:
                         this.tracer = new RayTracer(new Scene(UnifiedScenesRepository.Scenes[this.TabText]));
@@ -68,7 +69,6 @@ namespace DrawEngine.SharpTracingUI
                         this.tracer = new DistributedRayTracer(new Scene(UnifiedScenesRepository.Scenes[this.TabText]));
                         break;
                 }
-                this.renderType = value;
             }
         }
         public Scene Scene
@@ -200,7 +200,7 @@ namespace DrawEngine.SharpTracingUI
             this.tracer.Render(g);
             g.Flush();
             if(this.pictureView.InvokeRequired){
-                this.pictureView.Invoke(new Action(delegate() { this.pictureView.Refresh(); }));
+                this.pictureView.Invoke(new Action(this.pictureView.Refresh));
             }
             //this.pictureView.Refresh();
             this.timer.Stop();

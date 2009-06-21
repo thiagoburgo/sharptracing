@@ -4,5 +4,6 @@
     {
         //bool Intersect(Ray ray);
         bool FindIntersection(Ray ray, out Intersection intersection);
+        bool Visible { get; set; }
     }
 }
