@@ -29,6 +29,7 @@ namespace DrawEngine.Renderer.RenderObjects
         protected UVCoordinate currentTextureCoordinate;
         protected Material material;
         private String name;
+        private bool visible = true;
         protected Primitive()
         {
             this.material = new PhongMaterial();
@@ -45,6 +46,12 @@ namespace DrawEngine.Renderer.RenderObjects
         {
             get { return this.material; }
             set { this.material = value; }
+        }
+      
+        public bool Visible
+        {
+            get { return this.visible; }
+            set { this.visible = value; }
         }
 
         #region IBoundBox Members

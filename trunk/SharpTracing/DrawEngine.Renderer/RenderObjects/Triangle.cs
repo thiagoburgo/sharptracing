@@ -117,9 +117,9 @@ namespace DrawEngine.Renderer.RenderObjects
             this.edge13 = (this.vertex3 - this.vertex1);
             this.normal = this.edge12 ^ this.edge13;
             this.normal.Normalize();
-            if(MathUtil.NearZero(this.normal.X, 1.0e-6) && MathUtil.NearZero(this.normal.Y, 1.0e-6) && MathUtil.NearZero(this.normal.Z, 1.0e-6)) {
-                MessageBox.Show("FUDEU NORMAL TRIANGULO");
-            }
+            //if(MathUtil.NearZero(this.normal.X, 1.0e-6) && MathUtil.NearZero(this.normal.Y, 1.0e-6) && MathUtil.NearZero(this.normal.Z, 1.0e-6)) {
+            //    MessageBox.Show("FUDEU NORMAL TRIANGULO");
+            //}
         }
         public override bool FindIntersection(Ray ray, out Intersection intersect)
         {

@@ -1,7 +1,6 @@
 using System;
 using System.ComponentModel;
 using System.Globalization;
-using DrawEngine.Renderer.Algebra;
 
 namespace DrawEngine.Renderer.Mathematics.Algebra.Design
 {

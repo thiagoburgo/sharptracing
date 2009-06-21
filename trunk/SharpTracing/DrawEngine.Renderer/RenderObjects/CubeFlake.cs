@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using DrawEngine.Renderer.Algebra;
 using DrawEngine.Renderer.BasicStructures;
 using DrawEngine.Renderer.Mathematics.Algebra;
 using DrawEngine.Renderer.SpatialSubdivision.Acceleration;

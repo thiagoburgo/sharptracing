@@ -1,7 +1,7 @@
 using System;
 using System.Drawing;
-using DrawEngine.Renderer.Algebra;
 using DrawEngine.Renderer.BasicStructures;
+using DrawEngine.Renderer.Mathematics.Algebra;
 
 namespace DrawEngine.Renderer.Tracers
 {

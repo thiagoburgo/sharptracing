@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using DrawEngine.Renderer.Algebra;
 using DrawEngine.Renderer.Mathematics.Algebra;
 using DrawEngine.Renderer.RenderObjects;
 

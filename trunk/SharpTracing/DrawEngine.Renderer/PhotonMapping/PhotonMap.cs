@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using DrawEngine.Renderer.Algebra;
 using DrawEngine.Renderer.BasicStructures;
 using DrawEngine.Renderer.Mathematics.Algebra;
 using System.Collections.Generic;
@@ -263,10 +262,10 @@ namespace DrawEngine.Renderer.PhotonMapping {
                 Photon[] pa1 = new Photon[this.stored_photons + 1];
                 Photon[] pa2 = new Photon[this.stored_photons + 1];
                 int i;
-                //for(i = 1; i <= this.stored_photons; i++) {
-                //    pa2[i] = this.Photons[i];
-                //}
-                this.Photons.CopyTo(pa2, 0);
+                for(i = 1; i <= this.stored_photons; i++) {
+                    pa2[i] = this.Photons[i];
+                }
+                //this.Photons.CopyTo(pa2, 0);
                 
                 this.BalanceSegment(pa1, pa2, 1, 1, this.stored_photons);
                 //Array.Clear(pa2, 0, pa2.Length); 

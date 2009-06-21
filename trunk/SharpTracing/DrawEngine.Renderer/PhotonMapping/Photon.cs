@@ -1,5 +1,4 @@
 using System;
-using DrawEngine.Renderer.Algebra;
 using DrawEngine.Renderer.BasicStructures;
 using DrawEngine.Renderer.Mathematics.Algebra;
 
@@ -15,6 +14,7 @@ namespace DrawEngine.Renderer.PhotonMapping
         public byte Theta; // incoming direction
         //Only for acceleration in search (avoid linear search)
         public int Index = -1;
+        public float PrevRefractIndex = 0;
         public Photon() {}
         public Photon(Vector3D dir, Point3D pos, RGBColor power)
         {

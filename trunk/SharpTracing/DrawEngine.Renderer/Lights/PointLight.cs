@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using DrawEngine.Renderer.Algebra;
 using DrawEngine.Renderer.BasicStructures;
 using DrawEngine.Renderer.Mathematics.Algebra;
 using DrawEngine.Renderer.PhotonMapping;
@@ -55,6 +54,15 @@ namespace DrawEngine.Renderer.Lights
             while(nShot < this.MaxPhotons){
                 nShot++;
                 yield return new Photon(Vector3D.CreateRandomVector().Normalized, this.position, this.color);
+                //float x, y, z;
+                //Random rnd = new Random();
+                //do{
+                //    x = -1 + 2 * (float)rnd.NextDouble();
+                //    y = -1 + 2 * (float)rnd.NextDouble();
+                //    z = -1 + 2 * (float)rnd.NextDouble();
+                //} while(x * x + y *y + z * z > 1);
+                //nShot++;
+                //yield return new Photon(new Vector3D(x, y, z), this.position, this.color);
             }
         }
     }

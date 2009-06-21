@@ -1,9 +1,9 @@
 using System;
 using System.Windows.Forms;
-using DrawEngine.Renderer.Algebra;
 using DrawEngine.Renderer.BasicStructures;
 using DrawEngine.Renderer.Lights;
 using DrawEngine.Renderer.Materials;
+using DrawEngine.Renderer.Mathematics.Algebra;
 
 namespace DrawEngine.Renderer.Shaders
 {

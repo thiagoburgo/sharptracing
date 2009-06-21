@@ -1,3 +1,5 @@
+using DrawEngine.Renderer.Mathematics.Algebra;
+
 namespace DrawEngine.Renderer.Algebra
 {
     public interface ITransformable3D
