@@ -1,0 +1,170 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{206D4408-3592-436C-8CE2-7BEE5D0AA404}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ToolBoxUI.Components</RootNamespace>
+    <AssemblyName>ToolBoxUI</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Design" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BalloonTooltip.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ChooseToolboxItems.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ChooseToolboxItems.designer.cs">
+      <DependentUpon>ChooseToolboxItems.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Design\HostToolbox.ToolboxConverter.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Design\SRCategoryAttribute.cs" />
+    <Compile Include="Design\SRDescriptionAttribute.cs" />
+    <Compile Include="Design\Toolbox.ItemConverter.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Design\Toolbox.ToolboxConverter.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="HostToolbox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="HostToolbox.HostItem.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="HostToolbox.Serializer.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="HostToolbox.ToolboxItemList.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="HostToolbox.ToolboxService.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ItemSelectionEventArgs.cs" />
+    <Compile Include="IToolboxObject.cs" />
+    <Compile Include="ListViewItemComparer.cs" />
+    <Compile Include="NameCreationService.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="TabEventArgs.cs" />
+    <Compile Include="Toolbox.ClipboardFormats.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Toolbox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Toolbox.HitArea.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Toolbox.HitTestInfo.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ITab.cs">
+    </Compile>
+    <Compile Include="Toolbox.Item.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Toolbox.ItemCollection.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Toolbox.Menu.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Toolbox.Renaming.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Toolbox.Serializer.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Toolbox.Tab.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Toolbox.TabCollection.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Design\Toolbox.TabConverter.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Toolbox.ColorStyle.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Toolbox.ToolboxItemsTab.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ToolCursor.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="BalloonTooltip.resx">
+      <DependentUpon>BalloonTooltip.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ChooseToolboxItems.resx">
+      <DependentUpon>ChooseToolboxItems.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
