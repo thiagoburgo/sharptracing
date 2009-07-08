@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 using DrawEngine.Renderer.BasicStructures;
@@ -126,7 +126,7 @@ namespace DrawEngine.Renderer.Tracers {
                 }
             }
         }
-        public RGBColor Trace(Ray ray, int depth) {
+        protected override RGBColor Trace(Ray ray, int depth) {
             Intersection intersection;
             if(this.scene.FindIntersection(ray, out intersection)) {
                 Material material = intersection.HitPrimitive.Material;
@@ -136,7 +136,7 @@ namespace DrawEngine.Renderer.Tracers {
                 if(depth < 5) {
                     if(material.IsReflective) {
                         rRay.Origin = intersection.HitPoint;
-                        rRay.Direction = Reflected(intersection.Normal, ray.Direction);
+                        rRay.Direction = Vector3D.Reflected(intersection.Normal, ray.Direction);
                         color += this.indirectEnlightenment.IrradianceEstimate(intersection.HitPoint, intersection.Normal, this.IrradianceArea, this.IrradiancePhotonNumber);
                         //color += this.Trace(rRay, depth + 1) * material.KSpec;
                         this.Trace(rRay, depth + 1);
@@ -150,7 +150,7 @@ namespace DrawEngine.Renderer.Tracers {
                         float eta = (ray.PrevRefractIndex == material.RefractIndex)
                                         ? material.RefractIndex * 1 / this.scene.RefractIndex
                                         : this.scene.RefractIndex * 1 / material.RefractIndex;
-                        if(Refracted(intersection.Normal, ray.Direction, out T, eta)) {
+                        if(Vector3D.Refracted(intersection.Normal, ray.Direction, out T, eta)) {
                             rRay.Origin = intersection.HitPoint;
                             rRay.Direction = T;
                             rRay.PrevRefractIndex = material.RefractIndex;
@@ -197,11 +197,11 @@ namespace DrawEngine.Renderer.Tracers {
 
                     rPhoton.Position = intersection.HitPoint;
                     rPhoton.Power = mixColor / probDiff;
-                    rPhoton.Direction = ReflectedDiffuse(intersection.Normal);
+                    rPhoton.Direction = Vector3D.ReflectedDiffuse(intersection.Normal);
                     this.ShootPhoton(rPhoton, depth + 1, EnlightenmentType.Indirect);
                 }
                 else if(randomValue <= probSpec + probDiff) {
-                    rPhoton.Direction = Reflected(intersection.Normal, photon.Direction);
+                    rPhoton.Direction = Vector3D.Reflected(intersection.Normal, photon.Direction);
                     //rPhoton.Direction.Normalize();
                     rPhoton.Position = intersection.HitPoint;
                     rPhoton.Power = mixColor / probSpec;
@@ -215,7 +215,7 @@ namespace DrawEngine.Renderer.Tracers {
                     float eta = (photon.PrevRefractIndex == material.RefractIndex)
                                     ? material.RefractIndex * 1 / this.scene.RefractIndex
                                     : this.scene.RefractIndex * 1 / material.RefractIndex;
-                    if(Refracted(intersection.Normal, photon.Direction, out T, eta)) {
+                    if(Vector3D.Refracted(intersection.Normal, photon.Direction, out T, eta)) {
                         rPhoton.Position = intersection.HitPoint;
                         rPhoton.Direction = T;
                         rPhoton.Power = mixColor / probTrans;

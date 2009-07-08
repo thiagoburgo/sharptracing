@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{2D552805-05C6-452F-8ECB-79C3E68B89FF}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -38,7 +38,7 @@
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -47,7 +47,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
@@ -59,7 +59,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x86\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>DEBUG</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <CodeAnalysisRuleAssemblies>\rules</CodeAnalysisRuleAssemblies>
@@ -71,9 +71,10 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>bin\x86\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>
+    </DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <CodeAnalysisRuleAssemblies>\rules</CodeAnalysisRuleAssemblies>
@@ -227,8 +228,7 @@
     <Compile Include="RenderObjects\BoundBox.cs" />
     <Compile Include="Cameras\PinholeCamera.cs" />
     <Compile Include="Lights\Light.cs" />
-    <Compile Include="RenderObjects\Box.cs">
-    </Compile>
+    <Compile Include="RenderObjects\Box.cs" />
     <Compile Include="RenderObjects\Cylinder.cs">
     </Compile>
     <Compile Include="RenderObjects\Plane.cs">
@@ -313,10 +313,11 @@
     <Compile Include="Collections\NotifyList.cs" />
     <Compile Include="Lights\AreaLight.cs" />
     <Compile Include="Lights\IPhotonSource.cs" />
-    <Compile Include="Mathematics\Random\IRandom.cs" />
-    <Compile Include="Mathematics\Random\MRG32k3Random.cs" />
-    <Compile Include="Mathematics\Random\QMCHaltonRandom.cs" />
-    <Compile Include="Mathematics\Random\QMCSobolRandom.cs" />
+    <Compile Include="Lights\SunSkyLight.cs" />
+    <Compile Include="Mathematics\QMCRandom\IRandom.cs" />
+    <Compile Include="Mathematics\QMCRandom\MRG32k3Random.cs" />
+    <Compile Include="Mathematics\QMCRandom\QMCHaltonRandom.cs" />
+    <Compile Include="Mathematics\QMCRandom\QMCSobolRandom.cs" />
     <None Include="PhotonMapping\PhotonMap.cs_____" />
     <Compile Include="PhotonMapping\NearestPhotons.cs" />
     <Compile Include="PhotonMapping\Photon.cs" />

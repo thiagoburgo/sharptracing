@@ -11,15 +11,13 @@ namespace DrawEngine.Renderer.Cameras
         public PinholeCamera() : base() {}
         public PinholeCamera(Point3D eye, Point3D lookAt, Vector3D up, float fov, float resX, float resY)
                 : base(eye, lookAt, up, fov, resX, resY) {}
-        public override Ray CreateRayFromScreen(PointF pointOnScreen)
-        {
-            return this.CreateRayFromScreen(pointOnScreen.X, pointOnScreen.Y);
-        }
+       
         public override Ray CreateRayFromScreen(float x, float y)
         {
             float du = -this.au + ((2.0f * this.au * x) * 1f / (this.resX));
             float dv = -this.av + ((2.0f * this.av * y) * 1f / (this.resY));
             return new Ray(this.eye, this.basis.Transform(new Vector3D(du, dv, -1)));
+            
         }
         //public PinholeCamera() { }
         //public PinholeCamera(Point3D eye, Point3D lookAt, Vector3D viewUp, float fov, float resX, float resY) {

@@ -80,23 +80,34 @@ namespace DrawEngine.Renderer.Util
             byte[] rgbValues = new byte[length];
             Marshal.Copy(ptr, rgbValues, 0, length);
             sourceBitmap.UnlockBits(bmpData);
+            RGBColor color = RGBColor.Black;
             switch(sourceBitmap.PixelFormat){
                 case PixelFormat.Format32bppArgb:
                     for(int y = 0; y < this.height; y++){
                         for(int x = 0; x < this.width; x++){
                             //Color.FromArgb(rgbValues[y * stride + x * 4 + 3],
-                            this.colors[x, y] = new RGBColor(rgbValues[y * stride + x * 4 + 2],
-                                                             rgbValues[y * stride + x * 4 + 1],
-                                                             rgbValues[y * stride + x * 4]);
+                            color.R = rgbValues[y * stride + x * 4 + 2];
+                            color.G = rgbValues[y * stride + x * 4 + 1];
+                            color.B = rgbValues[y * stride + x * 4];
+                            color.Normalize();
+                            this.colors[x, y] = color;
+                            //this.colors[x, y] = new RGBColor(rgbValues[y * stride + x * 4 + 2],
+                            //                                 rgbValues[y * stride + x * 4 + 1],
+                            //                                 rgbValues[y * stride + x * 4]);
                         }
                     }
                     break;
                 case PixelFormat.Format24bppRgb:
                     for(int y = 0; y < this.height; y++){
                         for(int x = 0; x < this.width; x++){
-                            this.colors[x, y] = new RGBColor(rgbValues[y * stride + x * 3 + 2],
-                                                             rgbValues[y * stride + x * 3 + 1],
-                                                             rgbValues[y * stride + x * 3]);
+                            color.R = rgbValues[y * stride + x * 3 + 2];
+                            color.G = rgbValues[y * stride + x * 3 + 1];
+                            color.B = rgbValues[y * stride + x * 3];
+                            color.Normalize();
+                            this.colors[x, y] = color;
+                            //this.colors[x, y] = new RGBColor(rgbValues[y * stride + x * 3 + 2],
+                            //                                 rgbValues[y * stride + x * 3 + 1],
+                            //                                 rgbValues[y * stride + x * 3]);
                         }
                     }
                     break;

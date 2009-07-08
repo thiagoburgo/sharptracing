@@ -166,7 +166,7 @@ namespace DrawEngine.Renderer.RenderObjects
         {
             intersect = new Intersection();
             float A = 1.0f;
-            Vector3D viewPosRel = ray.Origin - this.center; // Position relative to center
+            Vector3D viewPosRel = ray.Origin - this.center; // Origin relative to center
             float udotp = (ray.Direction * viewPosRel);
             float B = (udotp + udotp + udotp + udotp);
             float RadiiSqSum = this.majorRadius2 + this.minorRadius2;

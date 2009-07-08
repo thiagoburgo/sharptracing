@@ -15,14 +15,14 @@ namespace DrawEngine.Renderer.Materials
             this.roughness = 1.5f;
         }
         public CookTorranceMaterial(float kdiff, float kspec, float kamb, float refractIndex, float ktrans,
-                                    float shiness, float roughness, RGBColor color)
-                : base(kdiff, kspec, kamb, refractIndex, ktrans, shiness, color)
+                                    float glossy,float shiness, float roughness, RGBColor color)
+            : base(kdiff, kspec, kamb, refractIndex, ktrans, glossy, shiness, color)
         {
             this.roughness = roughness;
         }
         public CookTorranceMaterial(float kdiff, float kspec, float kamb, float refractIndex, float ktrans,
-                                    float shiness, float roughness, Texture texture)
-                : base(kdiff, kspec, kamb, refractIndex, ktrans, shiness, texture)
+                                    float glossy, float shiness, float roughness, Texture texture)
+                : base(kdiff, kspec, kamb, refractIndex, ktrans, glossy,shiness, texture)
         {
             this.roughness = roughness;
         }

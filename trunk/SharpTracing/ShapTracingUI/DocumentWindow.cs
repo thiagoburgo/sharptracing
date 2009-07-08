@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Design;
 using System.Linq;
@@ -18,6 +19,7 @@ using DrawEngine.Renderer.RenderObjects.Design;
 using DrawEngine.Renderer.Tracers;
 using TooboxUI.Components;
 using WeifenLuo.WinFormsUI.Docking;
+using ThreadState=System.Threading.ThreadState;
 using Timer=System.Timers.Timer;
 
 namespace DrawEngine.SharpTracingUI
@@ -32,25 +34,25 @@ namespace DrawEngine.SharpTracingUI
     public partial class DocumentWindow : DockContent
     {
         private Intersection current_intersection;
-        private bool? intersected = null;
-        double msElapseds = 0.0;
-        private Point prevPoint = new Point();
-        private Thread renderThread = null;
-        RenderType renderType;
-        Timer timer = new Timer(100);
-        RayCasting tracer;
+        private bool? intersected;
+        double msElapseds;
+        private Point prevPoint;
+        private Thread renderThread;
+        private RenderType renderType;
+        private readonly Timer timer = new Timer(100);
+        private RayCasting tracer;
         public DocumentWindow(RenderType renderType) : this(new Scene(), renderType) {}
         public DocumentWindow(Scene scene, RenderType renderType)
         {
             this.InitializeComponent();
-            this.timer.Elapsed += new ElapsedEventHandler(this.timer_Elapsed);
+            this.timer.Elapsed += this.timer_Elapsed;
             this.SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint, true);
             UnifiedScenesRepository.Scenes.Add(scene);
             this.TabText = scene.Name;
             UnifiedScenesRepository.CurrentEditingScene = UnifiedScenesRepository.Scenes[this.TabText];
             this.RenderType = renderType;
             UnifiedScenesRepository.Scenes[this.TabText].OnNameChanged +=
-                    new NameChangedEventHandler(this.scene_OnNameChanged);
+                    this.scene_OnNameChanged;
         }
         public RenderType RenderType
         {
@@ -75,20 +77,7 @@ namespace DrawEngine.SharpTracingUI
         {
             get { return UnifiedScenesRepository.Scenes[this.TabText]; }
         }
-        void timer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            this.msElapseds += this.timer.Interval;
-            if(this.statusBar.InvokeRequired){
-                this.lblTimeElapsed.Owner.Invoke(
-                        new Action(
-                                delegate { this.lblTimeElapsed.Text = TimeSpan.FromMilliseconds(this.msElapseds).ToString(); }));
-            }
-            if(this.msElapseds % 300 == 0){
-                if(this.pictureView.InvokeRequired){
-                    this.pictureView.Invoke(new Action(this.pictureView.Refresh));
-                }
-            }
-        }
+      
         void scene_OnNameChanged(INameable sender, string oldName)
         {
             this.TabText = sender.Name;
@@ -186,8 +175,12 @@ namespace DrawEngine.SharpTracingUI
             if(this.renderThread != null && this.renderThread.ThreadState == ThreadState.Running){
                 this.renderThread.Abort();
             }
-            this.renderThread = new Thread(new ThreadStart(this.StartRender));
+            //System.Diagnostics.Process.GetCurrentProcess().PriorityBoostEnabled = true;
+            //System.Diagnostics.Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.High;
+            this.renderThread = new Thread(this.StartRender);
             this.renderThread.Start();
+            
+
         }
         private void StartRender()
         {
@@ -195,7 +188,7 @@ namespace DrawEngine.SharpTracingUI
             this.pictureView.Image = new Bitmap((int)this.tracer.Scene.DefaultCamera.ResX,
                                                 (int)this.tracer.Scene.DefaultCamera.ResY);
             Graphics g = Graphics.FromImage(this.pictureView.Image);
-            this.timer.Start();
+            timer.Start();
             this.msElapseds = 0;
             this.tracer.Render(g);
             g.Flush();
@@ -204,6 +197,19 @@ namespace DrawEngine.SharpTracingUI
             }
             //this.pictureView.Refresh();
             this.timer.Stop();
+        }
+        void timer_Elapsed(object sender, ElapsedEventArgs e) {
+            this.msElapseds += this.timer.Interval;
+            if(this.statusBar.InvokeRequired) {
+                this.lblTimeElapsed.Owner.Invoke(
+                        new Action(
+                                delegate { this.lblTimeElapsed.Text = TimeSpan.FromMilliseconds(this.msElapseds).ToString(); }));
+            }
+            if(this.msElapseds % 500 == 0) {
+                if(this.pictureView.InvokeRequired) {
+                    this.pictureView.Invoke(new Action(this.pictureView.Refresh));
+                }
+            }
         }
         private void toolStripMenuItemStop_Click(object sender, EventArgs e)
         {
@@ -299,9 +305,9 @@ namespace DrawEngine.SharpTracingUI
         {
             if(this.intersected.GetValueOrDefault()){
                 Primitive primitive = this.current_intersection.HitPrimitive;
-                Scene scene = UnifiedScenesRepository.Scenes[this.TabText];
+                //Scene scene = UnifiedScenesRepository.Scenes[this.TabText];
                 if(primitive is ITransformable3D){
-                    Ray ray = scene.DefaultCamera.CreateRayFromScreen(e.X, e.Y);
+                    //Ray ray = scene.DefaultCamera.CreateRayFromScreen(e.X, e.Y);
                     float transX = (e.X - this.prevPoint.X);
                     float transY = (e.Y - this.prevPoint.Y);
                     ((ITransformable3D)primitive).Translate(transX, -transY, 0);
