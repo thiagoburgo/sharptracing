@@ -73,7 +73,7 @@ namespace DrawEngine.Renderer.BasicStructures
 
         public override string ToString()
         {
-            return "[O: " + this.Origin.ToString() + " D: " + this.direction.ToString() + "]";
+            return "[O: " + this.Origin+ " D: " + this.direction+ "]";
         }
     }
 }

@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Windows.Forms;
 using DrawEngine.Renderer.Mathematics.Algebra;
-using DrawEngine.Renderer.Mathematics.Random;
+using DrawEngine.Renderer.Mathematics.QMCRandom;
 using System.Drawing;
 
 namespace DrawEngine.ConsoleTests {

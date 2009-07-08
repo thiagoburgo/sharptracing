@@ -11,15 +11,7 @@ namespace DrawEngine.Renderer.Cameras
         private SphericalCamera() {}
         public SphericalCamera(Point3D eye, Point3D lookAt, Vector3D up, float fov, float resX, float resY)
                 : base(eye, lookAt, up, fov, resX, resY) {}
-        public override Ray CreateRayFromScreen(PointF pointOnScreen)
-        {
-            return this.CreateRayFromScreen(pointOnScreen.X, pointOnScreen.Y);
-        }
-        //public Point3D Center
-        //{
-        //    get { return eye; }
-        //    set { eye = value; }
-        //}
+       
         public override Ray CreateRayFromScreen(float x, float y)
         {
             float cx = 2.0f * x / this.resX - 1;
@@ -31,6 +23,10 @@ namespace DrawEngine.Renderer.Cameras
             //                   new Vector3D(float.NegativeInfinity, float.NegativeInfinity, float.NegativeInfinity));
             //}
             return new Ray(this.eye, new Vector3D(cx, -cy, (float)Math.Sqrt(1.0f - r2)));
+            // Generate environment camera ray direction
+            //double theta = 2 * Math.PI * x / this.resX + Math.PI / 2;
+            //double phi = Math.PI * (this.resY - 1 - y) / this.resY;
+            //return new Ray(this.eye, this.basis.Transform(new Vector3D((float)(Math.Cos(theta) * Math.Sin(phi)), -(float)(Math.Cos(phi)), (float)(Math.Sin(theta) * Math.Sin(phi)))));
         }
     }
 }

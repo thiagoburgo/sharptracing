@@ -1,9 +1,8 @@
 using System;
-using DrawEngine.Renderer.Mathematics.Algebra;
 
-namespace DrawEngine.Renderer.Algebra
+namespace DrawEngine.Renderer.Mathematics.Algebra
 {
-    public struct OrthoNormalBasis
+    public class OrthoNormalBasis
     {
         private Vector3D u, v, w;
         public void FlipU()

@@ -8,21 +8,21 @@ using DrawEngine.Renderer.Mathematics.Algebra;
 
 namespace DrawEngine.Renderer.Cameras
 {
-    [XmlInclude(typeof(PinholeCamera)), XmlInclude(typeof(SphericalCamera)), Serializable]
+    [XmlInclude(typeof(PinholeCamera)), XmlInclude(typeof(SphericalCamera)), XmlInclude(typeof(ThinLensCamera)), Serializable]
     public abstract class Camera : ITransformable3D, INameable
     {
-        protected float aspect;
+        private float aspect;
         protected float au, av;
         protected OrthoNormalBasis basis;
         protected Point3D eye; //LF
-        protected float fov;
-        protected Point3D lookAt; //LA
-        protected string name;
+        private float fov;
+        private Point3D lookAt; //LA
+        private string name;
         protected float resX;
         protected float resY;
-        protected Vector3D up; //VUP
+        private Vector3D up; //VUP
         protected Camera() : this(new Point3D(0, 50, -150), Point3D.Zero, Vector3D.UnitY, 0.5f, 512f, 512f) {}
-        public Camera(Point3D eye, Point3D lookAt, Vector3D up, float fov, float resX, float resY)
+        protected Camera(Point3D eye, Point3D lookAt, Vector3D up, float fov, float resX, float resY)
         {
             this.ResX = resX;
             this.ResY = resY;
@@ -167,7 +167,10 @@ namespace DrawEngine.Renderer.Cameras
         }
         #endregion
 
-        public abstract Ray CreateRayFromScreen(PointF pointOnScreen);
+        public Ray CreateRayFromScreen(PointF pointOnScreen)
+        {
+            return CreateRayFromScreen(pointOnScreen.X, pointOnScreen.Y);
+        }
         public abstract Ray CreateRayFromScreen(float x, float y);
         public override string ToString()
         {

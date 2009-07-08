@@ -173,7 +173,7 @@ namespace DrawEngine.Renderer.Importers
         /// </returns>
         protected RGBColor ParseColorData(DataReader3DS dataSegment)
         {
-            RGBColor result = new RGBColor();
+            RGBColor result = RGBColor.Black;
             switch(dataSegment.Tag){
                 case 0x0010: // Color is in float format
                     result.R = dataSegment.GetFloat();
@@ -181,9 +181,9 @@ namespace DrawEngine.Renderer.Importers
                     result.B = dataSegment.GetFloat();
                     break;
                 case 0x0011: // Color is in byte format
-                    result.R = ((float)dataSegment.GetByte()) / (float)255.0;
-                    result.G = ((float)dataSegment.GetByte()) / (float)255.0;
-                    result.B = ((float)dataSegment.GetByte()) / (float)255.0;
+                    result.R = dataSegment.GetByte() / 255.0f;
+                    result.G = dataSegment.GetByte() / 255.0f;
+                    result.B = dataSegment.GetByte() / 255.0f;
                     break;
                 default: // If there are any other formats, then we ignore them
                     break;
@@ -576,8 +576,8 @@ namespace DrawEngine.Renderer.Importers
             public float textureWeight;
             public MaterialData3DS()
             {
-                this.ambient = new RGBColor();
-                this.diffuse = new RGBColor();
+                this.ambient = RGBColor.Black;
+                this.diffuse = RGBColor.Black;
                 this.name = "";
                 this.textureName = "";
                 this.textureWeight = (float)0.0;

@@ -4,7 +4,7 @@ using DrawEngine.Renderer.Mathematics.Algebra;
 
 namespace DrawEngine.Renderer.PhotonMapping
 {
-    public class Photon //: IEquatable<Photon>
+    public sealed class Photon //: IEquatable<Photon>
     {
         private Vector3D direction;
         public byte Phi; // incoming direction

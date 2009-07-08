@@ -18,17 +18,17 @@ namespace DrawEngine.Renderer.RenderObjects
             this.cornellBoxGroup["floor"] = new Quadrilatero(new Point3D(0, -50, 0), Vector3D.UnitY, 100, 100);
             this.cornellBoxGroup["ceiling"] = new Quadrilatero(new Point3D(0, 50, 0), -Vector3D.UnitY, 100, 100);
             this.cornellBoxGroup["backWall"] = new Quadrilatero(new Point3D(0, 0, 50), -Vector3D.UnitZ, 100, 100);
-            Material white = new PhongMaterial(1, 0, 0, 0, 0, 0, RGBColor.White);
+            Material white = new PhongMaterial(1, 0, 0, 0, 0, 0,  0, RGBColor.White);
             this.cornellBoxGroup["floor"].Material =
                     this.cornellBoxGroup["ceiling"].Material =
                         this.cornellBoxGroup["backWall"].Material = white;
             
             this.cornellBoxGroup["rightWall"] = new Quadrilatero(new Point3D(50, 0, 0), -Vector3D.UnitX, 100, 100);
-            Material green = new PhongMaterial(1, 0, 0, 0, 0, 0, RGBColor.Green);
+            Material green = new PhongMaterial(1, 0, 0, 0, 0, 0, 0, RGBColor.Green);
             this.cornellBoxGroup["rightWall"].Material = green;
             
             this.cornellBoxGroup["leftWall"] = new Quadrilatero(new Point3D(-50, 0, 0), Vector3D.UnitX, 100, 100);
-            Material red = new PhongMaterial(1, 0, 0, 0, 0, 0, RGBColor.Red);
+            Material red = new PhongMaterial(1, 0, 0, 0, 0, 0, 0, RGBColor.Red);
 
             this.cornellBoxGroup["leftWall"].Material = red;
         }

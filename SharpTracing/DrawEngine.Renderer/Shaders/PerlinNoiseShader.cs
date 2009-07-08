@@ -18,10 +18,10 @@ namespace DrawEngine.Renderer.Shaders
         {
             Vector3D n = intersection.Normal;
             //int noisetype = 6;
-            //double f0 = f(n[0], n[1], n[2], noisetype),
-            //        fx = f(n[0] + .0001, n[1], n[2], noisetype),
-            //        fy = f(n[0], n[1] + .0001, n[2], noisetype),
-            //        fz = f(n[0], n[1], n[2] + .0001, noisetype);
+            //double f0 = F(n[0], n[1], n[2], noisetype),
+            //        fx = F(n[0] + .0001, n[1], n[2], noisetype),
+            //        fy = F(n[0], n[1] + .0001, n[2], noisetype),
+            //        fz = F(n[0], n[1], n[2] + .0001, noisetype);
             //// SUBTRACT THE FUNCTION'S GRADIENT FROM THE SURFACE NORMAL
             //n[0] -= (float)((fx - f0) / .0001);
             //n[1] -= (float)((fy - f0) / .0001);
@@ -43,7 +43,7 @@ namespace DrawEngine.Renderer.Shaders
         }
         /* Noise helper functions. */
         // added types 3,4,5,6 including stripes2, stripes3 functions(cos stripes)
-        double f(double x, double y, double z, int type)
+        double F(double x, double y, double z, int type)
         {
             double w = this.Scene.DefaultCamera.ResX;
             switch(type){

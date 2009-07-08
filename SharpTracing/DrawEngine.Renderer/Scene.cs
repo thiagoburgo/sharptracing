@@ -20,8 +20,7 @@ using DrawEngine.Renderer.Util;
 
 namespace DrawEngine.Renderer {
     [XmlRoot("Scene", IsNullable = false), Serializable]
-    public class Scene : INameable, IIntersectable //, ISerializable
-    {
+    public class Scene : INameable, IIntersectable {
         private IntersectableAccelerationStructure<Primitive> accelerationStructure;
         private RGBColor backgroundColor = RGBColor.Black;
         private NameableCollection<Camera> cameras;
@@ -36,8 +35,10 @@ namespace DrawEngine.Renderer {
         private float refractIndex;
         private RenderStrategy renderStrategy;
         private Sampler sampler;
+        private int glossySamples;
         private Shader shader;
         private bool visible = true;
+
 
         #region EVENTOS
         private bool isSoftShadowActive;
@@ -67,7 +68,11 @@ namespace DrawEngine.Renderer {
         public Scene(RGBColor iamb, NameableCollection<Light> lights, Camera defaultCamera, float refractIndice) {
             this.IAmb = iamb;
             this.RefractIndex = refractIndice;
-            this.Lights = new NameableCollection<Light>(lights);
+            if(lights != null){
+                this.Lights = new NameableCollection<Light>(lights);    
+            } else{
+                this.Lights = new NameableCollection<Light>();    
+            }
             this.primitives = new NameableCollection<Primitive>();
             this.AccelerationStructure = new KDTreePrimitiveManager(this.primitives as IList<Primitive>);
             this.materials = new NameableCollection<Material>();
@@ -80,7 +85,8 @@ namespace DrawEngine.Renderer {
             this.shader = new PhongShader(this);
             this.renderStrategy = new ScanlineRenderStrategy(this);
             this.isShadowActive = false;
-            this.softShadowSamples = 36;
+            this.softShadowSamples = 8;
+            this.glossySamples = 8;
             //this.cameras.CollectionChanged += new NotifyCollectionChangedEventHandler<Camera>(cameras_CollectionChanged);
         }
         public Scene() : this(RGBColor.White, new NameableCollection<Light>(), null, 1.0f) { }
@@ -96,6 +102,7 @@ namespace DrawEngine.Renderer {
                 this.isShadowActive = toCopy.isShadowActive;
                 this.isSoftShadowActive = toCopy.isSoftShadowActive;
                 this.softShadowSamples = toCopy.softShadowSamples;
+                this.glossySamples = toCopy.glossySamples;
                 this.IsEnvironmentMapped = toCopy.IsEnvironmentMapped;
                 this.EnvironmentMap = toCopy.environmentMap;
                 this.backgroundColor = toCopy.backgroundColor;
@@ -143,6 +150,12 @@ namespace DrawEngine.Renderer {
             get { return this.sampler; }
             set { this.sampler = value; }
         }
+        [Category("Viewer")]
+        public int GlossySamples
+        {
+            get { return this.glossySamples; }
+            set { this.glossySamples = value; }
+        }
         [XmlIgnore, Category("Viewer")]
         public Shader Shader {
             get { return this.shader; }
@@ -158,7 +171,7 @@ namespace DrawEngine.Renderer {
             get { return this.iAmb; }
             set { this.iAmb = value; }
         }
-        [Category("Collections"),]
+        [Category("Collections")]
         public NameableCollection<Light> Lights {
             get { return this.lights; }
             set {
@@ -176,28 +189,51 @@ namespace DrawEngine.Renderer {
                 }
             }
         }
-        [XmlIgnore, Category("Viewer"), TypeConverter(typeof(ExpandableObjectConverter)),
+        [XmlIgnore, Category("Camera"), TypeConverter(typeof(ExpandableObjectConverter)),
          Editor(typeof(DefaultCameraEditor), typeof(UITypeEditor))]
         public Camera DefaultCamera {
             get {
-                if(this.defaultCamera == null && this.defaultCameraName == null) {
+                if(!String.IsNullOrEmpty(this.defaultCameraName) && this.cameras.ContainsName(this.defaultCameraName) ){
+                    return this.cameras[this.defaultCameraName];
+                } else{
                     PinholeCamera camera = new PinholeCamera();
                     this.cameras.Add(camera);
-                    this.DefaultCamera = camera;
+                    this.DefaultCameraName = camera.Name;
+                    return camera;
                 }
-                return this.defaultCamera;
             }
             set {
                 if(value != null) {
-                    this.defaultCamera = value;
                     this.defaultCameraName = value.Name;
                 }
             }
         }
-        [Browsable(false), XmlElement("DefaultCamera")]
+        //public Camera DefaultCamera {
+        //    get {
+        //        if(this.defaultCamera == null && this.defaultCameraName == null) {
+        //            PinholeCamera camera = new PinholeCamera();
+        //            this.cameras.Add(camera);
+        //            this.DefaultCamera = camera;
+        //        }
+        //        return this.defaultCamera;
+        //    }
+        //    set {
+        //        if(value != null) {
+        //            this.defaultCamera = value;
+        //            this.defaultCameraName = value.Name;
+        //        }
+        //    }
+        //}
+        [Browsable(false), Category("Camera"), XmlElement("DefaultCamera")]
         public string DefaultCameraName {
             get { return this.defaultCameraName; }
-            set { this.defaultCameraName = value; }
+            set
+            {
+                this.defaultCameraName = value;
+                //if(!String.IsNullOrEmpty(this.defaultCameraName) && this.cameras != null && this.cameras.ContainsName(this.defaultCameraName)){
+                //    this.defaultCamera = this.cameras[this.defaultCameraName];
+                //}
+            }
         }
         [Category("Collections")]
         public NameableCollection<Camera> Cameras {

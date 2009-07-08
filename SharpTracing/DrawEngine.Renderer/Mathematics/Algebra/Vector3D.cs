@@ -164,53 +164,6 @@ namespace DrawEngine.Renderer.Mathematics.Algebra
             float z = 1 - 2 * r2;
             return new Vector3D(x, y, z);
         }
-
-        public static void SampleDisk(out float u, out float v) {
-            bool done = false;
-            System.Random rnd = new System.Random();
-            double coord1 = 0, coord2 = 0;
-            // Keep working until we get a random point inside unit circle
-            while(!done) {
-                coord1 = rnd.NextDouble();
-                coord2 = rnd.NextDouble();
-                // Test if u,v are inside unit circle
-                // centered at <0.5,0.5> with radius 0.5
-                double x = coord1 - 0.5;
-                double y = coord2 - 0.5f;
-                double dist2 = x * x + y * y;
-                if(dist2 <= 0.25) {
-                    // Yeah, inside unit circle
-                    done = true;
-                }
-            }
-
-            // Return result
-            u = (float)coord1;
-            v = (float)coord2;
-        }
-
-        public static Vector3D GlossPerturbRay(Vector3D toPertube) {
-
-            Vector3D uDir, vDir;// IN - u-dir on perpendicular disc to ray
-            // IN - v-dir on perpendicular disc to ray
-            // Get Random Point on unit disc
-            float discU, discV;
-            SampleDisk(out discU, out discV);
-            Vector3D.Orthonormalize(toPertube, out uDir, out vDir);
-            const float g_GlossRadius = 0.05f;
-
-            // Scale to our actual disc size
-            float len = toPertube.Length;
-            discU *= g_GlossRadius * len;
-            discV *= g_GlossRadius * len;
-
-            // Calculate new perturbed direction
-            Vector3D pDir = toPertube + (discU * uDir) + (discV * vDir);
-
-            // Success
-            return pDir;
-        }
-
         public void Normalize() {
             float len = this.Length;
             if(len != 1.0f) {
@@ -283,7 +236,11 @@ namespace DrawEngine.Renderer.Mathematics.Algebra
         /// <param name="v2">Vetor2</param>
         /// <returns>Retorna um vetor que representa a soma de outros dois</returns>
         public static Vector3D operator +(Vector3D v1, Vector3D v2) {
-            return new Vector3D((v1.X + v2.X), (v1.Y + v2.Y), (v1.Z + v2.Z));
+            v1.X += v2.X;
+            v1.Y += v2.Y;
+            v1.Z += v2.Z;
+            return v1;
+            //return new Vector3D((v1.X + v2.X), (v1.Y + v2.Y), (v1.Z + v2.Z));
         }
         /// <summary>
         /// Operador unário que retorna um NOVO vetor com direcao invertida
@@ -291,7 +248,11 @@ namespace DrawEngine.Renderer.Mathematics.Algebra
         /// <param name="v1">Vetor para inversao</param>
         /// <returns>o valor do vetor invertido</returns>
         public static Vector3D operator -(Vector3D v1) {
-            return new Vector3D(-v1.X, -v1.Y, -v1.Z);
+            v1.X = -v1.X;
+            v1.Y = -v1.Y;
+            v1.Z = -v1.Z;
+            return v1;
+            //return new Vector3D(-v1.X, -v1.Y, -v1.Z);
         }
         /// <summary>
         /// Diminue dois vetores
@@ -300,34 +261,50 @@ namespace DrawEngine.Renderer.Mathematics.Algebra
         /// <param name="v2">Vetor2</param>
         /// <returns>Retorno a subtracao entre Vetor1 e Vetor1</returns>
         public static Vector3D operator -(Vector3D v1, Vector3D v2) {
-            return new Vector3D((v1.X - v2.X), (v1.Y - v2.Y), (v1.Z - v2.Z));
+            v1.X -= v2.X;
+            v1.Y -= v2.Y;
+            v1.Z -= v2.Z;
+            return v1;
+            //return new Vector3D((v1.X - v2.X), (v1.Y - v2.Y), (v1.Z - v2.Z));
         }
         /// <summary>
         /// Produto entre um vetor e um escalar
         /// </summary>
-        /// <param name="vector">Vetor para aumento da magnitude</param>
+        /// <param name="v1">Vetor para aumento da magnitude</param>
         /// <param name="scalar">Escalar que aumenta a magnitude do vetor</param>        
         /// <returns>Vetor com a magnitude aumentada</returns>	
-        public static Vector3D operator *(Vector3D vector, float scalar) {
-            return new Vector3D((vector.X * scalar), (vector.Y * scalar), (vector.Z * scalar));
+        public static Vector3D operator *(Vector3D v1, float scalar) {
+            v1.X *= scalar;
+            v1.Y *= scalar;
+            v1.Z *= scalar;
+            return v1;
+            //return new Vector3D((vector.X * scalar), (vector.Y * scalar), (vector.Z * scalar));
         }
         /// <summary>
         /// Produto entre um vetor e um escalar
         /// </summary>
         /// <param name="scalar">Escalar que aumenta a magnitude do vetor</param>
-        /// <param name="vector">Vetor para aumento da magnitude</param>
+        /// <param name="v1">Vetor para aumento da magnitude</param>
         /// <returns>Vetor com a magnitude aumentada</returns>
-        public static Vector3D operator *(float scalar, Vector3D vector) {
-            return new Vector3D((vector.X * scalar), (vector.Y * scalar), (vector.Z * scalar));
+        public static Vector3D operator *(float scalar, Vector3D v1) {
+            v1.X *= scalar;
+            v1.Y *= scalar;
+            v1.Z *= scalar;
+            return v1;
+            //return new Vector3D((vector.X * scalar), (vector.Y * scalar), (vector.Z * scalar));
         }
         /// <summary>
         /// Divisão de um vetor por um escalar
         /// </summary>
-        /// <param name="vector">Vetor que terá sua magnitude será dividida</param>
+        /// <param name="v1">Vetor que terá sua magnitude será dividida</param>
         /// <param name="scalar">Divisor da magnitude do vetor</param>
         /// <returns>Vetor dividido</returns>
-        public static Vector3D operator /(Vector3D vector, float scalar) {
-            return new Vector3D((vector.X / scalar), (vector.Y / scalar), (vector.Z / scalar));
+        public static Vector3D operator /(Vector3D v1, float scalar) {
+            v1.X /= scalar;
+            v1.Y /= scalar;
+            v1.Z /= scalar;
+            return v1;
+            //return new Vector3D((vector.X / scalar), (vector.Y / scalar), (vector.Z / scalar));
         }
         /// <summary>
         /// Calcula o produto escalar entre dois vetores
@@ -345,7 +322,8 @@ namespace DrawEngine.Renderer.Mathematics.Algebra
         /// <param name="v2">Vetor2</param>
         /// <returns>Retorna um vetor que é perpendicular aos outros dois da entrada</returns>
         public static Vector3D operator ^(Vector3D v1, Vector3D v2) {
-            return new Vector3D((v1.Y * v2.Z) - (v1.Z * v2.Y), (v1.Z * v2.X) - (v1.X * v2.Z),
+            return new Vector3D((v1.Y * v2.Z) - (v1.Z * v2.Y),
+                                (v1.Z * v2.X) - (v1.X * v2.Z),
                                 (v1.X * v2.Y) - (v1.Y * v2.X));
         }
         public static implicit operator float[](Vector3D vec) {
@@ -378,6 +356,70 @@ namespace DrawEngine.Renderer.Mathematics.Algebra
             v23 = v23 ^ v12;
             v23.Normalize();
             return v23;
+        }
+     
+        /// <summary>
+        /// Calculate the refracted vector 
+        /// </summary>
+        /// <param name="N">Normal vector.</param>
+        /// <param name="I">Incoming vector.</param>
+        /// <param name="T">Outcoming Refracted vector.</param>
+        /// <param name="eta">eta = (Scene Index)/(Material Index) if ray generate outside material</param>
+        /// <returns></returns>
+        public static bool Refracted(Vector3D N, Vector3D I, out Vector3D T, float n1, float n2) {
+            float cosI = -(I * N);
+            float eta = n1 / n2;
+            float sinT2 = eta * eta * (1.0f - (cosI * cosI));
+            if(sinT2 > 1) {
+                T = Vector3D.Zero;
+                return false;
+            }
+            float cosT = (float)Math.Sqrt(1.0 - sinT2);
+            T = (eta * I) + (eta * cosI - cosT) * N;
+            //T = ((eta * cosI - (float)Math.Sqrt(cosT2)) * N) - (eta * I);
+            return true;
+        }
+        public static bool Refracted(Vector3D N, Vector3D I, out Vector3D T, float eta) {
+            float cosI = -(I * N);
+            float sinT2 = eta * eta * (1.0f - (cosI * cosI));
+            if(sinT2 > 1) {
+                T = Vector3D.Zero;
+                return false;
+            }
+            float cosT = (float)Math.Sqrt(1.0 - sinT2);
+            T = (eta * I) + (eta * cosI - cosT) * N;
+            //T = ((eta * cosI - (float)Math.Sqrt(cosT2)) * N) - (eta * I);
+            return true;
+        }
+        public static float FresnelBySchlick(Vector3D N, Vector3D I, float n1, float n2)
+        {
+            float r0 = (n1 - n2)/(n1 + n2);
+            r0 *= r0;
+            float cosI = -(N * I);
+            if(n1 > n2){
+                float eta = n1 / n2;
+                float sinT2 = eta * eta * (1.0f - cosI * cosI);
+                if(sinT2 > 1){
+                    return 1;
+                }
+                cosI = (float)Math.Sqrt(1.0 - sinT2);
+            }
+            float i = 1.0f - cosI;
+            return r0 + (1.0f - r0) * i * i * i * i * i;
+        }
+        public static Vector3D Reflected(Vector3D N, Vector3D I) {
+            float NI = N * -I;
+            return (2 * (NI) * N) + I;
+        }
+        public static Vector3D ReflectedDiffuse(Vector3D N) {
+            Random random = new Random(((int)DateTime.Now.Ticks) ^ 47);
+            Vector3D randDir = new Vector3D(-1 + 2 * (float)random.NextDouble(), -1 + 2 * (float)random.NextDouble(),
+                                            -1 + 2 * (float)random.NextDouble());
+            float dot = randDir * N;
+            if(dot < 0.0f) {
+                randDir.Flip();
+            }
+            return randDir;
         }
     }
 }
