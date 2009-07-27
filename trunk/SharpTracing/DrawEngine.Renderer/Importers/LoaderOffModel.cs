@@ -11,7 +11,7 @@ namespace DrawEngine.Renderer.Importers
     {
         private string path;
         //private List<string[]> file;
-        public LoaderOffModel(string path, string name)
+        public LoaderOffModel(string path)
         {
             this.path = path;
         }
@@ -102,7 +102,7 @@ namespace DrawEngine.Renderer.Importers
             vertices = null;
             GC.Collect();
         }
-        protected void ProcessNormalsPerVertex(PointerToVertex[] pointersToVertex, int verticesCount)
+        private void ProcessNormalsPerVertex(PointerToVertex[] pointersToVertex, int verticesCount)
         {
             Vector3D[] normalsPerVertex = new Vector3D[verticesCount];
             for(int i = 0; i < this.triangles.Length; i++){

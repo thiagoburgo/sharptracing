@@ -25,7 +25,7 @@ namespace DrawEngine.Renderer.Util
         /// </summary>
         Document
     }
-    public delegate void SerializationHandler();
+    public delegate void SerializationHandler<T>(T obj);
     /// <summary>
     /// Facade to XML serialization and deserialization of strongly typed objects to/from an XML file.
     /// 
@@ -34,8 +34,8 @@ namespace DrawEngine.Renderer.Util
     /// </summary>
     public static class ObjectXMLSerializer<T> //where T : class // Specify that T must be a class.
     {
-        public static event SerializationHandler OnDeserialized;
-        public static event SerializationHandler OnSerialized;
+        public static event SerializationHandler<T> OnDeserialized;
+        public static event SerializationHandler<T> OnSerialized;
 
         #region Load methods
         /// <summary>
@@ -321,7 +321,7 @@ namespace DrawEngine.Renderer.Util
                 serializableObject = (T)binaryFormatter.Deserialize(fileStream);
             }
             if(OnDeserialized != null){
-                OnDeserialized();    
+                OnDeserialized(serializableObject);    
             }
             return serializableObject;
         }
@@ -336,7 +336,7 @@ namespace DrawEngine.Renderer.Util
                 serializableObject = (T)xmlSerializer.Deserialize(textReader);
             }
             if(OnDeserialized != null) {
-                OnDeserialized();
+                OnDeserialized(serializableObject);
             }
             return serializableObject;
         }
@@ -381,7 +381,7 @@ namespace DrawEngine.Renderer.Util
                 XmlSerializer xmlSerializer = CreateXmlSerializer(extraTypes);
                 xmlSerializer.Serialize(textWriter, serializableObject);
                 if(OnSerialized != null) {
-                    OnSerialized();
+                    OnSerialized(serializableObject);
                 }
             }
         }
@@ -392,7 +392,7 @@ namespace DrawEngine.Renderer.Util
                 BinaryFormatter binaryFormatter = new BinaryFormatter();
                 binaryFormatter.Serialize(fileStream, serializableObject);
                 if(OnSerialized != null) {
-                    OnSerialized();
+                    OnSerialized(serializableObject);
                 }
             }
         }

@@ -25,7 +25,9 @@ namespace DrawEngine.Renderer.Tracers
                 {
                     float n1 = this.scene.RefractIndex;
                     float n2 = material.RefractIndex;
-                    if(ray.PrevRefractIndex == material.RefractIndex) {
+                    //if (ray.PrevRefractIndex == material.RefractIndex)
+                    if (ray.PrevPrimitive == intersection.HitPrimitive)
+                    {
                         float temp = n1;
                         n1 = n2;
                         n2 = temp;
@@ -40,17 +42,21 @@ namespace DrawEngine.Renderer.Tracers
                         {
                             rRay.Origin = intersection.HitPoint;
                             rRay.Direction = T;
-                            rRay.PrevRefractIndex = material.RefractIndex;
-                            //RGBColor absorbance = material.DiffuseColor * 0.15f * -intersection.TMin;
-                            //RGBColor transparency = new RGBColor((float)Math.Exp(absorbance.R), 
-                            //                                     (float)Math.Exp(absorbance.G),
-                            //                                     (float)Math.Exp(absorbance.B));
+                            
+                            //rRay.PrevRefractIndex = material.RefractIndex;
+                            rRay.PrevPrimitive = intersection.HitPrimitive;
+                           
                             fresnelFactor = Vector3D.FresnelBySchlick(intersection.Normal, ray.Direction, n1, n2);
                             float kTrans = material.KTrans - fresnelFactor;
                             kSpec += fresnelFactor;
                             specFromRefract = true;
                             kTrans = kTrans < 0 ? 0 : kTrans;
-                            color += this.Trace(rRay, depth + 1) * kTrans;
+                            color += this.Trace(rRay, depth + 1) * kTrans ;
+                            //float term  = (float)Math.Exp(material.Absorptivity * -intersection.TMin);
+                            //color *= term * material.DiffuseColor;
+                            //RGBColor transparency = new RGBColor((float)Math.Exp(absorbance.R), 
+                            //                                     (float)Math.Exp(absorbance.G),
+                            //                                     (float)Math.Exp(absorbance.B));
                         }
                     }
                     
@@ -58,8 +64,9 @@ namespace DrawEngine.Renderer.Tracers
                         rRay.Origin = intersection.HitPoint;
                         rRay.Direction = Vector3D.Reflected(intersection.Normal, ray.Direction);
                         if(!specFromRefract){
-                            fresnelFactor = Vector3D.FresnelBySchlick(intersection.Normal, ray.Direction, n1, n2);
-                            kSpec = material.KSpec + fresnelFactor;    
+                            //fresnelFactor = Vector3D.FresnelBySchlick(intersection.Normal, ray.Direction, n1, n2);
+                            kSpec = material.KSpec + fresnelFactor;
+                            rRay.PrevPrimitive = intersection.HitPrimitive;
                         }
                         kSpec = kSpec > 1 ? 1 : kSpec;
                         color += this.Trace(rRay, depth + 1) * kSpec;

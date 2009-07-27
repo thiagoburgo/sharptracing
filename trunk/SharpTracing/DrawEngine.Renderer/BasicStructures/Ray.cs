@@ -1,6 +1,7 @@
 using System;
 using DrawEngine.Renderer.Algebra;
 using DrawEngine.Renderer.Mathematics.Algebra;
+using DrawEngine.Renderer.RenderObjects;
 
 namespace DrawEngine.Renderer.BasicStructures
 {
@@ -10,6 +11,7 @@ namespace DrawEngine.Renderer.BasicStructures
         private Vector3D inv_direction;
         public Point3D Origin;
         public float PrevRefractIndex;
+        public Primitive PrevPrimitive;
         public Ray(Point3D origin, Vector3D direction)
         {
             this.direction = direction;
@@ -18,7 +20,8 @@ namespace DrawEngine.Renderer.BasicStructures
             this.inv_direction.Y = 1.0f / this.direction.Y;
             this.inv_direction.Z = 1.0f / this.direction.Z;
             this.Origin = origin;
-            this.PrevRefractIndex = 0;
+            this.PrevRefractIndex = -1;
+            this.PrevPrimitive = null;
         }
         public Vector3D Direction
         {

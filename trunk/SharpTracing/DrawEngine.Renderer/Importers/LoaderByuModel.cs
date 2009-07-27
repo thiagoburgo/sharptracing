@@ -10,7 +10,7 @@ namespace DrawEngine.Renderer.Importers
     {
         private string path;
         private StreamReader sr;
-        public LoaderByuModel(string path, string name)
+        public LoaderByuModel(string path)
         {
             this.sr = new StreamReader(path);
             this.path = path;

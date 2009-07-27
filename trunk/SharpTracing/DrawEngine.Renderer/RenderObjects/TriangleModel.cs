@@ -35,11 +35,11 @@ namespace DrawEngine.Renderer.RenderObjects
         private string path;
         private ShadeType shadeType;
         private Triangle[] triangles;
-        public TriangleModel() : this("", "") {}
-        public TriangleModel(string path, string name)
+        public TriangleModel() : this("") {}
+        public TriangleModel(string path)
         {
             this.Path = path;
-            this.Name = name;
+            this.Name = System.IO.Path.GetFileNameWithoutExtension(this.Name) ;
         }
         public int TriangleCount
         {
@@ -72,6 +72,7 @@ namespace DrawEngine.Renderer.RenderObjects
                 //if (File.Exists(value))
                 //{
                 this.path = value;
+                this.Name = System.IO.Path.GetFileNameWithoutExtension(this.path);
                 //}
                 //else
                 //{
@@ -270,24 +271,23 @@ namespace DrawEngine.Renderer.RenderObjects
             this.loader = null;
             switch(modelType){
                 case ModelType.Ply:
-                    this.loader = new LoaderPlyModel(this.path, this.Name);
+                    this.loader = new LoaderPlyModel(this.path);
                     break;
                 case ModelType.Byu:
-                    this.loader = new LoaderByuModel(this.path, this.Name);
+                    this.loader = new LoaderByuModel(this.path);
                     break;
                 case ModelType.Obj:
-                    this.loader = new LoaderObjModel(this.path, this.Name);
+                    this.loader = new LoaderObjModel(this.path);
                     break;
                 case ModelType.Off:
-                    this.loader = new LoaderOffModel(this.path, this.Name);
+                    this.loader = new LoaderOffModel(this.path);
                     break;
                 case ModelType.None:
                     throw new IOException(String.Format("O Arquivo {0} tem o formato inválido ou está corrompido!",
                                                         this.path));
             }
             if(this.loader != null){
-                this.loader.OnElementLoaded +=
-                        new AbstractLoaderModel.ElementLoadEventHandler(this.TriangleModel_OnElementLoaded);
+                this.loader.OnElementLoaded += this.TriangleModel_OnElementLoaded;
                 this.triangles = this.loader.Load();
                 this.loader.Dispose();
                 this.boundBox = this.loader.BoundBox;

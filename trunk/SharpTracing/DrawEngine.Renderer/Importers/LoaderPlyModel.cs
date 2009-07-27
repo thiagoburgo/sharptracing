@@ -17,7 +17,7 @@ namespace DrawEngine.Renderer.Importers
     public class LoaderPlyModel : AbstractLoaderModel
     {
         private string path;
-        public LoaderPlyModel(string path, string name)
+        public LoaderPlyModel(string path)
         {
             this.path = path;
         }
