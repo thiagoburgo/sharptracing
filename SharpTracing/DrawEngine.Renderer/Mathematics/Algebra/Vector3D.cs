@@ -367,16 +367,27 @@ namespace DrawEngine.Renderer.Mathematics.Algebra
         /// <param name="eta">eta = (Scene Index)/(Material Index) if ray generate outside material</param>
         /// <returns></returns>
         public static bool Refracted(Vector3D N, Vector3D I, out Vector3D T, float n1, float n2) {
-            float cosI = -(I * N);
-            float eta = n1 / n2;
-            float sinT2 = eta * eta * (1.0f - (cosI * cosI));
-            if(sinT2 > 1) {
+            //float cosI = -(I * N);
+            //float eta = n1 / n2;
+            //float sinT2 = eta * eta * (1.0f - (cosI * cosI));
+            //if(sinT2 > 1) {
+            //    T = Vector3D.Zero;
+            //    return false;
+            //}
+            //float cosT = (float)Math.Sqrt(1.0 - sinT2);
+            //T = (eta * I) + (eta * cosI - cosT) * N;
+            ////T = ((eta * cosI - (float)Math.Sqrt(cosT2)) * N) - (eta * I);
+            //return true;
+            
+            float n = n1 / n2;
+            float cosI = -(N*I);
+            float sinT2 = n * n * (1.0f - cosI * cosI);
+            if(sinT2 > 1.0){
                 T = Vector3D.Zero;
                 return false;
             }
             float cosT = (float)Math.Sqrt(1.0 - sinT2);
-            T = (eta * I) + (eta * cosI - cosT) * N;
-            //T = ((eta * cosI - (float)Math.Sqrt(cosT2)) * N) - (eta * I);
+            T = n * I + (n * cosI - cosT) * N;
             return true;
         }
         public static bool Refracted(Vector3D N, Vector3D I, out Vector3D T, float eta) {

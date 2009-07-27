@@ -15,39 +15,46 @@ namespace DrawEngine.Renderer.RenderObjects.Design
             this.InitializeComponent();
             this.DialogResult = DialogResult.Cancel;
             this.triangleModel = triangleModel;
-            if(triangleModel.Path != null && File.Exists(triangleModel.Path)){
-                triangleModel.OnElementLoaded +=
-                        new TriangleModel.ElementLoadEventHandler(this.triangleModel_OnElementLoaded);
-                triangleModel.OnInitBuild += new TriangleModel.InitBuildEventHandler(this.triangleModel_OnInitBuild);
-                triangleModel.OnEndBuild += new TriangleModel.EndBuildEventHandler(this.triangleModel_OnEndBuild);
-            } else{
+            if (triangleModel.Path != null && File.Exists(triangleModel.Path))
+            {
+                triangleModel.OnElementLoaded += this.triangleModel_OnElementLoaded;
+                triangleModel.OnInitBuild += this.triangleModel_OnInitBuild;
+                triangleModel.OnEndBuild += this.triangleModel_OnEndBuild;
+            }
+            else
+            {
                 this.Close();
             }
         }
         private void triangleModel_OnEndBuild(TimeSpan timeToBuild)
         {
             this.DialogResult = DialogResult.OK;
-            if(this.InvokeRequired){
+            if (this.InvokeRequired)
+            {
                 this.Invoke(new Action(delegate { this.Close(); }));
             }
         }
         private void triangleModel_OnInitBuild()
         {
-            if(this.InvokeRequired){
-                this.Invoke(new Action(delegate{
-                                           this.lblInfo.Text =
-                                                   string.Format("Optimize Model for fast intersections... Wait.. ");
-                                           this.lblTrianglesInfo.Text = "Triangles: " + this.triangleModel.TriangleCount;
-                                       }));
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action(delegate
+                {
+                    this.lblInfo.Text =
+                            string.Format("Optimize Model for fast intersections... Wait.. ");
+                    this.lblTrianglesInfo.Text = "Triangles: " + this.triangleModel.TriangleCount;
+                }));
             }
         }
         private void triangleModel_OnElementLoaded(int percentageOfTotal, ElementMesh element)
         {
-            if(this.progressBar.InvokeRequired){
+            if (this.progressBar.InvokeRequired)
+            {
                 this.progressBar.Invoke(new Action(delegate { this.progressBar.Value = percentageOfTotal; }));
             }
             string name = "Elements";
-            switch(element){
+            switch (element)
+            {
                 case ElementMesh.Vertex:
                     name = "Vertices";
                     break;
@@ -58,7 +65,8 @@ namespace DrawEngine.Renderer.RenderObjects.Design
                     name = "Vertices Normals";
                     break;
             }
-            if(this.lblInfo.InvokeRequired){
+            if (this.lblInfo.InvokeRequired)
+            {
                 this.lblInfo.Invoke(
                         new Action(
                                 delegate { this.lblInfo.Text = string.Format("Loading {0}... {1}%", name, percentageOfTotal); }));
@@ -76,10 +84,12 @@ namespace DrawEngine.Renderer.RenderObjects.Design
         }
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if(this.lblTimeElapsed.InvokeRequired){
+            if (this.lblTimeElapsed.InvokeRequired)
+            {
                 this.lblTimeElapsed.Invoke(
                         new Action(
-                                delegate{
+                                delegate
+                                {
                                     this.lblTimeElapsed.Text = String.Format("Elapsed Time: {0:mm}m{0:ss}s",
                                                                              DateTime.Now.Subtract(this.inicio));
                                 }));

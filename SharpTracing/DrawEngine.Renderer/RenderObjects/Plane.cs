@@ -102,8 +102,9 @@ namespace DrawEngine.Renderer.RenderObjects
             if(NRd == 0.0f){
                 return false;
             }
-            float t = -(this.normal * ray.Origin.ToVector3D() + this.d) / NRd;
-            if(t < 0.01f){
+            float t = -(this.normal * ray.Origin + this.d) / NRd;
+            if (t < 0.000001f)
+            {
                 return false;
             }
             intersect.Normal = this.normal;

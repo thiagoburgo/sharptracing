@@ -32,17 +32,14 @@ namespace DrawEngine.Renderer.RenderObjects.Design
                         if(modelDlg.ShowDialog() == DialogResult.OK){
                             return this.view.FileName;
                         } else{
-                            model = new TriangleModel("", "");
-                            model.Path = "";
+                            model = new TriangleModel();
                         }
                     }
                 }
             }
             return "";
         }
-        public override void PaintValue(PaintValueEventArgs e)
-        {
-            base.PaintValue(e);
-        }
+        
+        
     }
 }

@@ -188,17 +188,16 @@ namespace DrawEngine.Renderer.Importers
         private Dictionary<string, int> elementCount;
         private string path;
         //private List<string[]> file;
-        public LoaderObjModel(string path, string name)
+        public LoaderObjModel(string path)
         {
             this.path = path;
             //this.LoaAllFile();
             this.CountElements();
         }
         public override event ElementLoadEventHandler OnElementLoaded;
-        private int CountElements()
+        private void CountElements()
         {
             this.elementCount = new Dictionary<string, int>();
-            int count = 0;
             using(StreamReader sr = new StreamReader(this.path)){
                 string[] line;
                 while(!sr.EndOfStream){
@@ -214,7 +213,6 @@ namespace DrawEngine.Renderer.Importers
                 sr.Close();
                 sr.Dispose();
             }
-            return count;
         }
         public override Triangle[] Load()
         {
@@ -316,7 +314,7 @@ namespace DrawEngine.Renderer.Importers
             //this.file = null;
             GC.Collect();
         }
-        protected void ProcessNormalsPerVertex(List<PointerToVertex> pointersToVertex, List<Triangle> triangles,
+        private void ProcessNormalsPerVertex(List<PointerToVertex> pointersToVertex, List<Triangle> triangles,
                                                int verticesCount)
         {
             Vector3D[] normalsPerVertex = new Vector3D[verticesCount];

@@ -28,6 +28,7 @@ namespace DrawEngine.Renderer.Materials
         private Texture texture;
         protected Material()
         {
+            this.absorptivity = 0.3f;
             this.glossy = 0.1f;
             this.kDiff = 0.5f;
             this.kSpec = 0.5f;
@@ -55,6 +56,7 @@ namespace DrawEngine.Renderer.Materials
             this.specularColor = RGBColor.White;
             this.RefractIndex = refractIndex;
             this.Glossy = glossy;
+            this.Absorptivity = 0.3f;
             this.Shiness = shiness;
             if(!texture.IsLoaded){
                 this.isTexturized = false;
