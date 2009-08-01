@@ -43,30 +43,34 @@ namespace DrawEngine.Renderer.BasicStructures
             get { return this.inv_direction; }
         }
 
-        #region ITransformable3D Members
+        #region ITransformable3D Members BUGADO
         public void Rotate(float angle, Vector3D axis)
         {
-            throw new Exception("The method or operation is not implemented.");
+            this.Origin.Rotate(angle, axis);
+            this.direction.Rotate(angle, axis);
+            this.Direction = this.direction;
         }
         public void RotateAxisX(float angle)
         {
-            throw new Exception("The method or operation is not implemented.");
+            this.Rotate(angle, Vector3D.UnitX);
         }
         public void RotateAxisY(float angle)
         {
-            throw new Exception("The method or operation is not implemented.");
+            this.Rotate(angle, Vector3D.UnitY);
         }
         public void RotateAxisZ(float angle)
         {
-            throw new Exception("The method or operation is not implemented.");
+            this.Rotate(angle, Vector3D.UnitZ);
         }
         public void Scale(float factor)
         {
-            throw new Exception("The method or operation is not implemented.");
+            this.Direction = direction * factor;
         }
         public void Translate(float tx, float ty, float tz)
         {
-            throw new Exception("The method or operation is not implemented.");
+            this.Origin.Translate(tx, ty, tz);
+            this.direction.Translate(tx, ty, tz);
+            this.Direction = this.direction;
         }
         public void Translate(Vector3D translateVector)
         {

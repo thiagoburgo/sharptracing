@@ -230,7 +230,7 @@ namespace DrawEngine.Renderer.RenderObjects
         private enum Sides { None, Left, Right, Top, Bottom, Front, Back }
 
         public override bool FindIntersection(Ray ray, out Intersection intersection)
-        {
+        {   
             intersection = new Intersection();
             float tNear = float.NegativeInfinity, tFar = float.PositiveInfinity, t1, t2;
             float oX = ray.Origin.X, oY = ray.Origin.Y, oZ = ray.Origin.Z;
