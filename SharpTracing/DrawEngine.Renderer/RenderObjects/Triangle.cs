@@ -1,3 +1,4 @@
+//#define Culling
 /**
  * Criado por: Thiago Burgo Belo (thiagoburgo@gmail.com)
  * SharpTracing é um projeto feito inicialmente para disciplina
@@ -10,8 +11,7 @@
  * Feel free to copy, modify and  give fixes 
  * suggestions. Keep the credits!
  */
-//#define Culling
-using System;
+ using System;
 using System.ComponentModel;
 using System.Windows.Forms;
 using DrawEngine.Renderer.Algebra;
