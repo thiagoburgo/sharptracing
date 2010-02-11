@@ -32,6 +32,8 @@
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <StartupObject>
     </StartupObject>
+    <TargetFrameworkSubset>
+    </TargetFrameworkSubset>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -50,7 +52,7 @@
     <DefineConstants>DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <CodeAnalysisRules>
     </CodeAnalysisRules>
@@ -237,7 +239,6 @@
     <Compile Include="RenderObjects\Primitive.cs">
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="RenderObjects\Quadrangle.cs.old" />
     <Compile Include="RenderObjects\Triangle.cs">
     </Compile>
     <Compile Include="BasicStructures\RGBColor.cs" />
@@ -318,6 +319,7 @@
     <Compile Include="Mathematics\QMCRandom\MRG32k3Random.cs" />
     <Compile Include="Mathematics\QMCRandom\QMCHaltonRandom.cs" />
     <Compile Include="Mathematics\QMCRandom\QMCSobolRandom.cs" />
+    <None Include="app.config" />
     <None Include="PhotonMapping\PhotonMap.cs_____" />
     <Compile Include="PhotonMapping\NearestPhotons.cs" />
     <Compile Include="PhotonMapping\Photon.cs" />
@@ -337,7 +339,6 @@
     <Compile Include="RenderObjects\EnvironmentMaps\SphereMap.cs" />
     <Compile Include="RenderObjects\RegularPolygon.cs" />
     <Compile Include="RenderObjects\Quadrilatero.cs" />
-    <None Include="RenderObjects\RegularPolygon.cs.old" />
     <Compile Include="SpatialSubdivision\KDTree\Editor.cs" />
     <Compile Include="SpatialSubdivision\KDTree\EuclideanDistance.cs" />
     <Compile Include="SpatialSubdivision\KDTree\HammingDistance.cs" />
@@ -401,7 +402,11 @@
     <Compile Include="SpatialSubdivision\Acceleration\AccelerationStructure.cs" />
     <Compile Include="SpatialSubdivision\Acceleration\KDTreeTriangleManager.cs" />
     <None Include="Util\FastBitmap.cs__" />
+    <Compile Include="Util\Conversion\BitConverterEx.cs" />
     <Compile Include="Util\FastBitmap.cs" />
+    <Compile Include="Util\IO\EndianessBinaryReader.cs" />
+    <Compile Include="Util\IO\EndianessBinaryWriter.cs" />
+    <Compile Include="Util\IO\LineReader.cs" />
     <Compile Include="Util\Sort.cs" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
