@@ -164,13 +164,12 @@ namespace DrawEngine.Renderer.RenderObjects
             if(this.loader != null){
                 this.loader.Dispose();
             }
-            if(this.triangles != null){
-                Array.Clear(this.triangles, 0, this.triangles.Length);
-            }
+           
             this.triangles = null;
             this.manager = null;
-            this.boundBox = new BoundBox();
             this.loader = null;
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
         }
         #endregion
 
@@ -256,48 +255,11 @@ namespace DrawEngine.Renderer.RenderObjects
             }
             return Vector3D.Zero;
         }
-        private ModelType ResolverModelType()
-        {
-            List<string[]> header = new List<string[]>();
-            using(StreamReader sr = new StreamReader(this.path)){
-                string hLine = sr.ReadLine().Trim();
-                string ext = System.IO.Path.GetExtension(this.path).ToLower();
-                while(hLine == string.Empty){
-                    hLine = sr.ReadLine().Trim();
-                }
-                if(ext == ".ply" && hLine.ToLower() == "ply"){
-                    return ModelType.Ply;
-                } else if(ext == ".byu"){
-                    return ModelType.Byu;
-                } else if(ext == ".obj"){
-                    return ModelType.Obj;
-                } else if(ext == ".off" || ext == ".noff" || ext == ".cnoff"){
-                    return ModelType.Off;
-                }
-                return ModelType.None;
-            }
-        }
         public void Load()
         {
-            ModelType modelType = this.ResolverModelType();
-            this.loader = null;
-            switch(modelType){
-                case ModelType.Ply:
-                    this.loader = new LoaderPlyModel(this.path);
-                    break;
-                case ModelType.Byu:
-                    this.loader = new LoaderByuModel(this.path);
-                    break;
-                case ModelType.Obj:
-                    this.loader = new LoaderObjModel(this.path);
-                    break;
-                case ModelType.Off:
-                    this.loader = new LoaderOffModel(this.path);
-                    break;
-                case ModelType.None:
-                    throw new IOException(String.Format("O Arquivo {0} tem o formato inválido ou está corrompido!",
-                                                        this.path));
-            }
+            this.loader = AbstractLoaderModel.GetLoader(this.path);
+            //throw new IOException(String.Format("O Arquivo {0} tem o formato inválido ou está corrompido!",
+            //                                    this.path));
             if(this.loader != null){
                 this.loader.OnElementLoaded += this.TriangleModel_OnElementLoaded;
                 this.triangles = this.loader.Load();
@@ -305,7 +267,6 @@ namespace DrawEngine.Renderer.RenderObjects
                 this.boundBox = this.loader.BoundBox;
                 float len = Math.Abs(this.boundBox.PMax.Y - this.boundBox.PMin.Y);
                 this.boundBox.Scale(50 / len);
-                //this.boundBox.Translate(-this.boundBox.Center.ToVector3D());
                 foreach(Triangle t in this.triangles){
                     t.Scale(50 / len);
                     //t.Translate(-this.boundBox.Center.ToVector3D());
@@ -318,9 +279,7 @@ namespace DrawEngine.Renderer.RenderObjects
                 }
                 DateTime antes = DateTime.Now;
                 this.manager.Optimize();
-                ((ITransformable3D)this.manager).Translate(-(this.boundBox.Center.X), 0, 0);
-                ((ITransformable3D)this.manager).Translate(0, -(this.boundBox.Center.Y), 0);
-                ((ITransformable3D)this.manager).Translate(0, 0, -(this.boundBox.Center.Z));
+                //((ITransformable3D)this.manager).Translate(-(this.boundBox.Center.X), -(this.boundBox.Center.Y), -(this.boundBox.Center.Z));
                 //this.manager.Optimize();
                 if(this.OnEndBuild != null){
                     this.OnEndBuild(DateTime.Now.Subtract(antes));

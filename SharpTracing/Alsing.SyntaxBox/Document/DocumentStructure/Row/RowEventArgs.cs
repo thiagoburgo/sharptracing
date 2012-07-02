@@ -11,13 +11,14 @@ namespace Alsing.SourceCode
         /// 
         /// </summary>
         public Row Row;
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="row"></param>
         public RowEventArgs(Row row)
         {
-            this.Row = row;
+            Row = row;
         }
     }
 }

@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 namespace Alsing.Text.PatternMatchers
 {
     /// <summary>
@@ -15,14 +16,17 @@ namespace Alsing.Text.PatternMatchers
     public abstract class PatternMatcherBase : IPatternMatcher
     {
         #region IPatternMatcher Members
+
         public virtual int Match(string textToMatch, int matchAtIndex)
         {
             return 0;
         }
+
         public virtual string[] DefaultPrefixes
         {
             get { return null; }
         }
+
         #endregion
     }
 }

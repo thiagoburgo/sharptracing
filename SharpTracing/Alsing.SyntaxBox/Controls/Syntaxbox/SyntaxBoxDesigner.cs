@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 using System.Collections;
 using System.ComponentModel.Design;
 using System.Windows.Forms.Design;
@@ -21,23 +22,32 @@ namespace Alsing.Windows.Forms.SyntaxBox
     {
         protected ISelectionService SelectionService
         {
-            get { return (ISelectionService)this.GetService(typeof(ISelectionService)); }
+            get { return (ISelectionService) GetService(typeof (ISelectionService)); }
         }
+
         protected virtual IDesignerHost DesignerHost
         {
-            get { return (IDesignerHost)base.GetService(typeof(IDesignerHost)); }
+            get { return (IDesignerHost) base.GetService(typeof (IDesignerHost)); }
         }
+
         //protected void OnActivate(object s, EventArgs e) {}
+
         public override void InitializeNewComponent(IDictionary defaultValues)
         {
             base.InitializeNewComponent(defaultValues);
-            if(this.DesignerHost != null){
-                DesignerTransaction trans = this.DesignerHost.CreateTransaction("Adding Syntaxdocument");
-                var sd = this.DesignerHost.CreateComponent(typeof(SyntaxDocument)) as SyntaxDocument;
-                var sb = this.Control as SyntaxBoxControl;
-                if(sb == null){
+            if (DesignerHost != null)
+            {
+                DesignerTransaction trans = DesignerHost.CreateTransaction("Adding Syntaxdocument");
+                var sd = DesignerHost.CreateComponent(typeof (SyntaxDocument)) as SyntaxDocument;
+
+                var sb = Control as SyntaxBoxControl;
+
+                if (sb == null)
+                {
                     trans.Cancel();
-                } else{
+                }
+                else
+                {
                     sb.Document = sd;
                     trans.Commit();
                 }

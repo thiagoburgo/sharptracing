@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 using System.Text.RegularExpressions;
 
 namespace Alsing.SourceCode
@@ -21,8 +22,10 @@ namespace Alsing.SourceCode
     public sealed partial class Pattern
     {
         public static readonly string DefaultSeparators = ".,+-*^\\/()[]{}@:;'?£$#%& \t=<>";
+
         private string _StringPattern = "";
         public BracketType BracketType = BracketType.None;
+
         /// <summary>
         /// Category of the pattern
         /// Built in categories are:
@@ -31,39 +34,50 @@ namespace Alsing.SourceCode
         /// FILE
         /// </summary>
         public string Category;
+
         /// <summary>
         /// Gets if the pattern is a simple string or a RegEx pattern
         /// </summary>
         public bool IsComplex;
+
         /// <summary>
         /// Get or Sets if this pattern needs separator chars before and after it in order to be valid.
         /// </summary>
         public bool IsKeyword;
+
         public bool IsMultiLineBracket = true;
+
         /// <summary>
         /// Gets or Sets if the pattern is a separator pattern .
         /// A separator pattern can be "End Sub" in VB6 , whenever that pattern is found , the SyntaxBoxControl will render a horizontal separator line.
         /// NOTE: this should not be mixed up with separator chars.
         /// </summary>
         public bool IsSeparator;
+
         /// <summary>
         /// For internal use only
         /// </summary>
         public string LowerStringPattern = "";
+
         public Pattern MatchingBracket;
+
         /// <summary>
         /// The owning PatternList , eg a specific KeywordList or OperatorList
         /// </summary>
         public PatternList Parent;
+
         internal Regex rx;
 
         #region PUBLIC PROPERTY SEPARATORS
+
         private string _Separators = DefaultSeparators;
+
         public string Separators
         {
-            get { return this._Separators; }
-            set { this._Separators = value; }
+            get { return _Separators; }
+            set { _Separators = value; }
         }
+
         #endregion
 
         /// <summary>
@@ -73,14 +87,19 @@ namespace Alsing.SourceCode
         /// <param name="iscomplex"></param>
         public Pattern(string pattern, bool iscomplex)
         {
-            this.StringPattern = pattern;
-            if(iscomplex){
-                this.IsComplex = true;
-                this.rx = new Regex(this.StringPattern, RegexOptions.Compiled);
-            } else{
-                this.IsComplex = false;
+            StringPattern = pattern;
+            if (iscomplex)
+            {
+                IsComplex = true;
+                rx = new Regex(StringPattern, RegexOptions.Compiled);
+            }
+            else
+            {
+                IsComplex = false;
             }
         }
+
+
         /// <summary>
         /// 
         /// </summary>
@@ -90,8 +109,9 @@ namespace Alsing.SourceCode
         /// <param name="keyword"></param>
         public Pattern(string pattern, bool iscomplex, bool separator, bool keyword)
         {
-            this.Init(pattern, iscomplex, separator, keyword);
+            Init(pattern, iscomplex, separator, keyword);
         }
+
         /// <summary>
         /// 
         /// </summary>
@@ -103,21 +123,23 @@ namespace Alsing.SourceCode
         {
             escapeChar = Regex.Escape(escapeChar);
             string escapePattern = string.Format("(?<=((?<!{0})({0}{0})*))({1})", escapeChar, pattern);
-            this.Init(escapePattern, true, separator, keyword);
+            Init(escapePattern, true, separator, keyword);
         }
+
         /// <summary>
         /// Gets or Sets the the text of the pattern
         /// this only applies if the pattern is a simple pattern.
         /// </summary>
         public string StringPattern
         {
-            get { return this._StringPattern; }
+            get { return _StringPattern; }
             set
             {
-                this._StringPattern = value;
-                this.LowerStringPattern = this._StringPattern.ToLowerInvariant();
+                _StringPattern = value;
+                LowerStringPattern = _StringPattern.ToLowerInvariant();
             }
         }
+
         /// <summary>
         /// Returns true if the pattern contains separator chars<br/>
         /// (This is used by the parser)
@@ -126,23 +148,23 @@ namespace Alsing.SourceCode
         {
             get
             {
-                foreach(char c in this.StringPattern){
-                    if(this.Separators.IndexOf(c) >= 0){
+                foreach (char c in StringPattern)
+                {
+                    if (Separators.IndexOf(c) >= 0)
                         return true;
-                    }
                 }
                 return false;
             }
         }
+
         private void Init(string pattern, bool isComplex, bool separator, bool keyword)
         {
-            this.StringPattern = pattern;
-            this.IsSeparator = separator;
-            this.IsKeyword = keyword;
-            this.IsComplex = isComplex;
-            if(isComplex){
-                this.rx = new Regex(this.StringPattern, RegexOptions.Compiled);
-            }
+            StringPattern = pattern;
+            IsSeparator = separator;
+            IsKeyword = keyword;
+            IsComplex = isComplex;
+            if (isComplex)
+                rx = new Regex(StringPattern, RegexOptions.Compiled);
         }
     }
 }

@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 using System.Collections.Generic;
 
 namespace Alsing.SourceCode
@@ -18,18 +19,19 @@ namespace Alsing.SourceCode
     {
         public UndoBuffer()
         {
-            this.MaxSize = 1000;
+            MaxSize = 1000;
         }
+
         public int MaxSize { get; set; }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="index"></param>
         public void ClearFrom(int index)
         {
-            while(index <= this.Count - 1){
-                this.RemoveAt(index);
-            }
+            while (index <= Count - 1)
+                RemoveAt(index);
         }
     }
 }

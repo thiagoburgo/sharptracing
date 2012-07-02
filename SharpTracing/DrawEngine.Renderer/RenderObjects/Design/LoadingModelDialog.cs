@@ -15,9 +15,11 @@ using System.ComponentModel;
 using System.IO;
 using System.Windows.Forms;
 using DrawEngine.Renderer.Importers;
+using DrawEngine.Renderer.Mesh;
 
 namespace DrawEngine.Renderer.RenderObjects.Design
 {
+    
     public partial class LoadingModelDialog : Form
     {
         private TimeSpan inicio;

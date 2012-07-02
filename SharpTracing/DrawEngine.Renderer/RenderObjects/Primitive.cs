@@ -34,11 +34,11 @@ namespace DrawEngine.Renderer.RenderObjects
      XmlInclude(typeof(CubeFlake)), XmlInclude(typeof(CornellBox)), Serializable]
     #endregion
 
-    public abstract class Primitive : INameable, IIntersectable, IBoundBox
+    public abstract class Primitive : IPrimitive,INameable
     {
         protected BoundBox boundBox;
         protected Point3D center;
-        protected UVCoordinate currentTextureCoordinate;
+        [XmlIgnore, NonSerialized]
         protected Material material;
         private String name;
         private bool visible = true;
@@ -46,12 +46,8 @@ namespace DrawEngine.Renderer.RenderObjects
         {
             this.material = new PhongMaterial();
         }
-        [Browsable(false), XmlIgnore]
-        public UVCoordinate CurrentTextureCoordinate
-        {
-            get { return this.currentTextureCoordinate; }
-            protected set { this.currentTextureCoordinate = value; }
-        }
+        
+        
         [Editor(typeof(MaterialSelectorEditor), typeof(UITypeEditor)), DefaultValue(null),
          TypeConverter(typeof(ExpandableObjectConverter))]
         public virtual Material Material

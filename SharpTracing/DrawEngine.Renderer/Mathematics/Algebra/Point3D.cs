@@ -16,12 +16,14 @@ using System.Drawing.Design;
 using DrawEngine.Renderer.Algebra;
 using DrawEngine.Renderer.Mathematics.Algebra.Design;
 using Component = DrawEngine.Renderer.Algebra.Component;
+using System.Runtime.InteropServices;
 
 namespace DrawEngine.Renderer.Mathematics.Algebra {
     /// <summary>
     /// This class describe the point entity in three dimensional space 
     /// </summary>
     [Editor(typeof(VectorOrPointEditor), typeof(UITypeEditor)), TypeConverter(typeof(VectorOrPointTypeConverter))]
+    [Serializable, StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct Point3D : ITransformable3D, IEquatable<Point3D> {
         public static readonly Point3D Zero;
         public float X;

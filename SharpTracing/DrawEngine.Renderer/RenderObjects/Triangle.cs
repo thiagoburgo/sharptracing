@@ -11,7 +11,7 @@
  * Feel free to copy, modify and  give fixes 
  * suggestions. Keep the credits!
  */
- using System;
+using System;
 using System.ComponentModel;
 using System.Windows.Forms;
 using DrawEngine.Renderer.Algebra;
@@ -130,118 +130,140 @@ namespace DrawEngine.Renderer.RenderObjects
 
             this.normalNonNormalized = this.normal = this.edge1 ^ this.edge2;
             this.normal.Normalize();
-            
+
             //if(MathUtil.NearZero(this.normal.X, 1.0e-6) && MathUtil.NearZero(this.normal.Y, 1.0e-6) && MathUtil.NearZero(this.normal.Z, 1.0e-6)) {
             //    MessageBox.Show("FUDEU NORMAL TRIANGULO");
             //}
         }
+        //From http://www.cs.lth.se/home/Tomas_Akenine_Moller/raytri/raytri.c optimization 1
+        //public override bool FindIntersection(Ray ray, out Intersection intersect)
+        //{
+        //    intersect = Intersection.Zero;
+        //    Vector3D pvec, qvec, tvec;
+        //    float det, inv_det;
+        //    float u, v;
+        //    /* begin calculating determinant - also used to calculate U parameter */
+        //    pvec = ray.Direction ^ edge2;
+
+        //    /* if determinant is near zero, ray lies in plane of triangle */
+        //    det = edge1 * pvec;
+        //    const float EPSILON = 0.00001f;
+        //    if (det > EPSILON)
+        //    {
+        //        /* calculate distance from vert0 to ray origin */
+        //        tvec = ray.Origin - vertex1;
+
+        //        /* calculate U parameter and test bounds */
+        //        u = tvec * pvec;
+        //        if (u < 0 || u > det)
+        //            return false;
+
+        //        /* prepare to test V parameter */
+        //        qvec = tvec ^ edge1;
+
+        //        /* calculate V parameter and test bounds */
+        //        v = ray.Direction * qvec;
+        //        if (v < 0 || u + v > det)
+        //            return false;
+
+        //    }
+        //    else if (det < -EPSILON)
+        //    {
+        //        /* calculate distance from vert0 to ray origin */
+        //        tvec = ray.Origin - vertex1;
+
+        //        /* calculate U parameter and test bounds */
+        //        u = tvec * pvec;
+        //        /*      printf("*u=%f\n",(float)*u); */
+        //        /*      printf("det=%f\n",det); */
+        //        if (u > 0 || u < det)
+        //            return false;
+
+        //        /* prepare to test V parameter */
+        //        qvec = tvec ^ edge1;
+
+        //        /* calculate V parameter and test bounds */
+        //        v = ray.Direction * qvec;
+        //        if (v > 0 || u + v < det)
+        //            return false;
+        //    }
+        //    else return false;  /* ray is parallell to the plane of the triangle */
+
+
+        //    inv_det = 1.0f / det;
+
+        //    /* calculate t, ray intersects triangle */
+        //    intersect.TMin = (edge2 * qvec) * inv_det;
+        //    u *= inv_det;
+        //    v *= inv_det;
+        //    intersect.Normal = this.normal;
+        //    intersect.HitPoint = ray.Origin + (intersect.TMin * ray.Direction);
+        //    this.CurrentBarycentricCoordinate = new BarycentricCoordinate(1.0f - (u + v), u, v);
+        //    intersect.HitPrimitive = this;
+        //    if (this.material != null && this.material.IsTexturized)
+        //    {
+        //        //int widthTex = this.material.Texture.Width - 1;
+        //        //int heightTex = this.material.Texture.Height - 1;
+        //        //this.material.Color = this.material.Texture.GetPixel((int)(u * widthTex), (int)(v * heightTex));
+        //        intersect.CurrentTextureCoordinate.U = u;
+        //        intersect.CurrentTextureCoordinate.V = v;
+        //    }
+        //    return true;
+        //}
 
         //From http://jgt.akpeters.com/papers/GuigueDevillers03/ray_triangle_intersection.html
         public override bool FindIntersection(Ray ray, out Intersection intersect)
         {
             intersect = new Intersection();
-
             Vector3D vect0, vect1, nvect;
             float det, inv_det;
-
-            //vect0 = this.vertex2 - this.vertex1;
-            //vect1 = this.vertex3 - this.vertex1;
-            //normal = vect0 ^ vect1;
-
             /* orientation of the ray with respect to the triangle's normal, 
                also used to calculate output parameters*/
             det = -(ray.Direction * this.normalNonNormalized);
-#if TEST_CULL
-            /* define TEST_CULL if culling is desired */
-            if (det < 0.000001f) return false;
-
-            /* calculate vector from ray origin to this.vertex1 */
-            vect0 = this.vertex1 - ray.Origin;
-            /* vector used to calculate u and v parameters */
-            nvect = ray.Direction ^ vect0;
-
-            /* calculate vector from ray origin to this.vertex2*/
-            vect1 = this.vertex2 - ray.Origin;
-            /* calculate unnormalized v parameter and test bounds */
-            float v = -(vect1 * nvect);
-
-            if (v < 0.0 || v > det) return false;
-
-            /* calculate vector from ray origin to this.vertex3*/
-            vect1 = this.vertex3 - ray.Origin;
-            /* calculate unnormalized v parameter and test bounds */
-            float u = vect1 * nvect;
-
-            if (u < 0.0 || u + v > det) return false;
-
-            /* calculate unormalized t parameter */
-            float t = -(vect0 * this.normalNonNormalized);
-
-            inv_det = 1.0f / det;
-            /* calculate u v t, ray intersects triangle */
-            u = u * inv_det;
-            v = v * inv_det;
-            t = t * inv_det;
-
-#else
             /* the non-culling branch */
-
             /* if determinant is near zero, ray is parallel to the plane of triangle */
             if (det > -0.000001f && det < 0.000001f) return false;
-
             /* calculate vector from ray origin to this.vertex1 */
             vect0 = this.vertex1 - ray.Origin;
-            
             /* normal vector used to calculate u and v parameters */
             nvect = ray.Direction ^ vect0;
-            
             inv_det = 1.0f / det;
             /* calculate vector from ray origin to this.vertex2*/
             vect1 = this.vertex2 - ray.Origin;
-            
             /* calculate v parameter and test bounds */
             float v = -(vect1 * nvect) * inv_det;
-
             if (v < 0.0f || v > 1.0f) return false;
-
             /* calculate vector from ray origin to this.vertex3*/
             vect1 = this.vertex3 - ray.Origin;
             /* calculate v parameter and test bounds */
             float u = (vect1 * nvect) * inv_det;
-
             if (u < 0.0f || u + v > 1.0f) return false;
-
             /* calculate t, ray intersects triangle */
             float t = -(vect0 * this.normalNonNormalized) * inv_det;
-#endif
-
             //if (t < 100)
             //    return false;
             // return 1;
-
-            if (t < 100) //FIXME: the correct is t < 0, but dont work, why? tell me you! =P
-            {
-                return false;
+            if (t >= 100){
+                intersect.Normal = this.normal;
+                intersect.TMin = t;
+                
+                intersect.HitPoint = ray.Origin + (t * ray.Direction);
+                this.CurrentBarycentricCoordinate = new BarycentricCoordinate(1.0f - (u + v), u, v);
+                intersect.HitPrimitive = this;
+                if (this.material != null && this.material.IsTexturized)
+                {
+                    //int widthTex = this.material.Texture.Width - 1;
+                    //int heightTex = this.material.Texture.Height - 1;
+                    //this.material.Color = this.material.Texture.GetPixel((int)(u * widthTex), (int)(v * heightTex));
+                    intersect.CurrentTextureCoordinate.U = u;
+                    intersect.CurrentTextureCoordinate.V = v;
+                }
+                return true;
             }
-
-            intersect.TMin = t;
-            intersect.Normal = this.normal;
-            intersect.HitPoint = ray.Origin + (t * ray.Direction);
-            intersect.HitPrimitive = this;
-            this.CurrentBarycentricCoordinate = new BarycentricCoordinate(1.0f - (u + v), u, v);
-
-            if (this.material != null && this.material.IsTexturized)
-            {
-                //int widthTex = this.material.Texture.Width - 1;
-                //int heightTex = this.material.Texture.Height - 1;
-                //this.material.Color = this.material.Texture.GetPixel((int)(u * widthTex), (int)(v * heightTex));
-                this.currentTextureCoordinate.U = u;
-                this.currentTextureCoordinate.V = v;
-            }
-            return true;
-
+            return false;
         }
 
+        #region Codigos de intersection comentados
         //public override bool FindIntersection(Ray ray, out Intersection intersect)
         //{
         //    intersect = new Intersection();
@@ -313,8 +335,8 @@ namespace DrawEngine.Renderer.RenderObjects
         //        //int widthTex = this.material.Texture.Width - 1;
         //        //int heightTex = this.material.Texture.Height - 1;
         //        //this.material.Color = this.material.Texture.GetPixel((int)(u * widthTex), (int)(v * heightTex));
-        //        this.currentTextureCoordinate.U = u;
-        //        this.currentTextureCoordinate.V = v;
+        //        intersection.CurrentTextureCoordinate.U = u;
+        //        intersection.CurrentTextureCoordinate.V = v;
         //    }
         //    return true;
 
@@ -402,8 +424,8 @@ namespace DrawEngine.Renderer.RenderObjects
         //                //int widthTex = this.material.Texture.Width - 1;
         //                //int heightTex = this.material.Texture.Height - 1;
         //                //this.material.Color = this.material.Texture.GetPixel((int)(u * widthTex), (int)(v * heightTex));
-        //                this.currentTextureCoordinate.U = u;
-        //                this.currentTextureCoordinate.V = v;
+        //                intersection.CurrentTextureCoordinate.U = u;
+        //                intersection.CurrentTextureCoordinate.V = v;
         //            }
         //            return true;
         //        }
@@ -469,11 +491,12 @@ namespace DrawEngine.Renderer.RenderObjects
         //        //int widthTex = this.material.Texture.Width - 1;
         //        //int heightTex = this.material.Texture.Height - 1;
         //        //this.material.Color = this.material.Texture.GetPixel((int)(u * widthTex), (int)(v * heightTex));
-        //        this.currentTextureCoordinate.U = u;
-        //        this.currentTextureCoordinate.V = v;
+        //        intersection.CurrentTextureCoordinate.U = u;
+        //        intersection.CurrentTextureCoordinate.V = v;
         //    }
         //    return true;
         //}
+        #endregion
 
         private static bool SameSide(Point3D p1, Point3D p2, Point3D a, Point3D b)
         {

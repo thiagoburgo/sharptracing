@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 using System;
 using System.ComponentModel;
 using System.Windows.Forms;
@@ -33,10 +34,12 @@ namespace Alsing.Windows.Forms.SyntaxBox
         private CheckBox chkMatchCase;
         private CheckBox chkRegEx;
         private CheckBox chkWholeWord;
+
         /// <summary>
         /// Required designer variable.
         /// </summary>
         private Container components;
+
         private GroupBox groupBox1;
         private Label label1;
         private Label label2;
@@ -47,6 +50,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
         private Panel pnlReplace;
         private Panel pnlReplaceButtons;
         private Panel pnlSettings;
+
         /// <summary>
         /// Default constructor for the FindReplaceForm.
         /// </summary>
@@ -55,8 +59,9 @@ namespace Alsing.Windows.Forms.SyntaxBox
             //
             // Required for Windows Form Designer support
             //
-            this.InitializeComponent();
+            InitializeComponent();
         }
+
         /// <summary>
         /// Creates a FindReplaceForm that will be assigned to a specific Owner control.
         /// </summary>
@@ -66,24 +71,27 @@ namespace Alsing.Windows.Forms.SyntaxBox
             //
             // Required for Windows Form Designer support
             //
-            this.InitializeComponent();
+            InitializeComponent();
+
             //
             // TODO: Add any constructor code after InitializeComponent call
             //
-            this.mOwner = Owner;
+
+            mOwner = Owner;
         }
+
         private EditViewControl mOwner
         {
             get
             {
-                if(this._Control != null){
-                    return (EditViewControl)this._Control.Target;
-                } else{
+                if (_Control != null)
+                    return (EditViewControl) _Control.Target;
+                else
                     return null;
-                }
             }
-            set { this._Control = new WeakReference(value); }
+            set { _Control = new WeakReference(value); }
         }
+
         protected override CreateParams CreateParams
         {
             get
@@ -97,166 +105,193 @@ namespace Alsing.Windows.Forms.SyntaxBox
                 return cp;
             }
         }
+
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>
         protected override void Dispose(bool disposing)
         {
-            if(disposing){
-                if(this.components != null){
-                    this.components.Dispose();
+            if (disposing)
+            {
+                if (components != null)
+                {
+                    components.Dispose();
                 }
             }
             base.Dispose(disposing);
         }
+
         /// <summary>
         /// Displays the FindReplaceForm and sets it in "Find" mode.
         /// </summary>
         public void ShowFind()
         {
-            this.pnlReplace.Visible = false;
-            this.pnlReplaceButtons.Visible = false;
-            this.Text = "Find";
-            this.Show();
-            this.Height = 160;
-            this.btnDoReplace.Visible = false;
-            this.btnReplace.Visible = true;
-            this._Last = "";
-            this.cboFind.Focus();
+            pnlReplace.Visible = false;
+            pnlReplaceButtons.Visible = false;
+            Text = "Find";
+            Show();
+            Height = 160;
+            btnDoReplace.Visible = false;
+            btnReplace.Visible = true;
+            _Last = "";
+            cboFind.Focus();
         }
+
         /// <summary>
         /// Displays the FindReplaceForm and sets it in "Replace" mode.
         /// </summary>
         public void ShowReplace()
         {
-            this.pnlReplace.Visible = true;
-            this.pnlReplaceButtons.Visible = true;
-            this.Text = "Replace";
-            this.Show();
-            this.Height = 200;
-            this.btnDoReplace.Visible = true;
-            this.btnReplace.Visible = false;
-            this._Last = "";
-            this.cboFind.Focus();
+            pnlReplace.Visible = true;
+            pnlReplaceButtons.Visible = true;
+            Text = "Replace";
+            Show();
+            Height = 200;
+            btnDoReplace.Visible = true;
+            btnReplace.Visible = false;
+            _Last = "";
+            cboFind.Focus();
         }
+
         private void btnReplace_Click(object sender, EventArgs e)
         {
-            this.ShowReplace();
+            ShowReplace();
         }
+
         private void FindReplace_Closing(object sender, CancelEventArgs e)
         {
             e.Cancel = true;
-            this.Hide();
+            Hide();
         }
+
         private void btnFind_Click(object sender, EventArgs e)
         {
-            this.FindNext();
-            this.cboFind.Focus();
+            FindNext();
+            cboFind.Focus();
         }
+
         private void btnClose_Click(object sender, EventArgs e)
         {
-            this.mOwner.Focus();
-            this.Hide();
+            mOwner.Focus();
+            Hide();
         }
+
         private void btnDoReplace_Click(object sender, EventArgs e)
         {
-            this.mOwner.ReplaceSelection(this.cboReplace.Text);
-            this.btnFind_Click(null, null);
+            mOwner.ReplaceSelection(cboReplace.Text);
+            btnFind_Click(null, null);
         }
+
         private void btnReplaceAll_Click(object sender, EventArgs e)
         {
-            string text = this.cboFind.Text;
-            if(text == ""){
+            string text = cboFind.Text;
+            if (text == "")
                 return;
-            }
+
             bool found = false;
-            foreach(string s in this.cboFind.Items){
-                if(s == text){
+            foreach (string s in cboFind.Items)
+            {
+                if (s == text)
+                {
                     found = true;
                     break;
                 }
             }
-            if(!found){
-                this.cboFind.Items.Add(text);
+            if (!found)
+                cboFind.Items.Add(text);
+
+            int x = mOwner.Caret.Position.X;
+            int y = mOwner.Caret.Position.Y;
+            mOwner.Caret.Position.X = 0;
+            mOwner.Caret.Position.Y = 0;
+            while (mOwner.SelectNext(cboFind.Text, chkMatchCase.Checked, chkWholeWord.Checked, chkRegEx.Checked))
+            {
+                mOwner.ReplaceSelection(cboReplace.Text);
             }
-            int x = this.mOwner.Caret.Position.X;
-            int y = this.mOwner.Caret.Position.Y;
-            this.mOwner.Caret.Position.X = 0;
-            this.mOwner.Caret.Position.Y = 0;
-            while(this.mOwner.SelectNext(this.cboFind.Text, this.chkMatchCase.Checked, this.chkWholeWord.Checked,
-                                         this.chkRegEx.Checked)){
-                this.mOwner.ReplaceSelection(this.cboReplace.Text);
-            }
-            this.mOwner.Selection.ClearSelection();
+
+            mOwner.Selection.ClearSelection();
             //	mOwner.Caret.Position.X=x;
             //	mOwner.Caret.Position.Y=y;
             //	mOwner.ScrollIntoView ();
-            this.cboFind.Focus();
+
+            cboFind.Focus();
         }
+
         private void btnMarkAll_Click(object sender, EventArgs e)
         {
-            string text = this.cboFind.Text;
-            if(text == ""){
+            string text = cboFind.Text;
+            if (text == "")
                 return;
-            }
+
             bool found = false;
-            foreach(string s in this.cboFind.Items){
-                if(s == text){
+            foreach (string s in cboFind.Items)
+            {
+                if (s == text)
+                {
                     found = true;
                     break;
                 }
             }
-            if(!found){
-                this.cboFind.Items.Add(text);
+            if (!found)
+                cboFind.Items.Add(text);
+
+            int x = mOwner.Caret.Position.X;
+            int y = mOwner.Caret.Position.Y;
+            mOwner.Caret.Position.X = 0;
+            mOwner.Caret.Position.Y = 0;
+            while (mOwner.SelectNext(cboFind.Text, chkMatchCase.Checked, chkWholeWord.Checked, chkRegEx.Checked))
+            {
+                mOwner.Caret.CurrentRow.Bookmarked = true;
             }
-            int x = this.mOwner.Caret.Position.X;
-            int y = this.mOwner.Caret.Position.Y;
-            this.mOwner.Caret.Position.X = 0;
-            this.mOwner.Caret.Position.Y = 0;
-            while(this.mOwner.SelectNext(this.cboFind.Text, this.chkMatchCase.Checked, this.chkWholeWord.Checked,
-                                         this.chkRegEx.Checked)){
-                this.mOwner.Caret.CurrentRow.Bookmarked = true;
-            }
-            this.mOwner.Selection.ClearSelection();
+
+            mOwner.Selection.ClearSelection();
             //	mOwner.Caret.Position.X=x;
             //	mOwner.Caret.Position.Y=y;
             //	mOwner.ScrollIntoView ();
-            this.cboFind.Focus();
+
+            cboFind.Focus();
         }
+
         public void FindNext()
         {
-            string text = this.cboFind.Text;
-            if(this._Last != "" && this._Last != text){
-                this.mOwner.Caret.Position.X = 0;
-                this.mOwner.Caret.Position.Y = 0;
-                this.mOwner.ScrollIntoView();
+            string text = cboFind.Text;
+
+            if (_Last != "" && _Last != text)
+            {
+                mOwner.Caret.Position.X = 0;
+                mOwner.Caret.Position.Y = 0;
+                mOwner.ScrollIntoView();
             }
-            this._Last = text;
-            if(text == ""){
+
+            _Last = text;
+
+            if (text == "")
                 return;
-            }
+
             bool found = false;
-            foreach(string s in this.cboFind.Items){
-                if(s == text){
+            foreach (string s in cboFind.Items)
+            {
+                if (s == text)
+                {
                     found = true;
                     break;
                 }
             }
-            if(!found){
-                this.cboFind.Items.Add(text);
-            }
-            this.mOwner.SelectNext(this.cboFind.Text, this.chkMatchCase.Checked, this.chkWholeWord.Checked,
-                                   this.chkRegEx.Checked);
+            if (!found)
+                cboFind.Items.Add(text);
+
+            mOwner.SelectNext(cboFind.Text, chkMatchCase.Checked, chkWholeWord.Checked, chkRegEx.Checked);
         }
 
         #region Windows Form Designer generated code
+
         /// <summary>
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
         {
-            var resources = new System.Resources.ResourceManager(typeof(FindReplaceForm));
+            var resources = new System.Resources.ResourceManager(typeof (FindReplaceForm));
             this.pnlButtons = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.btnClose = new System.Windows.Forms.Button();
@@ -302,7 +337,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
             // 
             // panel3
             // 
-            this.panel3.Controls.AddRange(new System.Windows.Forms.Control[]{this.btnClose, this.btnMarkAll});
+            this.panel3.Controls.AddRange(new System.Windows.Forms.Control[] {this.btnClose, this.btnMarkAll});
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(0, 96);
             this.panel3.Name = "panel3";
@@ -330,7 +365,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
             // 
             // pnlReplaceButtons
             // 
-            this.pnlReplaceButtons.Controls.AddRange(new System.Windows.Forms.Control[]{this.btnReplaceAll});
+            this.pnlReplaceButtons.Controls.AddRange(new System.Windows.Forms.Control[] {this.btnReplaceAll});
             this.pnlReplaceButtons.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlReplaceButtons.Location = new System.Drawing.Point(0, 64);
             this.pnlReplaceButtons.Name = "pnlReplaceButtons";
@@ -368,7 +403,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
             // 
             // btnReplace
             // 
-            this.btnReplace.Image = ((System.Drawing.Bitmap)(resources.GetObject("btnReplace.Image")));
+            this.btnReplace.Image = ((System.Drawing.Bitmap) (resources.GetObject("btnReplace.Image")));
             this.btnReplace.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnReplace.Location = new System.Drawing.Point(8, 40);
             this.btnReplace.Name = "btnReplace";
@@ -389,7 +424,8 @@ namespace Alsing.Windows.Forms.SyntaxBox
             // 
             // pnlFind
             // 
-            this.pnlFind.Controls.AddRange(new System.Windows.Forms.Control[]{this.cboFind, this.label1, this.btnRegex1});
+            this.pnlFind.Controls.AddRange(new System.Windows.Forms.Control[]
+                                           {this.cboFind, this.label1, this.btnRegex1});
             this.pnlFind.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlFind.Name = "pnlFind";
             this.pnlFind.Size = new System.Drawing.Size(400, 40);
@@ -412,7 +448,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
             // 
             // btnRegex1
             // 
-            this.btnRegex1.Image = ((System.Drawing.Bitmap)(resources.GetObject("btnRegex1.Image")));
+            this.btnRegex1.Image = ((System.Drawing.Bitmap) (resources.GetObject("btnRegex1.Image")));
             this.btnRegex1.Location = new System.Drawing.Point(368, 8);
             this.btnRegex1.Name = "btnRegex1";
             this.btnRegex1.Size = new System.Drawing.Size(21, 21);
@@ -447,7 +483,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
             // 
             // button1
             // 
-            this.button1.Image = ((System.Drawing.Bitmap)(resources.GetObject("button1.Image")));
+            this.button1.Image = ((System.Drawing.Bitmap) (resources.GetObject("button1.Image")));
             this.button1.Location = new System.Drawing.Point(368, 8);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(21, 21);
@@ -456,7 +492,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
             // 
             // pnlSettings
             // 
-            this.pnlSettings.Controls.AddRange(new System.Windows.Forms.Control[]{this.groupBox1});
+            this.pnlSettings.Controls.AddRange(new System.Windows.Forms.Control[] {this.groupBox1});
             this.pnlSettings.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlSettings.Location = new System.Drawing.Point(0, 80);
             this.pnlSettings.Name = "pnlSettings";
@@ -523,6 +559,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
         }
+
         #endregion
     }
 }

@@ -11,9 +11,11 @@
  * suggestions. Keep the credits!
  */
  using System;
+using System.Runtime.InteropServices;
 
 namespace DrawEngine.Renderer.Algebra
 {
+    [Serializable, StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct Vector2D
     {
         public float X, Y;

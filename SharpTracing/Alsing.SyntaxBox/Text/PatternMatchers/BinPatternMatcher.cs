@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 namespace Alsing.Text.PatternMatchers
 {
     /// <summary>
@@ -16,23 +17,30 @@ namespace Alsing.Text.PatternMatchers
     {
         public static readonly BinPatternMatcher Default = new BinPatternMatcher();
         //perform the match
+
         //patterns that trigger this matcher
         public override string[] DefaultPrefixes
         {
-            get { return new[]{"0", "1"}; }
+            get { return new[] {"0", "1"}; }
         }
+
         public override int Match(string textToMatch, int matchAtIndex)
         {
             int currentIndex = matchAtIndex;
-            do{
+            do
+            {
                 char currentChar = textToMatch[currentIndex];
-                if(currentChar == '0' || currentChar == '1'){
+                if (currentChar == '0' || currentChar == '1')
+                {
                     //current char is hexchar
-                } else{
+                }
+                else
+                {
                     break;
                 }
                 currentIndex++;
-            } while(currentIndex < textToMatch.Length);
+            } while (currentIndex < textToMatch.Length);
+
             return currentIndex - matchAtIndex;
         }
     }

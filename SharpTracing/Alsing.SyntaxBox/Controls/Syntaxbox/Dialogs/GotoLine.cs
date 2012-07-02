@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 using System;
 using System.ComponentModel;
 using System.Globalization;
@@ -22,12 +23,15 @@ namespace Alsing.Windows.Forms.SyntaxBox
         private readonly EditViewControl mOwner;
         private Button btnCancel;
         private Button btnOK;
+
         /// <summary>
         /// Required designer variable.
         /// </summary>
         private Container components;
+
         private Label lblLines;
         private TextBox txtRow;
+
         /// <summary>
         /// Default constructor for the GotoLineForm.
         /// </summary>
@@ -36,11 +40,13 @@ namespace Alsing.Windows.Forms.SyntaxBox
             //
             // Required for Windows Form Designer support
             //
-            this.InitializeComponent();
+            InitializeComponent();
+
             //
             // TODO: Add any constructor code after InitializeComponent call
             //
         }
+
         /// <summary>
         /// Creates a GotoLineForm that will be assigned to a specific Owner control.
         /// </summary>
@@ -51,48 +57,59 @@ namespace Alsing.Windows.Forms.SyntaxBox
             //
             // Required for Windows Form Designer support
             //
-            this.InitializeComponent();
+            InitializeComponent();
+
             //
             // TODO: Add any constructor code after InitializeComponent call
             //
-            this.lblLines.Text = "Line number (1-" + RowCount.ToString(CultureInfo.InvariantCulture) + "):";
-            this.mOwner = Owner;
+            lblLines.Text = "Line number (1-" + RowCount.ToString(CultureInfo.InvariantCulture) + "):";
+            mOwner = Owner;
         }
+
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>
         protected override void Dispose(bool disposing)
         {
-            if(disposing){
-                if(this.components != null){
-                    this.components.Dispose();
+            if (disposing)
+            {
+                if (components != null)
+                {
+                    components.Dispose();
                 }
             }
             base.Dispose(disposing);
         }
+
         private void btnOK_Click(object sender, EventArgs e)
         {
-            try{
-                int row = int.Parse(this.txtRow.Text) - 1;
-                this.mOwner.GotoLine(row);
-            } catch{}
-            this.Close();
+            try
+            {
+                int row = int.Parse(txtRow.Text) - 1;
+                mOwner.GotoLine(row);
+            }
+            catch {}
+            Close();
         }
+
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
+
         private void GotoLine_Closing(object sender, CancelEventArgs e)
         {
             //e.Cancel =true;
             //this.Hide ();
         }
+
         private void GotoLine_Activated(object sender, EventArgs e)
         {
-            this.txtRow.Focus();
+            txtRow.Focus();
         }
 
         #region Windows Form Designer generated code
+
         /// <summary>
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
@@ -157,6 +174,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
             this.Activated += new System.EventHandler(this.GotoLine_Activated);
             this.ResumeLayout(false);
         }
+
         #endregion
     }
 }

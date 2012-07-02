@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
@@ -15,6 +16,7 @@ namespace Alsing.Windows
 {
 
     #region WINDOWPOS
+
     [StructLayout(LayoutKind.Sequential)]
     public struct WINDOWPOS
     {
@@ -26,15 +28,18 @@ namespace Alsing.Windows
         public int cy;
         public uint flags;
     }
+
     #endregion
 
     #region _NCCALCSIZE_PARAMS
+
     [StructLayout(LayoutKind.Sequential)]
     public struct _NCCALCSIZE_PARAMS
     {
         public APIRect NewRect;
         public APIRect OldRect;
         public APIRect OldClientRect;
+
         public WINDOWPOS lppos;
     }
 
@@ -51,6 +56,7 @@ namespace Alsing.Windows
         public byte b7;
         public byte b8;
     }
+
     #endregion
 
     public enum WindowStylesEx
@@ -60,17 +66,20 @@ namespace Alsing.Windows
         WS_EX_TOPMOST = 0x00000008,
         WS_EX_ACCEPTFILES = 0x00000010,
         WS_EX_TRANSPARENT = 0x00000020,
+
         WS_EX_MDICHILD = 0x00000040,
         WS_EX_TOOLWINDOW = 0x00000080,
         WS_EX_WINDOWEDGE = 0x00000100,
         WS_EX_CLIENTEDGE = 0x00000200,
         WS_EX_CONTEXTHELP = 0x00000400,
+
         WS_EX_RIGHT = 0x00001000,
         WS_EX_LEFT = 0x00000000,
         WS_EX_RTLREADING = 0x00002000,
         WS_EX_LTRREADING = 0x00000000,
         WS_EX_LEFTSCROLLBAR = 0x00004000,
         WS_EX_RIGHTSCROLLBAR = 0x00000000,
+
         WS_EX_CONTROLPARENT = 0x00010000,
         WS_EX_STATICEDGE = 0x00020000,
         WS_EX_APPWINDOW = 0x00040000,
@@ -79,7 +88,7 @@ namespace Alsing.Windows
     public enum WindowStyles
     {
         WS_OVERLAPPED = 0x00000000,
-        WS_POPUP = unchecked((int)0x80000000),
+        WS_POPUP = unchecked((int) 0x80000000),
         WS_CHILD = 0x40000000,
         WS_MINIMIZE = 0x20000000,
         WS_VISIBLE = 0x10000000,
@@ -174,21 +183,25 @@ namespace Alsing.Windows
         public int top;
         public int right;
         public int bottom;
+
         public int Width
         {
-            get { return this.right - this.left; }
+            get { return right - left; }
         }
+
         public int Height
         {
-            get { return this.bottom - this.top; }
+            get { return bottom - top; }
         }
+
         public APIRect(Rectangle rect)
         {
-            this.bottom = rect.Bottom;
-            this.left = rect.Left;
-            this.right = rect.Right;
-            this.top = rect.Top;
+            bottom = rect.Bottom;
+            left = rect.Left;
+            right = rect.Right;
+            top = rect.Top;
         }
+
         public APIRect(int left, int top, int right, int bottom)
         {
             this.bottom = bottom;
@@ -199,6 +212,7 @@ namespace Alsing.Windows
     }
 
     #region HitTest 
+
     public enum HitTest
     {
         HTERROR = (-2),
@@ -231,6 +245,7 @@ namespace Alsing.Windows
         HTCLOSE = 20,
         HTHELP = 21
     }
+
     #endregion
 
     public enum TextBoxMessages
@@ -442,6 +457,7 @@ namespace Alsing.Windows
         WM_HSCROLLCLIPBOARD = 0x030E,
         WM_QUERYNEWPALETTE = 0x030F,
         WM_PALETTEISCHANGING = 0x0310,
+
         WM_PALETTECHANGED = 0x0311,
         WM_HOTKEY = 0x0312,
         WM_PRINT = 0x0317,
@@ -458,12 +474,14 @@ namespace Alsing.Windows
         WM_THEMECHANGED = 794,
     }
 
+
     public enum GDIRop
     {
         SrcCopy = 13369376,
         Blackness = 0, //to be implemented
         Whiteness = 0
     }
+
 
     [StructLayout(LayoutKind.Sequential)]
     public struct GDITextMetric
@@ -491,16 +509,14 @@ namespace Alsing.Windows
     }
 
     //	public IntPtr Fontname;
+
     [StructLayout(LayoutKind.Sequential)]
     public class ENUMLOGFONTEX
     {
         public LogFont elfLogFont;
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
-        public string elfFullName = "";
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
-        public byte[] elfStyle;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
-        public byte[] elfScript;
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)] public string elfFullName = "";
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)] public byte[] elfStyle;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)] public byte[] elfScript;
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -527,218 +543,220 @@ namespace Alsing.Windows
         public byte lfClipPrecision;
         public byte lfQuality;
         public byte lfPitchAndFamily;
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
-        public string lfFaceName = "";
+
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)] public string lfFaceName = "";
     }
 
-    //	public enum VirtualKeys
-    //	{
-    //		VK_LBUTTON  = 0x01,
-    //	VK_RBUTTON =0x02,
-    //	VK_CANCEL =0x03,
-    //	VK_MBUTTON =0x04 ,
-    //	VK_XBUTTON1 =0x05,
-    //	VK_XBUTTON2 =0x06,		
-    //	VK_BACK =0x08 ,
-    //	VK_TAB =0x09,
-    //	—  0A–0B Reserved  
-    //	VK_CLEAR 0C CLEAR key  
-    //	VK_RETURN 0D ENTER key  
-    //	—  0E–0F Undefined  
-    //	VK_SHIFT 10 SHIFT key  
-    //	VK_CONTROL 11 CTRL key  
-    //	VK_MENU 12 ALT key  
-    //	VK_PAUSE 13 PAUSE key  
-    //	VK_CAPITAL 14 CAPS LOCK key  
-    //	VK_KANA 15 IME Kana mode 
-    //	VK_HANGUEL 15 IME Hanguel mode (maintained for compatibility; use VK_HANGUL) 
-    //	VK_HANGUL 15 IME Hangul mode 
-    //	—  16 Undefined  
-    //	VK_JUNJA 17 IME Junja mode 
-    //	VK_FINAL 18 IME final mode 
-    //	VK_HANJA 19 IME Hanja mode 
-    //	VK_KANJI 19 IME Kanji mode 
-    //	—  1A Undefined  
-    //	VK_ESCAPE 1B ESC key  
-    //	VK_CONVERT 1C IME convert 
-    //	VK_NONCONVERT 1D IME nonconvert 
-    //	VK_ACCEPT 1E IME accept 
-    //	VK_MODECHANGE 1F IME mode change request 
-    //	VK_SPACE 20 SPACEBAR  
-    //	VK_PRIOR 21 PAGE UP key  
-    //	VK_NEXT 22 PAGE DOWN key  
-    //	VK_END 23 END key  
-    //	VK_HOME 24 HOME key  
-    //	VK_LEFT 25 LEFT ARROW key  
-    //	VK_UP 26 UP ARROW key  
-    //	VK_RIGHT 27 RIGHT ARROW key  
-    //	VK_DOWN 28 DOWN ARROW key  
-    //	VK_SELECT 29 SELECT key  
-    //	VK_PRINT 2A PRINT key 
-    //	VK_EXECUTE 2B EXECUTE key  
-    //	VK_SNAPSHOT 2C PRINT SCREEN key  
-    //	VK_INSERT 2D INS key  
-    //	VK_DELETE 2E DEL key  
-    //	VK_HELP 2F HELP key  
-    //	30 0 key  
-    //	31 1 key  
-    //	32 2 key  
-    //	33 3 key  
-    //	34 4 key  
-    //	35 5 key  
-    //	36 6 key  
-    //	37 7 key  
-    //	38 8 key  
-    //	39 9 key  
-    //	—  3A–40 Undefined  
-    //	41 A key  
-    //	42 B key  
-    //	43 C key  
-    //	44 D key  
-    //	45 E key  
-    //	46 F key  
-    //	47 G key  
-    //	48 H key  
-    //	49 I key  
-    //	4A J key  
-    //	4B K key  
-    //	4C L key  
-    //	4D M key  
-    //	4E N key  
-    //	4F O key  
-    //	50 P key  
-    //	51 Q key  
-    //	52 R key  
-    //	53 S key  
-    //	54 T key  
-    //	55 U key  
-    //	56 V key  
-    //	57 W key  
-    //	58 X key  
-    //	59 Y key  
-    //	5A Z key  
-    //	VK_LWIN 5B Left Windows key (Microsoft® Natural® keyboard)  
-    //	VK_RWIN 5C Right Windows key (Natural keyboard)  
-    //	VK_APPS 5D Applications key (Natural keyboard)  
-    //	—  5E Reserved  
-    //	VK_SLEEP 5F Computer Sleep key 
-    //	VK_NUMPAD0 60 Numeric keypad 0 key  
-    //	VK_NUMPAD1 61 Numeric keypad 1 key  
-    //	VK_NUMPAD2 62 Numeric keypad 2 key  
-    //	VK_NUMPAD3 63 Numeric keypad 3 key  
-    //	VK_NUMPAD4 64 Numeric keypad 4 key  
-    //	VK_NUMPAD5 65 Numeric keypad 5 key  
-    //	VK_NUMPAD6 66 Numeric keypad 6 key  
-    //	VK_NUMPAD7 67 Numeric keypad 7 key  
-    //	VK_NUMPAD8 68 Numeric keypad 8 key  
-    //	VK_NUMPAD9 69 Numeric keypad 9 key  
-    //	VK_MULTIPLY 6A Multiply key  
-    //	VK_ADD 6B Add key  
-    //	VK_SEPARATOR 6C Separator key  
-    //	VK_SUBTRACT 6D Subtract key  
-    //	VK_DECIMAL 6E Decimal key  
-    //	VK_DIVIDE 6F Divide key  
-    //	VK_F1 70 F1 key  
-    //	VK_F2 71 F2 key  
-    //	VK_F3 72 F3 key  
-    //	VK_F4 73 F4 key  
-    //	VK_F5 74 F5 key  
-    //	VK_F6 75 F6 key  
-    //	VK_F7 76 F7 key  
-    //	VK_F8 77 F8 key  
-    //	VK_F9 78 F9 key  
-    //	VK_F10 79 F10 key  
-    //	VK_F11 7A F11 key  
-    //	VK_F12 7B F12 key  
-    //	VK_F13 7C F13 key  
-    //	VK_F14 7D F14 key  
-    //	VK_F15 7E F15 key  
-    //	VK_F16 7F F16 key  
-    //	VK_F17 80H F17 key  
-    //	VK_F18 81H F18 key  
-    //	VK_F19 82H F19 key  
-    //	VK_F20 83H F20 key  
-    //	VK_F21 84H F21 key  
-    //	VK_F22 85H F22 key  
-    //	VK_F23 86H F23 key  
-    //	VK_F24 87H F24 key  
-    //	—  88–8F Unassigned  
-    //	VK_NUMLOCK 90 NUM LOCK key  
-    //	VK_SCROLL 91 SCROLL LOCK key  
-    //	92–96 OEM specific 
-    //	—  97–9F Unassigned  
-    //	VK_LSHIFT A0 Left SHIFT key 
-    //	VK_RSHIFT A1 Right SHIFT key 
-    //	VK_LCONTROL A2 Left CONTROL key 
-    //	VK_RCONTROL A3 Right CONTROL key 
-    //	VK_LMENU A4 Left MENU key 
-    //	VK_RMENU A5 Right MENU key 
-    //	VK_BROWSER_BACK A6 Windows 2000/XP: Browser Back key 
-    //	VK_BROWSER_FORWARD A7 Windows 2000/XP: Browser Forward key 
-    //	VK_BROWSER_REFRESH A8 Windows 2000/XP: Browser Refresh key 
-    //	VK_BROWSER_STOP A9 Windows 2000/XP: Browser Stop key 
-    //	VK_BROWSER_SEARCH AA Windows 2000/XP: Browser Search key 
-    //	VK_BROWSER_FAVORITES AB Windows 2000/XP: Browser Favorites key 
-    //	VK_BROWSER_HOME AC Windows 2000/XP: Browser Start and Home key 
-    //	VK_VOLUME_MUTE AD Windows 2000/XP: Volume Mute key 
-    //	VK_VOLUME_DOWN AE Windows 2000/XP: Volume Down key 
-    //	VK_VOLUME_UP AF Windows 2000/XP: Volume Up key 
-    //	VK_MEDIA_NEXT_TRACK B0 Windows 2000/XP: Next Track key 
-    //	VK_MEDIA_PREV_TRACK B1 Windows 2000/XP: Previous Track key 
-    //	VK_MEDIA_STOP B2 Windows 2000/XP: Stop Media key 
-    //	VK_MEDIA_PLAY_PAUSE B3 Windows 2000/XP: Play/Pause Media key 
-    //	VK_LAUNCH_MAIL B4 Windows 2000/XP: Start Mail key 
-    //	VK_LAUNCH_MEDIA_SELECT B5 Windows 2000/XP: Select Media key 
-    //	VK_LAUNCH_APP1 B6 Windows 2000/XP: Start Application 1 key 
-    //	VK_LAUNCH_APP2 B7 Windows 2000/XP: Start Application 2 key 
-    //	—  B8-B9 Reserved 
-    //	VK_OEM_1 BA Used for miscellaneous characters; it can vary by keyboard. 
-    //	Windows 2000/XP: For the US standard keyboard, the ';:' key
-    // 
-    //	VK_OEM_PLUS BB Windows 2000/XP: For any country/region, the '+' key 
-    //	VK_OEM_COMMA BC Windows 2000/XP: For any country/region, the ',' key 
-    //	VK_OEM_MINUS BD Windows 2000/XP: For any country/region, the '-' key 
-    //	VK_OEM_PERIOD BE Windows 2000/XP: For any country/region, the '.' key 
-    //	VK_OEM_2 BF Used for miscellaneous characters; it can vary by keyboard. 
-    //	Windows 2000/XP: For the US standard keyboard, the '/?' key
-    // 
-    //	VK_OEM_3 C0 Used for miscellaneous characters; it can vary by keyboard. 
-    //	Windows 2000/XP: For the US standard keyboard, the '`~' key
-    // 
-    //	—  C1–D7 Reserved  
-    //	—  D8–DA Unassigned 
-    //	VK_OEM_4 DB Used for miscellaneous characters; it can vary by keyboard. 
-    //	Windows 2000/XP: For the US standard keyboard, the '[{' key
-    // 
-    //	VK_OEM_5 DC Used for miscellaneous characters; it can vary by keyboard. 
-    //	Windows 2000/XP: For the US standard keyboard, the '\|' key
-    // 
-    //	VK_OEM_6 DD Used for miscellaneous characters; it can vary by keyboard. 
-    //	Windows 2000/XP: For the US standard keyboard, the ']}' key
-    // 
-    //	VK_OEM_7 DE Used for miscellaneous characters; it can vary by keyboard. 
-    //	Windows 2000/XP: For the US standard keyboard, the 'single-quote/double-quote' key
-    // 
-    //	VK_OEM_8 DF Used for miscellaneous characters; it can vary by keyboard. 
-    //	—  E0 Reserved 
-    //	E1 OEM specific 
-    //	VK_OEM_102 E2 Windows 2000/XP: Either the angle bracket key or the backslash key on the RT 102-key keyboard 
-    //	E3–E4 OEM specific 
-    //	VK_PROCESSKEY E5 Windows 95/98/Me, Windows NT 4.0, Windows 2000/XP: IME PROCESS key 
-    //	E6 OEM specific 
-    //	VK_PACKET E7 Windows 2000/XP: Used to pass Unicode characters as if they were keystrokes. The VK_PACKET key is the low word of a 32-bit Virtual Key value used for non-keyboard input methods. For more information, see Remark in KEYBDINPUT, SendInput, WM_KEYDOWN, and WM_KEYUP 
-    //	—  E8 Unassigned  
-    //	E9–F5 OEM specific 
-    //	VK_ATTN F6 Attn key 
-    //	VK_CRSEL F7 CrSel key 
-    //	VK_EXSEL F8 ExSel key 
-    //	VK_EREOF F9 Erase EOF key 
-    //	VK_PLAY FA Play key 
-    //	VK_ZOOM FB Zoom key 
-    //	VK_NONAME FC Reserved for future use  
-    //	VK_PA1 FD PA1 key 
-    //	VK_OEM_CLEAR FE Clear key 
-    //
-    //	}
+//	public enum VirtualKeys
+//	{
+//		VK_LBUTTON  = 0x01,
+//	VK_RBUTTON =0x02,
+//	VK_CANCEL =0x03,
+//	VK_MBUTTON =0x04 ,
+//	VK_XBUTTON1 =0x05,
+//	VK_XBUTTON2 =0x06,		
+//	VK_BACK =0x08 ,
+//	VK_TAB =0x09,
+//	—  0A–0B Reserved  
+//	VK_CLEAR 0C CLEAR key  
+//	VK_RETURN 0D ENTER key  
+//	—  0E–0F Undefined  
+//	VK_SHIFT 10 SHIFT key  
+//	VK_CONTROL 11 CTRL key  
+//	VK_MENU 12 ALT key  
+//	VK_PAUSE 13 PAUSE key  
+//	VK_CAPITAL 14 CAPS LOCK key  
+//	VK_KANA 15 IME Kana mode 
+//	VK_HANGUEL 15 IME Hanguel mode (maintained for compatibility; use VK_HANGUL) 
+//	VK_HANGUL 15 IME Hangul mode 
+//	—  16 Undefined  
+//	VK_JUNJA 17 IME Junja mode 
+//	VK_FINAL 18 IME final mode 
+//	VK_HANJA 19 IME Hanja mode 
+//	VK_KANJI 19 IME Kanji mode 
+//	—  1A Undefined  
+//	VK_ESCAPE 1B ESC key  
+//	VK_CONVERT 1C IME convert 
+//	VK_NONCONVERT 1D IME nonconvert 
+//	VK_ACCEPT 1E IME accept 
+//	VK_MODECHANGE 1F IME mode change request 
+//	VK_SPACE 20 SPACEBAR  
+//	VK_PRIOR 21 PAGE UP key  
+//	VK_NEXT 22 PAGE DOWN key  
+//	VK_END 23 END key  
+//	VK_HOME 24 HOME key  
+//	VK_LEFT 25 LEFT ARROW key  
+//	VK_UP 26 UP ARROW key  
+//	VK_RIGHT 27 RIGHT ARROW key  
+//	VK_DOWN 28 DOWN ARROW key  
+//	VK_SELECT 29 SELECT key  
+//	VK_PRINT 2A PRINT key 
+//	VK_EXECUTE 2B EXECUTE key  
+//	VK_SNAPSHOT 2C PRINT SCREEN key  
+//	VK_INSERT 2D INS key  
+//	VK_DELETE 2E DEL key  
+//	VK_HELP 2F HELP key  
+//	30 0 key  
+//	31 1 key  
+//	32 2 key  
+//	33 3 key  
+//	34 4 key  
+//	35 5 key  
+//	36 6 key  
+//	37 7 key  
+//	38 8 key  
+//	39 9 key  
+//	—  3A–40 Undefined  
+//	41 A key  
+//	42 B key  
+//	43 C key  
+//	44 D key  
+//	45 E key  
+//	46 F key  
+//	47 G key  
+//	48 H key  
+//	49 I key  
+//	4A J key  
+//	4B K key  
+//	4C L key  
+//	4D M key  
+//	4E N key  
+//	4F O key  
+//	50 P key  
+//	51 Q key  
+//	52 R key  
+//	53 S key  
+//	54 T key  
+//	55 U key  
+//	56 V key  
+//	57 W key  
+//	58 X key  
+//	59 Y key  
+//	5A Z key  
+//	VK_LWIN 5B Left Windows key (Microsoft® Natural® keyboard)  
+//	VK_RWIN 5C Right Windows key (Natural keyboard)  
+//	VK_APPS 5D Applications key (Natural keyboard)  
+//	—  5E Reserved  
+//	VK_SLEEP 5F Computer Sleep key 
+//	VK_NUMPAD0 60 Numeric keypad 0 key  
+//	VK_NUMPAD1 61 Numeric keypad 1 key  
+//	VK_NUMPAD2 62 Numeric keypad 2 key  
+//	VK_NUMPAD3 63 Numeric keypad 3 key  
+//	VK_NUMPAD4 64 Numeric keypad 4 key  
+//	VK_NUMPAD5 65 Numeric keypad 5 key  
+//	VK_NUMPAD6 66 Numeric keypad 6 key  
+//	VK_NUMPAD7 67 Numeric keypad 7 key  
+//	VK_NUMPAD8 68 Numeric keypad 8 key  
+//	VK_NUMPAD9 69 Numeric keypad 9 key  
+//	VK_MULTIPLY 6A Multiply key  
+//	VK_ADD 6B Add key  
+//	VK_SEPARATOR 6C Separator key  
+//	VK_SUBTRACT 6D Subtract key  
+//	VK_DECIMAL 6E Decimal key  
+//	VK_DIVIDE 6F Divide key  
+//	VK_F1 70 F1 key  
+//	VK_F2 71 F2 key  
+//	VK_F3 72 F3 key  
+//	VK_F4 73 F4 key  
+//	VK_F5 74 F5 key  
+//	VK_F6 75 F6 key  
+//	VK_F7 76 F7 key  
+//	VK_F8 77 F8 key  
+//	VK_F9 78 F9 key  
+//	VK_F10 79 F10 key  
+//	VK_F11 7A F11 key  
+//	VK_F12 7B F12 key  
+//	VK_F13 7C F13 key  
+//	VK_F14 7D F14 key  
+//	VK_F15 7E F15 key  
+//	VK_F16 7F F16 key  
+//	VK_F17 80H F17 key  
+//	VK_F18 81H F18 key  
+//	VK_F19 82H F19 key  
+//	VK_F20 83H F20 key  
+//	VK_F21 84H F21 key  
+//	VK_F22 85H F22 key  
+//	VK_F23 86H F23 key  
+//	VK_F24 87H F24 key  
+//	—  88–8F Unassigned  
+//	VK_NUMLOCK 90 NUM LOCK key  
+//	VK_SCROLL 91 SCROLL LOCK key  
+//	92–96 OEM specific 
+//	—  97–9F Unassigned  
+//	VK_LSHIFT A0 Left SHIFT key 
+//	VK_RSHIFT A1 Right SHIFT key 
+//	VK_LCONTROL A2 Left CONTROL key 
+//	VK_RCONTROL A3 Right CONTROL key 
+//	VK_LMENU A4 Left MENU key 
+//	VK_RMENU A5 Right MENU key 
+//	VK_BROWSER_BACK A6 Windows 2000/XP: Browser Back key 
+//	VK_BROWSER_FORWARD A7 Windows 2000/XP: Browser Forward key 
+//	VK_BROWSER_REFRESH A8 Windows 2000/XP: Browser Refresh key 
+//	VK_BROWSER_STOP A9 Windows 2000/XP: Browser Stop key 
+//	VK_BROWSER_SEARCH AA Windows 2000/XP: Browser Search key 
+//	VK_BROWSER_FAVORITES AB Windows 2000/XP: Browser Favorites key 
+//	VK_BROWSER_HOME AC Windows 2000/XP: Browser Start and Home key 
+//	VK_VOLUME_MUTE AD Windows 2000/XP: Volume Mute key 
+//	VK_VOLUME_DOWN AE Windows 2000/XP: Volume Down key 
+//	VK_VOLUME_UP AF Windows 2000/XP: Volume Up key 
+//	VK_MEDIA_NEXT_TRACK B0 Windows 2000/XP: Next Track key 
+//	VK_MEDIA_PREV_TRACK B1 Windows 2000/XP: Previous Track key 
+//	VK_MEDIA_STOP B2 Windows 2000/XP: Stop Media key 
+//	VK_MEDIA_PLAY_PAUSE B3 Windows 2000/XP: Play/Pause Media key 
+//	VK_LAUNCH_MAIL B4 Windows 2000/XP: Start Mail key 
+//	VK_LAUNCH_MEDIA_SELECT B5 Windows 2000/XP: Select Media key 
+//	VK_LAUNCH_APP1 B6 Windows 2000/XP: Start Application 1 key 
+//	VK_LAUNCH_APP2 B7 Windows 2000/XP: Start Application 2 key 
+//	—  B8-B9 Reserved 
+//	VK_OEM_1 BA Used for miscellaneous characters; it can vary by keyboard. 
+//	Windows 2000/XP: For the US standard keyboard, the ';:' key
+// 
+//	VK_OEM_PLUS BB Windows 2000/XP: For any country/region, the '+' key 
+//	VK_OEM_COMMA BC Windows 2000/XP: For any country/region, the ',' key 
+//	VK_OEM_MINUS BD Windows 2000/XP: For any country/region, the '-' key 
+//	VK_OEM_PERIOD BE Windows 2000/XP: For any country/region, the '.' key 
+//	VK_OEM_2 BF Used for miscellaneous characters; it can vary by keyboard. 
+//	Windows 2000/XP: For the US standard keyboard, the '/?' key
+// 
+//	VK_OEM_3 C0 Used for miscellaneous characters; it can vary by keyboard. 
+//	Windows 2000/XP: For the US standard keyboard, the '`~' key
+// 
+//	—  C1–D7 Reserved  
+//	—  D8–DA Unassigned 
+//	VK_OEM_4 DB Used for miscellaneous characters; it can vary by keyboard. 
+//	Windows 2000/XP: For the US standard keyboard, the '[{' key
+// 
+//	VK_OEM_5 DC Used for miscellaneous characters; it can vary by keyboard. 
+//	Windows 2000/XP: For the US standard keyboard, the '\|' key
+// 
+//	VK_OEM_6 DD Used for miscellaneous characters; it can vary by keyboard. 
+//	Windows 2000/XP: For the US standard keyboard, the ']}' key
+// 
+//	VK_OEM_7 DE Used for miscellaneous characters; it can vary by keyboard. 
+//	Windows 2000/XP: For the US standard keyboard, the 'single-quote/double-quote' key
+// 
+//	VK_OEM_8 DF Used for miscellaneous characters; it can vary by keyboard. 
+//	—  E0 Reserved 
+//	E1 OEM specific 
+//	VK_OEM_102 E2 Windows 2000/XP: Either the angle bracket key or the backslash key on the RT 102-key keyboard 
+//	E3–E4 OEM specific 
+//	VK_PROCESSKEY E5 Windows 95/98/Me, Windows NT 4.0, Windows 2000/XP: IME PROCESS key 
+//	E6 OEM specific 
+//	VK_PACKET E7 Windows 2000/XP: Used to pass Unicode characters as if they were keystrokes. The VK_PACKET key is the low word of a 32-bit Virtual Key value used for non-keyboard input methods. For more information, see Remark in KEYBDINPUT, SendInput, WM_KEYDOWN, and WM_KEYUP 
+//	—  E8 Unassigned  
+//	E9–F5 OEM specific 
+//	VK_ATTN F6 Attn key 
+//	VK_CRSEL F7 CrSel key 
+//	VK_EXSEL F8 ExSel key 
+//	VK_EREOF F9 Erase EOF key 
+//	VK_PLAY FA Play key 
+//	VK_ZOOM FB Zoom key 
+//	VK_NONAME FC Reserved for future use  
+//	VK_PA1 FD PA1 key 
+//	VK_OEM_CLEAR FE Clear key 
+//
+//	}
+
+
     public delegate int FONTENUMPROC(ENUMLOGFONTEX f, int lpntme, int FontType, int lParam);
 }

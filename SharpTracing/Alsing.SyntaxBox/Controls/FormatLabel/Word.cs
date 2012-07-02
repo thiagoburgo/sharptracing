@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 using System.Drawing;
 
 namespace Alsing.Windows.Forms.FormatLabel

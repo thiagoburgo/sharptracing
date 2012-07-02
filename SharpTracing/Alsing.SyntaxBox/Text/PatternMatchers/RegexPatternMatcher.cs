@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 using System;
 using System.Text.RegularExpressions;
 
@@ -18,51 +19,58 @@ namespace Alsing.Text.PatternMatchers
     public class RegexPatternMatcher : PatternMatcherBase
     {
         private Regex regEx;
+
         public RegexPatternMatcher()
         {
-            this.PatternChanged += this.RegexPatternMatcher_PatternChanged;
+            PatternChanged += RegexPatternMatcher_PatternChanged;
         }
+
         public RegexPatternMatcher(string pattern) : this()
         {
-            this.Pattern = pattern;
+            Pattern = pattern;
         }
 
         #region PUBLIC PROPERTY PATTERN (+PATTERNCHANGED EVENT)
+
         private string pattern;
+
         /// <summary>
         /// Gets or Sets the <c>Pattern</c> property
         /// </summary>
         public string Pattern
         {
-            get { return this.pattern; }
+            get { return pattern; }
             set
             {
                 //Ignore same value
-                if(this.pattern == value){
+                if (pattern == value)
                     return;
-                }
+
                 //Set the new value
-                this.pattern = value;
+                pattern = value;
+
                 //Raise the changed event
-                this.OnPatternChanged(EventArgs.Empty);
+                OnPatternChanged(EventArgs.Empty);
             }
         }
 
         #region PUBLIC EVENT PATTERNCHANGED
+
         /// <summary>
         /// Fires when the 'Pattern' Property changes
         /// </summary>
         public event EventHandler PatternChanged = null;
+
         /// <summary>
         /// Raises the <c>PatternChanged</c> Event
         /// </summary>
         /// <param name="e">EventArgs</param>
         protected virtual void OnPatternChanged(EventArgs e)
         {
-            if(this.PatternChanged != null){
-                this.PatternChanged(this, e);
-            }
+            if (PatternChanged != null)
+                PatternChanged(this, e);
         }
+
         #endregion //END PUBLIC EVENT PATTERNCHANGED
 
         #endregion //END PUBLIC PROPERTY PATTERN (+PATTERNCHANGED EVENT)
@@ -70,19 +78,24 @@ namespace Alsing.Text.PatternMatchers
         //perform the match
         public override int Match(string textToMatch, int matchAtIndex)
         {
-            if(this.regEx == null){
+            if (regEx == null)
                 return 0;
-            }
-            Match match = this.regEx.Match(textToMatch, matchAtIndex);
-            if(match.Success){
+
+            Match match = regEx.Match(textToMatch, matchAtIndex);
+
+            if (match.Success)
+            {
                 return match.Length;
             }
+
             return 0;
         }
+
         private void RegexPatternMatcher_PatternChanged(object sender, EventArgs e)
         {
             const RegexOptions options = RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.Singleline;
-            this.regEx = new Regex(string.Format(@"\G({0})", this.pattern), options);
+
+            regEx = new Regex(string.Format(@"\G({0})", pattern), options);
         }
     }
 }

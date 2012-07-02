@@ -10,7 +10,7 @@
  * Feel free to copy, modify and  give fixes 
  * suggestions. Keep the credits!
  */
- using System;
+using System;
 using System.ComponentModel;
 using DrawEngine.Renderer.Algebra;
 using DrawEngine.Renderer.BasicStructures;
@@ -25,6 +25,7 @@ namespace DrawEngine.Renderer.RenderObjects
         private Vector3D halfVector;
         private Point3D pMax;
         private Point3D pMin;
+        public static readonly BoundBox Zero = new BoundBox();
         public BoundBox(float xMin, float yMin, float zMin, float xMax, float yMax, float zMax)
         {
             this.pMin = new Point3D(xMin, yMin, zMin);
@@ -63,17 +64,23 @@ namespace DrawEngine.Renderer.RenderObjects
         {
             get
             {
-                if(index % 2 == 0){
+                if (index % 2 == 0)
+                {
                     return this.pMin;
-                } else{
+                }
+                else
+                {
                     return this.pMax;
                 }
             }
             set
             {
-                if(index % 2 == 0){
+                if (index % 2 == 0)
+                {
                     this.pMin = value;
-                } else{
+                }
+                else
+                {
                     this.pMax = value;
                 }
             }
@@ -163,23 +170,30 @@ namespace DrawEngine.Renderer.RenderObjects
         }
         public void Include(Point3D p)
         {
-            if(p != Point3D.Zero){
-                if(p.X < this.pMin.X){
+            if (p != Point3D.Zero)
+            {
+                if (p.X < this.pMin.X)
+                {
                     this.pMin.X = p.X;
                 }
-                if(p.X > this.pMax.X){
+                if (p.X > this.pMax.X)
+                {
                     this.pMax.X = p.X;
                 }
-                if(p.Y < this.pMin.Y){
+                if (p.Y < this.pMin.Y)
+                {
                     this.pMin.Y = p.Y;
                 }
-                if(p.Y > this.pMax.Y){
+                if (p.Y > this.pMax.Y)
+                {
                     this.pMax.Y = p.Y;
                 }
-                if(p.Z < this.pMin.Z){
+                if (p.Z < this.pMin.Z)
+                {
                     this.pMin.Z = p.Z;
                 }
-                if(p.Z > this.pMax.Z){
+                if (p.Z > this.pMax.Z)
+                {
                     this.pMax.Z = p.Z;
                 }
             }
@@ -192,43 +206,58 @@ namespace DrawEngine.Renderer.RenderObjects
             float tmin, tmax, tymin, tymax, tzmin, tzmax;
             float oX = ray.Origin.X, oY = ray.Origin.Y, oZ = ray.Origin.Z;
             float inv_dX = ray.Inv_Direction.X, inv_dY = ray.Inv_Direction.Y, inv_dZ = ray.Inv_Direction.Z;
-            if(inv_dX > 0){
+            if (inv_dX > 0)
+            {
                 tmin = (this.pMin.X - oX) * inv_dX;
                 tmax = (this.pMax.X - oX) * inv_dX;
-            } else{
+            }
+            else
+            {
                 tmin = (this.pMax.X - oX) * inv_dX;
                 tmax = (this.pMin.X - oX) * inv_dX;
             }
-            if(inv_dY > 0){
+            if (inv_dY > 0)
+            {
                 tymin = (this.pMin.Y - oY) * inv_dY;
                 tymax = (this.pMax.Y - oY) * inv_dY;
-            } else{
+            }
+            else
+            {
                 tymin = (this.pMax.Y - oY) * inv_dY;
                 tymax = (this.pMin.Y - oY) * inv_dY;
             }
-            if((tmin > tymax) || (tymin > tmax)){
+            if ((tmin > tymax) || (tymin > tmax))
+            {
                 return false;
             }
-            if(tymin > tmin){
+            if (tymin > tmin)
+            {
                 tmin = tymin;
             }
-            if(tymax < tmax){
+            if (tymax < tmax)
+            {
                 tmax = tymax;
             }
-            if(inv_dZ > 0){
+            if (inv_dZ > 0)
+            {
                 tzmin = (this.pMin.Z - oZ) * inv_dZ;
                 tzmax = (this.pMax.Z - oZ) * inv_dZ;
-            } else{
+            }
+            else
+            {
                 tzmin = (this.pMax.Z - oZ) * inv_dZ;
                 tzmax = (this.pMin.Z - oZ) * inv_dZ;
             }
-            if((tmin > tzmax) || (tzmin > tmax)){
+            if ((tmin > tzmax) || (tzmin > tmax))
+            {
                 return false;
             }
-            if(tzmin > tmin){
+            if (tzmin > tmin)
+            {
                 tmin = tzmin;
             }
-            if(tzmax < tmax){
+            if (tzmax < tmax)
+            {
                 tmax = tzmax;
             }
             return true;
@@ -243,43 +272,58 @@ namespace DrawEngine.Renderer.RenderObjects
             float tmin, tmax, tymin, tymax, tzmin, tzmax;
             float oX = ray.Origin.X, oY = ray.Origin.Y, oZ = ray.Origin.Z;
             float inv_dX = ray.Inv_Direction.X, inv_dY = ray.Inv_Direction.Y, inv_dZ = ray.Inv_Direction.Z;
-            if(ray.Inv_Direction.X >= 0){
+            if (ray.Inv_Direction.X >= 0)
+            {
                 tmin = (this.pMin.X - oX) * inv_dX;
                 tmax = (this.pMax.X - oX) * inv_dX;
-            } else{
+            }
+            else
+            {
                 tmin = (this.pMax.X - oX) * inv_dX;
                 tmax = (this.pMin.X - oX) * inv_dX;
             }
-            if(ray.Inv_Direction.Y >= 0){
+            if (ray.Inv_Direction.Y >= 0)
+            {
                 tymin = (this.pMin.Y - oY) * inv_dY;
                 tymax = (this.pMax.Y - oY) * inv_dY;
-            } else{
+            }
+            else
+            {
                 tymin = (this.pMax.Y - oY) * inv_dY;
                 tymax = (this.pMin.Y - oY) * inv_dY;
             }
-            if((tmin > tymax) || (tymin > tmax)){
+            if ((tmin > tymax) || (tymin > tmax))
+            {
                 return false;
             }
-            if(tymin > tmin){
+            if (tymin > tmin)
+            {
                 tmin = tymin;
             }
-            if(tymax < tmax){
+            if (tymax < tmax)
+            {
                 tmax = tymax;
             }
-            if(ray.Inv_Direction.Z >= 0){
+            if (ray.Inv_Direction.Z >= 0)
+            {
                 tzmin = (this.pMin.Z - oZ) * inv_dZ;
                 tzmax = (this.pMax.Z - oZ) * inv_dZ;
-            } else{
+            }
+            else
+            {
                 tzmin = (this.pMax.Z - oZ) * inv_dZ;
                 tzmax = (this.pMin.Z - oZ) * inv_dZ;
             }
-            if((tmin > tzmax) || (tzmin > tmax)){
+            if ((tmin > tzmax) || (tzmin > tmax))
+            {
                 return false;
             }
-            if(tzmin > tmin){
+            if (tzmin > tmin)
+            {
                 tmin = tzmin;
             }
-            if(tzmax < tmax){
+            if (tzmax < tmax)
+            {
                 tmax = tzmax;
             }
             t = tmin;
@@ -290,46 +334,62 @@ namespace DrawEngine.Renderer.RenderObjects
             ltmin = float.MaxValue;
             ltmax = float.MaxValue;
             float tmin, tmax, tymin, tymax, tzmin, tzmax;
-            if(ray.Inv_Direction.X >= 0){
+            if (ray.Inv_Direction.X >= 0)
+            {
                 tmin = (this.pMin.X - ray.Origin.X) * ray.Inv_Direction.X;
                 tmax = (this.pMax.X - ray.Origin.X) * ray.Inv_Direction.X;
-            } else{
+            }
+            else
+            {
                 tmin = (this.pMax.X - ray.Origin.X) * ray.Inv_Direction.X;
                 tmax = (this.pMin.X - ray.Origin.X) * ray.Inv_Direction.X;
             }
-            if(ray.Inv_Direction.Y >= 0){
+            if (ray.Inv_Direction.Y >= 0)
+            {
                 tymin = (this.pMin.Y - ray.Origin.Y) * ray.Inv_Direction.Y;
                 tymax = (this.pMax.Y - ray.Origin.Y) * ray.Inv_Direction.Y;
-            } else{
+            }
+            else
+            {
                 tymin = (this.pMax.Y - ray.Origin.Y) * ray.Inv_Direction.Y;
                 tymax = (this.pMin.Y - ray.Origin.Y) * ray.Inv_Direction.Y;
             }
-            if((tmin > tymax) || (tymin > tmax)){
+            if ((tmin > tymax) || (tymin > tmax))
+            {
                 return false;
             }
-            if(tymin > tmin){
+            if (tymin > tmin)
+            {
                 tmin = tymin;
             }
-            if(tymax < tmax){
+            if (tymax < tmax)
+            {
                 tmax = tymax;
             }
-            if(ray.Inv_Direction.Z >= 0){
+            if (ray.Inv_Direction.Z >= 0)
+            {
                 tzmin = (this.pMin.Z - ray.Origin.Z) * ray.Inv_Direction.Z;
                 tzmax = (this.pMax.Z - ray.Origin.Z) * ray.Inv_Direction.Z;
-            } else{
+            }
+            else
+            {
                 tzmin = (this.pMax.Z - ray.Origin.Z) * ray.Inv_Direction.Z;
                 tzmax = (this.pMin.Z - ray.Origin.Z) * ray.Inv_Direction.Z;
             }
-            if((tmin > tzmax) || (tzmin > tmax)){
+            if ((tmin > tzmax) || (tzmin > tmax))
+            {
                 return false;
             }
-            if(tzmin > tmin){
+            if (tzmin > tmin)
+            {
                 tmin = tzmin;
             }
-            if(tzmax < tmax){
+            if (tzmax < tmax)
+            {
                 tmax = tzmax;
             }
-            if((tmin < ltmin) && (tmax > 0)){
+            if ((tmin < ltmin) && (tmax > 0))
+            {
                 ltmin = tmin;
                 ltmax = tmax;
                 return true;

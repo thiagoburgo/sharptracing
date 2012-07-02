@@ -1,10 +1,14 @@
+using System.Runtime.InteropServices;
+using System;
 namespace DrawEngine.Renderer.Algebra
 {
+    [Serializable, StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct BarycentricCoordinate
     {
         public float Alpha;
         public float Beta;
         public float Gama;
+        public static readonly BarycentricCoordinate Zero = new BarycentricCoordinate();
         public BarycentricCoordinate(float alpha, float beta, float gama)
         {
             this.Alpha = alpha;

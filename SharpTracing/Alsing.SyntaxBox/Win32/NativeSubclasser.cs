@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 using System;
 using System.Windows.Forms;
 
@@ -14,6 +15,7 @@ namespace Alsing.Windows.Forms
 {
 
     #region params
+
     public class NativeMessageArgs : EventArgs
     {
         public bool Cancel;
@@ -21,49 +23,61 @@ namespace Alsing.Windows.Forms
     }
 
     public delegate void NativeMessageHandler(object s, NativeMessageArgs e);
+
     #endregion
 
     public class NativeSubclasser : NativeWindow
     {
         public NativeSubclasser() {}
+
         public NativeSubclasser(Control Target)
         {
-            this.AssignHandle(Target.Handle);
-            Target.HandleCreated += this.Handle_Created;
-            Target.HandleDestroyed += this.Handle_Destroyed;
+            AssignHandle(Target.Handle);
+            Target.HandleCreated += Handle_Created;
+            Target.HandleDestroyed += Handle_Destroyed;
         }
+
         public NativeSubclasser(IntPtr hWnd)
         {
-            this.AssignHandle(hWnd);
+            AssignHandle(hWnd);
         }
+
         public event NativeMessageHandler Message = null;
+
         protected virtual void OnMessage(NativeMessageArgs e)
         {
-            if(this.Message != null){
-                this.Message(this, e);
-            }
+            if (Message != null)
+                Message(this, e);
         }
+
         private void Handle_Created(object o, EventArgs e)
         {
-            this.AssignHandle(((Control)o).Handle);
+            AssignHandle(((Control) o).Handle);
         }
+
         private void Handle_Destroyed(object o, EventArgs e)
         {
-            this.ReleaseHandle();
+            ReleaseHandle();
         }
+
         public void Detatch()
         {
             //	this.ReleaseHandle ();
         }
+
         protected override void WndProc(ref Message m)
         {
-            try{
-                var e = new NativeMessageArgs{Message = m, Cancel = false};
-                this.OnMessage(e);
-                if(!e.Cancel){
+            try
+            {
+                var e = new NativeMessageArgs {Message = m, Cancel = false};
+
+                OnMessage(e);
+
+                if (!e.Cancel)
                     base.WndProc(ref m);
-                }
-            } catch(Exception x){
+            }
+            catch (Exception x)
+            {
                 Console.WriteLine(x.Message);
             }
         }

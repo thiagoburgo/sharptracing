@@ -14,16 +14,18 @@
 using DrawEngine.Renderer.Algebra;
 using DrawEngine.Renderer.Mathematics.Algebra;
 using DrawEngine.Renderer.RenderObjects;
+using System.Runtime.InteropServices;
 
 namespace DrawEngine.Renderer.BasicStructures
 {
+    [Serializable, StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct Ray : ITransformable3D
     {
         private Vector3D direction;
         private Vector3D inv_direction;
         public Point3D Origin;
         public float PrevRefractIndex;
-        public Primitive PrevPrimitive;
+        public IPrimitive PrevPrimitive;
         public Ray(Point3D origin, Vector3D direction)
         {
             this.direction = direction;

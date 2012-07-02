@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 using System;
 
 namespace Alsing.Windows.Forms.FormatLabel
@@ -20,6 +21,7 @@ namespace Alsing.Windows.Forms.FormatLabel
         /// 
         /// </summary>
         public string Link = "";
+
         /// <summary>
         /// 
         /// </summary>

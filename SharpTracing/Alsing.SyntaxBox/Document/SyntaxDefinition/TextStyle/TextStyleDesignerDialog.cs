@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -23,92 +24,108 @@ namespace Alsing.SourceCode
         private readonly TextStyle _TmpStyle;
         private Button btnCancel;
         private Button btnOK;
+
         /// <summary>
         /// Required designer variable.
         /// </summary>
         private Container components;
+
         private Label lblCaption;
         private Label lblPreview;
         private Panel panel1;
         private Panel panel2;
         private Panel panel3;
         private PropertyGrid pgStyles;
+
         public TextStyleDesignerDialog(TextStyle Style)
         {
-            this._Style = Style;
-            this._TmpStyle = (TextStyle)Style.Clone();
+            _Style = Style;
+            _TmpStyle = (TextStyle) Style.Clone();
+
             //
             // Required for Windows Form Designer support
             //
-            this.InitializeComponent();
-            this.pgStyles.SelectedObject = this._TmpStyle;
-            this.lblCaption.Text = this._Style.ToString();
-            this.PreviewStyle();
+            InitializeComponent();
+
+            pgStyles.SelectedObject = _TmpStyle;
+            lblCaption.Text = _Style.ToString();
+            PreviewStyle();
+
             //
             // TODO: Add any constructor code after InitializeComponent call
             //
         }
+
         public static event EventHandler Change;
+
         protected static void OnChange()
         {
-            if(Change != null){
+            if (Change != null)
                 Change(null, EventArgs.Empty);
-            }
         }
+
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>
         protected override void Dispose(bool disposing)
         {
-            if(disposing){
-                if(this.components != null){
-                    this.components.Dispose();
+            if (disposing)
+            {
+                if (components != null)
+                {
+                    components.Dispose();
                 }
             }
             base.Dispose(disposing);
         }
+
         private void pgStyles_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
-            this.PreviewStyle();
+            PreviewStyle();
         }
+
         private void PreviewStyle()
         {
-            TextStyle s = this._TmpStyle;
-            this.lblPreview.ForeColor = s.ForeColor;
-            if(s.BackColor != Color.Transparent){
-                this.lblPreview.BackColor = s.BackColor;
-            } else{
-                this.lblPreview.BackColor = Color.White;
-            }
+            TextStyle s = _TmpStyle;
+
+            lblPreview.ForeColor = s.ForeColor;
+            if (s.BackColor != Color.Transparent)
+                lblPreview.BackColor = s.BackColor;
+            else
+                lblPreview.BackColor = Color.White;
+
+
             FontStyle fs = FontStyle.Regular;
-            if(s.Bold){
+            if (s.Bold)
                 fs |= FontStyle.Bold;
-            }
-            if(s.Italic){
+            if (s.Italic)
                 fs |= FontStyle.Italic;
-            }
-            if(s.Underline){
+            if (s.Underline)
                 fs |= FontStyle.Underline;
-            }
-            this.lblPreview.Font = new Font("Courier New", 11f, fs);
+
+            lblPreview.Font = new Font("Courier New", 11f, fs);
         }
+
         private void btnOK_Click(object sender, EventArgs e)
         {
-            this._Style.BackColor = this._TmpStyle.BackColor;
-            this._Style.ForeColor = this._TmpStyle.ForeColor;
-            this._Style.Bold = this._TmpStyle.Bold;
-            this._Style.Italic = this._TmpStyle.Italic;
-            this._Style.Underline = this._TmpStyle.Underline;
+            _Style.BackColor = _TmpStyle.BackColor;
+            _Style.ForeColor = _TmpStyle.ForeColor;
+            _Style.Bold = _TmpStyle.Bold;
+            _Style.Italic = _TmpStyle.Italic;
+            _Style.Underline = _TmpStyle.Underline;
             OnChange();
-            this.DialogResult = DialogResult.OK;
+            DialogResult = DialogResult.OK;
         }
+
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.Cancel;
+            DialogResult = DialogResult.Cancel;
         }
+
         private void TextStyleDesignerDialog_Load(object sender, EventArgs e) {}
 
         #region Windows Form Designer generated code
+
         /// <summary>
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
@@ -171,7 +188,7 @@ namespace Alsing.SourceCode
             this.pgStyles.ViewBackColor = System.Drawing.SystemColors.Window;
             this.pgStyles.ViewForeColor = System.Drawing.SystemColors.WindowText;
             this.pgStyles.PropertyValueChanged +=
-                    new System.Windows.Forms.PropertyValueChangedEventHandler(this.pgStyles_PropertyValueChanged);
+                new System.Windows.Forms.PropertyValueChangedEventHandler(this.pgStyles_PropertyValueChanged);
             // 
             // panel1
             // 
@@ -184,7 +201,7 @@ namespace Alsing.SourceCode
             // panel3
             // 
             this.panel3.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.panel3.Controls.AddRange(new System.Windows.Forms.Control[]{this.lblCaption});
+            this.panel3.Controls.AddRange(new System.Windows.Forms.Control[] {this.lblCaption});
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel3.Location = new System.Drawing.Point(4, 2);
             this.panel3.Name = "panel3";
@@ -195,7 +212,7 @@ namespace Alsing.SourceCode
             // 
             this.lblCaption.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblCaption.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold,
-                                                           System.Drawing.GraphicsUnit.Point, ((System.Byte)(0)));
+                                                           System.Drawing.GraphicsUnit.Point, ((System.Byte) (0)));
             this.lblCaption.ForeColor = System.Drawing.SystemColors.Window;
             this.lblCaption.Name = "lblCaption";
             this.lblCaption.Size = new System.Drawing.Size(354, 24);
@@ -209,7 +226,7 @@ namespace Alsing.SourceCode
             this.lblPreview.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblPreview.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblPreview.Font = new System.Drawing.Font("Courier New", 10F, System.Drawing.FontStyle.Regular,
-                                                           System.Drawing.GraphicsUnit.Point, ((System.Byte)(0)));
+                                                           System.Drawing.GraphicsUnit.Point, ((System.Byte) (0)));
             this.lblPreview.Name = "lblPreview";
             this.lblPreview.Size = new System.Drawing.Size(354, 40);
             this.lblPreview.TabIndex = 8;
@@ -238,6 +255,7 @@ namespace Alsing.SourceCode
             this.panel3.ResumeLayout(false);
             this.ResumeLayout(false);
         }
+
         #endregion
     }
 }

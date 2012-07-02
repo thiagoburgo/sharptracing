@@ -8,6 +8,7 @@
 // *
 // *
 // * contributions by Sebastian Faltoni
+
 using System.Collections;
 using System.Drawing;
 
@@ -45,45 +46,58 @@ namespace Alsing.SourceCode
     public sealed class Row : IEnumerable
     {
         #region General Declarations
-        private RowRevisionMark _RevisionMark = RowRevisionMark.BeforeSave;
+
         private RowState _RowState = RowState.NotParsed;
+
+        private RowRevisionMark _RevisionMark = RowRevisionMark.BeforeSave;
+
         /// <summary>
         /// The owner document
         /// </summary>
         public SyntaxDocument Document;
+
         /// <summary>
         /// The first span that terminates on this row.
         /// </summary>
         public Span endSpan;
+
         /// <summary>
         /// Segments that ends in this row
         /// </summary>
         public SpanList endSpans = new SpanList();
+
         /// <summary>
         /// For public use only
         /// </summary>
         public int Expansion_EndChar;
+
         /// <summary>
         /// 
         /// </summary>
         public Span expansion_EndSpan;
+
         /// <summary>
         /// For public use only
         /// </summary>
         public int Expansion_PixelEnd;
+
         /// <summary>
         /// For public use only
         /// </summary>
         public int Expansion_PixelStart;
+
         /// <summary>
         /// For public use only
         /// </summary>
         public int Expansion_StartChar;
+
         /// <summary>
         /// 
         /// </summary>
         public Span expansion_StartSpan;
+
         public WordList FormattedWords = new WordList();
+
         /// <summary>
         /// Collection of Image indices assigned to a row.
         /// </summary>
@@ -94,29 +108,39 @@ namespace Alsing.SourceCode
         /// </code>
         /// </example>
         public ImageIndexList Images = new ImageIndexList();
+
         /// <summary>
         /// For public use only
         /// </summary>
         public int Indent; //value indicating how much this line should be indented (c style)
+
+
         /// <summary>
         /// Returns true if the row is in the owner documents keyword parse queue
         /// </summary>
         public bool InKeywordQueue; //is this line in the parseQueue?
+
         /// <summary>
         /// Returns true if the row is in the owner documents parse queue
         /// </summary>
         public bool InQueue; //is this line in the parseQueue?
+
+
+
         private bool mBookmarked; //is this line bookmarked?
         private bool mBreakpoint; //Does this line have a breakpoint?
         private string mText = "";
+
         /// <summary>
         /// The first collapsable span on this row.
         /// </summary>
         public Span startSpan;
+
         /// <summary>
         /// Segments that start on this row
         /// </summary>
         public SpanList startSpans = new SpanList();
+
         /// <summary>
         /// Object tag for storage of custom user data..
         /// </summary>
@@ -152,15 +176,19 @@ namespace Alsing.SourceCode
         /// </code>
         /// </example>
         public object Tag;
+
         internal WordList words = new WordList();
 
         #region PUBLIC PROPERTY BACKCOLOR
+
         private Color _BackColor = Color.Transparent;
+
         public Color BackColor
         {
-            get { return this._BackColor; }
-            set { this._BackColor = value; }
+            get { return _BackColor; }
+            set { _BackColor = value; }
         }
+
         #endregion
 
         public int Depth
@@ -168,33 +196,38 @@ namespace Alsing.SourceCode
             get
             {
                 int i = 0;
-                Span s = this.startSpan;
-                while(s != null){
-                    if(s.Scope != null && s.Scope.CauseIndent){
+                Span s = startSpan;
+                while (s != null)
+                {
+                    if (s.Scope != null && s.Scope.CauseIndent)
                         i++;
-                    }
+
                     s = s.Parent;
                 }
                 //				if (i>0)
                 //					i--;
-                if(this.ShouldOutdent){
+
+                if (ShouldOutdent)
                     i--;
-                }
+
                 return i;
             }
         }
+
         public bool ShouldOutdent
         {
             get
             {
-                if(this.startSpan.EndRow == this){
-                    if(this.startSpan.Scope.CauseIndent){
+                if (startSpan.EndRow == this)
+                {
+                    if (startSpan.Scope.CauseIndent)
                         return true;
-                    }
                 }
+
                 return false;
             }
         }
+
         /// <summary>
         /// The parse state of this row
         /// </summary>
@@ -209,28 +242,34 @@ namespace Alsing.SourceCode
         /// </example>
         public RowState RowState
         {
-            get { return this._RowState; }
+            get { return _RowState; }
             set
             {
-                if(value == this._RowState){
+                if (value == _RowState)
                     return;
+
+                if (value == RowState.SpanParsed && !InKeywordQueue)
+                {
+                    Document.KeywordQueue.Add(this);
+                    InKeywordQueue = true;
                 }
-                if(value == RowState.SpanParsed && !this.InKeywordQueue){
-                    this.Document.KeywordQueue.Add(this);
-                    this.InKeywordQueue = true;
+
+                if ((value == RowState.AllParsed || value == RowState.NotParsed) && InKeywordQueue)
+                {
+                    Document.KeywordQueue.Remove(this);
+                    InKeywordQueue = false;
                 }
-                if((value == RowState.AllParsed || value == RowState.NotParsed) && this.InKeywordQueue){
-                    this.Document.KeywordQueue.Remove(this);
-                    this.InKeywordQueue = false;
-                }
-                this._RowState = value;
+
+                _RowState = value;
             }
         }
+
         public RowRevisionMark RevisionMark
         {
-            get { return this._RevisionMark; }
-            set { this._RevisionMark = value; }
+            get { return _RevisionMark; }
+            set { _RevisionMark = value; }
         }
+
         #endregion
 
         /// <summary>
@@ -238,67 +277,78 @@ namespace Alsing.SourceCode
         /// </summary>
         public bool Bookmarked
         {
-            get { return this.mBookmarked; }
+            get { return mBookmarked; }
             set
             {
-                this.mBookmarked = value;
-                if(value){
-                    this.Document.InvokeBookmarkAdded(this);
-                } else{
-                    this.Document.InvokeBookmarkRemoved(this);
-                }
-                this.Document.InvokeChange();
+                mBookmarked = value;
+
+                if (value)
+                    Document.InvokeBookmarkAdded(this);
+                else
+                    Document.InvokeBookmarkRemoved(this);
+
+                Document.InvokeChange();
             }
         }
+
         /// <summary>
         /// Gets or Sets if this row has a breakpoint or not.
         /// </summary>
         public bool Breakpoint
         {
-            get { return this.mBreakpoint; }
+            get { return mBreakpoint; }
             set
             {
-                this.mBreakpoint = value;
-                if(value){
-                    this.Document.InvokeBreakPointAdded(this);
-                } else{
-                    this.Document.InvokeBreakPointRemoved(this);
-                }
-                this.Document.InvokeChange();
+                mBreakpoint = value;
+                if (value)
+                    Document.InvokeBreakPointAdded(this);
+                else
+                    Document.InvokeBreakPointRemoved(this);
+
+                Document.InvokeChange();
             }
         }
+
         /// <summary>
         /// Returns the number of words in the row.
         /// (this only applied if the row is fully parsed)
         /// </summary>
         public int Count
         {
-            get { return this.words.Count; }
+            get { return words.Count; }
         }
+
         /// <summary>
         /// Gets or Sets the text of the row.
         /// </summary>
         public string Text
         {
-            get { return this.mText; }
+            get { return mText; }
+
             set
             {
                 bool ParsePreview = false;
-                if(this.mText != value){
+                if (mText != value)
+                {
                     ParsePreview = true;
                     this.Document.Modified = true;
-                    this.RevisionMark = RowRevisionMark.BeforeSave;
+                    RevisionMark = RowRevisionMark.BeforeSave;
                 }
-                this.mText = value;
-                if(this.Document != null){
-                    if(ParsePreview){
-                        this.Document.Parser.ParsePreviewLine(this.Document.IndexOf(this));
+
+                mText = value;
+                if (Document != null)
+                {
+                    if (ParsePreview)
+                    {
+                        Document.Parser.ParsePreviewLine(Document.IndexOf(this));
                         this.Document.OnApplyFormatRanges(this);
                     }
-                    this.AddToParseQueue();
+
+                    AddToParseQueue();
                 }
             }
         }
+
         /// <summary>
         /// Return the Word object at the specified index.
         /// </summary>
@@ -306,51 +356,56 @@ namespace Alsing.SourceCode
         {
             get
             {
-                if(index >= 0){
-                    return this.words[index];
-                }
+                if (index >= 0)
+                    return words[index];
                 return new Word();
             }
         }
+
         public int StartWordIndex
         {
             get
             {
-                if(this.expansion_StartSpan == null){
+                if (expansion_StartSpan == null)
                     return 0;
-                }
+
                 //				if (this.expansion_StartSpan.StartRow != this)
                 //					return 0;
-                Word w = this.expansion_StartSpan.StartWord;
+
+                Word w = expansion_StartSpan.StartWord;
+
                 int i = 0;
-                foreach(Word wo in this){
-                    if(wo == w){
+                foreach (Word wo in this)
+                {
+                    if (wo == w)
                         break;
-                    }
                     i += wo.Text.Length;
                 }
                 return i;
             }
         }
+
         public Word FirstNonWsWord
         {
             get
             {
-                foreach(Word w in this){
-                    if(w.Type == WordType.Word){
+                foreach (Word w in this)
+                {
+                    if (w.Type == WordType.Word)
                         return w;
-                    }
                 }
                 return null;
             }
         }
+
         /// <summary>
         /// Returns the index of this row in the owner SyntaxDocument.
         /// </summary>
         public int Index
         {
-            get { return this.Document.IndexOf(this); }
+            get { return Document.IndexOf(this); }
         }
+
         /// <summary>
         /// Returns the visible index of this row in the owner SyntaxDocument
         /// </summary>
@@ -358,16 +413,19 @@ namespace Alsing.SourceCode
         {
             get
             {
-                int i = this.Document.VisibleRows.IndexOf(this);
-                if(i == -1){
-                    if(this.startSpan != null && this.startSpan.StartRow != null && this.startSpan.StartRow != this){
-                        return this.startSpan.StartRow.VisibleIndex;
-                    }
-                    return this.Index;
+                int i = Document.VisibleRows.IndexOf(this);
+                if (i == -1)
+                {
+                    if (startSpan != null && startSpan.StartRow != null && startSpan.StartRow != this)
+
+                        return startSpan.StartRow.VisibleIndex;
+
+                    return Index;
                 }
-                return this.Document.VisibleRows.IndexOf(this);
+                return Document.VisibleRows.IndexOf(this);
             }
         }
+
         /// <summary>
         /// Returns the next visible row.
         /// </summary>
@@ -375,16 +433,18 @@ namespace Alsing.SourceCode
         {
             get
             {
-                int i = this.VisibleIndex;
-                if(i > this.Document.VisibleRows.Count){
+                int i = VisibleIndex;
+                if (i > Document.VisibleRows.Count)
                     return null;
-                }
-                if(i + 1 < this.Document.VisibleRows.Count){
-                    return this.Document.VisibleRows[i + 1];
+
+                if (i + 1 < Document.VisibleRows.Count)
+                {
+                    return Document.VisibleRows[i + 1];
                 }
                 return null;
             }
         }
+
         /// <summary>
         /// Returns the next row
         /// </summary>
@@ -392,13 +452,13 @@ namespace Alsing.SourceCode
         {
             get
             {
-                int i = this.Index;
-                if(i + 1 <= this.Document.Lines.Length - 1){
-                    return this.Document[i + 1];
-                }
+                int i = Index;
+                if (i + 1 <= Document.Lines.Length - 1)
+                    return Document[i + 1];
                 return null;
             }
         }
+
         /// <summary>
         /// Returns the first visible row before this row.
         /// </summary>
@@ -406,16 +466,16 @@ namespace Alsing.SourceCode
         {
             get
             {
-                int i = this.VisibleIndex;
-                if(i < 0){
+                int i = VisibleIndex;
+                if (i < 0)
                     return null;
-                }
-                if(i - 1 >= 0){
-                    return this.Document.VisibleRows[i - 1];
-                }
+
+                if (i - 1 >= 0)
+                    return Document.VisibleRows[i - 1];
                 return null;
             }
         }
+
         /// <summary>
         /// Returns true if the row is collapsed
         /// </summary>
@@ -423,14 +483,13 @@ namespace Alsing.SourceCode
         {
             get
             {
-                if(this.expansion_StartSpan != null){
-                    if(this.expansion_StartSpan.Expanded == false){
+                if (expansion_StartSpan != null)
+                    if (expansion_StartSpan.Expanded == false)
                         return true;
-                    }
-                }
                 return false;
             }
         }
+
         /// <summary>
         /// Returns true if this row is the last part of a collepsed span
         /// </summary>
@@ -438,14 +497,14 @@ namespace Alsing.SourceCode
         {
             get
             {
-                if(this.expansion_EndSpan != null){
-                    if(this.expansion_EndSpan.Expanded == false){
+                if (expansion_EndSpan != null)
+                    if (expansion_EndSpan.Expanded == false)
                         return true;
-                    }
-                }
                 return false;
             }
         }
+
+
         /// <summary>
         /// Returns true if this row can fold
         /// </summary>
@@ -453,10 +512,11 @@ namespace Alsing.SourceCode
         {
             get
             {
-                return (this.expansion_StartSpan != null && this.expansion_StartSpan.EndRow != null
-                        && this.Document.IndexOf(this.expansion_StartSpan.EndRow) != 0);
+                return (expansion_StartSpan != null && expansion_StartSpan.EndRow != null &&
+                        Document.IndexOf(expansion_StartSpan.EndRow) != 0);
             }
         }
+
         /// <summary>
         /// Gets or Sets if this row is expanded.
         /// </summary>
@@ -464,55 +524,62 @@ namespace Alsing.SourceCode
         {
             get
             {
-                if(this.CanFold){
-                    return (this.expansion_StartSpan.Expanded);
+                if (CanFold)
+                {
+                    return (expansion_StartSpan.Expanded);
                 }
                 return false;
             }
             set
             {
-                if(this.CanFold){
-                    this.expansion_StartSpan.Expanded = value;
+                if (CanFold)
+                {
+                    expansion_StartSpan.Expanded = value;
                 }
             }
         }
+
         public string ExpansionText
         {
-            get { return this.expansion_StartSpan.Scope.ExpansionText; }
+            get { return expansion_StartSpan.Scope.ExpansionText; }
             set
             {
-                Scope oScope = this.expansion_StartSpan.Scope;
-                var oNewScope = new Scope{
-                                                 CaseSensitive = oScope.CaseSensitive,
-                                                 CauseIndent = oScope.CauseIndent,
-                                                 DefaultExpanded = oScope.DefaultExpanded,
-                                                 EndPatterns = oScope.EndPatterns,
-                                                 NormalizeCase = oScope.NormalizeCase,
-                                                 Parent = oScope.Parent,
-                                                 spawnSpanOnEnd = oScope.spawnSpanOnEnd,
-                                                 spawnSpanOnStart = oScope.spawnSpanOnStart,
-                                                 Start = oScope.Start,
-                                                 Style = oScope.Style,
-                                                 ExpansionText = value
-                                         };
-                this.expansion_StartSpan.Scope = oNewScope;
-                this.Document.InvokeChange();
+                Scope oScope = expansion_StartSpan.Scope;
+                var oNewScope = new Scope
+                                {
+                                    CaseSensitive = oScope.CaseSensitive,
+                                    CauseIndent = oScope.CauseIndent,
+                                    DefaultExpanded = oScope.DefaultExpanded,
+                                    EndPatterns = oScope.EndPatterns,
+                                    NormalizeCase = oScope.NormalizeCase,
+                                    Parent = oScope.Parent,
+                                    spawnSpanOnEnd = oScope.spawnSpanOnEnd,
+                                    spawnSpanOnStart = oScope.spawnSpanOnStart,
+                                    Start = oScope.Start,
+                                    Style = oScope.Style,
+                                    ExpansionText = value
+                                };
+                expansion_StartSpan.Scope = oNewScope;
+                Document.InvokeChange();
             }
         }
+
         /// <summary>
         /// Returns true if this row is the end part of a collapsable span
         /// </summary>
         public bool CanFoldEndPart
         {
-            get { return (this.expansion_EndSpan != null); }
+            get { return (expansion_EndSpan != null); }
         }
+
         /// <summary>
         /// For public use only
         /// </summary>
         public bool HasExpansionLine
         {
-            get { return (this.endSpan.Parent != null); }
+            get { return (endSpan.Parent != null); }
         }
+
         /// <summary>
         /// Returns the last row of a collapsable span
         /// (this only applies if this row is the start row of the span)
@@ -521,12 +588,12 @@ namespace Alsing.SourceCode
         {
             get
             {
-                if(this.CanFold){
-                    return this.expansion_StartSpan.EndRow;
-                }
+                if (CanFold)
+                    return expansion_StartSpan.EndRow;
                 return this;
             }
         }
+
         /// <summary>
         /// Returns the first row of a collapsable span
         /// (this only applies if this row is the last row of the span)
@@ -535,12 +602,12 @@ namespace Alsing.SourceCode
         {
             get
             {
-                if(this.CanFoldEndPart){
-                    return this.expansion_EndSpan.StartRow;
-                }
+                if (CanFoldEndPart)
+                    return expansion_EndSpan.StartRow;
                 return this;
             }
         }
+
         /// <summary>
         /// For public use only
         /// </summary>
@@ -549,28 +616,32 @@ namespace Alsing.SourceCode
             get
             {
                 var r = new Row();
-                foreach(Word w in this){
-                    if(this.expansion_StartSpan == w.Span){
+
+                foreach (Word w in this)
+                {
+                    if (expansion_StartSpan == w.Span)
                         break;
-                    }
                     r.Add(w);
                 }
-                Word wo = r.Add(this.CollapsedText);
-                wo.Style = new TextStyle{BackColor = Color.Silver, ForeColor = Color.DarkBlue, Bold = true};
+
+                Word wo = r.Add(CollapsedText);
+                wo.Style = new TextStyle {BackColor = Color.Silver, ForeColor = Color.DarkBlue, Bold = true};
+
                 bool found = false;
-                if(this.Expansion_EndRow != null){
-                    foreach(Word w in this.Expansion_EndRow){
-                        if(found){
+                if (Expansion_EndRow != null)
+                {
+                    foreach (Word w in Expansion_EndRow)
+                    {
+                        if (found)
                             r.Add(w);
-                        }
-                        if(w == this.Expansion_EndRow.expansion_EndSpan.EndWord){
+                        if (w == Expansion_EndRow.expansion_EndSpan.EndWord)
                             found = true;
-                        }
                     }
                 }
                 return r;
             }
         }
+
         /// <summary>
         /// Returns the text that should be displayed if the row is collapsed.
         /// </summary>
@@ -580,19 +651,21 @@ namespace Alsing.SourceCode
             {
                 string str = "";
                 int pos = 0;
-                foreach(Word w in this){
+                foreach (Word w in this)
+                {
                     pos += w.Text.Length;
-                    if(w.Span == this.expansion_StartSpan){
-                        str = this.Text.Substring(pos).Trim();
+                    if (w.Span == expansion_StartSpan)
+                    {
+                        str = Text.Substring(pos).Trim();
                         break;
                     }
                 }
-                if(this.expansion_StartSpan.Scope.ExpansionText != ""){
-                    str = this.expansion_StartSpan.Scope.ExpansionText.Replace("***", str);
-                }
+                if (expansion_StartSpan.Scope.ExpansionText != "")
+                    str = expansion_StartSpan.Scope.ExpansionText.Replace("***", str);
                 return str;
             }
         }
+
         /// <summary>
         /// Returns the row before this row.
         /// </summary>
@@ -600,61 +673,67 @@ namespace Alsing.SourceCode
         {
             get
             {
-                int i = this.Index;
-                if(i - 1 >= 0){
-                    return this.Document[i - 1];
-                }
+                int i = Index;
+
+                if (i - 1 >= 0)
+                    return Document[i - 1];
                 return null;
             }
         }
 
         #region IEnumerable Members
+
         /// <summary>
         /// Get the Word enumerator for this row
         /// </summary>
         /// <returns></returns>
         public IEnumerator GetEnumerator()
         {
-            return this.words.GetEnumerator();
+            return words.GetEnumerator();
         }
+
         #endregion
 
         public void Clear()
         {
-            this.words.Clear();
+            words.Clear();
         }
+
         /// <summary>
         /// If the row is hidden inside a collapsed span , call this method to make the collapsed segments expanded.
         /// </summary>
         public void EnsureVisible()
         {
-            if(this.RowState == RowState.NotParsed){
+            if (RowState == RowState.NotParsed)
                 return;
-            }
-            Span seg = this.startSpan;
-            while(seg != null){
+
+            Span seg = startSpan;
+            while (seg != null)
+            {
                 seg.Expanded = true;
                 seg = seg.Parent;
             }
-            this.Document.ResetVisibleRows();
+            Document.ResetVisibleRows();
         }
+
         public Word Add(string text)
         {
-            var xw = new Word{Row = this, Text = text};
-            this.words.Add(xw);
+            var xw = new Word {Row = this, Text = text};
+            words.Add(xw);
             return xw;
         }
+
         /// <summary>
         /// Adds this row to the parse queue
         /// </summary>
         public void AddToParseQueue()
         {
-            if(!this.InQueue){
-                this.Document.ParseQueue.Add(this);
-            }
-            this.InQueue = true;
-            this.RowState = RowState.NotParsed;
+            if (!InQueue)
+                Document.ParseQueue.Add(this);
+            InQueue = true;
+            RowState = RowState.NotParsed;
         }
+
         /// <summary>
         /// Assigns a new text to the row.
         /// </summary>
@@ -668,16 +747,17 @@ namespace Alsing.SourceCode
             tr.FirstRow = tp.Y;
             tr.LastColumn = this.Text.Length;
             tr.LastRow = tp.Y;
+
             this.Document.StartUndoCapture();
             //delete the current line
-            this.Document.PushUndoBlock(UndoAction.DeleteRange, this.Document.GetRange(tr), tr.FirstColumn, tr.FirstRow,
-                                        this.RevisionMark);
+            this.Document.PushUndoBlock(UndoAction.DeleteRange, this.Document.GetRange(tr), tr.FirstColumn, tr.FirstRow, this.RevisionMark);
             //alter the text
             this.Document.PushUndoBlock(UndoAction.InsertRange, Text, tp.X, tp.Y, this.RevisionMark);
             this.Text = Text;
             this.Document.EndUndoCapture();
             this.Document.InvokeChange();
         }
+
         /// <summary>
         /// Call this method to make all words match the case of their patterns.
         /// (this only applies if the row is fully parsed)
@@ -685,79 +765,94 @@ namespace Alsing.SourceCode
         public void MatchCase()
         {
             string s = "";
-            foreach(Word w in this.words){
+            foreach (Word w in words)
+            {
                 s = s + w.Text;
             }
-            this.mText = s;
+            mText = s;
         }
+
         /// <summary>
         /// Force a span parse on the row.
         /// </summary>
         public void Parse()
         {
-            this.Document.ParseRow(this);
+            Document.ParseRow(this);
         }
+
         /// <summary>
         /// Forces the parser to parse this row directly
         /// </summary>
         /// <param name="ParseKeywords">true if keywords and operators should be parsed</param>
         public void Parse(bool ParseKeywords)
         {
-            this.Document.ParseRow(this, ParseKeywords);
+            Document.ParseRow(this, ParseKeywords);
         }
+
         public void SetExpansionSegment()
         {
-            this.expansion_StartSpan = null;
-            this.expansion_EndSpan = null;
-            foreach(Span s in this.startSpans){
-                if(!this.endSpans.Contains(s)){
-                    this.expansion_StartSpan = s;
+            expansion_StartSpan = null;
+            expansion_EndSpan = null;
+            foreach (Span s in startSpans)
+            {
+                if (!endSpans.Contains(s))
+                {
+                    expansion_StartSpan = s;
                     break;
                 }
             }
-            foreach(Span s in this.endSpans){
-                if(!this.startSpans.Contains(s)){
-                    this.expansion_EndSpan = s;
+
+            foreach (Span s in endSpans)
+            {
+                if (!startSpans.Contains(s))
+                {
+                    expansion_EndSpan = s;
                     break;
                 }
             }
-            if(this.expansion_EndSpan != null){
-                this.expansion_StartSpan = null;
-            }
+
+            if (expansion_EndSpan != null)
+                expansion_StartSpan = null;
         }
+
         /// <summary>
         /// Returns the whitespace string at the begining of this row.
         /// </summary>
         /// <returns>a string containing the whitespace at the begining of this row</returns>
         public string GetLeadingWhitespace()
         {
-            string s = this.mText;
+            string s = mText;
             int i;
             s = s.Replace("	", " ");
-            for(i = 0; i < s.Length; i++){
-                if(s.Substring(i, 1) == " "){} else{
+            for (i = 0; i < s.Length; i++)
+            {
+                if (s.Substring(i, 1) == " ") {}
+                else
+                {
                     break;
                 }
             }
-            return this.mText.Substring(0, i);
+            return mText.Substring(0, i);
         }
+
         public string GetVirtualLeadingWhitespace()
         {
-            int i = this.StartWordIndex;
+            int i = StartWordIndex;
             string ws = "";
-            foreach(char c in this.Text){
-                if(c == '\t'){
+            foreach (char c in Text)
+            {
+                if (c == '\t')
                     ws += c;
-                } else{
+                else
                     ws += ' ';
-                }
+
                 i--;
-                if(i <= 0){
+                if (i <= 0)
                     break;
-                }
             }
             return ws;
         }
+
         /// <summary>
         /// Adds a word object to this row
         /// </summary>
@@ -765,8 +860,9 @@ namespace Alsing.SourceCode
         public void Add(Word word)
         {
             word.Row = this;
-            this.words.Add(word);
+            words.Add(word);
         }
+
         /// <summary>
         /// Returns the index of a specific Word object
         /// </summary>
@@ -774,8 +870,9 @@ namespace Alsing.SourceCode
         /// <returns>index of the word in the row</returns>
         public int IndexOf(Word word)
         {
-            return this.words.IndexOf(word);
+            return words.IndexOf(word);
         }
+
         /// <summary>
         /// For public use only
         /// </summary>
@@ -786,14 +883,17 @@ namespace Alsing.SourceCode
         public Word FindRightWordByPatternList(PatternList PatternList, Word StartWord, bool IgnoreStartWord)
         {
             int i = StartWord.Index;
-            if(IgnoreStartWord){
+            if (IgnoreStartWord)
                 i++;
-            }
-            while(i < this.words.Count){
+            while (i < words.Count)
+            {
                 Word w = this[i];
-                if(w.Pattern != null){
-                    if(w.Pattern.Parent != null){
-                        if(w.Pattern.Parent == PatternList && w.Type != WordType.Space && w.Type != WordType.Tab){
+                if (w.Pattern != null)
+                {
+                    if (w.Pattern.Parent != null)
+                    {
+                        if (w.Pattern.Parent == PatternList && w.Type != WordType.Space && w.Type != WordType.Tab)
+                        {
                             return w;
                         }
                     }
@@ -802,6 +902,7 @@ namespace Alsing.SourceCode
             }
             return null;
         }
+
         /// <summary>
         /// For public use only
         /// </summary>
@@ -812,15 +913,19 @@ namespace Alsing.SourceCode
         public Word FindRightWordByPatternListName(string PatternListName, Word StartWord, bool IgnoreStartWord)
         {
             int i = StartWord.Index;
-            if(IgnoreStartWord){
+            if (IgnoreStartWord)
                 i++;
-            }
-            while(i < this.words.Count){
+
+            while (i < words.Count)
+            {
                 Word w = this[i];
-                if(w.Pattern != null){
-                    if(w.Pattern.Parent != null){
-                        if(w.Pattern.Parent.Name == PatternListName && w.Type != WordType.Space
-                           && w.Type != WordType.Tab){
+                if (w.Pattern != null)
+                {
+                    if (w.Pattern.Parent != null)
+                    {
+                        if (w.Pattern.Parent.Name == PatternListName && w.Type != WordType.Space &&
+                            w.Type != WordType.Tab)
+                        {
                             return w;
                         }
                     }
@@ -829,6 +934,7 @@ namespace Alsing.SourceCode
             }
             return null;
         }
+
         /// <summary>
         /// For public use only
         /// </summary>
@@ -839,14 +945,17 @@ namespace Alsing.SourceCode
         public Word FindLeftWordByPatternList(PatternList PatternList, Word StartWord, bool IgnoreStartWord)
         {
             int i = StartWord.Index;
-            if(IgnoreStartWord){
+            if (IgnoreStartWord)
                 i--;
-            }
-            while(i >= 0){
+            while (i >= 0)
+            {
                 Word w = this[i];
-                if(w.Pattern != null){
-                    if(w.Pattern.Parent != null){
-                        if(w.Pattern.Parent == PatternList && w.Type != WordType.Space && w.Type != WordType.Tab){
+                if (w.Pattern != null)
+                {
+                    if (w.Pattern.Parent != null)
+                    {
+                        if (w.Pattern.Parent == PatternList && w.Type != WordType.Space && w.Type != WordType.Tab)
+                        {
                             return w;
                         }
                     }
@@ -855,6 +964,7 @@ namespace Alsing.SourceCode
             }
             return null;
         }
+
         /// <summary>
         /// For public use only
         /// </summary>
@@ -865,15 +975,19 @@ namespace Alsing.SourceCode
         public Word FindLeftWordByPatternListName(string PatternListName, Word StartWord, bool IgnoreStartWord)
         {
             int i = StartWord.Index;
-            if(IgnoreStartWord){
+            if (IgnoreStartWord)
                 i--;
-            }
-            while(i >= 0){
+
+            while (i >= 0)
+            {
                 Word w = this[i];
-                if(w.Pattern != null){
-                    if(w.Pattern.Parent != null){
-                        if(w.Pattern.Parent.Name == PatternListName && w.Type != WordType.Space
-                           && w.Type != WordType.Tab){
+                if (w.Pattern != null)
+                {
+                    if (w.Pattern.Parent != null)
+                    {
+                        if (w.Pattern.Parent.Name == PatternListName && w.Type != WordType.Space &&
+                            w.Type != WordType.Tab)
+                        {
                             return w;
                         }
                     }
@@ -882,6 +996,7 @@ namespace Alsing.SourceCode
             }
             return null;
         }
+
         /// <summary>
         /// For public use only
         /// </summary>
@@ -892,18 +1007,20 @@ namespace Alsing.SourceCode
         public Word FindLeftWordByBlockType(SpanDefinition spanDefinition, Word StartWord, bool IgnoreStartWord)
         {
             int i = StartWord.Index;
-            if(IgnoreStartWord){
+            if (IgnoreStartWord)
                 i--;
-            }
-            while(i >= 0){
+            while (i >= 0)
+            {
                 Word w = this[i];
-                if(w.Span.spanDefinition == spanDefinition && w.Type != WordType.Space && w.Type != WordType.Tab){
+                if (w.Span.spanDefinition == spanDefinition && w.Type != WordType.Space && w.Type != WordType.Tab)
+                {
                     return w;
                 }
                 i--;
             }
             return null;
         }
+
         /// <summary>
         /// For public use only
         /// </summary>
@@ -914,18 +1031,20 @@ namespace Alsing.SourceCode
         public Word FindRightWordByBlockType(SpanDefinition spanDefinition, Word StartWord, bool IgnoreStartWord)
         {
             int i = StartWord.Index;
-            if(IgnoreStartWord){
+            if (IgnoreStartWord)
                 i++;
-            }
-            while(i < this.words.Count){
+            while (i < words.Count)
+            {
                 Word w = this[i];
-                if(w.Span.spanDefinition == spanDefinition && w.Type != WordType.Space && w.Type != WordType.Tab){
+                if (w.Span.spanDefinition == spanDefinition && w.Type != WordType.Space && w.Type != WordType.Tab)
+                {
                     return w;
                 }
                 i++;
             }
             return null;
         }
+
         /// <summary>
         /// For public use only
         /// </summary>
@@ -936,18 +1055,20 @@ namespace Alsing.SourceCode
         public Word FindLeftWordByBlockTypeName(string BlockTypeName, Word StartWord, bool IgnoreStartWord)
         {
             int i = StartWord.Index;
-            if(IgnoreStartWord){
+            if (IgnoreStartWord)
                 i--;
-            }
-            while(i >= 0){
+            while (i >= 0)
+            {
                 Word w = this[i];
-                if(w.Span.spanDefinition.Name == BlockTypeName && w.Type != WordType.Space && w.Type != WordType.Tab){
+                if (w.Span.spanDefinition.Name == BlockTypeName && w.Type != WordType.Space && w.Type != WordType.Tab)
+                {
                     return w;
                 }
                 i--;
             }
             return null;
         }
+
         /// <summary>
         /// For public use only
         /// </summary>
@@ -958,12 +1079,13 @@ namespace Alsing.SourceCode
         public Word FindRightWordByBlockTypeName(string BlockTypeName, Word StartWord, bool IgnoreStartWord)
         {
             int i = StartWord.Index;
-            if(IgnoreStartWord){
+            if (IgnoreStartWord)
                 i++;
-            }
-            while(i < this.words.Count){
+            while (i < words.Count)
+            {
                 Word w = this[i];
-                if(w.Span.spanDefinition.Name == BlockTypeName && w.Type != WordType.Space && w.Type != WordType.Tab){
+                if (w.Span.spanDefinition.Name == BlockTypeName && w.Type != WordType.Space && w.Type != WordType.Tab)
+                {
                     return w;
                 }
                 i++;

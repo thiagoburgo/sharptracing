@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 using System;
 using System.Drawing;
 using Alsing.Windows;
@@ -16,18 +17,19 @@ namespace Alsing.Drawing.GDI
     public class GDIPen : GDIObject
     {
         public IntPtr hPen;
+
         public GDIPen(Color color, int width)
         {
-            this.hPen = NativeMethods.CreatePen(0, width, NativeMethods.ColorToInt(color));
-            this.Create();
+            hPen = NativeMethods.CreatePen(0, width, NativeMethods.ColorToInt(color));
+            Create();
         }
+
         protected override void Destroy()
         {
-            if(this.hPen != (IntPtr)0){
-                NativeMethods.DeleteObject(this.hPen);
-            }
+            if (hPen != (IntPtr) 0)
+                NativeMethods.DeleteObject(hPen);
             base.Destroy();
-            this.hPen = (IntPtr)0;
+            hPen = (IntPtr) 0;
         }
     }
 }

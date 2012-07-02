@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -28,45 +29,54 @@ namespace Alsing.Windows.Forms.CoreLib
         protected SplitViewChildControl UpperRight;
 
         #region Private Properties
+
         private List<SplitViewChildControl> _Views;
+
         protected List<SplitViewChildControl> Views
         {
-            get { return this._Views; }
-            set { this._Views = value; }
+            get { return _Views; }
+            set { _Views = value; }
         }
+
         #endregion
 
         public SplitViewParentControl()
         {
-            this.OnCreate();
-            this.InitializeComponent();
-            this.InitializeComponentInternal();
-            this.splitView.Resizing += this.SplitView_Resizing;
-            this.splitView.HideLeft += this.SplitView_HideLeft;
-            this.splitView.HideTop += this.SplitView_HideTop;
-            this.LowerRight = this.GetNewView();
-            this.LowerRight.AllowDrop = true;
-            this.LowerRight.BorderColor = Color.White;
-            this.LowerRight.BorderStyle = BorderStyle.None;
-            this.LowerRight.Location = new Point(0, 0);
-            this.LowerRight.Size = new Size(100, 100);
-            this.Views = new List<SplitViewChildControl>();
-            this.LowerRight.TopThumb.MouseDown += this.TopThumb_MouseDown;
-            this.LowerRight.LeftThumb.MouseDown += this.LeftThumb_MouseDown;
-            this.Views.Add(this.LowerRight);
-            this.LowerRight.TopThumbVisible = true;
-            this.LowerRight.LeftThumbVisible = true;
-            this.splitView.Controls.Add(this.LowerRight);
-            this.splitView.LowerRight = this.LowerRight;
-            this.SplitView = true;
-            this.ScrollBars = ScrollBars.Both;
-            this.BorderStyle = BorderStyle.None;
-            this.ChildBorderColor = SystemColors.ControlDark;
-            this.ChildBorderStyle = BorderStyle.FixedSingle;
-            this.BackColor = SystemColors.Window;
-            this.Size = new Size(100, 100);
-            this._ActiveView = this.LowerRight;
+            OnCreate();
+
+            InitializeComponent();
+            InitializeComponentInternal();
+            splitView.Resizing += SplitView_Resizing;
+            splitView.HideLeft += SplitView_HideLeft;
+            splitView.HideTop += SplitView_HideTop;
+
+
+            LowerRight = GetNewView();
+            LowerRight.AllowDrop = true;
+            LowerRight.BorderColor = Color.White;
+            LowerRight.BorderStyle = BorderStyle.None;
+            LowerRight.Location = new Point(0, 0);
+            LowerRight.Size = new Size(100, 100);
+
+            Views = new List<SplitViewChildControl>();
+            LowerRight.TopThumb.MouseDown += TopThumb_MouseDown;
+            LowerRight.LeftThumb.MouseDown += LeftThumb_MouseDown;
+            Views.Add(LowerRight);
+            LowerRight.TopThumbVisible = true;
+            LowerRight.LeftThumbVisible = true;
+            splitView.Controls.Add(LowerRight);
+            splitView.LowerRight = LowerRight;
+
+            SplitView = true;
+            ScrollBars = ScrollBars.Both;
+            BorderStyle = BorderStyle.None;
+            ChildBorderColor = SystemColors.ControlDark;
+            ChildBorderStyle = BorderStyle.FixedSingle;
+            BackColor = SystemColors.Window;
+            Size = new Size(100, 100);
+            _ActiveView = LowerRight;
         }
+
         /// <summary>
         /// Gets or Sets the active view
         /// </summary>
@@ -75,273 +85,335 @@ namespace Alsing.Windows.Forms.CoreLib
         {
             get
             {
-                if(this._ActiveView == this.UpperLeft){
+                if (_ActiveView == UpperLeft)
                     return ActiveView.TopLeft;
-                }
-                if(this._ActiveView == this.UpperRight){
+
+                if (_ActiveView == UpperRight)
                     return ActiveView.TopRight;
-                }
-                if(this._ActiveView == this.LowerLeft){
+
+                if (_ActiveView == LowerLeft)
                     return ActiveView.BottomLeft;
-                }
-                if(this._ActiveView == this.LowerRight){
+
+                if (_ActiveView == LowerRight)
                     return ActiveView.BottomRight;
-                }
+
                 return 0;
             }
             set
             {
-                if(value != ActiveView.BottomRight){
-                    this.ActivateSplits();
+                if (value != ActiveView.BottomRight)
+                {
+                    ActivateSplits();
                 }
-                if(value == ActiveView.TopLeft){
-                    this._ActiveView = this.UpperLeft;
-                }
-                if(value == ActiveView.TopRight){
-                    this._ActiveView = this.UpperRight;
-                }
-                if(value == ActiveView.BottomLeft){
-                    this._ActiveView = this.LowerLeft;
-                }
-                if(value == ActiveView.BottomRight){
-                    this._ActiveView = this.LowerRight;
-                }
+
+
+                if (value == ActiveView.TopLeft)
+                    _ActiveView = UpperLeft;
+
+                if (value == ActiveView.TopRight)
+                    _ActiveView = UpperRight;
+
+                if (value == ActiveView.BottomLeft)
+                    _ActiveView = LowerLeft;
+
+                if (value == ActiveView.BottomRight)
+                    _ActiveView = LowerRight;
             }
         }
+
         private void InitializeComponent() {}
+
         /// <summary>
         /// Resets the Splitview.
         /// </summary>
         public void ResetSplitview()
         {
-            this.splitView.ResetSplitview();
+            splitView.ResetSplitview();
         }
+
         private void SplitView_Resizing(object sender, EventArgs e)
         {
-            this.LowerRight.TopThumbVisible = false;
-            this.LowerRight.LeftThumbVisible = false;
+            LowerRight.TopThumbVisible = false;
+            LowerRight.LeftThumbVisible = false;
         }
+
         private void SplitView_HideTop(object sender, EventArgs e)
         {
-            this.LowerRight.TopThumbVisible = true;
+            LowerRight.TopThumbVisible = true;
         }
+
         private void SplitView_HideLeft(object sender, EventArgs e)
         {
-            this.LowerRight.LeftThumbVisible = true;
+            LowerRight.LeftThumbVisible = true;
         }
+
         protected virtual void ActivateSplits()
         {
-            if(this.UpperLeft == null){
-                this.UpperLeft = this.GetNewView();
-                this.UpperRight = this.GetNewView();
-                this.LowerLeft = this.GetNewView();
-                this.splitView.Controls.AddRange(new Control[]{this.UpperLeft, this.LowerLeft, this.UpperRight});
-                this.splitView.UpperRight = this.LowerLeft;
-                this.splitView.UpperLeft = this.UpperLeft;
-                this.splitView.LowerLeft = this.UpperRight;
-                this.CreateViews();
+            if (UpperLeft == null)
+            {
+                UpperLeft = GetNewView();
+                UpperRight = GetNewView();
+                LowerLeft = GetNewView();
+
+                splitView.Controls.AddRange(new Control[] {UpperLeft, LowerLeft, UpperRight});
+
+                splitView.UpperRight = LowerLeft;
+                splitView.UpperLeft = UpperLeft;
+                splitView.LowerLeft = UpperRight;
+
+                CreateViews();
             }
         }
+
+
         protected void TopThumb_MouseDown(object sender, MouseEventArgs e)
         {
-            this.ActivateSplits();
-            long t = DateTime.Now.Ticks - this._ticks;
-            this._ticks = DateTime.Now.Ticks;
-            if(t < 3000000){
-                this.splitView.Split5050h();
-            } else{
-                this.splitView.InvokeMouseDownh();
+            ActivateSplits();
+
+            long t = DateTime.Now.Ticks - _ticks;
+            _ticks = DateTime.Now.Ticks;
+
+
+            if (t < 3000000)
+            {
+                splitView.Split5050h();
+            }
+            else
+            {
+                splitView.InvokeMouseDownh();
             }
         }
+
         protected void LeftThumb_MouseDown(object sender, MouseEventArgs e)
         {
-            this.ActivateSplits();
-            long t = DateTime.Now.Ticks - this._ticks;
-            this._ticks = DateTime.Now.Ticks;
-            if(t < 3000000){
-                this.splitView.Split5050v();
-            } else{
-                this.splitView.InvokeMouseDownv();
+            ActivateSplits();
+
+            long t = DateTime.Now.Ticks - _ticks;
+            _ticks = DateTime.Now.Ticks;
+
+
+            if (t < 3000000)
+            {
+                splitView.Split5050v();
+            }
+            else
+            {
+                splitView.InvokeMouseDownv();
             }
         }
+
         protected virtual void OnCreate() {}
+
         protected virtual void CreateViews()
         {
-            if(this.UpperRight != null){
-                this.Views.Add(this.UpperRight);
-                this.Views.Add(this.UpperLeft);
-                this.Views.Add(this.LowerLeft);
+            if (UpperRight != null)
+            {
+                Views.Add(UpperRight);
+                Views.Add(UpperLeft);
+                Views.Add(LowerLeft);
             }
         }
+
         protected virtual SplitViewChildControl GetNewView()
         {
             return null;
         }
+
         protected void View_Enter(object sender, EventArgs e)
         {
-            this._ActiveView = (SplitViewChildControl)sender;
+            _ActiveView = (SplitViewChildControl) sender;
         }
+
         protected void View_Leave(object sender, EventArgs e)
         {
             //	((EditViewControl)sender).RemoveFocus ();
         }
+
         protected override void WndProc(ref Message m)
         {
             base.WndProc(ref m);
-            if(m.Msg == (int)WindowMessage.WM_SETFOCUS){
-                if(this._ActiveView != null){
-                    this._ActiveView.Focus();
-                }
+            if (m.Msg == (int) WindowMessage.WM_SETFOCUS)
+            {
+                if (_ActiveView != null)
+                    _ActiveView.Focus();
             }
         }
 
         #region PUBLIC PROPERTY SPLITVIEWV
+
         [Browsable(false)]
         public int SplitviewV
         {
-            get { return this.splitView.SplitviewV; }
+            get { return splitView.SplitviewV; }
             set
             {
-                if(this.splitView == null){
+                if (splitView == null)
                     return;
-                }
-                this.splitView.SplitviewV = value;
+
+                splitView.SplitviewV = value;
             }
         }
+
         #endregion
 
         #region PUBLIC PROPERTY SPLITVIEWH
+
         [Browsable(false)]
         public int SplitviewH
         {
-            get { return this.splitView.SplitviewH; }
+            get { return splitView.SplitviewH; }
             set
             {
-                if(this.splitView == null){
+                if (splitView == null)
                     return;
-                }
-                this.splitView.SplitviewH = value;
+                splitView.SplitviewH = value;
             }
         }
+
         #endregion
 
         #region public property ScrollBars
+
         private ScrollBars _ScrollBars;
-        [Category("Appearance"), Description("Determines what Scrollbars should be visible"),
-         DefaultValue(ScrollBars.Both)]
+
+        [Category("Appearance"), Description("Determines what Scrollbars should be visible")]
+        [DefaultValue(ScrollBars.Both)]
         public ScrollBars ScrollBars
         {
-            get { return this._ScrollBars; }
+            get { return _ScrollBars; }
+
             set
             {
-                if(this._Views == null){
+                if (_Views == null)
                     return;
-                }
-                if(this.DisableScrollBars){
+
+                if (DisableScrollBars)
                     value = ScrollBars.None;
-                }
-                foreach(SplitViewChildControl evc in this._Views){
+
+                foreach (SplitViewChildControl evc in _Views)
+                {
                     evc.ScrollBars = value;
                 }
-                this._ScrollBars = value;
+                _ScrollBars = value;
             }
         }
+
         #endregion
 
         #region public property SplitView
+
         //member variable
         private bool _SplitView;
-        [Category("Appearance"), Description("Determines if the controls should use splitviews"), DefaultValue(true)]
+
+        [Category("Appearance"), Description("Determines if the controls should use splitviews")]
+        [DefaultValue(true)]
         public bool SplitView
         {
-            get { return this._SplitView; }
+            get { return _SplitView; }
+
             set
             {
-                this._SplitView = value;
-                if(this.splitView == null){
+                _SplitView = value;
+
+                if (splitView == null)
                     return;
+
+                if (!SplitView)
+                {
+                    splitView.Visible = false;
+                    Controls.Add(LowerRight);
+                    LowerRight.HideThumbs();
+                    LowerRight.Dock = DockStyle.Fill;
                 }
-                if(!this.SplitView){
-                    this.splitView.Visible = false;
-                    this.Controls.Add(this.LowerRight);
-                    this.LowerRight.HideThumbs();
-                    this.LowerRight.Dock = DockStyle.Fill;
-                } else{
-                    this.splitView.Visible = true;
-                    this.splitView.LowerRight = this.LowerRight;
-                    this.LowerRight.Dock = DockStyle.None;
-                    this.LowerRight.ShowThumbs();
+                else
+                {
+                    splitView.Visible = true;
+                    splitView.LowerRight = LowerRight;
+                    LowerRight.Dock = DockStyle.None;
+                    LowerRight.ShowThumbs();
                 }
             }
         }
+
         #endregion //END PROPERTY SplitView
 
         #region PUBLIC PROPERTY CHILDBODERSTYLE
+
         /// <summary>
         /// Gets or Sets the border styles of the split views.
         /// </summary>
-        [Category("Appearance - Borders"), Description("Gets or Sets the border styles of the split views."),
-         DefaultValue(BorderStyle.FixedSingle)]
+        [Category("Appearance - Borders")]
+        [Description("Gets or Sets the border styles of the split views.")]
+        [DefaultValue(BorderStyle.FixedSingle)]
         public BorderStyle ChildBorderStyle
         {
-            get { return (this.Views[0]).BorderStyle; }
+            get { return (Views[0]).BorderStyle; }
             set
             {
-                foreach(SplitViewChildControl ev in this.Views){
+                foreach (SplitViewChildControl ev in Views)
+                {
                     ev.BorderStyle = value;
                 }
             }
         }
+
         #endregion
 
         #region PUBLIC PROPERTY CHILDBORDERCOLOR
+
         /// <summary>
         /// Gets or Sets the border color of the split views.
         /// </summary>
-        [Category("Appearance - Borders"), Description("Gets or Sets the border color of the split views."),
-         DefaultValue(typeof(Color), "ControlDark")]
+        [Category("Appearance - Borders")]
+        [Description("Gets or Sets the border color of the split views.")]
+        [DefaultValue(typeof (Color), "ControlDark")]
         public Color ChildBorderColor
         {
-            get { return (this.Views[0]).BorderColor; }
+            get { return (Views[0]).BorderColor; }
             set
             {
-                foreach(SplitViewChildControl ev in this.Views){
-                    if(ev != null){
+                foreach (SplitViewChildControl ev in Views)
+                {
+                    if (ev != null)
+                    {
                         ev.BorderColor = value;
                     }
                 }
             }
         }
+
         #endregion
 
         #region roger generated code
+
         private void InitializeComponentInternal()
         {
-            this.splitView = new SplitViewControl();
-            this.SuspendLayout();
+            splitView = new SplitViewControl();
+            SuspendLayout();
             // 
             // splitView
             // 
-            this.splitView.BackColor = Color.Empty;
-            this.splitView.Dock = DockStyle.Fill;
-            this.splitView.LowerLeft = null;
-            this.splitView.LowerRight = null;
-            this.splitView.Name = "splitView";
-            this.splitView.Size = new Size(248, 216);
-            this.splitView.SplitviewH = -4;
-            this.splitView.SplitviewV = -4;
-            this.splitView.TabIndex = 0;
-            this.splitView.Text = "splitView";
-            this.splitView.UpperLeft = null;
-            this.splitView.UpperRight = null;
+            splitView.BackColor = Color.Empty;
+            splitView.Dock = DockStyle.Fill;
+            splitView.LowerLeft = null;
+            splitView.LowerRight = null;
+            splitView.Name = "splitView";
+            splitView.Size = new Size(248, 216);
+            splitView.SplitviewH = -4;
+            splitView.SplitviewV = -4;
+            splitView.TabIndex = 0;
+            splitView.Text = "splitView";
+            splitView.UpperLeft = null;
+            splitView.UpperRight = null;
             // 
             // SplitViewParentControl
             // 
-            this.Controls.AddRange(new Control[]{this.splitView});
-            this.Name = "SplitViewParentControl";
-            this.Size = new Size(248, 216);
-            this.ResumeLayout(false);
+            Controls.AddRange(new Control[] {splitView});
+            Name = "SplitViewParentControl";
+            Size = new Size(248, 216);
+            ResumeLayout(false);
         }
+
         #endregion
     }
 }

@@ -74,13 +74,13 @@ namespace DrawEngine.SharpTracingUI
                 this.renderType = value;
                 switch(this.renderType){
                     case RenderType.RayTracer:
-                        this.tracer = new RayTracer(new Scene(UnifiedScenesRepository.Scenes[this.TabText]));
+                        this.tracer = new RayTracer(UnifiedScenesRepository.Scenes[this.TabText]);
                         break;
                     case RenderType.PhotonTracer:
-                        this.tracer = new PhotonTracer(new Scene(UnifiedScenesRepository.Scenes[this.TabText]), 500000);
+                        this.tracer = new PhotonTracer(UnifiedScenesRepository.Scenes[this.TabText], 500000);
                         break;
                     case RenderType.DistributedRayTracer:
-                        this.tracer = new DistributedRayTracer(new Scene(UnifiedScenesRepository.Scenes[this.TabText]));
+                        this.tracer = new DistributedRayTracer(UnifiedScenesRepository.Scenes[this.TabText]);
                         break;
                 }
             }
@@ -125,11 +125,13 @@ namespace DrawEngine.SharpTracingUI
             }
             if(obj is Primitive){
                 Primitive p = (Primitive)obj;
-                if(p is TriangleModel){
+                if (p is TriangleModel)
+                {
                     OpenFileDialog ofd = new OpenFileDialog();
                     ofd.Filter =
                             "All Know Files|*.ply;*.byu;*.obj;*.off;*.noff;*.cnoff|Ply Files|*.ply|Byu Files|*.byu|Wave Obj Files|*.obj|Off Files|*.off;*.noff;*.cnoff";
-                    if(ofd.ShowDialog() == DialogResult.OK){
+                    if (ofd.ShowDialog() == DialogResult.OK)
+                    {
                         TriangleModel model = p as TriangleModel;
                         model.Path = ofd.FileName;
                         LoadingModelDialog modelDlg = new LoadingModelDialog(model);
@@ -156,6 +158,7 @@ namespace DrawEngine.SharpTracingUI
         }
         private void DocumentWindow_Click(object sender, EventArgs e)
         {
+           
             PropertyWindow.Instance.PropertyGrid.SelectedObject = UnifiedScenesRepository.Scenes[this.TabText];
             this.Activate();
         }
@@ -173,7 +176,10 @@ namespace DrawEngine.SharpTracingUI
         }
         private void DocumentWindow_FormClosed(object sender, FormClosedEventArgs e)
         {
+            this.tracer = null;
             UnifiedScenesRepository.Scenes.Remove(this.TabText);
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
         }
         private void menuItemRender_Click(object sender, EventArgs e)
         {
@@ -316,7 +322,7 @@ namespace DrawEngine.SharpTracingUI
         private void pictureView_MouseMove(object sender, MouseEventArgs e)
         {
             if(this.intersected.GetValueOrDefault()){
-                Primitive primitive = this.current_intersection.HitPrimitive;
+                IPrimitive primitive = this.current_intersection.HitPrimitive;
                 //Scene scene = UnifiedScenesRepository.Scenes[this.TabText];
                 if(primitive is ITransformable3D){
                     //Ray ray = scene.DefaultCamera.CreateRayFromScreen(e.X, e.Y);

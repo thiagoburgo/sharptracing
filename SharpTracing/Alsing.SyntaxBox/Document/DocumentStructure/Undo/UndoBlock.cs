@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 namespace Alsing.SourceCode
 {
     //what kind of undoaction is it?
@@ -34,18 +35,21 @@ namespace Alsing.SourceCode
         /// <summary>
         /// 
         /// </summary>
-        public UndoAction Action = 0;
+        public string Text = "";
+
         /// <summary>
         /// 
         /// </summary>
         public TextPoint Position = new TextPoint(0, 0);
+
         /// <summary>
         /// 
         /// </summary>
-        public bool RowModified;
+        public UndoAction Action = 0;
+
         /// <summary>
         /// 
         /// </summary>
-        public string Text = "";
+        public bool RowModified = false;
     }
 }

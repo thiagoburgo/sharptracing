@@ -9,6 +9,7 @@
 // *
 
 #region using...
+
 using System;
 using System.ComponentModel;
 using System.ComponentModel.Design;
@@ -29,7 +30,7 @@ namespace Alsing.Windows.Forms
     /// <summary>
     /// Syntaxbox control that can be used as a pure text editor or as a code editor when a syntaxfile is used.
     /// </summary>
-    [Designer(typeof(SyntaxBoxDesigner), typeof(IDesigner))]
+    [Designer(typeof (SyntaxBoxDesigner), typeof (IDesigner))]
     public class SyntaxBoxControl : SplitViewParentControl
     {
         protected internal bool DisableAutoList;
@@ -38,12 +39,14 @@ namespace Alsing.Windows.Forms
         protected internal bool DisableIntelliMouse;
 
         #region General Declarations
+
         private bool _AllowBreakPoints = true;
         private Color _BackColor = Color.White;
         private Color _BracketBackColor = Color.LightSteelBlue;
         private Color _BracketBorderColor = Color.DarkBlue;
         private Color _BracketForeColor = Color.Black;
         private bool _BracketMatching = true;
+
         private Color _BreakPointBackColor = Color.DarkRed;
         private Color _BreakPointForeColor = Color.White;
         private SyntaxDocument _Document;
@@ -76,243 +79,297 @@ namespace Alsing.Windows.Forms
         private bool _ShowTabGuides;
         private bool _ShowWhitespace;
         private int _SmoothScrollSpeed = 2;
+
         private Color _TabGuideColor = ControlPaint.Light(SystemColors.ControlLight);
+
         private int _TabSize = 4;
+
         private int _TooltipDelay = 240;
         private bool _VirtualWhitespace;
         private Color _WhitespaceColor = SystemColors.ControlDark;
         private IContainer components;
+
         #endregion
 
         #region Internal Components/Controls
+
         private ImageList _AutoListIcons;
         private ImageList _GutterIcons;
         private Timer ParseTimer;
+
         #endregion
 
         #region Public Events
+
         /// <summary>
         /// An event that is fired when the cursor hovers a pattern;
         /// </summary>
         public event WordMouseHandler WordMouseHover = null;
+
         /// <summary>
         /// An event that is fired when the cursor hovers a pattern;
         /// </summary>
         public event WordMouseHandler WordMouseDown = null;
+
         /// <summary>
         /// An event that is fired when the control has updated the clipboard
         /// </summary>
         public event CopyHandler ClipboardUpdated = null;
+
         /// <summary>
         /// Event fired when the caret of the active view have moved.
         /// </summary>
         public event EventHandler CaretChange = null;
+
         /// <summary>
         /// 
         /// </summary>
         public event EventHandler SelectionChange = null;
+
         /// <summary>
         /// Event fired when the user presses the up or the down button on the infotip.
         /// </summary>
         public event EventHandler InfoTipSelectedIndexChanged = null;
+
         /// <summary>
         /// Event fired when a row is rendered.
         /// </summary>
         public event RowPaintHandler RenderRow = null;
+
         /// <summary>
         /// An event that is fired when mouse down occurs on a row
         /// </summary>
         public event RowMouseHandler RowMouseDown = null;
+
         /// <summary>
         /// An event that is fired when mouse move occurs on a row
         /// </summary>
         public event RowMouseHandler RowMouseMove = null;
+
         /// <summary>
         /// An event that is fired when mouse up occurs on a row
         /// </summary>
         public event RowMouseHandler RowMouseUp = null;
+
         /// <summary>
         /// An event that is fired when a click occurs on a row
         /// </summary>
         public event RowMouseHandler RowClick = null;
+
         /// <summary>
         /// An event that is fired when a double click occurs on a row
         /// </summary>
         public event RowMouseHandler RowDoubleClick = null;
+
         #endregion //END PUBLIC EGENTS
 
         #region Public Properties
 
         #region PUBLIC PROPERTY SHOWEOLMARKER
+
         private bool _ShowEOLMarker;
-        [Category("Appearance"), Description("Determines if a ¶ should be displayed at the end of a line"),
-         DefaultValue(false)]
+
+        [Category("Appearance"), Description("Determines if a ¶ should be displayed at the end of a line")]
+        [DefaultValue(false)]
         public bool ShowEOLMarker
         {
-            get { return this._ShowEOLMarker; }
+            get { return _ShowEOLMarker; }
             set
             {
-                this._ShowEOLMarker = value;
-                this.Redraw();
+                _ShowEOLMarker = value;
+                Redraw();
             }
         }
+
         #endregion
 
         #region PUBLIC PROPERTY EOLMARKERCOLOR
+
         private Color _EOLMarkerColor = Color.Red;
-        [Category("Appearance"), Description("The color of the EOL marker"), DefaultValue(typeof(Color), "Red")]
+
+        [Category("Appearance"), Description("The color of the EOL marker")]
+        [DefaultValue(typeof (Color), "Red")]
         public Color EOLMarkerColor
         {
-            get { return this._EOLMarkerColor; }
+            get { return _EOLMarkerColor; }
             set
             {
-                this._EOLMarkerColor = value;
-                this.Redraw();
+                _EOLMarkerColor = value;
+                Redraw();
             }
         }
+
         #endregion
 
         #region PUBLIC PROPERTY AUTOLISTAUTOSELECT
+
         private bool _AutoListAutoSelect = true;
+
         [DefaultValue(true)]
         public bool AutoListAutoSelect
         {
-            get { return this._AutoListAutoSelect; }
-            set { this._AutoListAutoSelect = value; }
+            get { return _AutoListAutoSelect; }
+            set { _AutoListAutoSelect = value; }
         }
+
         #endregion
 
         #region PUBLIC PROPERTY COPYASRTF
-        [Category("Behavior - Clipboard"), Description("determines if the copy actions should be stored as RTF"),
-         DefaultValue(typeof(Color), "false")]
+
+        [Category("Behavior - Clipboard"), Description("determines if the copy actions should be stored as RTF")]
+        [DefaultValue(typeof (Color), "false")]
         public bool CopyAsRTF { get; set; }
+
         #endregion
 
         private bool _CollapsedBlockTooltipsEnabled = true;
-        [Category("Appearance - Scopes"), Description("The color of the active scope"),
-         DefaultValue(typeof(Color), "Transparent")]
+
+        [Category("Appearance - Scopes"), Description("The color of the active scope")]
+        [DefaultValue(typeof (Color), "Transparent")]
         public Color ScopeBackColor
         {
-            get { return this._ScopeBackColor; }
+            get { return _ScopeBackColor; }
             set
             {
-                this._ScopeBackColor = value;
-                this.Redraw();
+                _ScopeBackColor = value;
+                Redraw();
             }
         }
-        [Category("Appearance - Scopes"), Description("The color of the scope indicator"),
-         DefaultValue(typeof(Color), "Transparent")]
+
+        [Category("Appearance - Scopes"), Description("The color of the scope indicator")]
+        [DefaultValue(typeof (Color), "Transparent")]
         public Color ScopeIndicatorColor
         {
-            get { return this._ScopeIndicatorColor; }
+            get { return _ScopeIndicatorColor; }
             set
             {
-                this._ScopeIndicatorColor = value;
-                this.Redraw();
+                _ScopeIndicatorColor = value;
+                Redraw();
             }
         }
+
         /// <summary>
         /// Positions the AutoList
         /// </summary>
-        [Category("Behavior"), Browsable(false)]
+        [Category("Behavior")]
+        [Browsable(false)]
         public TextPoint AutoListPosition
         {
-            get { return ((EditViewControl)this._ActiveView).AutoListPosition; }
+            get { return ((EditViewControl) _ActiveView).AutoListPosition; }
             set
             {
-                if((this._ActiveView) == null){
+                if ((_ActiveView) == null)
                     return;
-                }
-                ((EditViewControl)this._ActiveView).AutoListPosition = value;
+
+                ((EditViewControl) _ActiveView).AutoListPosition = value;
             }
         }
+
         /// <summary>
         /// Positions the InfoTip
         /// </summary>
-        [Category("Behavior"), Browsable(false)]
+        [Category("Behavior")]
+        [Browsable(false)]
         public TextPoint InfoTipPosition
         {
-            get { return ((EditViewControl)this._ActiveView).InfoTipPosition; }
+            get { return ((EditViewControl) _ActiveView).InfoTipPosition; }
             set
             {
-                if((this._ActiveView) == null){
+                if ((_ActiveView) == null)
                     return;
-                }
-                ((EditViewControl)this._ActiveView).InfoTipPosition = value;
+
+                ((EditViewControl) _ActiveView).InfoTipPosition = value;
             }
         }
+
+
         /// <summary>
         /// Determines if the revision marks should be visible.
         /// </summary>
-        [Category("Appearance - Revision Marks"), Description("Determines if the revision marks should be visible"),
-         DefaultValue(true)]
+        [Category("Appearance - Revision Marks")]
+        [Description(
+            "Determines if the revision marks should be visible")
+        ]
+        [DefaultValue(true)]
         public bool ShowRevisionMarks
         {
-            get { return this._ShowRevisionMarks; }
+            get { return _ShowRevisionMarks; }
             set
             {
-                this._ShowRevisionMarks = value;
-                this.Redraw();
+                _ShowRevisionMarks = value;
+                Redraw();
             }
         }
+
         /// <summary>
         /// Prevents the control from changing the cursor.
         /// </summary>
-        [Description("Prevents the control from changing the cursor."), Category("Appearance"), Browsable(false)]
+        [Description("Prevents the control from changing the cursor.")]
+        [Category("Appearance")]
+        [Browsable(false)]
         public bool LockCursorUpdate { get; set; }
+
         /// <summary>
         /// The row padding in pixels.
         /// </summary>
-        [Category("Appearance"), Description("The number of pixels to add between rows"), DefaultValue(0)]
+        [Category("Appearance"), Description("The number of pixels to add between rows")]
+        [DefaultValue(0)]
         public int RowPadding { get; set; }
+
+
         /// <summary>
         /// The selected index in the infotip.
         /// </summary>
-        [Category("Appearance - Infotip"), Description("The currently active selection in the infotip"),
-         Browsable(false)]
+        [Category("Appearance - Infotip"), Description("The currently active selection in the infotip")]
+        [Browsable(false)]
         public int InfoTipSelectedIndex
         {
-            get { return ((EditViewControl)this._ActiveView).InfoTip.SelectedIndex; }
+            get { return ((EditViewControl) _ActiveView).InfoTip.SelectedIndex; }
             set
             {
-                if((this._ActiveView) == null || ((EditViewControl)this._ActiveView).InfoTip == null){
+                if ((_ActiveView) == null || ((EditViewControl) _ActiveView).InfoTip == null)
                     return;
-                }
-                ((EditViewControl)this._ActiveView).InfoTip.SelectedIndex = value;
+
+                ((EditViewControl) _ActiveView).InfoTip.SelectedIndex = value;
             }
         }
+
         /// <summary>
         /// Gets or Sets the image used in the infotip.
         /// </summary>
-        [Category("Appearance - InfoTip"), Description("An image to show in the infotip"), DefaultValue(null)]
+        [Category("Appearance - InfoTip"), Description("An image to show in the infotip")]
+        [DefaultValue(null)]
         public Image InfoTipImage
         {
-            get { return ((EditViewControl)this._ActiveView).InfoTip.Image; }
+            get { return ((EditViewControl) _ActiveView).InfoTip.Image; }
             set
             {
-                if((this._ActiveView) == null || ((EditViewControl)this._ActiveView).InfoTip == null){
+                if ((_ActiveView) == null || ((EditViewControl) _ActiveView).InfoTip == null)
                     return;
-                }
-                ((EditViewControl)this._ActiveView).InfoTip.Image = value;
+
+
+                ((EditViewControl) _ActiveView).InfoTip.Image = value;
             }
         }
+
         /// <summary>
         /// Get or Sets the number of choices that could be made in the infotip.
         /// </summary>
-        [Category("Appearance"), Description("Get or Sets the number of choices that could be made in the infotip"),
-         Browsable(false)]
+        [Category("Appearance"), Description("Get or Sets the number of choices that could be made in the infotip")]
+        [Browsable(false)]
         public int InfoTipCount
         {
-            get { return ((EditViewControl)this._ActiveView).InfoTip.Count; }
+            get { return ((EditViewControl) _ActiveView).InfoTip.Count; }
             set
             {
-                if((this._ActiveView) == null || ((EditViewControl)this._ActiveView).InfoTip == null){
+                if ((_ActiveView) == null || ((EditViewControl) _ActiveView).InfoTip == null)
                     return;
-                }
-                ((EditViewControl)this._ActiveView).InfoTip.Count = value;
-                ((EditViewControl)this._ActiveView).InfoTip.Init();
+
+                ((EditViewControl) _ActiveView).InfoTip.Count = value;
+                ((EditViewControl) _ActiveView).InfoTip.Init();
             }
         }
+
         /// <summary>
         /// The text in the Infotip.
         /// </summary>
@@ -333,18 +390,20 @@ namespace Alsing.Windows.Forms
         /// MySyntaxBox.InfoTipText="public void MyMethod ( &lt;b&gt; string text &lt;/b&gt; );"; 		
         /// </code>
         /// </example>	
-        [Category("Appearance - InfoTip"), Description("The infotip text"), DefaultValue("")]
+        [Category("Appearance - InfoTip"), Description("The infotip text")]
+        [DefaultValue("")]
         public string InfoTipText
         {
-            get { return ((EditViewControl)this._ActiveView).InfoTip.Data; }
+            get { return ((EditViewControl) _ActiveView).InfoTip.Data; }
             set
             {
-                if((this._ActiveView) == null || ((EditViewControl)this._ActiveView).InfoTip == null){
+                if ((_ActiveView) == null || ((EditViewControl) _ActiveView).InfoTip == null)
                     return;
-                }
-                ((EditViewControl)this._ActiveView).InfoTip.Data = value;
+
+                ((EditViewControl) _ActiveView).InfoTip.Data = value;
             }
         }
+
         /// <summary>
         /// Gets the Selection object from the active view.
         /// </summary>
@@ -353,60 +412,65 @@ namespace Alsing.Windows.Forms
         {
             get
             {
-                if((this._ActiveView) != null){
-                    return ((EditViewControl)this._ActiveView).Selection;
+                if ((_ActiveView) != null)
+                {
+                    return ((EditViewControl) _ActiveView).Selection;
                 }
                 return null;
             }
         }
+
         /// <summary>
         /// Collection of KeyboardActions that is used by the control.
         /// Keyboard actions to add shortcut key combinations to certain tasks.
         /// </summary>
-        [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public KeyboardActionList KeyboardActions
         {
-            get { return this._KeyboardActions; }
-            set { this._KeyboardActions = value; }
+            get { return _KeyboardActions; }
+            set { _KeyboardActions = value; }
         }
+
         /// <summary>
         /// Gets or Sets if the AutoList is visible in the active view.
         /// </summary>
-        [Category("Appearance"), Description("Gets or Sets if the AutoList is visible in the active view."),
-         Browsable(false)]
+        [Category("Appearance"), Description("Gets or Sets if the AutoList is visible in the active view.")]
+        [Browsable(false)]
         public bool AutoListVisible
         {
-            get { return (this._ActiveView) != null && ((EditViewControl)this._ActiveView).AutoListVisible; }
+            get { return (_ActiveView) != null && ((EditViewControl) _ActiveView).AutoListVisible; }
             set
             {
-                if((this._ActiveView) != null){
-                    ((EditViewControl)this._ActiveView).AutoListVisible = value;
-                }
+                if ((_ActiveView) != null)
+                    ((EditViewControl) _ActiveView).AutoListVisible = value;
             }
         }
+
         /// <summary>
         /// Gets or Sets if the InfoTip is visible in the active view.
         /// </summary>
-        [Category("Appearance"), Description("Gets or Sets if the InfoTip is visible in the active view."),
-         Browsable(false)]
+        [Category("Appearance"), Description("Gets or Sets if the InfoTip is visible in the active view.")]
+        [Browsable(false)]
         public bool InfoTipVisible
         {
-            get { return (this._ActiveView) != null && ((EditViewControl)this._ActiveView).InfoTipVisible; }
+            get { return (_ActiveView) != null && ((EditViewControl) _ActiveView).InfoTipVisible; }
             set
             {
-                if((this._ActiveView) != null){
-                    ((EditViewControl)this._ActiveView).InfoTipVisible = value;
-                }
+                if ((_ActiveView) != null)
+                    ((EditViewControl) _ActiveView).InfoTipVisible = value;
             }
         }
+
         /// <summary>
         /// Gets if the control can perform a Copy action.
         /// </summary>
         [Browsable(false)]
         public bool CanCopy
         {
-            get { return ((EditViewControl)this._ActiveView).CanCopy; }
+            get { return ((EditViewControl) _ActiveView).CanCopy; }
         }
+
         /// <summary>
         /// Gets if the control can perform a Paste action.
         /// (if the clipboard contains a valid text).
@@ -414,24 +478,28 @@ namespace Alsing.Windows.Forms
         [Browsable(false)]
         public bool CanPaste
         {
-            get { return ((EditViewControl)this._ActiveView).CanPaste; }
+            get { return ((EditViewControl) _ActiveView).CanPaste; }
         }
+
+
         /// <summary>
         /// Gets if the control can perform a ReDo action.
         /// </summary>
         [Browsable(false)]
         public bool CanRedo
         {
-            get { return ((EditViewControl)this._ActiveView).CanRedo; }
+            get { return ((EditViewControl) _ActiveView).CanRedo; }
         }
+
         /// <summary>
         /// Gets if the control can perform an Undo action.
         /// </summary>
         [Browsable(false)]
         public bool CanUndo
         {
-            get { return ((EditViewControl)this._ActiveView).CanUndo; }
+            get { return ((EditViewControl) _ActiveView).CanUndo; }
         }
+
         /// <summary>
         /// Gets or Sets the imagelist to use in the gutter margin.
         /// </summary>
@@ -442,706 +510,827 @@ namespace Alsing.Windows.Forms
         [Category("Appearance - Gutter Margin"), Description("Gets or Sets the imagelist to use in the gutter margin.")]
         public ImageList GutterIcons
         {
-            get { return this._GutterIcons; }
+            get { return _GutterIcons; }
             set
             {
-                this._GutterIcons = value;
-                this.Redraw();
+                _GutterIcons = value;
+                Redraw();
             }
         }
+
         /// <summary>
         /// Gets or Sets the imagelist to use in the autolist.
         /// </summary>
-        [Category("Appearance"), Description("Gets or Sets the imagelist to use in the autolist."), DefaultValue(null)]
+        [Category("Appearance"), Description("Gets or Sets the imagelist to use in the autolist.")]
+        [DefaultValue(null)]
         public ImageList AutoListIcons
         {
-            get { return this._AutoListIcons; }
+            get { return _AutoListIcons; }
             set
             {
-                this._AutoListIcons = value;
-                foreach(EditViewControl ev in this.Views){
-                    if(ev != null && ev.AutoList != null){
+                _AutoListIcons = value;
+
+
+                foreach (EditViewControl ev in Views)
+                {
+                    if (ev != null && ev.AutoList != null)
                         ev.AutoList.Images = value;
-                    }
                 }
-                this.Redraw();
+                Redraw();
             }
         }
+
+
         /// <summary>
         /// Gets or Sets the color to use when rendering Tab guides.
         /// </summary>
-        [Category("Appearance - Tabs"), Description("Gets or Sets the color to use when rendering Tab guides."),
-         DefaultValue(typeof(Color), "Control")]
+        [Category("Appearance - Tabs")]
+        [Description("Gets or Sets the color to use when rendering Tab guides.")]
+        [DefaultValue(typeof (Color), "Control")]
         public Color TabGuideColor
         {
-            get { return this._TabGuideColor; }
+            get { return _TabGuideColor; }
             set
             {
-                this._TabGuideColor = value;
-                this.Redraw();
+                _TabGuideColor = value;
+                Redraw();
             }
         }
+
         /// <summary>
         /// Gets or Sets the color of the bracket match borders.
         /// </summary>
         /// <remarks>
         /// NOTE: use Color.Transparent to turn off the bracket match borders.
         /// </remarks>
-        [Category("Appearance - Bracket Match"), Description("Gets or Sets the color of the bracket match borders."),
-         DefaultValue(typeof(Color), "DarkBlue")]
+        [Category("Appearance - Bracket Match")]
+        [Description("Gets or Sets the color of the bracket match borders.")]
+        [DefaultValue(typeof (Color), "DarkBlue")]
         public Color BracketBorderColor
         {
-            get { return this._BracketBorderColor; }
+            get { return _BracketBorderColor; }
             set
             {
-                this._BracketBorderColor = value;
-                this.Redraw();
+                _BracketBorderColor = value;
+                Redraw();
             }
         }
+
         /// <summary>
         /// Gets or Sets if the control should render Tab guides.
         /// </summary>
-        [Category("Appearance - Tabs"), Description("Gets or Sets if the control should render Tab guides."),
-         DefaultValue(false)]
+        [Category("Appearance - Tabs")]
+        [Description("Gets or Sets if the control should render Tab guides.")]
+        [DefaultValue(false)]
         public bool ShowTabGuides
         {
-            get { return this._ShowTabGuides; }
+            get { return _ShowTabGuides; }
             set
             {
-                this._ShowTabGuides = value;
-                this.Redraw();
+                _ShowTabGuides = value;
+                Redraw();
             }
         }
+
         /// <summary>
         /// Gets or Sets the color to use when rendering whitespace characters
         /// </summary>
-        [Category("Appearance"), Description("Gets or Sets the color to use when rendering whitespace characters."),
-         DefaultValue(typeof(Color), "Control")]
+        [Category("Appearance")]
+        [Description("Gets or Sets the color to use when rendering whitespace characters.")]
+        [DefaultValue(typeof (Color), "Control")]
         public Color WhitespaceColor
         {
-            get { return this._WhitespaceColor; }
+            get { return _WhitespaceColor; }
             set
             {
-                this._WhitespaceColor = value;
-                this.Redraw();
+                _WhitespaceColor = value;
+                Redraw();
             }
         }
+
         /// <summary>
         /// Gets or Sets the color of the code Outlining (both folding lines and collapsed blocks).
         /// </summary>
-        [Category("Appearance"),
-         Description("Gets or Sets the color of the code Outlining (both folding lines and collapsed blocks)."),
-         DefaultValue(typeof(Color), "ControlDark")]
+        [Category("Appearance")]
+        [Description("Gets or Sets the color of the code Outlining (both folding lines and collapsed blocks).")]
+        [DefaultValue(typeof (Color), "ControlDark")]
         public Color OutlineColor
         {
-            get { return this._OutlineColor; }
+            get { return _OutlineColor; }
             set
             {
-                this._OutlineColor = value;
-                this.InitGraphics();
-                this.Redraw();
+                _OutlineColor = value;
+                InitGraphics();
+                Redraw();
             }
         }
+
+
         /// <summary>
         /// Determines if the control should use a smooth scroll when scrolling one row up or down.
         /// </summary>
-        [Category("Behavior"),
-         Description("Determines if the control should use a smooth scroll when scrolling one row up or down."),
-         DefaultValue(typeof(Color), "False")]
+        [Category("Behavior")]
+        [Description("Determines if the control should use a smooth scroll when scrolling one row up or down.")]
+        [DefaultValue(typeof (Color), "False")]
         public bool SmoothScroll { get; set; }
+
         /// <summary>
         /// Gets or Sets the speed of the vertical scroll when SmoothScroll is activated
         /// </summary>
-        [Category("Behavior"),
-         Description("Gets or Sets the speed of the vertical scroll when SmoothScroll is activated"), DefaultValue(2)]
+        [Category("Behavior")]
+        [Description("Gets or Sets the speed of the vertical scroll when SmoothScroll is activated")]
+        [DefaultValue(2)]
         public int SmoothScrollSpeed
         {
-            get { return this._SmoothScrollSpeed; }
+            get { return _SmoothScrollSpeed; }
             set
             {
-                if(value <= 0){
+                if (value <= 0)
+                {
                     throw (new Exception("Scroll speed may not be less than 1"));
                 }
-                this._SmoothScrollSpeed = value;
+
+                _SmoothScrollSpeed = value;
             }
         }
+
         /// <summary>
         /// Gets or Sets if the control can display breakpoints or not.
         /// </summary>
-        [Category("Behavior"), Description("Gets or Sets if the control can display breakpoints or not."),
-         DefaultValue(true)]
+        [Category("Behavior")]
+        [Description("Gets or Sets if the control can display breakpoints or not.")]
+        [DefaultValue(true)]
         public bool AllowBreakPoints
         {
-            get { return this._AllowBreakPoints; }
-            set { this._AllowBreakPoints = value; }
+            get { return _AllowBreakPoints; }
+            set { _AllowBreakPoints = value; }
         }
+
         /// <summary>
         /// Gets or Sets the RevisionMarkBeforeSave Color to use for modified rows.
         /// </summary>
-        [Category("Appearance - Revision Marks"),
-         Description("The color to use for revision mark when line is modified"), DefaultValue(typeof(Color), "Gold")]
-        public Color RevisionMarkBeforeSave
+        [Category("Appearance - Revision Marks")]
+        [Description(
+            "The color to use for revision mark when line is modified")
+        ]
+        [DefaultValue(typeof (Color), "Gold")]
+        public Color
+            RevisionMarkBeforeSave
         {
-            get { return this._RevisionMarkBeforeSave; }
+            get { return _RevisionMarkBeforeSave; }
             set
             {
-                this._RevisionMarkBeforeSave = value;
-                this.Redraw();
+                _RevisionMarkBeforeSave = value;
+                Redraw();
             }
         }
+
         /// <summary>
         /// Gets or Sets the RevisionMarkAfterSave Color to use for saved rows.
         /// </summary>
-        [Category("Appearance - Revision Marks"), Description("The color to use for revision mark when line is saved"),
-         DefaultValue(typeof(Color), "LimeGreen")]
-        public Color RevisionMarkAfterSave
+        [Category("Appearance - Revision Marks")]
+        [Description(
+            "The color to use for revision mark when line is saved")
+        ]
+        [DefaultValue(typeof (Color), "LimeGreen")]
+        public Color
+            RevisionMarkAfterSave
         {
-            get { return this._RevisionMarkAfterSave; }
+            get { return _RevisionMarkAfterSave; }
             set
             {
-                this._RevisionMarkAfterSave = value;
-                this.Redraw();
+                _RevisionMarkAfterSave = value;
+                Redraw();
             }
         }
+
         /// <summary>
         /// Gets or Sets if the control should perform a full parse of the document when content is drag dropped or pasted into the control
         /// </summary>
-        [Category("Behavior - Clipboard"),
-         Description(
-                 "Gets or Sets if the control should perform a full parse of the document when content is drag dropped or pasted into the control"
-                 ), DefaultValue(false)]
+        [Category("Behavior - Clipboard")]
+        [Description(
+            "Gets or Sets if the control should perform a full parse of the document when content is drag dropped or pasted into the control"
+            )]
+        [DefaultValue(false)]
         public bool ParseOnPaste
         {
-            get { return this._ParseOnPaste; }
+            get { return _ParseOnPaste; }
             set
             {
-                this._ParseOnPaste = value;
-                this.Redraw();
+                _ParseOnPaste = value;
+                Redraw();
             }
         }
+
         /// <summary>
         /// Gets or Sets the Size of the font.
         /// <seealso cref="FontName"/>
         /// </summary>
-        [Category("Appearance - Font"), Description("The size of the font"), DefaultValue(10f)]
+        [Category("Appearance - Font")]
+        [Description("The size of the font")]
+        [DefaultValue(10f)]
         public float FontSize
         {
-            get { return this._FontSize; }
+            get { return _FontSize; }
             set
             {
-                this._FontSize = value;
-                this.InitGraphics();
-                this.Redraw();
+                _FontSize = value;
+                InitGraphics();
+                Redraw();
             }
         }
+
         /// <summary>
         /// Determines what indentstyle to use on a new line.
         /// </summary>
-        [Category("Behavior"), Description("Determines how the the control indents a new line"),
-         DefaultValue(IndentStyle.LastRow)]
+        [Category("Behavior")]
+        [Description("Determines how the the control indents a new line")]
+        [DefaultValue(IndentStyle.LastRow)]
         public IndentStyle Indent
         {
-            get { return this._Indent; }
-            set { this._Indent = value; }
+            get { return _Indent; }
+            set { _Indent = value; }
         }
+
         /// <summary>
         /// Gets or Sets the SyntaxDocument the control is currently attatched to.
         /// </summary>
-        [Category("Content"), Description("The SyntaxDocument that is attatched to the contro")]
+        [Category("Content")]
+        [Description("The SyntaxDocument that is attatched to the contro")]
         public SyntaxDocument Document
         {
-            get { return this._Document; }
-            set { this.AttachDocument(value); }
+            get { return _Document; }
+            set { AttachDocument(value); }
         }
+
         /// <summary>
         /// Get or Set the delay before the tooltip is displayed over a collapsed block
         /// </summary>
-        [Category("Behavior"), Description("The delay before the tooltip is displayed over a collapsed block"),
-         DefaultValue(240)]
+        [Category("Behavior")]
+        [Description("The delay before the tooltip is displayed over a collapsed block")]
+        [DefaultValue(240)]
         public int TooltipDelay
         {
-            get { return this._TooltipDelay; }
-            set { this._TooltipDelay = value; }
+            get { return _TooltipDelay; }
+            set { _TooltipDelay = value; }
         }
+
         // ROB: Added property to turn collapsed block tooltips on and off.
+
         /// <summary>
         /// Get or Set whether or not tooltips will be deplayed for collapsed blocks.
         /// </summary>
-        [Category("Behavior"), Description("The delay before the tooltip is displayed over a collapsed block"),
-         DefaultValue(true)]
+        [Category("Behavior")]
+        [Description("The delay before the tooltip is displayed over a collapsed block")]
+        [DefaultValue(true)]
         public bool CollapsedBlockTooltipsEnabled
         {
-            get { return this._CollapsedBlockTooltipsEnabled; }
-            set { this._CollapsedBlockTooltipsEnabled = value; }
+            get { return _CollapsedBlockTooltipsEnabled; }
+            set { _CollapsedBlockTooltipsEnabled = value; }
         }
+
         // END-ROB ----------------------------------------------------------
+
         /// <summary>
         /// Get or Set the delay before the tooltip is displayed over a collapsed block
         /// </summary>
-        [Category("Behavior"), Description("Determines if the control is readonly or not"), DefaultValue(false)]
+        [Category("Behavior")]
+        [Description("Determines if the control is readonly or not")]
+        [DefaultValue(false)]
         public bool ReadOnly { get; set; }
+
         /// <summary>
         /// Gets or Sets the name of the font.
         /// <seealso cref="FontSize"/>
         /// </summary>
-        [Category("Appearance - Font"), Description("The name of the font that is used to render the control"),
-         Editor(typeof(FontList), typeof(UITypeEditor)), DefaultValue("Courier New")]
+        [Category("Appearance - Font")]
+        [Description("The name of the font that is used to render the control")]
+        [Editor(typeof (FontList), typeof (UITypeEditor))]
+        [DefaultValue("Courier New")]
         public string FontName
         {
-            get { return this._FontName; }
+            get { return _FontName; }
             set
             {
-                if(this.Views == null){
+                if (Views == null)
                     return;
-                }
-                this._FontName = value;
-                this.InitGraphics();
-                foreach(EditViewControl evc in this.Views){
+
+                _FontName = value;
+                InitGraphics();
+                foreach (EditViewControl evc in Views)
                     evc.CalcMaxCharWidth();
-                }
-                this.Redraw();
+
+                Redraw();
             }
         }
+
         /// <summary>
         /// Gets or Sets if bracketmatching is active
         /// <seealso cref="BracketForeColor"/>
         /// <seealso cref="BracketBackColor"/>
         /// </summary>
-        [Category("Appearance - Bracket Match"),
-         Description("Determines if the control should highlight scope patterns"), DefaultValue(true)]
+        [Category("Appearance - Bracket Match")]
+        [Description("Determines if the control should highlight scope patterns")]
+        [DefaultValue(true)]
         public bool BracketMatching
         {
-            get { return this._BracketMatching; }
+            get { return _BracketMatching; }
             set
             {
-                this._BracketMatching = value;
-                this.Redraw();
+                _BracketMatching = value;
+                Redraw();
             }
         }
+
         /// <summary>
         /// Gets or Sets if Virtual Whitespace is active.
         /// <seealso cref="ShowWhitespace"/>
         /// </summary>
-        [Category("Behavior"), Description("Determines if virtual Whitespace is active"), DefaultValue(false)]
+        [Category("Behavior")]
+        [Description("Determines if virtual Whitespace is active")]
+        [DefaultValue(false)]
         public bool VirtualWhitespace
         {
-            get { return this._VirtualWhitespace; }
+            get { return _VirtualWhitespace; }
             set
             {
-                this._VirtualWhitespace = value;
-                this.Redraw();
+                _VirtualWhitespace = value;
+                Redraw();
             }
         }
+
         /// <summary>
         /// Gets or Sets the separator Color.
         /// <seealso cref="BracketMatching"/>
         /// <seealso cref="BracketBackColor"/>
         /// </summary>
-        [Category("Appearance"), Description("The separator color"), DefaultValue(typeof(Color), "Control")]
+        [Category("Appearance")]
+        [Description("The separator color")]
+        [DefaultValue(typeof (Color), "Control")]
         public Color SeparatorColor
         {
-            get { return this._SeparatorColor; }
+            get { return _SeparatorColor; }
             set
             {
-                this._SeparatorColor = value;
-                this.Redraw();
+                _SeparatorColor = value;
+                Redraw();
             }
         }
+
+
         /// <summary>
         /// Gets or Sets the foreground Color to use when BracketMatching is activated.
         /// <seealso cref="BracketMatching"/>
         /// <seealso cref="BracketBackColor"/>
         /// </summary>
-        [Category("Appearance - Bracket Match"),
-         Description("The foreground color to use when BracketMatching is activated"),
-         DefaultValue(typeof(Color), "Black")]
+        [Category("Appearance - Bracket Match")]
+        [Description("The foreground color to use when BracketMatching is activated")]
+        [DefaultValue(typeof (Color), "Black")]
         public Color BracketForeColor
         {
-            get { return this._BracketForeColor; }
+            get { return _BracketForeColor; }
             set
             {
-                this._BracketForeColor = value;
-                this.Redraw();
+                _BracketForeColor = value;
+                Redraw();
             }
         }
+
         /// <summary>
         /// Gets or Sets the background Color to use when BracketMatching is activated.
         /// <seealso cref="BracketMatching"/>
         /// <seealso cref="BracketForeColor"/>
         /// </summary>
-        [Category("Appearance - Bracket Match"),
-         Description("The background color to use when BracketMatching is activated"),
-         DefaultValue(typeof(Color), "LightSteelBlue")]
+        [Category("Appearance - Bracket Match")]
+        [Description("The background color to use when BracketMatching is activated")]
+        [DefaultValue(typeof (Color), "LightSteelBlue")]
         public Color BracketBackColor
         {
-            get { return this._BracketBackColor; }
+            get { return _BracketBackColor; }
             set
             {
-                this._BracketBackColor = value;
-                this.Redraw();
+                _BracketBackColor = value;
+                Redraw();
             }
         }
+
+
         /// <summary>
         /// The inactive selection background color.
         /// </summary>
-        [Category("Appearance - Selection"), Description("The inactive selection background color."),
-         DefaultValue(typeof(Color), "ControlDark")]
+        [Category("Appearance - Selection")]
+        [Description("The inactive selection background color.")]
+        [DefaultValue(typeof (Color), "ControlDark")]
         public Color InactiveSelectionBackColor
         {
-            get { return this._InactiveSelectionBackColor; }
+            get { return _InactiveSelectionBackColor; }
             set
             {
-                this._InactiveSelectionBackColor = value;
-                this.Redraw();
+                _InactiveSelectionBackColor = value;
+                Redraw();
             }
         }
+
         /// <summary>
         /// The inactive selection foreground color.
         /// </summary>
-        [Category("Appearance - Selection"), Description("The inactive selection foreground color."),
-         DefaultValue(typeof(Color), "ControlLight")]
+        [Category("Appearance - Selection")]
+        [Description("The inactive selection foreground color.")]
+        [DefaultValue(typeof (Color), "ControlLight")]
         public Color InactiveSelectionForeColor
         {
-            get { return this._InactiveSelectionForeColor; }
+            get { return _InactiveSelectionForeColor; }
             set
             {
-                this._InactiveSelectionForeColor = value;
-                this.Redraw();
+                _InactiveSelectionForeColor = value;
+                Redraw();
             }
         }
+
         /// <summary>
         /// The selection background color.
         /// </summary>
-        [Category("Appearance - Selection"), Description("The selection background color."),
-         DefaultValue(typeof(Color), "Highlight")]
+        [Category("Appearance - Selection")]
+        [Description("The selection background color.")]
+        [DefaultValue(typeof (Color), "Highlight")]
         public Color SelectionBackColor
         {
-            get { return this._SelectionBackColor; }
+            get { return _SelectionBackColor; }
             set
             {
-                this._SelectionBackColor = value;
-                this.Redraw();
+                _SelectionBackColor = value;
+                Redraw();
             }
         }
+
         /// <summary>
         /// The selection foreground color.
         /// </summary>
-        [Category("Appearance - Selection"), Description("The selection foreground color."),
-         DefaultValue(typeof(Color), "HighlightText")]
+        [Category("Appearance - Selection")]
+        [Description("The selection foreground color.")]
+        [DefaultValue(typeof (Color), "HighlightText")]
         public Color SelectionForeColor
         {
-            get { return this._SelectionForeColor; }
+            get { return _SelectionForeColor; }
             set
             {
-                this._SelectionForeColor = value;
-                this.Redraw();
+                _SelectionForeColor = value;
+                Redraw();
             }
         }
+
         /// <summary>
         /// Gets or Sets the border Color of the gutter margin.
         /// <seealso cref="GutterMarginColor"/>
         /// </summary>
-        [Category("Appearance - Gutter Margin"), Description("The border color of the gutter margin"),
-         DefaultValue(typeof(Color), "ControlDark")]
+        [Category("Appearance - Gutter Margin")]
+        [Description("The border color of the gutter margin")]
+        [DefaultValue(typeof (Color), "ControlDark")]
         public Color GutterMarginBorderColor
         {
-            get { return this._GutterMarginBorderColor; }
+            get { return _GutterMarginBorderColor; }
             set
             {
-                this._GutterMarginBorderColor = value;
-                this.InitGraphics();
-                this.Redraw();
+                _GutterMarginBorderColor = value;
+                InitGraphics();
+                Redraw();
             }
         }
+
         /// <summary>
         /// Gets or Sets the border Color of the line number margin
         /// <seealso cref="LineNumberForeColor"/>
         /// <seealso cref="LineNumberBackColor"/>
         /// </summary>
-        [Category("Appearance - Line Numbers"), Description("The border color of the line number margin"),
-         DefaultValue(typeof(Color), "Teal")]
+        [Category("Appearance - Line Numbers")]
+        [Description("The border color of the line number margin")]
+        [DefaultValue(typeof (Color), "Teal")]
         public Color LineNumberBorderColor
         {
-            get { return this._LineNumberBorderColor; }
+            get { return _LineNumberBorderColor; }
             set
             {
-                this._LineNumberBorderColor = value;
-                this.InitGraphics();
-                this.Redraw();
+                _LineNumberBorderColor = value;
+                InitGraphics();
+                Redraw();
             }
         }
+
+
         /// <summary>
         /// Gets or Sets the foreground Color of a Breakpoint.
         /// <seealso cref="BreakPointBackColor"/>
         /// </summary>
-        [Category("Appearance - BreakPoints"), Description("The foreground color of a Breakpoint"),
-         DefaultValue(typeof(Color), "White")]
+        [Category("Appearance - BreakPoints")]
+        [Description("The foreground color of a Breakpoint")]
+        [DefaultValue(typeof (Color), "White")]
         public Color BreakPointForeColor
         {
-            get { return this._BreakPointForeColor; }
+            get { return _BreakPointForeColor; }
             set
             {
-                this._BreakPointForeColor = value;
-                this.Redraw();
+                _BreakPointForeColor = value;
+                Redraw();
             }
         }
+
         /// <summary>
         /// Gets or Sets the background Color to use for breakpoint rows.
         /// <seealso cref="BreakPointForeColor"/>
         /// </summary>
-        [Category("Appearance - BreakPoints"),
-         Description("The background color to use when BracketMatching is activated"),
-         DefaultValue(typeof(Color), "DarkRed")]
+        [Category("Appearance - BreakPoints")]
+        [Description("The background color to use when BracketMatching is activated")]
+        [DefaultValue(typeof (Color), "DarkRed")]
         public Color BreakPointBackColor
         {
-            get { return this._BreakPointBackColor; }
+            get { return _BreakPointBackColor; }
             set
             {
-                this._BreakPointBackColor = value;
-                this.Redraw();
+                _BreakPointBackColor = value;
+                Redraw();
             }
         }
+
         /// <summary>
         /// Gets or Sets the foreground Color of line numbers.
         /// <seealso cref="LineNumberBorderColor"/>
         /// <seealso cref="LineNumberBackColor"/>
         /// </summary>
-        [Category("Appearance - Line Numbers"), Description("The foreground color of line numbers"),
-         DefaultValue(typeof(Color), "Teal")]
+        [Category("Appearance - Line Numbers")]
+        [Description("The foreground color of line numbers")]
+        [DefaultValue(typeof (Color), "Teal")]
         public Color LineNumberForeColor
         {
-            get { return this._LineNumberForeColor; }
+            get { return _LineNumberForeColor; }
             set
             {
-                this._LineNumberForeColor = value;
-                this.InitGraphics();
-                this.Redraw();
+                _LineNumberForeColor = value;
+                InitGraphics();
+                Redraw();
             }
         }
+
         /// <summary>
         /// Gets or Sets the background Color of line numbers.
         /// <seealso cref="LineNumberForeColor"/>
         /// <seealso cref="LineNumberBorderColor"/>
         /// </summary>
-        [Category("Appearance - Line Numbers"), Description("The background color of line numbers"),
-         DefaultValue(typeof(Color), "Window")]
+        [Category("Appearance - Line Numbers")]
+        [Description("The background color of line numbers")]
+        [DefaultValue(typeof (Color), "Window")]
         public Color LineNumberBackColor
         {
-            get { return this._LineNumberBackColor; }
+            get { return _LineNumberBackColor; }
             set
             {
-                this._LineNumberBackColor = value;
-                this.InitGraphics();
-                this.Redraw();
+                _LineNumberBackColor = value;
+                InitGraphics();
+                Redraw();
             }
         }
+
         /// <summary>
         /// Gets or Sets the Color of the gutter margin
         /// <seealso cref="GutterMarginBorderColor"/>
         /// </summary>
-        [Category("Appearance - Gutter Margin"), Description("The color of the gutter margin"),
-         DefaultValue(typeof(Color), "Control")]
+        [Category("Appearance - Gutter Margin")]
+        [Description("The color of the gutter margin")]
+        [DefaultValue(typeof (Color), "Control")]
         public Color GutterMarginColor
         {
-            get { return this._GutterMarginColor; }
+            get { return _GutterMarginColor; }
             set
             {
-                this._GutterMarginColor = value;
-                this.InitGraphics();
-                this.Redraw();
+                _GutterMarginColor = value;
+                InitGraphics();
+                Redraw();
             }
         }
+
         /// <summary>
         /// Gets or Sets the background Color of the client area.
         /// </summary>
-        [Category("Appearance"), Description("The background color of the client area"),
-         DefaultValue(typeof(Color), "Window")]
+        [Category("Appearance")]
+        [Description("The background color of the client area")]
+        [DefaultValue(typeof (Color), "Window")]
         public new Color BackColor
         {
-            get { return this._BackColor; }
+            get { return _BackColor; }
             set
             {
-                this._BackColor = value;
-                this.InitGraphics();
-                this.Redraw();
+                _BackColor = value;
+                InitGraphics();
+                Redraw();
             }
         }
+
         /// <summary>
         /// Gets or Sets the background Color of the active line.
         /// <seealso cref="HighLightActiveLine"/>
         /// </summary>
-        [Category("Appearance - Active Line"), Description("The background color of the active line"),
-         DefaultValue(typeof(Color), "LightYellow")]
+        [Category("Appearance - Active Line")]
+        [Description("The background color of the active line")]
+        [DefaultValue(typeof (Color), "LightYellow")]
         public Color HighLightedLineColor
         {
-            get { return this._HighLightedLineColor; }
+            get { return _HighLightedLineColor; }
             set
             {
-                this._HighLightedLineColor = value;
-                this.InitGraphics();
-                this.Redraw();
+                _HighLightedLineColor = value;
+                InitGraphics();
+                Redraw();
             }
         }
+
         /// <summary>
         /// Determines if the active line should be highlighted.
         /// </summary>
-        [Category("Appearance - Active Line"), Description("Determines if the active line should be highlighted"),
-         DefaultValue(false)]
+        [Category("Appearance - Active Line")]
+        [Description("Determines if the active line should be highlighted")]
+        [DefaultValue(false)]
         public bool HighLightActiveLine
         {
-            get { return this._HighLightActiveLine; }
+            get { return _HighLightActiveLine; }
             set
             {
-                this._HighLightActiveLine = value;
-                this.Redraw();
+                _HighLightActiveLine = value;
+                Redraw();
             }
         }
+
         /// <summary>
         /// Determines if Whitespace should be rendered as symbols.
         /// </summary>
-        [Category("Appearance"), Description("Determines if Whitespace should be rendered as symbols"),
-         DefaultValue(false)]
+        [Category("Appearance")]
+        [Description("Determines if Whitespace should be rendered as symbols")]
+        [DefaultValue(false)]
         public bool ShowWhitespace
         {
-            get { return this._ShowWhitespace; }
+            get { return _ShowWhitespace; }
             set
             {
-                this._ShowWhitespace = value;
-                this.Redraw();
+                _ShowWhitespace = value;
+                Redraw();
             }
         }
+
         /// <summary>
         /// Determines if the line number margin should be visible.
         /// </summary>
-        [Category("Appearance - Line Numbers"), Description("Determines if the line number margin should be visible"),
-         DefaultValue(true)]
+        [Category("Appearance - Line Numbers")]
+        [Description("Determines if the line number margin should be visible")]
+        [DefaultValue(true)]
         public bool ShowLineNumbers
         {
-            get { return this._ShowLineNumbers; }
+            get { return _ShowLineNumbers; }
             set
             {
-                this._ShowLineNumbers = value;
-                this.Redraw();
+                _ShowLineNumbers = value;
+                Redraw();
             }
         }
+
         /// <summary>
         /// Determines if the gutter margin should be visible.
         /// </summary>
-        [Category("Appearance - Gutter Margin"), Description("Determines if the gutter margin should be visible"),
-         DefaultValue(true)]
+        [Category("Appearance - Gutter Margin")]
+        [Description("Determines if the gutter margin should be visible")]
+        [DefaultValue(true)]
         public bool ShowGutterMargin
         {
-            get { return this._ShowGutterMargin; }
+            get { return _ShowGutterMargin; }
             set
             {
-                this._ShowGutterMargin = value;
-                this.Redraw();
+                _ShowGutterMargin = value;
+                Redraw();
             }
         }
+
         /// <summary>
         /// Gets or Sets the witdth of the gutter margin in pixels.
         /// </summary>
-        [Category("Appearance - Gutter Margin"), Description("Determines the width of the gutter margin in pixels"),
-         DefaultValue(19)]
+        [Category("Appearance - Gutter Margin")]
+        [Description("Determines the width of the gutter margin in pixels")]
+        [DefaultValue(19)]
         public int GutterMarginWidth
         {
-            get { return this._GutterMarginWidth; }
+            get { return _GutterMarginWidth; }
             set
             {
-                this._GutterMarginWidth = value;
-                this.Redraw();
+                _GutterMarginWidth = value;
+                Redraw();
             }
         }
+
         // ROB: Added .TabsToSpaces property.
         /// <summary>
         /// Gets or Sets the 'Tabs To Spaces' feature of the editor.
         /// </summary>
-        [Category("Appearance - Tabs"),
-         Description("Determines whether or not the SyntaxBox converts tabs to spaces as you type."),
-         DefaultValue(false)]
+        [Category("Appearance - Tabs")]
+        [Description("Determines whether or not the SyntaxBox converts tabs to spaces as you type.")]
+        [DefaultValue(false)]
         public bool TabsToSpaces { get; set; }
+
         /// <summary>
         /// Get or Sets the size of a TAB char in number of SPACES.
         /// </summary>
-        [Category("Appearance - Tabs"), Description("Determines the size of a TAB in number of SPACE chars"),
-         DefaultValue(4)]
+        [Category("Appearance - Tabs")]
+        [Description("Determines the size of a TAB in number of SPACE chars")]
+        [DefaultValue(4)]
         public int TabSize
         {
-            get { return this._TabSize; }
+            get { return _TabSize; }
             set
             {
-                this._TabSize = value;
-                this.Redraw();
+                _TabSize = value;
+                Redraw();
             }
         }
 
         #region PUBLIC PROPERTY SHOWSCOPEINDICATOR
+
         private bool _ShowScopeIndicator;
-        [Category("Appearance - Scopes"), Description("Determines if the scope indicator should be shown"),
-         DefaultValue(true)]
+
+        [Category("Appearance - Scopes"), Description("Determines if the scope indicator should be shown")]
+        [DefaultValue(true)]
         public bool ShowScopeIndicator
         {
-            get { return this._ShowScopeIndicator; }
+            get { return _ShowScopeIndicator; }
             set
             {
-                this._ShowScopeIndicator = value;
-                this.Redraw();
+                _ShowScopeIndicator = value;
+                Redraw();
             }
         }
+
         #endregion
 
         // END-ROB
+
         // ROB: Added method: ConvertTabsToSpaces()
         /// <summary>
         /// Converts all tabs to spaces the size of .TabSize in the Document.
         /// </summary>
         public void ConvertTabsToSpaces()
         {
-            if(this._Document != null){
-                this._Document.StartUndoCapture();
-                var spaces = new string(' ', this._TabSize);
+            if (_Document != null)
+            {
+                _Document.StartUndoCapture();
+                var spaces = new string(' ', _TabSize);
                 // Iterate all rows and convert tabs to spaces.
-                for(int count = 0; count < this._Document.Count; count++){
-                    Row row = this._Document[count];
+                for (int count = 0; count < _Document.Count; count++)
+                {
+                    Row row = _Document[count];
+
                     string rowText = row.Text;
                     string newText = rowText.Replace("\t", spaces);
                     // If this has made a change to the row, update it.
-                    if(newText != rowText){
-                        this._Document.DeleteRange(new TextRange(0, count, rowText.Length, count));
-                        this._Document.InsertText(newText, 0, count, true);
+                    if (newText != rowText)
+                    {
+                        _Document.DeleteRange(new TextRange(0, count, rowText.Length, count));
+                        _Document.InsertText(newText, 0, count, true);
                     }
                 }
-                this._Document.EndUndoCapture();
+                _Document.EndUndoCapture();
             }
         }
+
         // END-ROB
+
         // ROB: Added method: ConvertSpacesToTabs()
         /// <summary>
         /// Converts all spaces the size of .TabSize in the Document to tabs.
         /// </summary>
         public void ConvertSpacesToTabs()
         {
-            if(this._Document != null){
-                this._Document.StartUndoCapture();
-                var spaces = new string(' ', this._TabSize);
+            if (_Document != null)
+            {
+                _Document.StartUndoCapture();
+                var spaces = new string(' ', _TabSize);
                 // Iterate all rows and convert tabs to spaces.
-                for(int count = 0; count < this._Document.Count; count++){
-                    Row row = this._Document[count];
+                for (int count = 0; count < _Document.Count; count++)
+                {
+                    Row row = _Document[count];
+
                     string rowText = row.Text;
                     string newText = rowText.Replace(spaces, "\t");
                     // If this has made a change to the row, update it.
-                    if(newText != rowText){
-                        this._Document.DeleteRange(new TextRange(0, count, rowText.Length - 1, count));
-                        this._Document.InsertText(newText, 0, count, true);
+                    if (newText != rowText)
+                    {
+                        _Document.DeleteRange(new TextRange(0, count, rowText.Length - 1, count));
+                        _Document.InsertText(newText, 0, count, true);
                     }
                 }
-                this._Document.EndUndoCapture();
+                _Document.EndUndoCapture();
             }
         }
+
         // END-ROB
+
         #endregion // PUBLIC PROPERTIES
 
         #region Public Methods
+
         /// <summary>
         /// Gets the Caret object from the active view.
         /// </summary>
@@ -1150,16 +1339,19 @@ namespace Alsing.Windows.Forms
         {
             get
             {
-                if((this._ActiveView) != null){
-                    return ((EditViewControl)this._ActiveView).Caret;
+                if ((_ActiveView) != null)
+                {
+                    return ((EditViewControl) _ActiveView).Caret;
                 }
                 return null;
             }
         }
+
         public void ScrollIntoView(int RowIndex)
         {
-            ((EditViewControl)this._ActiveView).ScrollIntoView(RowIndex);
+            ((EditViewControl) _ActiveView).ScrollIntoView(RowIndex);
         }
+
         /// <summary>
         /// Disables painting while loading data into the Autolist
         /// </summary>
@@ -1179,22 +1371,25 @@ namespace Alsing.Windows.Forms
         /// </example>
         public void AutoListBeginLoad()
         {
-            ((EditViewControl)this._ActiveView).AutoListBeginLoad();
+            ((EditViewControl) _ActiveView).AutoListBeginLoad();
         }
+
         /// <summary>
         /// Resumes painting and autosizes the Autolist.			
         /// </summary>		
         public void AutoListEndLoad()
         {
-            ((EditViewControl)this._ActiveView).AutoListEndLoad();
+            ((EditViewControl) _ActiveView).AutoListEndLoad();
         }
+
         /// <summary>
         /// Clears the content in the autolist.
         /// </summary>
         public void AutoListClear()
         {
-            ((EditViewControl)this._ActiveView).AutoList.Clear();
+            ((EditViewControl) _ActiveView).AutoList.Clear();
         }
+
         /// <summary>
         /// Adds an item to the autolist control.
         /// </summary>
@@ -1213,8 +1408,9 @@ namespace Alsing.Windows.Forms
         /// <param name="ImageIndex">The image index in the AutoListIcons</param>
         public void AutoListAdd(string text, int ImageIndex)
         {
-            ((EditViewControl)this._ActiveView).AutoList.Add(text, ImageIndex);
+            ((EditViewControl) _ActiveView).AutoList.Add(text, ImageIndex);
         }
+
         /// <summary>
         /// Adds an item to the autolist control.
         /// </summary>
@@ -1223,8 +1419,9 @@ namespace Alsing.Windows.Forms
         /// <param name="ImageIndex">The image index in the AutoListIcons</param>
         public void AutoListAdd(string text, string InsertText, int ImageIndex)
         {
-            ((EditViewControl)this._ActiveView).AutoList.Add(text, InsertText, ImageIndex);
+            ((EditViewControl) _ActiveView).AutoList.Add(text, InsertText, ImageIndex);
         }
+
         /// <summary>
         /// Adds an item to the autolist control.
         /// </summary>
@@ -1234,8 +1431,9 @@ namespace Alsing.Windows.Forms
         /// <param name="ImageIndex">The image index in the AutoListIcons</param>
         public void AutoListAdd(string text, string InsertText, string ToolTip, int ImageIndex)
         {
-            ((EditViewControl)this._ActiveView).AutoList.Add(text, InsertText, ToolTip, ImageIndex);
+            ((EditViewControl) _ActiveView).AutoList.Add(text, InsertText, ToolTip, ImageIndex);
         }
+
         /// <summary>
         /// Converts a Client pixel coordinate into a TextPoint (Column/Row)
         /// </summary>
@@ -1244,58 +1442,67 @@ namespace Alsing.Windows.Forms
         /// <returns>The row and column at the given pixel coordinate.</returns>
         public TextPoint CharFromPixel(int x, int y)
         {
-            return ((EditViewControl)this._ActiveView).CharFromPixel(x, y);
+            return ((EditViewControl) _ActiveView).CharFromPixel(x, y);
         }
+
         /// <summary>
         /// Clears the selection in the active view.
         /// </summary>
         public void ClearSelection()
         {
-            ((EditViewControl)this._ActiveView).ClearSelection();
+            ((EditViewControl) _ActiveView).ClearSelection();
         }
+
         /// <summary>
         /// Executes a Copy action on the selection in the active view.
         /// </summary>
         public void Copy()
         {
-            ((EditViewControl)this._ActiveView).Copy();
+            ((EditViewControl) _ActiveView).Copy();
         }
+
         /// <summary>
         /// Executes a Cut action on the selection in the active view.
         /// </summary>
         public void Cut()
         {
-            ((EditViewControl)this._ActiveView).Cut();
+            ((EditViewControl) _ActiveView).Cut();
         }
+
         /// <summary>
         /// Executes a Delete action on the selection in the active view.
         /// </summary>
         public void Delete()
         {
-            ((EditViewControl)this._ActiveView).Delete();
+            ((EditViewControl) _ActiveView).Delete();
         }
+
         /// <summary>
         /// Moves the caret of the active view to a specific row.
         /// </summary>
         /// <param name="RowIndex">the row to jump to</param>
         public void GotoLine(int RowIndex)
         {
-            ((EditViewControl)this._ActiveView).GotoLine(RowIndex);
+            ((EditViewControl) _ActiveView).GotoLine(RowIndex);
         }
+
         /// <summary>
         /// Moves the caret of the active view to the next bookmark.
         /// </summary>
         public void GotoNextBookmark()
         {
-            ((EditViewControl)this._ActiveView).GotoNextBookmark();
+            ((EditViewControl) _ActiveView).GotoNextBookmark();
         }
+
         /// <summary>
         /// Moves the caret of the active view to the previous bookmark.
         /// </summary>
         public void GotoPreviousBookmark()
         {
-            ((EditViewControl)this._ActiveView).GotoPreviousBookmark();
+            ((EditViewControl) _ActiveView).GotoPreviousBookmark();
         }
+
+
         /// <summary>
         /// Takes a pixel position and returns true if that position is inside the selected text.
         /// 
@@ -1305,44 +1512,50 @@ namespace Alsing.Windows.Forms
         /// <returns>true if the position is inside the selection.</returns>
         public bool IsOverSelection(int x, int y)
         {
-            return ((EditViewControl)this._ActiveView).IsOverSelection(x, y);
+            return ((EditViewControl) _ActiveView).IsOverSelection(x, y);
         }
+
         /// <summary>
         /// Execute a Paste action if possible.
         /// </summary>
         public void Paste()
         {
-            ((EditViewControl)this._ActiveView).Paste();
+            ((EditViewControl) _ActiveView).Paste();
         }
+
         /// <summary>
         /// Execute a ReDo action if possible.
         /// </summary>
         public void Redo()
         {
-            ((EditViewControl)this._ActiveView).Redo();
+            ((EditViewControl) _ActiveView).Redo();
         }
+
         /// <summary>
         /// Makes the caret in the active view visible on screen.
         /// </summary>
         public void ScrollIntoView()
         {
-            ((EditViewControl)this._ActiveView).ScrollIntoView();
+            ((EditViewControl) _ActiveView).ScrollIntoView();
         }
+
         /// <summary>
         /// Scrolls the active view to a specific position.
         /// </summary>
         /// <param name="Pos"></param>
         public void ScrollIntoView(TextPoint Pos)
         {
-            ((EditViewControl)this._ActiveView).ScrollIntoView(Pos);
+            ((EditViewControl) _ActiveView).ScrollIntoView(Pos);
         }
+
         /// <summary>
         /// Select all the text in the active view.
         /// </summary>
         public void SelectAll()
         {
-            ((EditViewControl)this._ActiveView).SelectAll();
+            ((EditViewControl) _ActiveView).SelectAll();
         }
+
         /// <summary>
         /// Selects the next word (from the current caret position) that matches the parameter criterias.
         /// </summary>
@@ -1352,15 +1565,17 @@ namespace Alsing.Windows.Forms
         /// <param name="UseRegEx">To be implemented</param>
         public void FindNext(string Pattern, bool MatchCase, bool WholeWords, bool UseRegEx)
         {
-            ((EditViewControl)this._ActiveView).SelectNext(Pattern, MatchCase, WholeWords, UseRegEx);
+            ((EditViewControl) _ActiveView).SelectNext(Pattern, MatchCase, WholeWords, UseRegEx);
         }
+
         /// <summary>
         /// Finds the next occurance of the pattern in the find/replace dialog
         /// </summary>
         public void FindNext()
         {
-            ((EditViewControl)this._ActiveView).FindNext();
+            ((EditViewControl) _ActiveView).FindNext();
         }
+
         /// <summary>
         /// Shows the default GotoLine dialog.
         /// </summary>
@@ -1372,29 +1587,34 @@ namespace Alsing.Windows.Forms
         /// </example>
         public void ShowGotoLine()
         {
-            ((EditViewControl)this._ActiveView).ShowGotoLine();
+            ((EditViewControl) _ActiveView).ShowGotoLine();
         }
+
         /// <summary>
         /// Not yet implemented
         /// </summary>
         public void ShowSettings()
         {
-            ((EditViewControl)this._ActiveView).ShowSettings();
+            ((EditViewControl) _ActiveView).ShowSettings();
         }
+
         /// <summary>
         /// Toggles a bookmark on the active row of the active view.
         /// </summary>
         public void ToggleBookmark()
         {
-            ((EditViewControl)this._ActiveView).ToggleBookmark();
+            ((EditViewControl) _ActiveView).ToggleBookmark();
         }
+
         /// <summary>
         /// Executes an undo action if possible.
         /// </summary>
         public void Undo()
         {
-            ((EditViewControl)this._ActiveView).Undo();
+            ((EditViewControl) _ActiveView).Undo();
         }
+
+
         /// <summary>
         /// Shows the Find dialog
         /// </summary>
@@ -1406,8 +1626,9 @@ namespace Alsing.Windows.Forms
         /// </example>
         public void ShowFind()
         {
-            ((EditViewControl)this._ActiveView).ShowFind();
+            ((EditViewControl) _ActiveView).ShowFind();
         }
+
         /// <summary>
         /// Shows the Replace dialog
         /// </summary>
@@ -1419,16 +1640,19 @@ namespace Alsing.Windows.Forms
         /// </example>
         public void ShowReplace()
         {
-            ((EditViewControl)this._ActiveView).ShowReplace();
+            ((EditViewControl) _ActiveView).ShowReplace();
         }
+
         #endregion //END Public Methods
 
-        [Browsable(false), Obsolete("Use .FontName and .FontSize", true)]
+        [Browsable(false)]
+        [Obsolete("Use .FontName and .FontSize", true)]
         public override Font Font
         {
             get { return base.Font; }
             set { base.Font = value; }
         }
+
         //		[Browsable(true)]
         //		[DesignerSerializationVisibility (DesignerSerializationVisibility.Hidden)]
         //		[RefreshProperties (RefreshProperties.All)]
@@ -1443,195 +1667,250 @@ namespace Alsing.Windows.Forms
         //				this.Document.Text=value;
         //			}
         //		}
-        [Browsable(false), Obsolete("Apply a syntax instead", true)]
+
+        [Browsable(false)]
+        [Obsolete("Apply a syntax instead", true)]
         public override Color ForeColor
         {
             get { return base.ForeColor; }
             set { base.ForeColor = value; }
         }
+
         /// <summary>
         /// The currently highlighted text in the autolist.
         /// </summary>
         [Browsable(false)]
         public string AutoListSelectedText
         {
-            get { return ((EditViewControl)this._ActiveView).AutoList.SelectedText; }
+            get { return ((EditViewControl) _ActiveView).AutoList.SelectedText; }
             set
             {
-                if((this._ActiveView) == null || ((EditViewControl)this._ActiveView).AutoList == null){
+                if ((_ActiveView) == null || ((EditViewControl) _ActiveView).AutoList == null)
                     return;
-                }
-                ((EditViewControl)this._ActiveView).AutoList.SelectItem(value);
+
+                ((EditViewControl) _ActiveView).AutoList.SelectItem(value);
             }
         }
+
         public void Save(string filename)
         {
-            string text = this.Document.Text;
+            string text = Document.Text;
+
             var swr = new StreamWriter(filename);
+
             swr.Write(text);
+
             swr.Flush();
+
             swr.Close();
         }
+
         public void Open(string filename)
         {
-            if(this.Document == null){
+            if (Document == null)
                 throw new NullReferenceException("CodeEditorControl.Document");
-            }
+
             var swr = new StreamReader(filename);
-            this.Document.Text = swr.ReadToEnd();
+
+            Document.Text = swr.ReadToEnd();
+
             swr.Close();
         }
+
         public void AttachDocument(SyntaxDocument document)
         {
             //_Document=document;
-            if(this._Document != null){
-                this._Document.ParsingCompleted -= this.OnParsingCompleted;
-                this._Document.Parsing -= this.OnParse;
-                this._Document.Change -= this.OnChange;
+
+            if (_Document != null)
+            {
+                _Document.ParsingCompleted -= OnParsingCompleted;
+                _Document.Parsing -= OnParse;
+                _Document.Change -= OnChange;
             }
-            if(document == null){
+
+            if (document == null)
                 document = new SyntaxDocument();
+
+            _Document = document;
+
+            if (_Document != null)
+            {
+                _Document.ParsingCompleted += OnParsingCompleted;
+                _Document.Parsing += OnParse;
+                _Document.Change += OnChange;
             }
-            this._Document = document;
-            if(this._Document != null){
-                this._Document.ParsingCompleted += this.OnParsingCompleted;
-                this._Document.Parsing += this.OnParse;
-                this._Document.Change += this.OnChange;
-            }
-            this.Redraw();
+
+            Redraw();
         }
+
         protected virtual void OnParse(object Sender, EventArgs e)
         {
-            foreach(EditViewControl ev in this.Views){
+            foreach (EditViewControl ev in Views)
+            {
                 ev.OnParse();
             }
         }
+
         protected virtual void OnParsingCompleted(object Sender, EventArgs e)
         {
-            foreach(EditViewControl ev in this.Views){
+            foreach (EditViewControl ev in Views)
+            {
                 ev.Invalidate();
             }
         }
+
         protected virtual void OnChange(object Sender, EventArgs e)
         {
-            if(this.Views == null){
+            if (Views == null)
                 return;
-            }
-            foreach(EditViewControl ev in this.Views){
+
+
+            foreach (EditViewControl ev in Views)
+            {
                 ev.OnChange();
             }
-            this.OnTextChanged(EventArgs.Empty);
+            OnTextChanged(EventArgs.Empty);
         }
+
         public void RemoveCurrentRow()
         {
-            ((EditViewControl)this._ActiveView).RemoveCurrentRow();
+            ((EditViewControl) _ActiveView).RemoveCurrentRow();
         }
+
         public void CutClear()
         {
-            ((EditViewControl)this._ActiveView).CutClear();
+            ((EditViewControl) _ActiveView).CutClear();
         }
+
+
         public void AutoListInsertSelectedText()
         {
-            ((EditViewControl)this._ActiveView).InsertAutolistText();
+            ((EditViewControl) _ActiveView).InsertAutolistText();
         }
+
+
         protected override SplitViewChildControl GetNewView()
         {
             return new EditViewControl(this);
         }
+
         protected override void OnImeModeChanged(EventArgs e)
         {
             base.OnImeModeChanged(e);
-            foreach(EditViewControl ev in this.Views){
-                ev.ImeMode = this.ImeMode;
+            foreach (EditViewControl ev in Views)
+            {
+                ev.ImeMode = ImeMode;
             }
         }
 
         #region Constructor
+
         /// <summary>
         /// Default constructor for the SyntaxBoxControl
         /// </summary>
         public SyntaxBoxControl()
         {
-            try{
-                this.Document = new SyntaxDocument();
-                this.CreateViews();
-                this.InitializeComponent();
-                this.SetStyle(ControlStyles.Selectable, true);
+            try
+            {
+                Document = new SyntaxDocument();
+
+
+                CreateViews();
+
+
+                InitializeComponent();
+                SetStyle(ControlStyles.Selectable, true);
+
                 //assign keys
-                this.KeyboardActions.Add(new KeyboardAction(Keys.Z, false, true, false, false, this.Undo));
-                this.KeyboardActions.Add(new KeyboardAction(Keys.Y, false, true, false, false, this.Redo));
-                this.KeyboardActions.Add(new KeyboardAction(Keys.F3, false, false, false, true, this.FindNext));
-                this.KeyboardActions.Add(new KeyboardAction(Keys.C, false, true, false, true, this.Copy));
-                this.KeyboardActions.Add(new KeyboardAction(Keys.X, false, true, false, false, this.CutClear));
-                this.KeyboardActions.Add(new KeyboardAction(Keys.V, false, true, false, false, this.Paste));
-                this.KeyboardActions.Add(new KeyboardAction(Keys.Insert, false, true, false, true, this.Copy));
-                this.KeyboardActions.Add(new KeyboardAction(Keys.Delete, true, false, false, false, this.Cut));
-                this.KeyboardActions.Add(new KeyboardAction(Keys.Insert, true, false, false, false, this.Paste));
-                this.KeyboardActions.Add(new KeyboardAction(Keys.A, false, true, false, true, this.SelectAll));
-                this.KeyboardActions.Add(new KeyboardAction(Keys.F, false, true, false, false, this.ShowFind));
-                this.KeyboardActions.Add(new KeyboardAction(Keys.H, false, true, false, false, this.ShowReplace));
-                this.KeyboardActions.Add(new KeyboardAction(Keys.G, false, true, false, true, this.ShowGotoLine));
-                this.KeyboardActions.Add(new KeyboardAction(Keys.T, false, true, false, false, this.ShowSettings));
-                this.KeyboardActions.Add(new KeyboardAction(Keys.F2, false, true, false, true, this.ToggleBookmark));
-                this.KeyboardActions.Add(new KeyboardAction(Keys.F2, false, false, false, true, this.GotoNextBookmark));
-                this.KeyboardActions.Add(new KeyboardAction(Keys.F2, true, false, false, true, this.GotoPreviousBookmark));
-                this.KeyboardActions.Add(new KeyboardAction(Keys.Escape, false, false, false, true, this.ClearSelection));
-                this.KeyboardActions.Add(new KeyboardAction(Keys.Tab, false, false, false, false, this.Selection.Indent));
-                this.KeyboardActions.Add(new KeyboardAction(Keys.Tab, true, false, false, false, this.Selection.Outdent));
-                this.AutoListIcons = this._AutoListIcons;
-            } catch{
+                KeyboardActions.Add(new KeyboardAction(Keys.Z, false, true, false, false, Undo));
+                KeyboardActions.Add(new KeyboardAction(Keys.Y, false, true, false, false, Redo));
+
+                KeyboardActions.Add(new KeyboardAction(Keys.F3, false, false, false, true, FindNext));
+
+                KeyboardActions.Add(new KeyboardAction(Keys.C, false, true, false, true, Copy));
+                KeyboardActions.Add(new KeyboardAction(Keys.X, false, true, false, false, CutClear));
+                KeyboardActions.Add(new KeyboardAction(Keys.V, false, true, false, false, Paste));
+
+                KeyboardActions.Add(new KeyboardAction(Keys.Insert, false, true, false, true, Copy));
+                KeyboardActions.Add(new KeyboardAction(Keys.Delete, true, false, false, false, Cut));
+                KeyboardActions.Add(new KeyboardAction(Keys.Insert, true, false, false, false, Paste));
+
+                KeyboardActions.Add(new KeyboardAction(Keys.A, false, true, false, true, SelectAll));
+
+                KeyboardActions.Add(new KeyboardAction(Keys.F, false, true, false, false, ShowFind));
+                KeyboardActions.Add(new KeyboardAction(Keys.H, false, true, false, false, ShowReplace));
+                KeyboardActions.Add(new KeyboardAction(Keys.G, false, true, false, true, ShowGotoLine));
+                KeyboardActions.Add(new KeyboardAction(Keys.T, false, true, false, false, ShowSettings));
+
+                KeyboardActions.Add(new KeyboardAction(Keys.F2, false, true, false, true, ToggleBookmark));
+                KeyboardActions.Add(new KeyboardAction(Keys.F2, false, false, false, true, GotoNextBookmark));
+                KeyboardActions.Add(new KeyboardAction(Keys.F2, true, false, false, true, GotoPreviousBookmark));
+
+                KeyboardActions.Add(new KeyboardAction(Keys.Escape, false, false, false, true, ClearSelection));
+
+                KeyboardActions.Add(new KeyboardAction(Keys.Tab, false, false, false, false, Selection.Indent));
+                KeyboardActions.Add(new KeyboardAction(Keys.Tab, true, false, false, false, Selection.Outdent));
+
+                AutoListIcons = _AutoListIcons;
+            }
+            catch
+            {
                 //	Console.WriteLine (x.StackTrace);
             }
         }
+
         #endregion //END Constructor		
 
         #region EventHandlers
+
         protected virtual void OnClipboardUpdated(CopyEventArgs e)
         {
-            if(this.ClipboardUpdated != null){
-                this.ClipboardUpdated(this, e);
-            }
+            if (ClipboardUpdated != null)
+                ClipboardUpdated(this, e);
         }
+
         protected virtual void OnRowMouseDown(RowMouseEventArgs e)
         {
-            if(this.RowMouseDown != null){
-                this.RowMouseDown(this, e);
-            }
+            if (RowMouseDown != null)
+                RowMouseDown(this, e);
         }
+
         protected virtual void OnRowMouseMove(RowMouseEventArgs e)
         {
-            if(this.RowMouseMove != null){
-                this.RowMouseMove(this, e);
-            }
+            if (RowMouseMove != null)
+                RowMouseMove(this, e);
         }
+
         protected virtual void OnRowMouseUp(RowMouseEventArgs e)
         {
-            if(this.RowMouseUp != null){
-                this.RowMouseUp(this, e);
-            }
+            if (RowMouseUp != null)
+                RowMouseUp(this, e);
         }
+
         protected virtual void OnRowClick(RowMouseEventArgs e)
         {
-            if(this.RowClick != null){
-                this.RowClick(this, e);
-            }
+            if (RowClick != null)
+                RowClick(this, e);
         }
+
         protected virtual void OnRowDoubleClick(RowMouseEventArgs e)
         {
-            if(this.RowDoubleClick != null){
-                this.RowDoubleClick(this, e);
-            }
+            if (RowDoubleClick != null)
+                RowDoubleClick(this, e);
         }
+
+
         private void ParseTimer_Tick(object sender, EventArgs e)
         {
-            this.Document.ParseSome();
+            Document.ParseSome();
         }
+
         protected virtual void OnInfoTipSelectedIndexChanged()
         {
-            if(this.InfoTipSelectedIndexChanged != null){
-                this.InfoTipSelectedIndexChanged(null, null);
-            }
+            if (InfoTipSelectedIndexChanged != null)
+                InfoTipSelectedIndexChanged(null, null);
         }
+
         /// <summary>
         /// 
         /// </summary>
@@ -1639,265 +1918,314 @@ namespace Alsing.Windows.Forms
         protected override void OnEnter(EventArgs e)
         {
             base.OnEnter(e);
-            if((this._ActiveView) != null){
-                (this._ActiveView).Focus();
+            if ((_ActiveView) != null)
+            {
+                (_ActiveView).Focus();
             }
         }
+
+
         private void View_RowClick(object sender, RowMouseEventArgs e)
         {
-            this.OnRowClick(e);
+            OnRowClick(e);
         }
+
         private void View_RowDoubleClick(object sender, RowMouseEventArgs e)
         {
-            this.OnRowDoubleClick(e);
+            OnRowDoubleClick(e);
         }
+
         private void View_RowMouseDown(object sender, RowMouseEventArgs e)
         {
-            this.OnRowMouseDown(e);
+            OnRowMouseDown(e);
         }
+
         private void View_RowMouseMove(object sender, RowMouseEventArgs e)
         {
-            this.OnRowMouseMove(e);
+            OnRowMouseMove(e);
         }
+
         private void View_RowMouseUp(object sender, RowMouseEventArgs e)
         {
-            this.OnRowMouseUp(e);
+            OnRowMouseUp(e);
         }
+
         private void View_ClipboardUpdated(object sender, CopyEventArgs e)
         {
-            this.OnClipboardUpdated(e);
+            OnClipboardUpdated(e);
         }
+
+
         public void OnRenderRow(RowPaintEventArgs e)
         {
-            if(this.RenderRow != null){
-                this.RenderRow(this, e);
-            }
+            if (RenderRow != null)
+                RenderRow(this, e);
         }
+
         public void OnWordMouseHover(ref WordMouseEventArgs e)
         {
-            if(this.WordMouseHover != null){
-                this.WordMouseHover(this, ref e);
-            }
+            if (WordMouseHover != null)
+                WordMouseHover(this, ref e);
         }
+
         public void OnWordMouseDown(ref WordMouseEventArgs e)
         {
-            if(this.WordMouseDown != null){
-                this.WordMouseDown(this, ref e);
-            }
+            if (WordMouseDown != null)
+                WordMouseDown(this, ref e);
         }
+
         protected virtual void OnCaretChange(object sender)
         {
-            if(this.CaretChange != null){
-                this.CaretChange(this, null);
-            }
+            if (CaretChange != null)
+                CaretChange(this, null);
         }
+
         protected virtual void OnSelectionChange(object sender)
         {
-            if(this.SelectionChange != null){
-                this.SelectionChange(this, null);
-            }
+            if (SelectionChange != null)
+                SelectionChange(this, null);
         }
+
         private void View_CaretChanged(object s, EventArgs e)
         {
-            this.OnCaretChange(s);
+            OnCaretChange(s);
         }
+
         private void View_SelectionChanged(object s, EventArgs e)
         {
-            this.OnSelectionChange(s);
+            OnSelectionChange(s);
         }
+
         private void View_DoubleClick(object sender, EventArgs e)
         {
-            this.OnDoubleClick(e);
+            OnDoubleClick(e);
         }
+
         private void View_MouseUp(object sender, MouseEventArgs e)
         {
-            var ev = (EditViewControl)sender;
+            var ev = (EditViewControl) sender;
             var ea = new MouseEventArgs(e.Button, e.Clicks, e.X + ev.Location.X + ev.BorderWidth,
                                         e.Y + ev.Location.Y + ev.BorderWidth, e.Delta);
-            this.OnMouseUp(ea);
+            OnMouseUp(ea);
         }
+
         private void View_MouseMove(object sender, MouseEventArgs e)
         {
-            var ev = (EditViewControl)sender;
+            var ev = (EditViewControl) sender;
             var ea = new MouseEventArgs(e.Button, e.Clicks, e.X + ev.Location.X + ev.BorderWidth,
                                         e.Y + ev.Location.Y + ev.BorderWidth, e.Delta);
-            this.OnMouseMove(ea);
+            OnMouseMove(ea);
         }
+
         private void View_MouseLeave(object sender, EventArgs e)
         {
-            this.OnMouseLeave(e);
+            OnMouseLeave(e);
         }
+
         private void View_MouseHover(object sender, EventArgs e)
         {
-            this.OnMouseHover(e);
+            OnMouseHover(e);
         }
+
         private void View_MouseEnter(object sender, EventArgs e)
         {
-            this.OnMouseEnter(e);
+            OnMouseEnter(e);
         }
+
         private void View_MouseDown(object sender, MouseEventArgs e)
         {
-            var ev = (EditViewControl)sender;
+            var ev = (EditViewControl) sender;
             var ea = new MouseEventArgs(e.Button, e.Clicks, e.X + ev.Location.X + ev.BorderWidth,
                                         e.Y + ev.Location.Y + ev.BorderWidth, e.Delta);
-            this.OnMouseDown(ea);
+            OnMouseDown(ea);
         }
+
         private void View_KeyUp(object sender, KeyEventArgs e)
         {
-            this.OnKeyUp(e);
+            OnKeyUp(e);
         }
+
         private void View_KeyPress(object sender, KeyPressEventArgs e)
         {
-            this.OnKeyPress(e);
+            OnKeyPress(e);
         }
+
         private void View_KeyDown(object sender, KeyEventArgs e)
         {
-            this.OnKeyDown(e);
+            OnKeyDown(e);
         }
+
         private void View_Click(object sender, EventArgs e)
         {
-            this.OnClick(e);
+            OnClick(e);
         }
+
         private void View_DragOver(object sender, DragEventArgs e)
         {
-            this.OnDragOver(e);
+            OnDragOver(e);
         }
+
         private void View_DragLeave(object sender, EventArgs e)
         {
-            this.OnDragLeave(e);
+            OnDragLeave(e);
         }
+
         private void View_DragEnter(object sender, DragEventArgs e)
         {
-            this.OnDragEnter(e);
+            OnDragEnter(e);
         }
+
         private void View_DragDrop(object sender, DragEventArgs e)
         {
-            this.OnDragDrop(e);
+            OnDragDrop(e);
         }
+
         private void View_InfoTipSelectedIndexChanged(object sender, EventArgs e)
         {
-            this.OnInfoTipSelectedIndexChanged();
+            OnInfoTipSelectedIndexChanged();
         }
+
         #endregion
 
         #region DISPOSE()
+
         /// <summary>
         /// </summary>
         /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
-            if(disposing){
-                if(this.components != null){
-                    this.components.Dispose();
-                }
+            if (disposing)
+            {
+                if (components != null)
+                    components.Dispose();
             }
             base.Dispose(disposing);
         }
+
         #endregion //END DISPOSE
 
         #region Private/Protected/Internal methods
+
         private void InitializeComponent()
         {
-            this.components = new Container();
-            var resources = new ResourceManager(typeof(SyntaxBoxControl));
-            this._GutterIcons = new ImageList(this.components);
-            this._AutoListIcons = new ImageList(this.components);
-            this.ParseTimer = new Timer(this.components);
+            components = new Container();
+            var resources = new ResourceManager(typeof (SyntaxBoxControl));
+            _GutterIcons = new ImageList(components);
+            _AutoListIcons = new ImageList(components);
+            ParseTimer = new Timer(components);
             // 
             // _GutterIcons
             // 
-            this._GutterIcons.ColorDepth = ColorDepth.Depth32Bit;
-            this._GutterIcons.ImageSize = new Size(17, 17);
-            this._GutterIcons.ImageStream = ((ImageListStreamer)(resources.GetObject("_GutterIcons.ImageStream")));
-            this._GutterIcons.TransparentColor = Color.Transparent;
+            _GutterIcons.ColorDepth = ColorDepth.Depth32Bit;
+            _GutterIcons.ImageSize = new Size(17, 17);
+            _GutterIcons.ImageStream = ((ImageListStreamer) (resources.GetObject("_GutterIcons.ImageStream")));
+            _GutterIcons.TransparentColor = Color.Transparent;
             // 
             // _AutoListIcons
             // 
-            this._AutoListIcons.ColorDepth = ColorDepth.Depth8Bit;
-            this._AutoListIcons.ImageSize = new Size(16, 16);
-            this._AutoListIcons.ImageStream = ((ImageListStreamer)(resources.GetObject("_AutoListIcons.ImageStream")));
-            this._AutoListIcons.TransparentColor = Color.Transparent;
+            _AutoListIcons.ColorDepth = ColorDepth.Depth8Bit;
+            _AutoListIcons.ImageSize = new Size(16, 16);
+            _AutoListIcons.ImageStream = ((ImageListStreamer) (resources.GetObject("_AutoListIcons.ImageStream")));
+            _AutoListIcons.TransparentColor = Color.Transparent;
             // 
             // ParseTimer
             // 
-            this.ParseTimer.Enabled = true;
-            this.ParseTimer.Interval = 1;
-            this.ParseTimer.Tick += this.ParseTimer_Tick;
+            ParseTimer.Enabled = true;
+            ParseTimer.Interval = 1;
+            ParseTimer.Tick += ParseTimer_Tick;
         }
+
+
         protected override void OnLoad(EventArgs e)
         {
-            this.Refresh();
+            Refresh();
         }
+
         private void Redraw()
         {
-            if(this.Views == null){
+            if (Views == null)
                 return;
-            }
-            foreach(EditViewControl ev in this.Views){
-                if(ev != null){
+
+            foreach (EditViewControl ev in Views)
+            {
+                if (ev != null)
+                {
                     ev.Refresh();
                 }
             }
         }
+
         private void InitGraphics()
         {
-            if(this.Views == null || this.Parent == null){
+            if (Views == null || Parent == null)
                 return;
-            }
-            foreach(EditViewControl ev in this.Views){
+
+            foreach (EditViewControl ev in Views)
+            {
                 ev.InitGraphics();
             }
         }
+
+
         protected override void CreateViews()
         {
             base.CreateViews();
-            foreach(EditViewControl ev in this.Views){
-                if(this.DoOnce && ev == this.LowerRight){
+
+            foreach (EditViewControl ev in Views)
+            {
+                if (DoOnce && ev == LowerRight)
                     continue;
-                }
+
                 //attatch events to views
-                ev.Enter += this.View_Enter;
-                ev.Leave += this.View_Leave;
-                ev.GotFocus += this.View_Enter;
-                ev.LostFocus += this.View_Leave;
-                ev.CaretChange += this.View_CaretChanged;
-                ev.SelectionChange += this.View_SelectionChanged;
-                ev.Click += this.View_Click;
-                ev.DoubleClick += this.View_DoubleClick;
-                ev.MouseDown += this.View_MouseDown;
-                ev.MouseEnter += this.View_MouseEnter;
-                ev.MouseHover += this.View_MouseHover;
-                ev.MouseLeave += this.View_MouseLeave;
-                ev.MouseMove += this.View_MouseMove;
-                ev.MouseUp += this.View_MouseUp;
-                ev.KeyDown += this.View_KeyDown;
-                ev.KeyPress += this.View_KeyPress;
-                ev.KeyUp += this.View_KeyUp;
-                ev.DragDrop += this.View_DragDrop;
-                ev.DragOver += this.View_DragOver;
-                ev.DragLeave += this.View_DragLeave;
-                ev.DragEnter += this.View_DragEnter;
-                if(ev.InfoTip != null){
+                ev.Enter += View_Enter;
+                ev.Leave += View_Leave;
+                ev.GotFocus += View_Enter;
+                ev.LostFocus += View_Leave;
+                ev.CaretChange += View_CaretChanged;
+                ev.SelectionChange += View_SelectionChanged;
+                ev.Click += View_Click;
+                ev.DoubleClick += View_DoubleClick;
+                ev.MouseDown += View_MouseDown;
+                ev.MouseEnter += View_MouseEnter;
+                ev.MouseHover += View_MouseHover;
+                ev.MouseLeave += View_MouseLeave;
+                ev.MouseMove += View_MouseMove;
+                ev.MouseUp += View_MouseUp;
+                ev.KeyDown += View_KeyDown;
+                ev.KeyPress += View_KeyPress;
+                ev.KeyUp += View_KeyUp;
+                ev.DragDrop += View_DragDrop;
+                ev.DragOver += View_DragOver;
+                ev.DragLeave += View_DragLeave;
+                ev.DragEnter += View_DragEnter;
+
+                if (ev.InfoTip != null)
+                {
                     ev.InfoTip.Data = "";
-                    ev.InfoTip.SelectedIndexChanged += this.View_InfoTipSelectedIndexChanged;
+                    ev.InfoTip.SelectedIndexChanged += View_InfoTipSelectedIndexChanged;
                 }
-                ev.RowClick += this.View_RowClick;
-                ev.RowDoubleClick += this.View_RowDoubleClick;
-                ev.RowMouseDown += this.View_RowMouseDown;
-                ev.RowMouseMove += this.View_RowMouseMove;
-                ev.RowMouseUp += this.View_RowMouseUp;
-                ev.ClipboardUpdated += this.View_ClipboardUpdated;
+
+                ev.RowClick += View_RowClick;
+                ev.RowDoubleClick += View_RowDoubleClick;
+
+                ev.RowMouseDown += View_RowMouseDown;
+                ev.RowMouseMove += View_RowMouseMove;
+                ev.RowMouseUp += View_RowMouseUp;
+                ev.ClipboardUpdated += View_ClipboardUpdated;
             }
-            this.DoOnce = true;
-            this.AutoListIcons = this.AutoListIcons;
-            this.InfoTipImage = this.InfoTipImage;
-            this.ChildBorderStyle = this.ChildBorderStyle;
-            this.ChildBorderColor = this.ChildBorderColor;
-            this.BackColor = this.BackColor;
-            this.Document = this.Document;
-            this.ImeMode = this.ImeMode;
-            this.Redraw();
+
+            DoOnce = true;
+
+            AutoListIcons = AutoListIcons;
+            InfoTipImage = InfoTipImage;
+            ChildBorderStyle = ChildBorderStyle;
+            ChildBorderColor = ChildBorderColor;
+            BackColor = BackColor;
+            Document = Document;
+            ImeMode = ImeMode;
+            Redraw();
         }
+
         #endregion //END Private/Protected/Internal methods
     }
 }

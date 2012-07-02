@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 using System;
 
 namespace Alsing.SourceCode
@@ -17,6 +18,7 @@ namespace Alsing.SourceCode
     public class TextRange
     {
         public TextRange() {}
+
         public TextRange(int firstColumn, int firstRow, int lastColumn, int lastRow)
         {
             this.firstColumn = firstColumn;
@@ -24,13 +26,15 @@ namespace Alsing.SourceCode
             this.lastColumn = lastColumn;
             this.lastRow = lastRow;
         }
+
         public event EventHandler Change = null;
+
         protected virtual void OnChange()
         {
-            if(this.Change != null){
-                this.Change(this, EventArgs.Empty);
-            }
+            if (Change != null)
+                Change(this, EventArgs.Empty);
         }
+
         /// <summary>
         /// The start row of the range
         /// </summary>
@@ -49,59 +53,71 @@ namespace Alsing.SourceCode
             this.firstRow = firstRow;
             this.lastColumn = lastColumn;
             this.lastRow = lastRow;
-            this.OnChange();
+            OnChange();
         }
 
         #region PUBLIC PROPERTY FIRSTROW
+
         private int firstRow;
+
         public int FirstRow
         {
-            get { return this.firstRow; }
+            get { return firstRow; }
             set
             {
-                this.firstRow = value;
-                this.OnChange();
+                firstRow = value;
+                OnChange();
             }
         }
+
         #endregion
 
         #region PUBLIC PROPERTY FIRSTCOLUMN
+
         private int firstColumn;
+
         public int FirstColumn
         {
-            get { return this.firstColumn; }
+            get { return firstColumn; }
             set
             {
-                this.firstColumn = value;
-                this.OnChange();
+                firstColumn = value;
+                OnChange();
             }
         }
+
         #endregion
 
         #region PUBLIC PROPERTY LASTROW
+
         private int lastRow;
+
         public int LastRow
         {
-            get { return this.lastRow; }
+            get { return lastRow; }
             set
             {
-                this.lastRow = value;
-                this.OnChange();
+                lastRow = value;
+                OnChange();
             }
         }
+
         #endregion
 
         #region PUBLIC PROPERTY LASTCOLUMN
+
         private int lastColumn;
+
         public int LastColumn
         {
-            get { return this.lastColumn; }
+            get { return lastColumn; }
             set
             {
-                this.lastColumn = value;
-                this.OnChange();
+                lastColumn = value;
+                OnChange();
             }
         }
+
         #endregion
     }
 }

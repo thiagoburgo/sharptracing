@@ -161,8 +161,8 @@ namespace DrawEngine.Renderer.RenderObjects
                 //int widthTex = this.material.Texture.Width - 1;
                 //int heightTex = this.material.Texture.Height - 1;
                 //this.material.Color = this.material.Texture.GetPixel((int)(vdotuA * widthTex), (int)(vdotuB * heightTex));
-                this.currentTextureCoordinate.U = vdotuA;
-                this.currentTextureCoordinate.V = vdotuB;
+                intersect.CurrentTextureCoordinate.U = vdotuA;
+                intersect.CurrentTextureCoordinate.V = vdotuB;
             }
             return true;
         }

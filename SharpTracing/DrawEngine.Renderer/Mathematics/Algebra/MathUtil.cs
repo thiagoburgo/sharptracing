@@ -58,15 +58,16 @@ namespace DrawEngine.Renderer.Mathematics.Algebra
         {
             if(val < low){
                 return low;
-            } else if(val > high){
-                return high;
-            } else{
-                return val;
             }
+            if(val > high){
+                return high;
+            }
+            return val;
         }
+
         public static int Mod(int a, int b)
         {
-            int n = (int)(a / b);
+            int n = a / b;
             a -= n * b;
             if(a < 0){
                 a += b;

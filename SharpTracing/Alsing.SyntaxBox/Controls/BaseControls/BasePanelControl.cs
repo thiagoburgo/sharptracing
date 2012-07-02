@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -24,123 +25,144 @@ namespace Alsing.Windows.Forms
         private BorderStyle borderStyle;
         private Container components;
         private bool RunOnce = true;
+
+
         public BasePanelControl()
         {
-            this.SetStyle(ControlStyles.EnableNotifyMessage, true);
-            this.BorderStyle = BorderStyle.FixedSingle;
-            this.InitializeComponent();
+            SetStyle(ControlStyles.EnableNotifyMessage, true);
+            BorderStyle = BorderStyle.FixedSingle;
+            InitializeComponent();
         }
+
         public Color BorderColor
         {
-            get { return this.borderColor; }
+            get { return borderColor; }
+
             set
             {
-                this.borderColor = value;
-                this.Refresh();
-                this.Invalidate();
-                this.UpdateStyles();
+                borderColor = value;
+                Refresh();
+                Invalidate();
+                UpdateStyles();
             }
         }
+
         protected override CreateParams CreateParams
         {
             get
             {
                 CreateParams cp = base.CreateParams;
-                if(this.BorderStyle == BorderStyle.None){
+
+                if (BorderStyle == BorderStyle.None)
                     return cp;
-                }
+
                 cp.ExStyle &= (~WS_EX_CLIENTEDGE);
                 cp.Style &= (~WS_BORDER);
+
                 return cp;
             }
         }
+
         [Browsable(true), EditorBrowsable(EditorBrowsableState.Always)]
         public new BorderStyle BorderStyle
         {
-            get { return this.borderStyle; }
+            get { return borderStyle; }
             set
             {
-                try{
-                    if(this.borderStyle != value){
-                        this.borderStyle = value;
-                        this.UpdateStyles();
-                        this.Refresh();
+                try
+                {
+                    if (borderStyle != value)
+                    {
+                        borderStyle = value;
+                        UpdateStyles();
+                        Refresh();
                     }
-                } catch{}
+                }
+                catch {}
             }
         }
+
         [Browsable(false), EditorBrowsable(EditorBrowsableState.Never), Obsolete("Do not use!", true)]
         public override Image BackgroundImage
         {
             get { return base.BackgroundImage; }
             set { base.BackgroundImage = value; }
         }
+
+
         [Browsable(false)]
         public int ClientWidth
         {
-            get { return this.Width - (this.BorderWidth * 2); }
+            get { return Width - (BorderWidth*2); }
         }
+
         [Browsable(false)]
         public int ClientHeight
         {
-            get { return this.Height - (this.BorderWidth * 2); }
+            get { return Height - (BorderWidth*2); }
         }
+
         [Browsable(false)]
         public int BorderWidth
         {
             get
             {
-                switch(this.borderStyle){
+                switch (borderStyle)
+                {
                     case BorderStyle.None:
-                    {
-                        return 0;
-                    }
+                        {
+                            return 0;
+                        }
                     case BorderStyle.Sunken:
-                    {
-                        return 2;
-                    }
+                        {
+                            return 2;
+                        }
                     case BorderStyle.SunkenThin:
-                    {
-                        return 1;
-                    }
+                        {
+                            return 1;
+                        }
                     case BorderStyle.Raised:
-                    {
-                        return 2;
-                    }
+                        {
+                            return 2;
+                        }
+
                     case BorderStyle.Etched:
-                    {
-                        return 2;
-                    }
+                        {
+                            return 2;
+                        }
                     case BorderStyle.Bump:
-                    {
-                        return 6;
-                    }
+                        {
+                            return 6;
+                        }
                     case BorderStyle.FixedSingle:
-                    {
-                        return 1;
-                    }
+                        {
+                            return 1;
+                        }
                     case BorderStyle.FixedDouble:
-                    {
-                        return 2;
-                    }
+                        {
+                            return 2;
+                        }
                     case BorderStyle.RaisedThin:
-                    {
-                        return 1;
-                    }
+                        {
+                            return 1;
+                        }
                     case BorderStyle.Dotted:
-                    {
-                        return 1;
-                    }
+                        {
+                            return 1;
+                        }
                     case BorderStyle.Dashed:
-                    {
-                        return 1;
-                    }
+                        {
+                            return 1;
+                        }
                 }
-                return this.Height;
+
+
+                return Height;
             }
         }
 
         #region Component Designer generated code
+
         /// <summary> 
         /// Required method for Designer support - do not modify 
         /// the contents of this method with the code editor.
@@ -152,78 +174,109 @@ namespace Alsing.Windows.Forms
             // 
             this.Size = new System.Drawing.Size(272, 264);
         }
+
         #endregion
 
         public event EventHandler Load = null;
+
         protected override void Dispose(bool disposing)
         {
-            if(disposing){
-                if(this.components != null){
-                    this.components.Dispose();
+            if (disposing)
+            {
+                if (components != null)
+                {
+                    components.Dispose();
                 }
             }
             base.Dispose(disposing);
         }
+
         protected virtual void OnLoad(EventArgs e)
         {
-            if(this.Load != null){
-                this.Load(this, e);
-            }
-            this.Refresh();
+            if (Load != null)
+                Load(this, e);
+            Refresh();
         }
+
         protected override unsafe void WndProc(ref Message m)
         {
-            if(m.Msg == (int)WindowMessage.WM_NCPAINT){
-                try{
-                    this.RenderBorder();
-                } catch{}
+            if (m.Msg == (int) WindowMessage.WM_NCPAINT)
+            {
+                try
+                {
+                    RenderBorder();
+                }
+                catch {}
                 base.WndProc(ref m);
                 //	RenderBorder();
-            } else if(m.Msg == (int)WindowMessage.WM_SHOWWINDOW){
-                if(this.RunOnce){
-                    this.RunOnce = false;
-                    this.OnLoad(null);
+            }
+            else if (m.Msg == (int) WindowMessage.WM_SHOWWINDOW)
+            {
+                if (RunOnce)
+                {
+                    RunOnce = false;
+                    OnLoad(null);
                     base.WndProc(ref m);
-                    this.UpdateStyles();
-                } else{
-                    this.UpdateStyles();
+                    UpdateStyles();
+                }
+                else
+                {
+                    UpdateStyles();
                     base.WndProc(ref m);
                 }
-            } else if(m.Msg == (int)WindowMessage.WM_NCCREATE){
+            }
+            else if (m.Msg == (int) WindowMessage.WM_NCCREATE)
+            {
                 base.WndProc(ref m);
-            } else if(m.Msg == (int)WindowMessage.WM_NCCALCSIZE){
-                if(m.WParam == (IntPtr)0){
+            }
+            else if (m.Msg == (int) WindowMessage.WM_NCCALCSIZE)
+            {
+                if (m.WParam == (IntPtr) 0)
+                {
                     //APIRect* pRC=(APIRect*)m.LParam;
                     //pRC->left -=3;
                     base.WndProc(ref m);
-                } else if(m.WParam == (IntPtr)1){
-                    var pNCP = (_NCCALCSIZE_PARAMS*)m.LParam;
+                }
+                else if (m.WParam == (IntPtr) 1)
+                {
+                    var pNCP = (_NCCALCSIZE_PARAMS*) m.LParam;
+
                     base.WndProc(ref m);
-                    int t = pNCP->NewRect.top + this.BorderWidth;
-                    int l = pNCP->NewRect.left + this.BorderWidth;
-                    int b = pNCP->NewRect.bottom - this.BorderWidth;
-                    int r = pNCP->NewRect.right - this.BorderWidth;
+
+                    int t = pNCP->NewRect.top + BorderWidth;
+                    int l = pNCP->NewRect.left + BorderWidth;
+                    int b = pNCP->NewRect.bottom - BorderWidth;
+                    int r = pNCP->NewRect.right - BorderWidth;
+
+
                     pNCP->NewRect.top = t;
                     pNCP->NewRect.left = l;
                     pNCP->NewRect.right = r;
                     pNCP->NewRect.bottom = b;
+
                     return;
                 }
-            } else{
+            }
+            else
+            {
                 base.WndProc(ref m);
             }
         }
+
         private void RenderBorder()
         {
-            IntPtr hdc = NativeMethods.GetWindowDC(this.Handle);
+            IntPtr hdc = NativeMethods.GetWindowDC(Handle);
             var s = new APIRect();
-            NativeMethods.GetWindowRect(this.Handle, ref s);
-            using(Graphics g = Graphics.FromHdc(hdc)){
-                DrawingTools.DrawBorder((BorderStyle2)(int)this.BorderStyle, this.BorderColor, g,
+            NativeMethods.GetWindowRect(Handle, ref s);
+
+            using (Graphics g = Graphics.FromHdc(hdc))
+            {
+                DrawingTools.DrawBorder((BorderStyle2) (int) BorderStyle, BorderColor, g,
                                         new Rectangle(0, 0, s.Width, s.Height));
             }
-            NativeMethods.ReleaseDC(this.Handle, hdc);
+            NativeMethods.ReleaseDC(Handle, hdc);
         }
+
         protected override void OnEnter(EventArgs e)
         {
             base.OnEnter(e);

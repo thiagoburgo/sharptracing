@@ -1,4 +1,5 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
     <ProductVersion>9.0.21022</ProductVersion>
@@ -26,8 +27,8 @@
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
-    <OldToolsVersion>2.0</OldToolsVersion>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <PublishUrl>http://localhost/Puzzle.SyntaxBox.NET2/</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
@@ -43,6 +44,7 @@
     <IsWebBootstrapper>true</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -59,13 +61,14 @@
     <NoStdLib>false</NoStdLib>
     <NoWarn>
     </NoWarn>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <RegisterForComInterop>false</RegisterForComInterop>
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <WarningLevel>4</WarningLevel>
     <DebugType>full</DebugType>
     <ErrorReport>prompt</ErrorReport>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -88,13 +91,40 @@
     <WarningLevel>4</WarningLevel>
     <DebugType>none</DebugType>
     <ErrorReport>prompt</ErrorReport>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <BaseAddress>285212672</BaseAddress>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <FileAlignment>4096</FileAlignment>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>true</CodeAnalysisFailOnMissingRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <BaseAddress>285212672</BaseAddress>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>Compona.Syntaxbox.xml</DocumentationFile>
+    <Optimize>true</Optimize>
+    <FileAlignment>4096</FileAlignment>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>true</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System">
       <Name>System</Name>
-    </Reference>
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data">
       <Name>System.Data</Name>
@@ -384,6 +414,42 @@
       <DependentUpon>TextStyleDesignerDialog.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\Lang6502.syn" />
+    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\ASP.Syn" />
+    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\CPP.syn" />
+    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\Cobol.syn" />
+    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\CSharp.syn" />
+    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\CSS.Syn" />
+    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\DataFlex.syn" />
+    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\Delphi.syn" />
+    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\DOSBatch.syn" />
+    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\Fortran90.syn" />
+    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\FoxPro.syn" />
+    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\Java.syn" />
+    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\JavaScript.syn" />
+    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\JSP.syn" />
+    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\LotusScript.syn" />
+    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\MSIL.syn" />
+    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\MySQL_SQL.syn" />
+    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\npath.syn" />
+    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\Oracle_SQL.syn" />
+    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\Perl.syn" />
+    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\PHP.Syn" />
+    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\Povray.syn" />
+    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\Python.syn" />
+    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\rtf.syn" />
+    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\SmallTalk.syn" />
+    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\SQLServer2K.syn" />
+    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\SQLServer7.syn" />
+    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\SystemPolicies.syn" />
+    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\Template.syn" />
+    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\Text.syn" />
+    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\TurboPascal.syn" />
+    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\VB.NET.syn" />
+    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\VB.syn" />
+    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\VBScript.syn" />
+    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\VRML97.syn" />
+    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\XML.syn" />
     <None Include="FlippedCursor.cur" />
     <None Include="Alsing.Windows.Forms.SyntaxBoxControl.bmp" />
   </ItemGroup>
@@ -412,44 +478,6 @@
     </EmbeddedResource>
     <None Include="Alsing.SourceCode.SourceCodePrintDocument.bmp" />
     <None Include="Alsing.SourceCode.SyntaxDocument.bmp" />
-    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\Lang6502.syn" />
-    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\ASP.Syn" />
-    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\CPP.syn" />
-    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\Cobol.syn" />
-    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\CSharp.syn" />
-    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\CSS.Syn" />
-    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\DataFlex.syn" />
-    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\Delphi.syn" />
-    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\DOSBatch.syn" />
-    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\Fortran90.syn" />
-    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\FoxPro.syn" />
-    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\Java.syn" />
-    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\JavaScript.syn" />
-    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\JSP.syn" />
-    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\LotusScript.syn" />
-    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\MSIL.syn" />
-    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\MySQL_SQL.syn" />
-    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\npath.syn" />
-    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\Oracle_SQL.syn" />
-    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\Perl.syn" />
-    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\PHP.Syn" />
-    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\Povray.syn" />
-    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\Python.syn" />
-    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\rtf.syn" />
-    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\SmallTalk.syn" />
-    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\SQLServer2K5.syn" />
-    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\SQLServer7.syn" />
-    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\SystemPolicies.syn" />
-    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\Template.syn" />
-    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\Text.syn" />
-    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\TurboPascal.syn" />
-    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\VB.NET.syn" />
-    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\VB.syn" />
-    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\VBScript.syn" />
-    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\VRML97.syn" />
-    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\XML.syn" />
-    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\SQLServer2K.syn" />
-    <EmbeddedResource Include="Document\SyntaxDefinition\SyntaxFiles\Nemerle.syn" />
     <None Include="MoveUp.cur" />
     <None Include="MoveUpDown.cur" />
     <None Include="MoveDown.cur" />

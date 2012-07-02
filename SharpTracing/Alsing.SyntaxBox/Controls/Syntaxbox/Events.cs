@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -42,14 +43,17 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// The mouse buttons that was pressed when the event fired
         /// </summary>
         public MouseButtons Button;
+
         /// <summary>
         /// Reference to a mouse cursor , developers can assign new values here to display new cursors for a given pattern
         /// </summary>
         public Cursor Cursor;
+
         /// <summary>
         /// The pattern that triggered the event
         /// </summary>
         public Pattern Pattern;
+
         /// <summary>
         /// The word where the event was fired
         /// </summary>
@@ -65,23 +69,28 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// The area of the row where the event was fired
         /// </summary>
         public RowArea Area;
+
         /// <summary>
         /// The mousebuttons that was pressed when the event was fired
         /// </summary>
         public MouseButtons Button;
+
         /// <summary>
         /// The X position of the mouse cursor when the event was fired
         /// </summary>
         public int MouseX;
+
         /// <summary>
         /// The Y position of the mouse cursor when the event was fired
         /// </summary>
         public int MouseY;
+
         /// <summary>
         /// The row where the event was fired
         /// </summary>
         public Row Row;
     }
+
 
     /// <summary>
     /// Describes in what area a mouse event occured on a row
@@ -115,10 +124,12 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// the bounds of the row
         /// </summary>
         public Rectangle Bounds;
+
         /// <summary>
         /// The graphics surface to draw on
         /// </summary>
         public Graphics Graphics;
+
         /// <summary>
         /// The row to draw
         /// </summary>

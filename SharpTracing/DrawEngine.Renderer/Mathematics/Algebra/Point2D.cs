@@ -1,5 +1,8 @@
+using System.Runtime.InteropServices;
+using System;
 namespace DrawEngine.Renderer.Algebra
 {
+    [Serializable, StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct Point2D
     {
         public float X, Y;

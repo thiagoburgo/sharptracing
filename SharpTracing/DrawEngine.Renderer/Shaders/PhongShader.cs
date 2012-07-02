@@ -33,7 +33,7 @@ namespace DrawEngine.Renderer.Shaders {
         public PhongShader(Scene scene) : base(scene) { }
         public static Vector3D BumpNormal(Texture bumpTexture, Intersection intersection) {
             const float scale = 1;
-            UVCoordinate uv = intersection.HitPrimitive.CurrentTextureCoordinate;
+            UVCoordinate uv = intersection.CurrentTextureCoordinate;
             float dx = 1.0f / (bumpTexture.Width - 1);
             float dy = 1.0f / (bumpTexture.Height - 1);
             float b0 = bumpTexture.GetPixel(uv).Luminance;
@@ -133,7 +133,7 @@ namespace DrawEngine.Renderer.Shaders {
                                     color += (material.KDiff
                                               *
                                               material.Texture.GetPixel(
-                                                      intersection.HitPrimitive.CurrentTextureCoordinate) * light.Color
+                                                      intersection.CurrentTextureCoordinate) * light.Color
                                               * this.NL) * this.lightFactor * shadowFactor;
                                 }
                                 else {

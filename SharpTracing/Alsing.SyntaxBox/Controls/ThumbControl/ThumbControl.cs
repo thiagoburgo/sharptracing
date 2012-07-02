@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 using System.Windows.Forms;
 
 namespace Alsing.Windows.Forms.CoreLib
@@ -15,15 +16,16 @@ namespace Alsing.Windows.Forms.CoreLib
     {
         public ThumbControl()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
+
         /// <summary>
         /// Draws a 2px Raised Border for the ThumbControl
         /// </summary>
         /// <param name="e"></param>
         protected override void OnPaint(PaintEventArgs e)
         {
-            ControlPaint.DrawBorder3D(e.Graphics, 0, 0, this.Width, this.Height, Border3DStyle.Raised);
+            ControlPaint.DrawBorder3D(e.Graphics, 0, 0, Width, Height, Border3DStyle.Raised);
         }
     }
 }

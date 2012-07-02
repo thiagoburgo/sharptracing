@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 using System;
 using System.Collections;
 using System.ComponentModel;
@@ -16,21 +17,26 @@ namespace Alsing.Design
     public class FilteredTypeConverter : TypeConverter
     {
         protected virtual void FilterProperties(IDictionary Properties, object value) {}
+
         public override PropertyDescriptorCollection GetProperties(ITypeDescriptorContext context, object value,
                                                                    Attribute[] attributes)
         {
             PropertyDescriptorCollection propps = propps = TypeDescriptor.GetProperties(value, attributes, false);
+
             var arr = new Hashtable();
-            foreach(PropertyDescriptor pd in propps){
+            foreach (PropertyDescriptor pd in propps)
                 arr[pd.Name] = pd;
-            }
-            this.FilterProperties(arr, value);
+
+            FilterProperties(arr, value);
+
             //copy the modified propp arr into a typed propertydescriptor[] 
             var arr2 = new PropertyDescriptor[arr.Values.Count];
             arr.Values.CopyTo(arr2, 0);
+
             //return the new propertydescriptorcollection
             return new PropertyDescriptorCollection(arr2);
         }
+
         public override bool GetPropertiesSupported(ITypeDescriptorContext context)
         {
             return true;

@@ -364,8 +364,8 @@ namespace DrawEngine.Renderer.RenderObjects
                 //int widthTex = this.material.Texture.Width - 1;
                 //int heightTex = this.material.Texture.Height - 1;
                 //this.material.Color = this.material.Texture.GetPixel((int)(uCoord * widthTex), (int)(vCoord * heightTex));
-                this.currentTextureCoordinate.U = uCoord;
-                this.currentTextureCoordinate.V = vCoord;
+                intersect.CurrentTextureCoordinate.U = uCoord;
+                intersect.CurrentTextureCoordinate.V = vCoord;
             }
             return true;
         }

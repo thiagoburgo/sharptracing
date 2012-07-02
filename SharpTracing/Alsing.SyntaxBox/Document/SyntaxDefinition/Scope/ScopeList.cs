@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 using System.Collections.Generic;
 using T = Alsing.SourceCode.Scope;
 
@@ -19,8 +20,9 @@ namespace Alsing.SourceCode
     {
         public ScopeList(SpanDefinition parent)
         {
-            this.Parent = parent;
+            Parent = parent;
         }
+
         public SpanDefinition Parent { get; private set; }
     }
 }
