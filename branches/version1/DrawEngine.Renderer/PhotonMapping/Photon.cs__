@@ -1,0 +1,25 @@
+using DrawEngine.Renderer.Algebra;
+using DrawEngine.Renderer.BasicStructures;
+
+namespace DrawEngine.Renderer.PhotonMapping {
+    public struct Photon {
+        public Point3D Position;
+        public RGBColor Power;
+        public Vector3D Direction;
+        //public Photon() { }
+        public Photon(Point3D position, RGBColor power, Vector3D direction) {
+            this.Position = position;
+            this.Power = power;
+            this.Direction = direction;
+        }
+
+        public static implicit operator Ray(Photon p) {
+            return new Ray(p.Position, p.Direction);
+        }
+        public override string ToString()
+        {
+            return string.Format("Position: [{0}], Direction: [{1}], Power: [{2}]",
+                this.Position, this.Direction, this.Power);
+        }
+    }
+}

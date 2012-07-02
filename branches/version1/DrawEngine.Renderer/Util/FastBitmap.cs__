@@ -1,0 +1,162 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Drawing;
+using System.Drawing.Imaging;
+using DrawEngine.Renderer.BasicStructures;
+
+namespace DrawEngine.Renderer.Util {
+    public struct PixelData {
+        public byte Blue;
+        public byte Green;
+        public byte Red;
+    }
+
+    public unsafe class FastBitmap :  IDisposable {
+        private volatile Bitmap bitmap;
+        private int bytesPerRow;
+        private int sizeOfPixelData = sizeof(PixelData);        
+        private Rectangle bounds;
+
+        private volatile BitmapData bitmapData = null;
+        private Byte* pBase = null;
+        private volatile bool locked = false;
+        
+        private int width;
+        private int height;
+
+        public int Height
+        {
+            get { return height; }
+            //set { height = value; }
+        }
+        public int Width
+        {
+            get { return width; }
+            //set { width = value; }
+        }
+        
+        public FastBitmap(Image image) : base(){
+            this.bitmap = new Bitmap(image);
+            this.AdjustValues();
+        }
+
+        public FastBitmap(int width, int height) {
+            this.width = width;
+            this.height = height;
+            this.bitmap = new Bitmap(width, height, PixelFormat.Format24bppRgb);
+            this.AdjustValues();
+        }   
+
+
+        private void AdjustValues() {            
+            //boundsF = bitmap.GetBounds(ref unit);            
+            bounds = new Rectangle(0,
+             0,
+             bitmap.Width,
+             bitmap.Height);
+
+            // Figure out the number of bytes in a row
+            // This is rounded up to be a multiple of 4
+            // bytes, since a scan line in an image must always be a multiple of 4 bytes
+            // in length.
+            bytesPerRow = bitmap.Width * sizeOfPixelData;
+            if (bytesPerRow % 4 != 0) {
+                bytesPerRow = 4 * (bytesPerRow / 4 + 1);
+            }
+        }
+
+        ~FastBitmap() {
+            this.Dispose();
+
+        }
+
+        public void Dispose() {
+            if (bitmap != null) {
+                bitmap.Dispose();
+                bitmap = null;
+                bitmapData = null;
+            }
+        }
+
+        public Bitmap Bitmap {
+            get {
+                return bitmap;
+            }
+            set {
+                this.bitmap = value;                
+                this.AdjustValues();
+            }
+        }
+
+        private Point PixelSize {
+            get {
+                return new Point((int)bounds.Width, (int)bounds.Height);
+            }
+        }
+
+        private void LockBitmap() {
+            if (!locked) {
+                bitmapData =
+                 bitmap.LockBits(this.bounds, ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
+                pBase = (Byte*)bitmapData.Scan0.ToPointer();
+                locked = true;
+            }
+        }
+
+        // Bilinear interpolation 
+        public RGBColor GetPixel(float x, float y)
+        {
+            int pixelX1 = (int)Math.Floor(x);
+            int pixelX2 = (int)Math.Ceiling(x);
+            float xLerp = x - (float)Math.Truncate(x);
+            int pixelY1 = (int)Math.Floor(y);
+            int pixelY2 = (int)Math.Ceiling(y);
+            float yLerp = y - (float)Math.Truncate(y);
+
+            RGBColor c11 = GetPixel(pixelX1, pixelY1);
+            RGBColor c12 = GetPixel(pixelX1, pixelY2);
+            RGBColor c21 = GetPixel(pixelX2, pixelY1);
+            RGBColor c22 = GetPixel(pixelX2, pixelY2);
+            return c11 * (1 - xLerp) * (1 - yLerp)
+                    + c12 * (1 - xLerp) * yLerp
+                    + c21 * xLerp * (1 - yLerp)
+                    + c22 * xLerp * yLerp;
+        }
+        public RGBColor GetPixel(int x, int y) {
+            PixelData uColor = *(PixelData*)(pBase + y * bytesPerRow + x * sizeOfPixelData);
+            return new RGBColor(uColor.Red, uColor.Green, uColor.Blue);
+        }
+
+        public void SetPixel(int x, int y, Color color) {
+            PixelData uColor = new PixelData();
+            uColor.Red = color.R;
+            uColor.Green = color.G;
+            uColor.Blue = color.B;
+            this.LockBitmap();
+            PixelData* pixel = (PixelData*)(pBase + y * bytesPerRow + x * sizeOfPixelData);
+            *pixel = uColor;
+            if (locked) {
+                bitmap.UnlockBits(bitmapData);
+                bitmapData = null;
+                pBase = null;
+                locked = false;
+            }
+        }
+        //private void UnlockBitmap() {
+        //    if (locked) {
+        //        bitmap.UnlockBits(bitmapData);
+        //        bitmapData = null;
+        //        pBase = null;
+        //        locked = false;
+        //    }
+        //}
+        //private PixelData* PixelAt(int x, int y) {
+        //    return (PixelData*)(pBase + y * width + x * sizeOfPixelData);
+        //}
+    }
+
+
+}
+
+

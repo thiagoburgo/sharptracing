@@ -1,0 +1,8 @@
+- Adjust refractions
+	1) Box refractions
+	2) Triangle Models refraction
+	- Refraction in colored objects.
+- PhotonMap incomplete!
+- Implement CSG
+- Implement SkySun Light
+- Improove sampler (adaptative)

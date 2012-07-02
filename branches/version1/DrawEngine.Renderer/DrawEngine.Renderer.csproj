@@ -1,0 +1,442 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2D552805-05C6-452F-8ECB-79C3E68B89FF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DrawEngine.Renderer</RootNamespace>
+    <AssemblyName>DrawEngine.Renderer</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <StartupObject>
+    </StartupObject>
+    <TargetFrameworkSubset>
+    </TargetFrameworkSubset>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CodeAnalysisRules>
+    </CodeAnalysisRules>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisRuleAssemblies>\rules</CodeAnalysisRuleAssemblies>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <Optimize>false</Optimize>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>
+    </DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisRuleAssemblies>\rules</CodeAnalysisRuleAssemblies>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Design" />
+    <Reference Include="System.Runtime.Serialization">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Mathematics\Algebra\Design\VectorOrPointTypeConverter.cs" />
+    <Compile Include="Mathematics\Algebra\MathUtil.cs" />
+    <Compile Include="Mathematics\Algebra\UVCoordinate.cs" />
+    <Compile Include="Mathematics\Algebra\Design\VectorOrPointEditor.cs" />
+    <Compile Include="Mathematics\Algebra\Design\VectorPoint3DControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Mathematics\Algebra\Design\VectorPoint3DControl.designer.cs">
+      <DependentUpon>VectorPoint3DControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Mathematics\Algebra\ITransformable3D.cs" />
+    <Compile Include="Mathematics\Algebra\OrthonormalBasis.cs" />
+    <Compile Include="BasicStructures\Design\RGBColorConverter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="BasicStructures\Design\RGBColorEditor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="BasicStructures\Design\TextureEditor.cs" />
+    <Compile Include="BasicStructures\HSBColor.cs" />
+    <Compile Include="BasicStructures\Texture.cs" />
+    <Compile Include="Cameras\Camera.cs" />
+    <Compile Include="Cameras\Design\DefaultCameraEditor.cs" />
+    <Compile Include="Cameras\Design\ListBoxDefaultCameraControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Cameras\Design\ListBoxDefaultCameraControl.Designer.cs">
+      <DependentUpon>ListBoxDefaultCameraControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Collections\Design\ObjectChooseType.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Collections\Design\ObjectChooseType.Designer.cs">
+      <DependentUpon>ObjectChooseType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Filters\PerlinNoiseFilter.cs" />
+    <Compile Include="Collections\INameable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Collections\NameableCollection.cs" />
+    <Compile Include="Materials\Design\MaterialTreeViewEditorControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Materials\Design\MaterialTreeViewEditorControl.Designer.cs">
+      <DependentUpon>MaterialTreeViewEditorControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Materials\Design\MaterialTypeEditor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <None Include="PhotonMapping\PhotonMap.cs__" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="RenderObjects\Design\LoadingModelDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RenderObjects\Design\LoadingModelDialog.Designer.cs">
+      <DependentUpon>LoadingModelDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RenderObjects\Design\ModelFileEditor.cs" />
+    <None Include="RenderObjects\Esfera.cs_">
+      <SubType>Code</SubType>
+    </None>
+    <Compile Include="RenderObjects\Quadric.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Samplers\Sampler.cs" />
+    <Compile Include="Shaders\Shader.cs" />
+    <Compile Include="Mathematics\Algebra\BarycentricCoordinate.cs" />
+    <Compile Include="Mathematics\Algebra\Dominant.cs" />
+    <Compile Include="Mathematics\Algebra\EquationSolver.cs" />
+    <Compile Include="Mathematics\Algebra\Matrix3D.cs" />
+    <Compile Include="Materials\CookTorranceMaterial.cs" />
+    <Compile Include="Shaders\CookTorranceShader.cs" />
+    <Compile Include="Shaders\PerlinNoiseShader.cs" />
+    <Compile Include="Shaders\PhongShader.cs" />
+    <Compile Include="Cameras\SphericalCamera.cs" />
+    <Compile Include="Cameras\ThinLensCamera.cs" />
+    <Compile Include="Importers\AbstractLoaderModel.cs" />
+    <Compile Include="Importers\DataReader3DS.cs" />
+    <Compile Include="Importers\Loader3DSModel.cs" />
+    <Compile Include="Importers\LoaderByuModel.cs" />
+    <Compile Include="Importers\LoaderPlyModel.cs" />
+    <Compile Include="Importers\PointerToVertex.cs" />
+    <Compile Include="Lights\PointLight.cs" />
+    <Compile Include="Materials\PhongMaterial.cs" />
+    <None Include="PhotonMapping\PhotonSource.cs__" />
+    <None Include="PhotonMapping\Photon.cs__" />
+    <None Include="PhotonMapping\PhotonMap.cs___" />
+    <None Include="PhotonMapping\PointPhotonSource.cs_" />
+    <Compile Include="Tracers\RayCasting.cs" />
+    <Compile Include="RenderObjects\Cone.cs">
+    </Compile>
+    <Compile Include="RenderObjects\CSG\DifferencePrimitive.cs">
+    </Compile>
+    <Compile Include="RenderObjects\CSG\IConstrutive.cs" />
+    <Compile Include="RenderObjects\CSG\IntersectionPrimitive.cs">
+    </Compile>
+    <Compile Include="RenderObjects\CSG\UnionPrimitive.cs">
+    </Compile>
+    <Compile Include="RenderObjects\Disc.cs">
+    </Compile>
+    <Compile Include="RenderObjects\Ellipsoid.cs">
+    </Compile>
+    <Compile Include="RenderObjects\Torus.cs">
+    </Compile>
+    <Compile Include="RenderObjects\TriangleModel.cs">
+    </Compile>
+    <Compile Include="SpatialSubdivision\Acceleration\Octree.cs" />
+    <Compile Include="Lights\SpotLight.cs" />
+    <Compile Include="Importers\ModelType.cs" />
+    <Compile Include="UnifiedScenesRepository.cs" />
+    <Compile Include="Mathematics\Algebra\Vector2D.cs" />
+    <Compile Include="Mathematics\Algebra\Point2D.cs" />
+    <Compile Include="BasicStructures\Intersection.cs" />
+    <Compile Include="Materials\Material.cs" />
+    <None Include="Tracers\RayTracer.cs_" />
+    <Compile Include="RenderObjects\BoundBox.cs" />
+    <Compile Include="Cameras\PinholeCamera.cs" />
+    <Compile Include="Lights\Light.cs" />
+    <Compile Include="RenderObjects\Box.cs" />
+    <Compile Include="RenderObjects\Cylinder.cs">
+    </Compile>
+    <Compile Include="RenderObjects\Plane.cs">
+    </Compile>
+    <Compile Include="Mathematics\Algebra\Point3D.cs" />
+    <Compile Include="RenderObjects\Primitive.cs">
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RenderObjects\Triangle.cs">
+    </Compile>
+    <Compile Include="BasicStructures\RGBColor.cs" />
+    <Compile Include="BasicStructures\Ray.cs" />
+    <Compile Include="RenderObjects\Sphere.cs">
+    </Compile>
+    <Compile Include="Scene.cs">
+    </Compile>
+    <Compile Include="Mathematics\Algebra\Vector3D.cs" />
+    <Compile Include="Util\ObjectXMLSerializer.cs" />
+    <Compile Include="Util\PicturePanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Util\PicturePanel.designer.cs">
+      <DependentUpon>PicturePanel.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mathematics\Algebra\Design\VectorPoint3DControl.resx">
+      <DependentUpon>VectorPoint3DControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Cameras\Design\ListBoxDefaultCameraControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ListBoxDefaultCameraControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Collections\Design\ObjectChooseType.resx">
+      <DependentUpon>ObjectChooseType.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Lights\Design\LightChooseType.resx">
+      <DependentUpon>LightChooseType.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Lights\Design\LightCollectionForm.resx">
+      <DependentUpon>LightCollectionForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Materials\Design\MaterialTreeViewEditorControl.resx">
+      <DependentUpon>MaterialTreeViewEditorControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RenderObjects\EnvironmentMaps\Design\CubeMapEditorForm.resx">
+      <DependentUpon>CubeMapEditorForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RenderObjects\Design\LoadingModelDialog.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>LoadingModelDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RenderObjects\EnvironmentMaps\Design\SphereMapEditorForm.resx">
+      <DependentUpon>SphereMapEditorForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\setaBaixo1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\setaCima1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\remover.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BasicStructures\IItersectable.cs" />
+    <Compile Include="Collections\Design\CustomCollectionEditor.cs" />
+    <Compile Include="Collections\NotifyList.cs" />
+    <Compile Include="Lights\AreaLight.cs" />
+    <Compile Include="Lights\IPhotonSource.cs" />
+    <Compile Include="Lights\SunSkyLight.cs" />
+    <Compile Include="Mathematics\QMCRandom\IRandom.cs" />
+    <Compile Include="Mathematics\QMCRandom\MRG32k3Random.cs" />
+    <Compile Include="Mathematics\QMCRandom\QMCHaltonRandom.cs" />
+    <Compile Include="Mathematics\QMCRandom\QMCSobolRandom.cs" />
+    <None Include="app.config" />
+    <None Include="PhotonMapping\PhotonMap.cs_____" />
+    <Compile Include="PhotonMapping\NearestPhotons.cs" />
+    <Compile Include="PhotonMapping\Photon.cs" />
+    <Compile Include="PhotonMapping\PhotonMap.cs" />
+    <None Include="PhotonMapping\PhotonShooter.cs_" />
+    <Compile Include="RenderObjects\CornellBox.cs" />
+    <Compile Include="RenderObjects\EnvironmentMaps\Design\SphereMapEditor.cs" />
+    <Compile Include="RenderObjects\EnvironmentMaps\Design\SphereMapEditorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RenderObjects\EnvironmentMaps\Design\SphereMapEditorForm.Designer.cs">
+      <DependentUpon>SphereMapEditorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RenderObjects\EnvironmentMaps\EnvironmentMap.cs" />
+    <Compile Include="RenderObjects\IPreprocess.cs" />
+    <Compile Include="RenderObjects\Polygon.cs" />
+    <Compile Include="RenderObjects\EnvironmentMaps\SphereMap.cs" />
+    <Compile Include="RenderObjects\RegularPolygon.cs" />
+    <Compile Include="RenderObjects\Quadrilatero.cs" />
+    <Compile Include="SpatialSubdivision\KDTree\Editor.cs" />
+    <Compile Include="SpatialSubdivision\KDTree\EuclideanDistance.cs" />
+    <Compile Include="SpatialSubdivision\KDTree\HammingDistance.cs" />
+    <Compile Include="SpatialSubdivision\KDTree\HPoint.cs" />
+    <Compile Include="SpatialSubdivision\KDTree\HRect.cs" />
+    <Compile Include="SpatialSubdivision\KDTree\IDistanceMetric.cs" />
+    <Compile Include="SpatialSubdivision\KDTree\KDException.cs" />
+    <Compile Include="SpatialSubdivision\KDTree\KDNode.cs" />
+    <Compile Include="SpatialSubdivision\KDTree\KDTree.cs" />
+    <Compile Include="SpatialSubdivision\KDTree\KeyDuplicateException.cs" />
+    <Compile Include="SpatialSubdivision\KDTree\KeyMissingException.cs" />
+    <Compile Include="SpatialSubdivision\KDTree\KeySizeException.cs" />
+    <Compile Include="SpatialSubdivision\KDTree\NearestNeighborList.cs" />
+    <Compile Include="SpatialSubdivision\KDTree\PriorityQueue.cs" />
+    <None Include="Tracers\PhotonTracer.cs____" />
+    <Compile Include="Tracers\PhotonTracer.cs" />
+    <Compile Include="Tracers\DistributedRayTracer.cs" />
+    <Compile Include="Importers\LoaderOffModel.cs" />
+    <Compile Include="Importers\LoaderObjModel.cs" />
+    <Compile Include="Lights\Design\LightChooseType.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Lights\Design\LightChooseType.Designer.cs">
+      <DependentUpon>LightChooseType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Lights\Design\LightCollectionEditor.cs" />
+    <Compile Include="Lights\Design\LightCollectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Lights\Design\LightCollectionForm.Designer.cs">
+      <DependentUpon>LightCollectionForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Lights\LightDictionary.cs" />
+    <None Include="PhotonMapping\PhotonMap.cs____" />
+    <None Include="Tracers\PhotonTracer.cs___" />
+    <None Include="DrawEngine.Renderer.cd" />
+    <None Include="Tracers\PhotonTracer.cs_" />
+    <None Include="Tracers\PhotonTracer.cs_____" />
+    <Compile Include="Tracers\RayTracer.cs" />
+    <None Include="PhotonMapping\PointPhotonSource.cs__" />
+    <Compile Include="Renderers\RenderStrategy.cs" />
+    <Compile Include="Renderers\ScanlineRenderStrategy.cs" />
+    <Compile Include="RenderObjects\CubeFlake.cs" />
+    <Compile Include="RenderObjects\EnvironmentMaps\CubeMap.cs" />
+    <Compile Include="RenderObjects\EnvironmentMaps\Design\CubeMapEditorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RenderObjects\EnvironmentMaps\Design\CubeMapEditorForm.Designer.cs">
+      <DependentUpon>CubeMapEditorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RenderObjects\EnvironmentMaps\Design\CubeMapUIEditor.cs" />
+    <Compile Include="RenderObjects\IBoundBox.cs" />
+    <Compile Include="RenderObjects\SphereFlake.cs" />
+    <Compile Include="Samplers\RegularGridSampler.cs" />
+    <Compile Include="SceneManager.cs" />
+    <Compile Include="SpatialSubdivision\Acceleration\IAccelerationStructure.cs" />
+    <Compile Include="SpatialSubdivision\Acceleration\IntersectableAccelerationStructure.cs" />
+    <Compile Include="SpatialSubdivision\Acceleration\KDTreeIntersectableManager.cs" />
+    <Compile Include="SpatialSubdivision\Acceleration\NoAccerelationStructure.cs" />
+    <Compile Include="SpatialSubdivision\Acceleration\KDTreePrimitiveManager.cs" />
+    <Compile Include="SpatialSubdivision\Acceleration\AccelerationStructure.cs" />
+    <Compile Include="SpatialSubdivision\Acceleration\KDTreeTriangleManager.cs" />
+    <None Include="Util\FastBitmap.cs__" />
+    <Compile Include="Util\Conversion\BitConverterEx.cs" />
+    <Compile Include="Util\FastBitmap.cs" />
+    <Compile Include="Util\IO\EndianessBinaryReader.cs" />
+    <Compile Include="Util\IO\EndianessBinaryWriter.cs" />
+    <Compile Include="Util\IO\LineReader.cs" />
+    <Compile Include="Util\Sort.cs" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Resources\member.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

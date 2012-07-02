@@ -1,0 +1,16 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace DrawEngine.Renderer.RenderObjects
+{
+    public class Esfera : Quadric
+    {
+        public Esfera()
+            //: base(1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, -1.0f)
+            : base(36.0f, 9.0f, -4.0f, 0.0f, 0.0f, 0f, 0f, 0.0f, 0.0f, -36.0f)
+        {
+           
+        }
+    }
+}

@@ -1,0 +1,366 @@
+using System;
+using System.ComponentModel;
+using DrawEngine.Renderer.Algebra;
+using DrawEngine.Renderer.BasicStructures;
+using DrawEngine.Renderer.Mathematics.Algebra;
+
+namespace DrawEngine.Renderer.RenderObjects
+{
+    [Serializable]
+    public class Quadrangle : Primitive, ITransformable3D
+    {
+        private float coef12, coef23, coef34, coef41;
+        private float coefQuadrangle;
+        
+        private Vector3D edge12, edge23, edge34, edge41;
+        private float height;
+        private float length12, length23, length34, length41;
+        private Vector3D normal, normal12, normal23, normal34, normal41;
+        private Point3D vertex1, vertex2, vertex3, vertex4;
+        private float width;
+        private Quadrangle() : this(Point3D.Zero, Vector3D.UnitY, 100, 100) {}
+        public Quadrangle(Point3D vertex1, Point3D vertex2, Point3D vertex3, Point3D vertex4)
+        {
+            this.vertex1 = vertex1;
+            this.vertex2 = vertex2;
+            this.vertex3 = vertex3;
+            this.vertex4 = vertex4;
+            this.AdjustQuadrangle(true);
+            //if ((this.normal * this.edge23) != 0.0f && (this.normal * this.edge41) != 0.0f) {
+            //    throw new ArgumentException("Os pontos não são colineares e por isso não formam um quadrilátero!");
+            //}
+        }
+        public Quadrangle(Point3D center, Vector3D normal, float width, float height)
+        {
+            this.normal = normal;
+            this.normal.Normalize();
+            this.center = center;
+            this.width = width;
+            this.height = height;
+            this.CalculateVertex();
+        }
+        [Browsable(false)]
+        public override BoundBox BoundBox
+        {
+            get { return base.BoundBox; }
+            set { base.BoundBox = value; }
+        }
+        public Point3D Center
+        {
+            get { return base.center; }
+            set
+            {
+                base.center = value;
+                this.CalculateVertex();
+            }
+        }
+        [RefreshProperties(RefreshProperties.All)]
+        public float Height
+        {
+            get { return this.height; }
+            set
+            {
+                if(value > 0){
+                    this.height = value;
+                    this.CalculateVertex();
+                } else{
+                    throw new Exception("O valor da ALTURA do quadrangulo deve ser maior que ZERO!");
+                }
+            }
+        }
+        [RefreshProperties(RefreshProperties.All)]
+        public float Width
+        {
+            get { return this.width; }
+            set
+            {
+                if(value > 0){
+                    this.width = value;
+                    this.CalculateVertex();
+                } else{
+                    throw new Exception("O valor da LARGURA do quadrangulo deve ser maior que ZERO!");
+                }
+            }
+        }
+        [RefreshProperties(RefreshProperties.All)]
+        public Point3D Vertex1
+        {
+            get { return this.vertex1; }
+            set
+            {
+                this.vertex1 = value;
+                this.AdjustQuadrangle(true);
+            }
+        }
+        [RefreshProperties(RefreshProperties.All)]
+        public Point3D Vertex2
+        {
+            get { return this.vertex2; }
+            set
+            {
+                this.vertex2 = value;
+                this.AdjustQuadrangle(true);
+            }
+        }
+        [RefreshProperties(RefreshProperties.All)]
+        public Point3D Vertex3
+        {
+            get { return this.vertex3; }
+            set
+            {
+                this.vertex3 = value;
+                this.AdjustQuadrangle(true);
+            }
+        }
+        [RefreshProperties(RefreshProperties.All)]
+        public Point3D Vertex4
+        {
+            get { return this.vertex4; }
+            set
+            {
+                this.vertex4 = value;
+                this.AdjustQuadrangle(true);
+            }
+        }
+        [RefreshProperties(RefreshProperties.All)]
+        public Vector3D Normal
+        {
+            get { return this.normal; }
+            set
+            {
+                this.normal = value;
+                this.normal.Normalize();
+                this.AdjustBoundBox();
+            }
+        }
+        
+
+        #region ITransformable3D Members
+        public void Rotate(float angle, Vector3D axis)
+        {
+            this.center.Rotate(angle, axis);
+            this.normal.Rotate(angle, axis);
+            this.CalculateVertex();
+        }
+        public void RotateAxisX(float angle)
+        {
+            this.center.RotateAxisX(angle);
+            this.normal.RotateAxisX(angle);
+            this.CalculateVertex();
+        }
+        public void RotateAxisY(float angle)
+        {
+            this.center.RotateAxisY(angle);
+            this.normal.RotateAxisY(angle);
+            this.CalculateVertex();
+        }
+        public void RotateAxisZ(float angle)
+        {
+            this.center.RotateAxisZ(angle);
+            this.normal.RotateAxisZ(angle);
+            this.CalculateVertex();
+        }
+        public void Scale(float factor)
+        {
+            this.width = this.width * factor;
+            this.height = this.height * factor;
+            this.CalculateVertex();
+        }
+        public void Translate(float tx, float ty, float tz)
+        {
+            this.center.Translate(tx, ty, tz);
+            this.CalculateVertex();
+        }
+        public void Translate(Vector3D translateVector)
+        {
+            this.Translate(translateVector.X, translateVector.Y, translateVector.Z);
+        }
+        #endregion
+
+        private void CalculateVertex()
+        {
+            Vector3D.Orthonormalize(this.normal, out edge23, out edge12);
+
+            this.vertex1 = center + this.edge12 * width * 0.5f + this.edge23 * -height * 0.5f;
+            this.vertex2 = center + this.edge12 * width * 0.5f + this.edge23 * height * 0.5f;
+            this.vertex3 = center + this.edge12 * -width * 0.5f + this.edge23 * height * 0.5f;
+            this.vertex4 = center + this.edge12 * -width * 0.5f + this.edge23 * -height * 0.5f;
+            this.AdjustQuadrangle(false);
+        }
+        private void AdjustQuadrangle(bool recalcWidthHeight)
+        {
+            this.edge12 = (this.vertex2 - this.vertex1);
+            this.length12 = this.edge12.Length;
+            this.edge23 = (this.vertex3 - this.vertex2);
+            this.length23 = this.edge23.Length;
+            if(recalcWidthHeight){
+                this.width = this.length12;
+                this.height = this.length23;
+            }
+            this.edge12.Normalize();
+            this.edge23.Normalize();
+            this.edge34 = (this.vertex4 - this.vertex3);
+            this.length34 = this.edge34.Length;
+            this.edge34.Normalize();
+            this.edge41 = (this.vertex1 - this.vertex4);
+            this.length41 = this.edge41.Length;
+            this.edge41.Normalize();
+            if((this.edge12 * this.edge23) < (this.edge23 * this.edge34)){
+                this.normal = (this.edge12 ^ this.edge23);
+            } else{
+                this.normal = (this.edge23 ^ this.edge34);
+            }
+            this.normal.Normalize();
+            this.coefQuadrangle = (this.normal * this.vertex1);
+            this.normal12 = this.normal ^ this.edge12;
+            this.normal23 = this.normal ^ this.edge23;
+            this.normal34 = this.normal ^ this.edge34;
+            this.normal41 = this.normal ^ this.edge41;
+            this.coef12 = (this.normal12 * this.vertex1); // Coef for line in plane
+            this.coef23 = (this.normal23 * this.vertex2); // Coef for line in plane
+            this.coef34 = (this.normal34 * this.vertex3); // Coef for line in plane
+            this.coef41 = (this.normal41 * this.vertex4); // Coef for line in plane
+            //if(this.normal23 * this.normal != 0 || this.normal12 * this.normal != 0){
+            //    throw new ArgumentException("Os pontos não são colineares e por isso não formam um quadrilátero!");
+            //}
+            this.AdjustBoundBox();
+        }
+        private void AdjustBoundBox()
+        {
+            Point3D pMin = new Point3D(this.MinValue(this.vertex1.X, this.vertex2.X, this.vertex3.X, this.vertex4.X),
+                                       this.MinValue(this.vertex1.Y, this.vertex2.Y, this.vertex3.Y, this.vertex4.Y),
+                                       this.MinValue(this.vertex1.Z, this.vertex2.Z, this.vertex3.Z, this.vertex4.Z));
+            Point3D pMax = new Point3D(this.MaxValue(this.vertex1.X, this.vertex2.X, this.vertex3.X, this.vertex4.X),
+                                       this.MaxValue(this.vertex1.Y, this.vertex2.Y, this.vertex3.Y, this.vertex4.Y),
+                                       this.MaxValue(this.vertex1.Z, this.vertex2.Z, this.vertex3.Z, this.vertex4.Z));
+            //Como o boundbox de um plano ou um quadrilatero nao tem largura, deve-se colocar uma largura minima
+            //if(this.normal == Vector3D.UnitY){
+            //    pMax.Y += 5;
+            //    pMin.Y -= 5;
+            //} else if(this.normal == Vector3D.UnitZ){
+            //    pMax.Z += 5;
+            //    pMin.Z -= 5;
+            //} else if(this.normal == Vector3D.UnitX){
+            //    pMax.X += 5;
+            //    pMin.X -= 5;
+            //}
+            //this.boundBox = new BoundBox(pMin, pMax);
+        }
+        private float MinValue(params float[] values)
+        {
+            float min = 0;
+            if(values != null && values.Length > 0){
+                min = values[0];
+                foreach(float value in values){
+                    if(min > value){
+                        min = value;
+                    }
+                }
+            }
+            return min;
+        }
+        private float MaxValue(params float[] values)
+        {
+            float max = 0;
+            if(values != null && values.Length > 0){
+                max = values[0];
+                foreach(float value in values){
+                    if(max < value){
+                        max = value;
+                    }
+                }
+            }
+            return max;
+        }
+        public override bool FindIntersection(Ray ray, out Intersection intersect)
+        {
+            intersect = new Intersection();
+            float NRd = (this.normal * ray.Direction);
+            if(NRd == 0.0f){
+                return false;
+            }
+            intersect.TMin = (ray.Origin * this.normal) - this.coefQuadrangle;
+            intersect.TMin = -intersect.TMin * 1.0f / NRd;
+            if(intersect.TMin < 0.0001f){
+                return false;
+            }
+            intersect.HitPoint = ray.Origin + (intersect.TMin * ray.Direction);
+            intersect.Normal = this.normal;
+            //FIM INTERSECCAO COM O PLANO
+            float hitDotNorm12 = (intersect.HitPoint * this.normal12);
+            if(hitDotNorm12 < this.coef12){
+                return false;
+            }
+            float hitDotNorm23 = (intersect.HitPoint * this.normal23);
+            if(hitDotNorm23 < this.coef23){
+                return false;
+            }
+            float hitDotNorm34 = (intersect.HitPoint * this.normal34);
+            if(hitDotNorm34 < this.coef34){
+                return false;
+            }
+            float hitDotNorm41 = (intersect.HitPoint * this.normal41);
+            if(hitDotNorm41 < this.coef41){
+                return false;
+            }
+            intersect.HitPrimitive = this;
+            if(this.material != null && this.material.IsTexturized){
+                float uCoord = (hitDotNorm41 - this.coef41) * this.length41;
+                float vCoord = (hitDotNorm34 - this.coef34) * this.length34;
+                float wCoord = (hitDotNorm12 - this.coef12) * this.length12;
+                float hCoord = (hitDotNorm23 - this.coef23) * this.length23;
+                float baryScale = 2.0f / (uCoord + vCoord + wCoord + hCoord);
+                //int widthTex = this.material.Texture.Width - 1;
+                //int heightTex = this.material.Texture.Height - 1;
+                //this.material.Color =
+                //    this.material.Texture.GetPixel((int)((1.0f - (uCoord * baryScale)) * widthTex),
+                //                                   (int)(((vCoord * baryScale)) * heightTex));
+                this.currentTextureCoordinate.U = ((1.0f - (uCoord * baryScale)));
+                this.currentTextureCoordinate.V = ((vCoord * baryScale));
+            }
+            return true;
+        }
+        public bool FindIntersection(Ray ray) {
+            float NRd = (this.normal * ray.Direction);
+            if(NRd == 0.0f) {
+                return false;
+            }
+            float tMin = (ray.Origin * this.normal) - this.coefQuadrangle;
+            tMin = -tMin * 1.0f / NRd;
+            if(tMin < 0.0001f) {
+                return false;
+            }
+            Point3D hitPoint = ray.Origin + (tMin * ray.Direction);
+            //FIM INTERSECCAO COM O PLANO
+            float hitDotNorm12 = (hitPoint * this.normal12);
+            if(hitDotNorm12 < this.coef12) {
+                return false;
+            }
+            float hitDotNorm23 = (hitPoint * this.normal23);
+            if(hitDotNorm23 < this.coef23) {
+                return false;
+            }
+            float hitDotNorm34 = (hitPoint * this.normal34);
+            if(hitDotNorm34 < this.coef34) {
+                return false;
+            }
+            float hitDotNorm41 = (hitPoint * this.normal41);
+            if(hitDotNorm41 < this.coef41) {
+                return false;
+            }
+            return true;
+        }
+        public override Vector3D NormalOnPoint(Point3D pointInPrimitive)
+        {
+            return this.normal;
+        }
+        public override bool IsInside(Point3D point)
+        {
+            throw new NotImplementedException();
+        }
+        public override bool IsOverlap(BoundBox boundBox)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}
