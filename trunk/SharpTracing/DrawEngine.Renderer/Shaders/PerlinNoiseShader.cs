@@ -44,7 +44,7 @@ namespace DrawEngine.Renderer.Shaders
             if(intersection.HitPrimitive.Material.IsTexturized){
                 RGBColor col =
                         intersection.HitPrimitive.Material.Texture.GetPixel(
-                                intersection.HitPrimitive.CurrentTextureCoordinate);
+                                intersection.CurrentTextureCoordinate);
                 Vector3D v = new Vector3D(col.R, col.G, col.B);
                 Vector3D.Orthogonalize(ref v, n);
                 v.Normalize();

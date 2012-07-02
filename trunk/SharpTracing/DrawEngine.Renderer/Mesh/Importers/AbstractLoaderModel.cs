@@ -10,29 +10,76 @@
  * Feel free to copy, modify and  give fixes 
  * suggestions. Keep the credits!
  */
- using System;
+using System;
 using DrawEngine.Renderer.RenderObjects;
+using System.Collections.Generic;
+using System.Reflection;
+using System.IO;
 
 namespace DrawEngine.Renderer.Importers
 {
     public abstract class AbstractLoaderModel : IDisposable
     {
-        #region Delegates
+        #region Delegates/Events
         public delegate void ElementLoadEventHandler(int percentageOfTotal, ElementMesh element);
+        public abstract event ElementLoadEventHandler OnElementLoaded;
         #endregion
 
-        protected BoundBox boundBox;
+        protected string path;
         private bool disposed;
         protected Triangle[] triangles;
-        public BoundBox BoundBox
+        public BoundBox BoundBox = BoundBox.Zero;
+        private static Dictionary<string, AbstractLoaderModel> s_importers;
+        public AbstractLoaderModel() : this("")
         {
-            get { return this.boundBox; }
+        }
+        public AbstractLoaderModel(String path)
+        {
+            this.path = path;
+        }
+        static AbstractLoaderModel()
+        {
+            // get all available importers
+            s_importers = new Dictionary<string, AbstractLoaderModel>();
+            foreach (Assembly ass in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                foreach (Type tp in ass.GetTypes())
+                {
+                    if (!tp.IsAbstract && tp.IsClass && typeof(AbstractLoaderModel).IsAssignableFrom(tp))
+                    {
+                        AbstractLoaderModel importer = Activator.CreateInstance(tp) as AbstractLoaderModel;
+                        if (importer == null)
+                        {
+                            continue;
+                        }
+                        foreach (String ext in importer.Extensions)
+                        {
+                            s_importers.Add(ext, importer);
+                        }
+                    }
+                }
+            }
+        }
+        public static AbstractLoaderModel GetLoader(String path)
+        {
+            AbstractLoaderModel import;
+            String ext = Path.GetExtension(path);
+            if (!s_importers.TryGetValue(Path.GetExtension(path), out import))
+            {
+                throw new IOException("Loader not found for this file type. Extension: " + ext);
+            }
+            if (import != null)
+            {
+                import.path = path;
+            }
+            return import;
         }
 
         #region IDisposable Members
         public void Dispose()
         {
-            if(!this.disposed){
+            if (!this.disposed)
+            {
                 this.triangles = null;
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
@@ -40,18 +87,12 @@ namespace DrawEngine.Renderer.Importers
             }
         }
         #endregion
-
+        public abstract List<String> Extensions { get; }
         public abstract Triangle[] Load();
-        public abstract event ElementLoadEventHandler OnElementLoaded;
+
         ~AbstractLoaderModel()
         {
             this.Dispose();
         }
-        //public Point3D[] Vertices {
-        //    get { return vertices; }
-        //}
-        //public Triangle[] Triangles {
-        //    get { return triangles; }
-        //}
     }
 }

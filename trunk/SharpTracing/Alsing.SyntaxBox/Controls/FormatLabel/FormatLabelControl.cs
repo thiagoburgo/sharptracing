@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -28,6 +29,7 @@ namespace Alsing.Windows.Forms.CoreLib
         private Element _ActiveElement;
         private Element[] _Elements;
         private bool _HasImageError;
+
         private ImageList _ImageList;
         private Color _Link_Color = Color.Blue;
         private Color _Link_Color_Hover = Color.Blue;
@@ -40,120 +42,142 @@ namespace Alsing.Windows.Forms.CoreLib
         private PictureBox Filler;
         private HScrollBar hScroll;
         private VScrollBar vScroll;
+
         public ImageList ImageList
         {
-            get { return this._ImageList; }
+            get { return _ImageList; }
             set
             {
-                this._ImageList = value;
-                this.Invalidate();
+                _ImageList = value;
+                Invalidate();
                 //this.Text = this.Text;
             }
         }
+
         public Color Link_Color
         {
-            get { return this._Link_Color; }
+            get { return _Link_Color; }
             set
             {
-                this._Link_Color = value;
-                this.Invalidate();
+                _Link_Color = value;
+                Invalidate();
             }
         }
+
         public Color Link_Color_Hover
         {
-            get { return this._Link_Color_Hover; }
+            get { return _Link_Color_Hover; }
             set
             {
-                this._Link_Color_Hover = value;
-                this.Invalidate();
+                _Link_Color_Hover = value;
+                Invalidate();
             }
         }
+
         public bool Link_UnderLine
         {
-            get { return this._Link_UnderLine; }
+            get { return _Link_UnderLine; }
             set
             {
-                this._Link_UnderLine = value;
-                this.Invalidate();
+                _Link_UnderLine = value;
+                Invalidate();
             }
         }
+
         public bool Link_UnderLine_Hover
         {
-            get { return this._Link_UnderLine_Hover; }
+            get { return _Link_UnderLine_Hover; }
             set
             {
-                this._Link_UnderLine_Hover = value;
-                this.Invalidate();
+                _Link_UnderLine_Hover = value;
+                Invalidate();
             }
         }
+
+
         public bool AutoSizeHorizontal { get; set; }
+
         public bool AutoSizeVertical { get; set; }
+
         public bool WordWrap
         {
-            get { return this._WordWrap; }
+            get { return _WordWrap; }
             set
             {
-                this._WordWrap = value;
-                this.CreateRows();
-                this.Invalidate();
+                _WordWrap = value;
+                CreateRows();
+                Invalidate();
             }
         }
+
+
         [Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Obsolete("", false)]
         public override Image BackgroundImage
         {
             get { return base.BackgroundImage; }
             set { base.BackgroundImage = value; }
         }
+
         public ScrollBars ScrollBars
         {
-            get { return this._ScrollBars; }
+            get { return _ScrollBars; }
             set
             {
-                this._ScrollBars = value;
-                this.InitScrollbars();
+                _ScrollBars = value;
+                InitScrollbars();
             }
         }
 
         #region Defaults
+
         private Container components;
+
         public FormatLabelControl()
         {
-            this.SetStyle(ControlStyles.ResizeRedraw, true);
-            this.SetStyle(ControlStyles.Opaque, true);
-            this.InitializeComponent();
-            this.Text = this.Text;
+            SetStyle(ControlStyles.ResizeRedraw, true);
+            SetStyle(ControlStyles.Opaque, true);
+            InitializeComponent();
+            Text = Text;
         }
+
         protected override void Dispose(bool disposing)
         {
-            if(disposing){
-                foreach(GDIObject o in this._Fonts.Values){
+            if (disposing)
+            {
+                foreach (GDIObject o in _Fonts.Values)
                     o.Dispose();
-                }
-                if(this.components != null){
-                    this.components.Dispose();
-                }
+
+                if (components != null)
+                    components.Dispose();
             }
             base.Dispose(disposing);
         }
 
         #region Component Designer generated code
-        [Browsable(true), DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+
+        [Browsable(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public override string Text
         {
             get { return _Text; }
             set
             {
-                try{
+                try
+                {
                     //Text=value;
                     _Text = value;
+
                     CreateAll();
                     this.Invalidate();
-                } catch(Exception x){
+                }
+                catch (Exception x)
+                {
                     Console.WriteLine(x.Message);
                     System.Diagnostics.Debugger.Break();
                 }
             }
         }
+
         /// <summary>
         /// Required method for Designer support - do not modify 
         /// the contents of this method with the code editor.
@@ -198,239 +222,316 @@ namespace Alsing.Windows.Forms.CoreLib
             // FormatLabelControl
             // 
             this.BackColor = System.Drawing.SystemColors.Window;
-            this.Controls.AddRange(new System.Windows.Forms.Control[]{this.Filler, this.vScroll, this.hScroll});
+            this.Controls.AddRange(new System.Windows.Forms.Control[] {this.Filler, this.vScroll, this.hScroll});
             this.Name = "FormatLabelControl";
             this.Size = new System.Drawing.Size(160, 136);
             this.ResumeLayout(false);
         }
+
         private void CreateAll()
         {
             _Elements = CreateElements();
             ClearFonts();
+
+
             ApplyFormat(_Elements);
             CreateWords(_Elements);
             CreateRows();
             SetAutoSize();
         }
+
         private void ClearFonts()
         {
-            foreach(GDIFont gf in _Fonts.Values){
+            foreach (GDIFont gf in _Fonts.Values)
+            {
                 gf.Dispose();
             }
             _Fonts.Clear();
         }
+
         #endregion
 
         #endregion
 
         public event ClickLinkEventHandler ClickLink = null;
+
         protected void OnClickLink(string Link)
         {
-            if(this.ClickLink != null){
-                this.ClickLink(this, new ClickLinkEventArgs(Link));
-            }
+            if (ClickLink != null)
+                ClickLink(this, new ClickLinkEventArgs(Link));
         }
+
         private void SetAutoSize()
         {
-            if(this.AutoSizeHorizontal){
-                this.Width = this.GetWidth();
-            }
-            if(this.AutoSizeVertical){
-                this.Height = this.GetHeight();
-            }
+            if (AutoSizeHorizontal)
+                Width = GetWidth();
+
+            if (AutoSizeVertical)
+                Height = GetHeight();
         }
+
         protected override void OnPaint(PaintEventArgs e)
         {
-            this.SetAutoSize();
+            SetAutoSize();
             //base.OnPaint (e);
-            if(this._HasImageError){
-                this.CreateAll();
-            }
-            var bbuff = new GDISurface(this.Width, this.Height, this, true);
+
+            if (_HasImageError)
+                CreateAll();
+
+            var bbuff = new GDISurface(Width, Height, this, true);
             Graphics g = Graphics.FromHdc(bbuff.hDC);
-            try{
+            try
+            {
                 bbuff.FontTransparent = true;
-                if(this.BackgroundImage != null){
-                    g.DrawImage(this.BackgroundImage, 0, 0, this.Width, this.Height);
-                } else{
-                    bbuff.Clear(this.BackColor);
+
+                if (BackgroundImage != null)
+                {
+                    g.DrawImage(BackgroundImage, 0, 0, Width, Height);
                 }
-                int x = this.Margin;
-                int y = this.Margin;
-                for(int i = this.vScroll.Value; i < this._Rows.Count; i++){
-                    Row r = this._Rows[i];
-                    x = this.Margin;
+                else
+                {
+                    bbuff.Clear(BackColor);
+                }
+                int x = Margin;
+                int y = Margin;
+                for (int i = vScroll.Value; i < _Rows.Count; i++)
+                {
+                    Row r = _Rows[i];
+                    x = Margin;
                     r.Visible = true;
                     r.Top = y;
-                    if(r.RenderSeparator){
+                    if (r.RenderSeparator)
+                    {
                         Color c1 = Color.FromArgb(120, 0, 0, 0);
                         Brush b1 = new SolidBrush(c1);
-                        g.FillRectangle(b1, 0, y, this.Width, 1);
+                        g.FillRectangle(b1, 0, y, Width, 1);
+
                         Color c2 = Color.FromArgb(120, 255, 255, 255);
                         Brush b2 = new SolidBrush(c2);
-                        g.FillRectangle(b2, 0, y + 1, this.Width, 1);
+                        g.FillRectangle(b2, 0, y + 1, Width, 1);
+
                         b1.Dispose();
                         b2.Dispose();
+
+
                         //bbuff.DrawLine (this.ForeColor,new Point (0,y),new Point (this.Width,y));
                     }
-                    foreach(Word w in r.Words){
+
+                    foreach (Word w in r.Words)
+                    {
                         int ypos = r.Height - w.Height + y;
-                        if(w.Image != null){
+
+                        if (w.Image != null)
+                        {
                             g.DrawImage(w.Image, x, y);
                             //bbuff.FillRect (Color.Red ,x,ypos,w.Width ,w.Height);
-                        } else{
+                        }
+                        else
+                        {
                             GDIFont gf;
-                            if(w.Element.Link != null){
+                            if (w.Element.Link != null)
+                            {
                                 Font f = null;
+
                                 FontStyle fs = w.Element.Font.Style;
-                                if(w.Element.Link == this._ActiveElement){
-                                    if(this._Link_UnderLine_Hover){
+                                if (w.Element.Link == _ActiveElement)
+                                {
+                                    if (_Link_UnderLine_Hover)
                                         fs |= FontStyle.Underline;
-                                    }
-                                    f = new Font(w.Element.Font, fs);
-                                } else{
-                                    if(this._Link_UnderLine){
-                                        fs |= FontStyle.Underline;
-                                    }
+
                                     f = new Font(w.Element.Font, fs);
                                 }
-                                gf = this.GetFont(f);
-                            } else{
-                                gf = this.GetFont(w.Element.Font);
+                                else
+                                {
+                                    if (_Link_UnderLine)
+                                        fs |= FontStyle.Underline;
+
+                                    f = new Font(w.Element.Font, fs);
+                                }
+
+                                gf = GetFont(f);
                             }
+                            else
+                            {
+                                gf = GetFont(w.Element.Font);
+                            }
+
                             bbuff.Font = gf;
-                            if(w.Element.Effect != TextEffect.None){
+                            if (w.Element.Effect != TextEffect.None)
+                            {
                                 bbuff.TextForeColor = w.Element.EffectColor;
-                                if(w.Element.Effect == TextEffect.Outline){
-                                    for(int xx = -1; xx <= 1; xx++){
-                                        for(int yy = -1; yy <= 1; yy++){
+
+                                if (w.Element.Effect == TextEffect.Outline)
+                                {
+                                    for (int xx = -1; xx <= 1; xx++)
+                                        for (int yy = -1; yy <= 1; yy++)
                                             bbuff.DrawTabbedString(w.Text, x + xx, ypos + yy, 0, 0);
-                                        }
-                                    }
-                                } else if(w.Element.Effect != TextEffect.None){
+                                }
+                                else if (w.Element.Effect != TextEffect.None)
+                                {
                                     bbuff.DrawTabbedString(w.Text, x + 1, ypos + 1, 0, 0);
                                 }
                             }
-                            if(w.Element.Link != null){
-                                if(w.Element.Link == this._ActiveElement){
-                                    bbuff.TextForeColor = this.Link_Color_Hover;
-                                } else{
-                                    bbuff.TextForeColor = this.Link_Color;
+
+
+                            if (w.Element.Link != null)
+                            {
+                                if (w.Element.Link == _ActiveElement)
+                                {
+                                    bbuff.TextForeColor = Link_Color_Hover;
                                 }
-                            } else{
-                                bbuff.TextForeColor = w.Element.ForeColor;
+                                else
+                                {
+                                    bbuff.TextForeColor = Link_Color;
+                                }
                             }
+                            else
+                                bbuff.TextForeColor = w.Element.ForeColor;
+
                             bbuff.TextBackColor = w.Element.BackColor;
                             bbuff.DrawTabbedString(w.Text, x, ypos, 0, 0);
                         }
+
                         w.ScreenArea.X = x;
                         w.ScreenArea.Y = ypos;
                         x += w.Width;
                     }
+
                     y += r.Height + r.BottomPadd;
-                    if(y > this.Height){
+                    if (y > Height)
                         break;
-                    }
                 }
-            } catch(Exception x){
+            }
+            catch (Exception x)
+            {
                 Console.WriteLine(x.Message);
             }
             bbuff.RenderToControl(0, 0);
             bbuff.Dispose();
             g.Dispose();
         }
+
         private Element[] CreateElements()
         {
-            string text = this.Text.Replace("\n", "");
+            string text = Text.Replace("\n", "");
             text = text.Replace("\r", "");
             string[] parts = text.Split('<');
             var elements = new List<Element>();
             int i = 0;
-            foreach(string part in parts){
+            foreach (string part in parts)
+            {
                 var cmd = new Element();
-                if(i == 0){
+
+                if (i == 0)
+                {
                     cmd.Text = part;
-                } else{
+                }
+                else
+                {
                     string[] TagTextPair = part.Split('>');
                     cmd.Tag = TagTextPair[0].ToLowerInvariant();
-                    if(cmd.Tag.IndexOfAny(" \t".ToCharArray()) >= 0){
+                    if (cmd.Tag.IndexOfAny(" \t".ToCharArray()) >= 0)
+                    {
                         int ws = cmd.Tag.IndexOfAny(" \t".ToCharArray());
                         string s1 = TagTextPair[0].Substring(0, ws).ToLowerInvariant();
                         string s2 = TagTextPair[0].Substring(ws + 1);
                         cmd.Tag = s1 + " " + s2;
                     }
+
+
                     cmd.Text = TagTextPair[1];
-                    if(cmd.TagName == "img"){
-                        var img = new Element{Tag = cmd.Tag};
+
+
+                    if (cmd.TagName == "img")
+                    {
+                        var img = new Element {Tag = cmd.Tag};
+
                         elements.Add(img);
                         cmd.Tag = "";
                         //	Elements.Add (cmd);					
                     }
-                    //
-                    //					if (cmd.TagName == "hr")
-                    //					{
-                    //						Element hr=new Element();
-                    //						hr.Tag = cmd.Tag;					
-                    //						Elements.Add (hr);
-                    //						cmd.Tag ="";
-                    //						cmd.Text ="a";
-                    //						//	Elements.Add (cmd);					
-                    //					}
+//
+//					if (cmd.TagName == "hr")
+//					{
+//						Element hr=new Element();
+//						hr.Tag = cmd.Tag;					
+//						Elements.Add (hr);
+//						cmd.Tag ="";
+//						cmd.Text ="a";
+//						//	Elements.Add (cmd);					
+//					}
+
                     cmd.Text = cmd.Text.Replace("\t", "     ");
                     cmd.Text = cmd.Text.Replace("&#145;", "'");
                     cmd.Text = cmd.Text.Replace("&#146;", "'");
-                    cmd.Text = cmd.Text.Replace(" ", ((char)1).ToString());
+
+
+                    cmd.Text = cmd.Text.Replace(" ", ((char) 1).ToString());
                     cmd.Text = HttpUtility.HtmlDecode(cmd.Text);
                     //	cmd.Text =cmd.Text.Replace (" ","*");
-                    cmd.Text = cmd.Text.Replace(((char)1).ToString(), " ");
+                    cmd.Text = cmd.Text.Replace(((char) 1).ToString(), " ");
                 }
+
+
                 elements.Add(cmd);
                 i++;
             }
+
             var res = new Element[elements.Count];
             elements.CopyTo(res);
             return res;
         }
+
         private string GetAttrib(string attrib, string tag)
         {
-            try{
-                if(tag.IndexOf(attrib) < 0){
+            try
+            {
+                if (tag.IndexOf(attrib) < 0)
                     return "";
-                }
+
                 //tag=tag.Replace("\"","");
                 tag = tag.Replace("\t", " ");
+
                 int start = tag.IndexOf(attrib);
                 int end = start + attrib.Length;
                 int valuestart = tag.IndexOf("=", end);
-                if(valuestart < 0){
+                if (valuestart < 0)
                     return "";
-                }
                 valuestart++;
+
+
                 string value = tag.Substring(valuestart);
-                while(value.StartsWith(" ")){
+
+                while (value.StartsWith(" "))
                     value = value.Substring(1);
-                }
+
                 //int pos=0;
-                if(value.StartsWith("\"")){
+
+                if (value.StartsWith("\""))
+                {
                     // = "value"
                     value = value.Substring(1);
                     int valueend = value.IndexOf("\"");
                     value = value.Substring(0, valueend);
                     return value;
-                } else{
+                }
+                else
+                {
                     // = value
                     int valueend = value.IndexOf(" ");
-                    if(valueend < 0){
+                    if (valueend < 0)
                         valueend = value.Length;
-                    }
                     value = value.Substring(0, valueend);
                     return value;
                 }
                 //return "";
-            } catch{
+            }
+            catch
+            {
                 return "";
             }
         }
+
         private void ApplyFormat(Element[] Elements)
         {
             var bold = new Stack();
@@ -443,171 +544,177 @@ namespace Alsing.Windows.Forms.CoreLib
             var link = new Stack();
             var effectcolor = new Stack();
             var effect = new Stack();
-            bold.Push(this.Font.Bold);
-            italic.Push(this.Font.Italic);
-            underline.Push(this.Font.Underline);
-            forecolor.Push(this.ForeColor);
+
+            bold.Push(Font.Bold);
+            italic.Push(Font.Italic);
+            underline.Push(Font.Underline);
+            forecolor.Push(ForeColor);
             backcolor.Push(Color.Transparent);
-            fontsize.Push((int)(this.Font.Size * 1.3));
-            fontname.Push(this.Font.Name);
+            fontsize.Push((int) (Font.Size*1.3));
+            fontname.Push(Font.Name);
             effect.Push(TextEffect.None);
             effectcolor.Push(Color.Black);
             link.Push(null);
-            foreach(Element Element in Elements){
-                switch(Element.TagName){
+
+
+            foreach (Element Element in Elements)
+            {
+                switch (Element.TagName)
+                {
                     case "b":
-                    {
-                        bold.Push(true);
-                        break;
-                    }
+                        {
+                            bold.Push(true);
+                            break;
+                        }
                     case "a":
-                    {
-                        //underline.Push (true);
-                        //forecolor.Push (_l);
-                        link.Push(Element);
-                        break;
-                    }
+                        {
+                            //underline.Push (true);
+                            //forecolor.Push (_l);
+                            link.Push(Element);
+                            break;
+                        }
                     case "i":
                     case "em":
-                    {
-                        italic.Push(true);
-                        break;
-                    }
+                        {
+                            italic.Push(true);
+                            break;
+                        }
                     case "u":
-                    {
-                        underline.Push(true);
-                        break;
-                    }
+                        {
+                            underline.Push(true);
+                            break;
+                        }
                     case "font":
-                    {
-                        string _fontname = this.GetAttrib("face", Element.Tag);
-                        string _size = this.GetAttrib("size", Element.Tag);
-                        string _color = this.GetAttrib("color", Element.Tag);
-                        string _effectcolor = this.GetAttrib("effectcolor", Element.Tag);
-                        string _effect = this.GetAttrib("effect", Element.Tag);
-                        if(_size == ""){
-                            fontsize.Push(fontsize.Peek());
-                        } else{
-                            fontsize.Push(int.Parse(_size));
+                        {
+                            string _fontname = GetAttrib("face", Element.Tag);
+                            string _size = GetAttrib("size", Element.Tag);
+                            string _color = GetAttrib("color", Element.Tag);
+                            string _effectcolor = GetAttrib("effectcolor", Element.Tag);
+                            string _effect = GetAttrib("effect", Element.Tag);
+
+
+                            if (_size == "")
+                                fontsize.Push(fontsize.Peek());
+                            else
+                                fontsize.Push(int.Parse(_size));
+
+                            if (_fontname == "")
+                                fontname.Push(fontname.Peek());
+                            else
+                                fontname.Push(_fontname);
+
+                            if (_color == "")
+                                forecolor.Push(forecolor.Peek());
+                            else
+                                forecolor.Push(Color.FromName(_color));
+
+                            if (_effectcolor == "")
+                                effectcolor.Push(effectcolor.Peek());
+                            else
+                                effectcolor.Push(Color.FromName(_effectcolor));
+
+                            if (_effect == "")
+                                effect.Push(effect.Peek());
+                            else
+                                effect.Push(Enum.Parse(typeof (TextEffect), _effect, true));
+
+                            break;
                         }
-                        if(_fontname == ""){
-                            fontname.Push(fontname.Peek());
-                        } else{
-                            fontname.Push(_fontname);
-                        }
-                        if(_color == ""){
-                            forecolor.Push(forecolor.Peek());
-                        } else{
-                            forecolor.Push(Color.FromName(_color));
-                        }
-                        if(_effectcolor == ""){
-                            effectcolor.Push(effectcolor.Peek());
-                        } else{
-                            effectcolor.Push(Color.FromName(_effectcolor));
-                        }
-                        if(_effect == ""){
-                            effect.Push(effect.Peek());
-                        } else{
-                            effect.Push(Enum.Parse(typeof(TextEffect), _effect, true));
-                        }
-                        break;
-                    }
                     case "br":
-                    {
-                        Element.NewLine = true;
-                        break;
-                    }
+                        {
+                            Element.NewLine = true;
+                            break;
+                        }
                     case "hr":
-                    {
-                        Element.NewLine = true;
-                        break;
-                    }
+                        {
+                            Element.NewLine = true;
+                            break;
+                        }
                     case "h3":
-                    {
-                        fontsize.Push((int)(this.Font.Size * 1.4));
-                        bold.Push(true);
-                        Element.NewLine = true;
-                        break;
-                    }
+                        {
+                            fontsize.Push((int) (Font.Size*1.4));
+                            bold.Push(true);
+                            Element.NewLine = true;
+                            break;
+                        }
                     case "h4":
-                    {
-                        fontsize.Push((int)(this.Font.Size * 1.2));
-                        bold.Push(true);
-                        Element.NewLine = true;
-                        break;
-                    }
+                        {
+                            fontsize.Push((int) (Font.Size*1.2));
+                            bold.Push(true);
+                            Element.NewLine = true;
+                            break;
+                        }
                     case "/b":
-                    {
-                        bold.Pop();
-                        break;
-                    }
+                        {
+                            bold.Pop();
+                            break;
+                        }
                     case "/a":
-                    {
-                        //underline.Pop ();
-                        //forecolor.Pop ();
-                        link.Pop();
-                        break;
-                    }
+                        {
+                            //underline.Pop ();
+                            //forecolor.Pop ();
+                            link.Pop();
+                            break;
+                        }
                     case "/i":
                     case "/em":
-                    {
-                        italic.Pop();
-                        break;
-                    }
+                        {
+                            italic.Pop();
+                            break;
+                        }
                     case "/u":
-                    {
-                        underline.Pop();
-                        break;
-                    }
+                        {
+                            underline.Pop();
+                            break;
+                        }
                     case "/font":
-                    {
-                        fontname.Pop();
-                        fontsize.Pop();
-                        forecolor.Pop();
-                        effect.Pop();
-                        effectcolor.Pop();
-                        break;
-                    }
+                        {
+                            fontname.Pop();
+                            fontsize.Pop();
+                            forecolor.Pop();
+                            effect.Pop();
+                            effectcolor.Pop();
+                            break;
+                        }
                     case "/h3":
-                    {
-                        fontsize.Pop();
-                        bold.Pop();
-                        Element.NewLine = true;
-                        break;
-                    }
+                        {
+                            fontsize.Pop();
+                            bold.Pop();
+                            Element.NewLine = true;
+                            break;
+                        }
                     case "/h4":
-                    {
-                        fontsize.Pop();
-                        bold.Pop();
-                        Element.NewLine = true;
-                        break;
-                    }
+                        {
+                            fontsize.Pop();
+                            bold.Pop();
+                            Element.NewLine = true;
+                            break;
+                        }
+
                     default:
-                    {
-                        break;
-                    }
+                        {
+                            break;
+                        }
                 }
+
+
                 //---------------------------------------------------------------------
-                var Bold = (bool)bold.Peek();
-                var Italic = (bool)italic.Peek();
-                var Underline = (bool)underline.Peek();
-                var Link = (Element)link.Peek();
-                var FontName = (string)fontname.Peek();
-                var FontSize = (int)fontsize.Peek();
-                var BackColor = (Color)backcolor.Peek();
-                var ForeColor1 = (Color)forecolor.Peek();
-                var Effect = (TextEffect)effect.Peek();
-                var EffectColor = (Color)effectcolor.Peek();
+                var Bold = (bool) bold.Peek();
+                var Italic = (bool) italic.Peek();
+                var Underline = (bool) underline.Peek();
+                var Link = (Element) link.Peek();
+                var FontName = (string) fontname.Peek();
+                var FontSize = (int) fontsize.Peek();
+                var BackColor = (Color) backcolor.Peek();
+                var ForeColor1 = (Color) forecolor.Peek();
+                var Effect = (TextEffect) effect.Peek();
+                var EffectColor = (Color) effectcolor.Peek();
+
                 FontStyle fs = 0;
-                if(Bold){
-                    fs |= FontStyle.Bold;
-                }
-                if(Italic){
-                    fs |= FontStyle.Italic;
-                }
-                if(Underline){
-                    fs |= FontStyle.Underline;
-                }
+                if (Bold) fs |= FontStyle.Bold;
+                if (Italic) fs |= FontStyle.Italic;
+                if (Underline) fs |= FontStyle.Underline;
+
                 var font = new Font(FontName, FontSize, fs);
                 Element.Font = font;
                 Element.BackColor = BackColor;
@@ -617,212 +724,281 @@ namespace Alsing.Windows.Forms.CoreLib
                 Element.EffectColor = EffectColor;
             }
         }
+
         private bool IsIndex(string src)
         {
             int i;
             return int.TryParse(src, out i);
         }
+
         private void CreateWords(Element[] Elements)
         {
             var bbuff = new GDISurface(1, 1, this, false);
-            this._HasImageError = false;
-            foreach(Element Element in Elements){
-                if(Element.TagName == "img"){
+
+            _HasImageError = false;
+            foreach (Element Element in Elements)
+            {
+                if (Element.TagName == "img")
+                {
                     Element.words = new Word[1];
+
                     Element.words[0] = new Word();
+
                     Image img = null;
-                    try{
-                        string SRC = this.GetAttrib("img", Element.Tag).ToLowerInvariant();
-                        if(this.IsIndex(SRC)){
+
+                    try
+                    {
+                        string SRC = GetAttrib("img", Element.Tag).ToLowerInvariant();
+                        if (IsIndex(SRC))
+                        {
                             int index = int.Parse(SRC);
-                            img = this.ImageList.Images[index];
-                        } else if(SRC.StartsWith("http://")) //from url
-                        {} else if(SRC.StartsWith("file://")) // from file
+                            img = ImageList.Images[index];
+                        }
+                        else if (SRC.StartsWith("http://")) //from url
+                        {}
+                        else if (SRC.StartsWith("file://")) // from file
                         {
                             img = Image.FromFile(SRC.Substring(7));
-                        } else //from file
+                        }
+                        else //from file
                         {
                             img = Image.FromFile(SRC);
                         }
-                    } catch{
-                        img = new Bitmap(20, 20);
-                        this._HasImageError = true;
                     }
+                    catch
+                    {
+                        img = new Bitmap(20, 20);
+                        _HasImageError = true;
+                    }
+
                     Element.words[0].Image = img;
+
+
                     Element.words[0].Element = Element;
-                    if(img != null){
+
+
+                    if (img != null)
+                    {
                         Element.words[0].Height = img.Height;
                         Element.words[0].Width = img.Width;
                         Element.words[0].ScreenArea.Width = img.Width;
                         Element.words[0].ScreenArea.Height = img.Height;
                     }
-                } else{
+                }
+                else
+                {
                     string[] words = Element.Text.Split(' ');
                     Element.words = new Word[words.Length];
                     int i = 0;
-                    foreach(string word in words){
+                    foreach (string word in words)
+                    {
                         Element.words[i] = new Word();
                         string tmp;
                         Element.words[i].Element = Element;
-                        if(i == words.Length - 1){
+                        if (i == words.Length - 1)
+                        {
                             Element.words[i].Text = word;
                             tmp = word;
-                        } else{
+                        }
+                        else
+                        {
                             Element.words[i].Text = word + " ";
                             tmp = word + " "; //last space cant be measured , lets measure an "," instead
                         }
                         //SizeF size=g.MeasureString (tmp,Element.Font);
-                        bbuff.Font = this.GetFont(Element.Font);
+                        bbuff.Font = GetFont(Element.Font);
                         Size s = bbuff.MeasureTabbedString(tmp, 0);
                         Element.words[i].Height = s.Height;
                         Element.words[i].Width = s.Width - 0;
                         Element.words[i].ScreenArea.Width = Element.words[i].Width;
                         Element.words[i].ScreenArea.Height = Element.words[i].Height;
                         //	Element.words[i].Link =Element.Link ;
+
                         i++;
                     }
                 }
             }
+
             bbuff.Dispose();
         }
+
         private GDIFont GetFont(Font font)
         {
             GDIFont gf = null;
-            if(!this._Fonts.TryGetValue(this.GetFontKey(font), out gf)){
+            if (!_Fonts.TryGetValue(GetFontKey(font), out gf))
+            {
                 gf = new GDIFont(font.Name, font.Size, font.Bold, font.Italic, font.Underline, false);
-                this._Fonts[this.GetFontKey(font)] = gf;
+                _Fonts[GetFontKey(font)] = gf;
             }
+
             return gf;
         }
+
         private string GetFontKey(Font font)
         {
             return font.Name + font.Bold + font.Italic + font.Underline + font.Size;
         }
+
+
         private void CreateRows()
         {
-            if(this._Elements != null){
+            if (_Elements != null)
+            {
                 int x = 0;
-                this._Rows = new List<Row>();
+                _Rows = new List<Row>();
+
                 //build rows---------------------------------------------
                 var row = new Row();
-                this._Rows.Add(row);
+                _Rows.Add(row);
                 bool WhiteSpace = false;
-                foreach(Element Element in this._Elements){
-                    if(Element.words == null){
+                foreach (Element Element in _Elements)
+                {
+                    if (Element.words == null)
                         return;
-                    }
-                    if(Element.NewLine){
+
+                    if (Element.NewLine)
+                    {
                         //tag forces a new line
                         x = 0;
                         row = new Row();
-                        this._Rows.Add(row);
+                        _Rows.Add(row);
                         WhiteSpace = true;
                     }
-                    if(Element.TagName == "hr"){
+                    if (Element.TagName == "hr")
+                    {
                         row.RenderSeparator = true;
                     }
+
                     //else
                     //{
-                    foreach(Word word in Element.words){
-                        if(this.WordWrap){
+
+
+                    foreach (Word word in Element.words)
+                    {
+                        if (WordWrap)
+                        {
                             int scrollwdh = 0;
-                            if(this.ScrollBars == ScrollBars.Both || this.ScrollBars == ScrollBars.Vertical){
-                                scrollwdh = this.vScroll.Width;
-                            }
-                            if((word.Width + x) > this.ClientWidth - this.Margin - scrollwdh){
+                            if (ScrollBars == ScrollBars.Both || ScrollBars == ScrollBars.Vertical)
+                                scrollwdh = vScroll.Width;
+
+                            if ((word.Width + x) > ClientWidth - Margin - scrollwdh)
+                            {
                                 //new line due to wordwrap
                                 x = 0;
                                 row = new Row();
-                                this._Rows.Add(row);
+                                _Rows.Add(row);
                                 WhiteSpace = true;
                             }
                         }
-                        if(word.Text.Replace(" ", "") != "" || word.Image != null){
+
+                        if (word.Text.Replace(" ", "") != "" || word.Image != null)
                             WhiteSpace = false;
-                        }
-                        if(!WhiteSpace){
+
+                        if (!WhiteSpace)
+                        {
                             row.Words.Add(word);
+
                             x += word.Width;
                         }
                     }
                     //}
                 }
+
                 //apply width and height to all rows
                 int index = 0;
-                foreach(Row r in this._Rows){
+                foreach (Row r in _Rows)
+                {
                     int width = 0;
                     int height = 0;
                     int padd = 0;
-                    if(index > 0){
+
+                    if (index > 0)
+                    {
                         int previndex = index - 1;
-                        Row prev = this._Rows[previndex];
-                        while(previndex >= 0 && prev.Words.Count == 0){
-                            prev = this._Rows[previndex];
+                        Row prev = _Rows[previndex];
+                        while (previndex >= 0 && prev.Words.Count == 0)
+                        {
+                            prev = _Rows[previndex];
                             previndex--;
                         }
-                        if(previndex >= 0){
-                            prev = this._Rows[previndex];
-                            if(prev.Words.Count > 0){
+
+                        if (previndex >= 0)
+                        {
+                            prev = _Rows[previndex];
+                            if (prev.Words.Count > 0)
+                            {
                                 Word w = prev.Words[prev.Words.Count - 1];
                                 height = w.Height;
                             }
                         }
                     }
-                    foreach(Word w in r.Words){
-                        if(w.Height > height && (w.Text != "")){
+
+
+                    foreach (Word w in r.Words)
+                    {
+                        if (w.Height > height && (w.Text != ""))
                             height = w.Height;
-                        }
+
                         width += w.Width;
                     }
                     r.Height = height;
+
                     int MaxImageH = 0;
-                    foreach(Word w in r.Words){
-                        if(w.Image != null){
-                            if(w.Height > height){
+                    foreach (Word w in r.Words)
+                    {
+                        if (w.Image != null)
+                        {
+                            if (w.Height > height)
                                 MaxImageH = w.Height;
-                            }
                         }
                     }
-                    foreach(Word w in r.Words){
+
+                    foreach (Word w in r.Words)
+                    {
                         int imgH = 0;
                         int imgPadd = 0;
-                        if(w.Image != null){
-                            string valign = this.GetAttrib("valign", w.Element.Tag);
-                            switch(valign){
+                        if (w.Image != null)
+                        {
+                            string valign = GetAttrib("valign", w.Element.Tag);
+                            switch (valign)
+                            {
                                 case "top":
-                                {
-                                    imgH = r.Height;
-                                    imgPadd = w.Height - imgH;
-                                    break;
-                                }
+                                    {
+                                        imgH = r.Height;
+                                        imgPadd = w.Height - imgH;
+                                        break;
+                                    }
                                 case "middle":
                                 case "center":
-                                {
-                                    imgH = r.Height;
-                                    int tmp = (w.Height - imgH) / 2;
-                                    imgH += tmp;
-                                    imgPadd = tmp;
-                                    break;
-                                }
+                                    {
+                                        imgH = r.Height;
+                                        int tmp = (w.Height - imgH)/2;
+                                        imgH += tmp;
+                                        imgPadd = tmp;
+
+                                        break;
+                                    }
                                 case "bottom":
-                                {
-                                    imgH = w.Height;
-                                    imgPadd = 0;
-                                    break;
-                                }
+                                    {
+                                        imgH = w.Height;
+                                        imgPadd = 0;
+                                        break;
+                                    }
                                 default:
-                                {
-                                    imgH = w.Height;
-                                    imgPadd = 0;
-                                    break;
-                                }
+                                    {
+                                        imgH = w.Height;
+                                        imgPadd = 0;
+                                        break;
+                                    }
                             }
-                            if(imgH > height){
+
+                            if (imgH > height)
                                 height = imgH;
-                            }
-                            if(imgPadd > padd){
+
+                            if (imgPadd > padd)
                                 padd = imgPadd;
-                            }
+
+
                             width += w.Width;
                         }
                     }
@@ -831,90 +1007,124 @@ namespace Alsing.Windows.Forms.CoreLib
                     r.BottomPadd = padd;
                     index++;
                 }
-                this.vScroll.Maximum = this._Rows.Count;
+
+                vScroll.Maximum = _Rows.Count;
             }
         }
+
         private void InitScrollbars()
         {
-            if(this.vScroll == null || this.hScroll == null){
+            if (vScroll == null || hScroll == null)
                 return;
+
+            if (ScrollBars == ScrollBars.Both)
+            {
+                vScroll.Left = ClientWidth - vScroll.Width;
+                vScroll.Top = 0;
+                vScroll.Height = ClientHeight - hScroll.Height;
+
+                hScroll.Left = 0;
+                hScroll.Top = ClientHeight - hScroll.Height;
+                hScroll.Width = ClientWidth - vScroll.Width;
+
+                Filler.Left = vScroll.Left;
+                Filler.Top = hScroll.Top;
+
+                Filler.Visible = true;
+                vScroll.Visible = true;
+                hScroll.Visible = true;
             }
-            if(this.ScrollBars == ScrollBars.Both){
-                this.vScroll.Left = this.ClientWidth - this.vScroll.Width;
-                this.vScroll.Top = 0;
-                this.vScroll.Height = this.ClientHeight - this.hScroll.Height;
-                this.hScroll.Left = 0;
-                this.hScroll.Top = this.ClientHeight - this.hScroll.Height;
-                this.hScroll.Width = this.ClientWidth - this.vScroll.Width;
-                this.Filler.Left = this.vScroll.Left;
-                this.Filler.Top = this.hScroll.Top;
-                this.Filler.Visible = true;
-                this.vScroll.Visible = true;
-                this.hScroll.Visible = true;
-            } else if(this.ScrollBars == ScrollBars.Vertical){
-                this.vScroll.Left = this.ClientWidth - this.vScroll.Width;
-                this.vScroll.Top = 0;
-                this.vScroll.Height = this.ClientHeight;
-                this.hScroll.Left = 0;
-                this.hScroll.Top = this.ClientHeight - this.hScroll.Height;
-                this.hScroll.Width = this.ClientWidth - this.vScroll.Width;
-                this.Filler.Left = this.vScroll.Left;
-                this.Filler.Top = this.hScroll.Top;
-                this.Filler.Visible = false;
-                this.vScroll.Visible = true;
-                this.hScroll.Visible = false;
-            } else if(this.ScrollBars == ScrollBars.Horizontal){
-                this.vScroll.Left = this.ClientWidth - this.vScroll.Width;
-                this.vScroll.Top = 0;
-                this.vScroll.Height = this.ClientHeight;
-                this.hScroll.Left = 0;
-                this.hScroll.Top = this.ClientHeight - this.hScroll.Height;
-                this.hScroll.Width = this.ClientWidth;
-                this.Filler.Left = this.vScroll.Left;
-                this.Filler.Top = this.hScroll.Top;
-                this.Filler.Visible = false;
-                this.vScroll.Visible = false;
-                this.hScroll.Visible = true;
-            } else if(this.ScrollBars == ScrollBars.None){
-                this.vScroll.Left = this.ClientWidth - this.vScroll.Width;
-                this.vScroll.Top = 0;
-                this.vScroll.Height = this.ClientHeight;
-                this.hScroll.Left = 0;
-                this.hScroll.Top = this.ClientHeight - this.hScroll.Height;
-                this.hScroll.Width = this.ClientWidth;
-                this.Filler.Left = this.vScroll.Left;
-                this.Filler.Top = this.hScroll.Top;
-                this.Filler.Visible = false;
-                this.vScroll.Visible = false;
-                this.hScroll.Visible = false;
+            else if (ScrollBars == ScrollBars.Vertical)
+            {
+                vScroll.Left = ClientWidth - vScroll.Width;
+                vScroll.Top = 0;
+                vScroll.Height = ClientHeight;
+
+                hScroll.Left = 0;
+                hScroll.Top = ClientHeight - hScroll.Height;
+                hScroll.Width = ClientWidth - vScroll.Width;
+
+                Filler.Left = vScroll.Left;
+                Filler.Top = hScroll.Top;
+
+                Filler.Visible = false;
+                vScroll.Visible = true;
+                hScroll.Visible = false;
+            }
+            else if (ScrollBars == ScrollBars.Horizontal)
+            {
+                vScroll.Left = ClientWidth - vScroll.Width;
+                vScroll.Top = 0;
+                vScroll.Height = ClientHeight;
+
+                hScroll.Left = 0;
+                hScroll.Top = ClientHeight - hScroll.Height;
+                hScroll.Width = ClientWidth;
+
+                Filler.Left = vScroll.Left;
+                Filler.Top = hScroll.Top;
+
+                Filler.Visible = false;
+                vScroll.Visible = false;
+                hScroll.Visible = true;
+            }
+            else if (ScrollBars == ScrollBars.None)
+            {
+                vScroll.Left = ClientWidth - vScroll.Width;
+                vScroll.Top = 0;
+                vScroll.Height = ClientHeight;
+
+                hScroll.Left = 0;
+                hScroll.Top = ClientHeight - hScroll.Height;
+                hScroll.Width = ClientWidth;
+
+                Filler.Left = vScroll.Left;
+                Filler.Top = hScroll.Top;
+
+                Filler.Visible = false;
+                vScroll.Visible = false;
+                hScroll.Visible = false;
             }
         }
+
+
         protected override void OnResize(EventArgs e)
         {
-            try{
-                this.InitScrollbars();
-                this.SetAutoSize();
-            } catch{}
-            this.CreateRows();
+            try
+            {
+                InitScrollbars();
+                SetAutoSize();
+            }
+            catch {}
+            CreateRows();
             base.OnResize(e);
         }
+
         protected override void OnMouseUp(MouseEventArgs e)
         {
             int y = e.Y;
             int x = e.X;
+
             int index = 0;
             bool Link = false;
             //this.Cursor =Cursors.Arrow;
-            this._ActiveElement = null;
-            if(this._Rows != null){
-                foreach(Row r in this._Rows){
-                    if(y >= r.Top && y <= r.Top + r.Height){
-                        foreach(Word w in r.Words){
-                            if(y >= w.ScreenArea.Top && y <= w.ScreenArea.Bottom){
-                                if(x >= w.ScreenArea.Left && x <= w.ScreenArea.Right){
-                                    if(w.Element.Link != null){
+            _ActiveElement = null;
+            if (_Rows != null)
+            {
+                foreach (Row r in _Rows)
+                {
+                    if (y >= r.Top && y <= r.Top + r.Height)
+                    {
+                        foreach (Word w in r.Words)
+                        {
+                            if (y >= w.ScreenArea.Top && y <= w.ScreenArea.Bottom)
+                            {
+                                if (x >= w.ScreenArea.Left && x <= w.ScreenArea.Right)
+                                {
+                                    if (w.Element.Link != null)
+                                    {
                                         Link = true;
-                                        this._ActiveElement = w.Element.Link;
+                                        _ActiveElement = w.Element.Link;
                                         break;
                                     }
                                 }
@@ -925,33 +1135,47 @@ namespace Alsing.Windows.Forms.CoreLib
                     index++;
                 }
             }
-            if(Link){
-                this.Cursor = Cursors.Hand;
-                this.Invalidate();
-                this.OnClickLink(this.GetAttrib("href", this._ActiveElement.Tag));
-            } else{
-                this.Cursor = Cursors.Arrow;
-                this.Invalidate();
+            if (Link)
+            {
+                Cursor = Cursors.Hand;
+                Invalidate();
+                OnClickLink(GetAttrib("href", _ActiveElement.Tag));
             }
+            else
+            {
+                Cursor = Cursors.Arrow;
+                Invalidate();
+            }
+
+
             base.OnMouseUp(e);
         }
+
         protected override void OnMouseMove(MouseEventArgs e)
         {
             int y = e.Y;
             int x = e.X;
+
             int index = 0;
             bool Link = false;
             //this.Cursor =Cursors.Arrow;
-            this._ActiveElement = null;
-            if(this._Rows != null){
-                foreach(Row r in this._Rows){
-                    if(y >= r.Top && y <= r.Top + r.Height){
-                        foreach(Word w in r.Words){
-                            if(y >= w.ScreenArea.Top && y <= w.ScreenArea.Bottom){
-                                if(x >= w.ScreenArea.Left && x <= w.ScreenArea.Right){
-                                    if(w.Element.Link != null){
+            _ActiveElement = null;
+            if (_Rows != null)
+            {
+                foreach (Row r in _Rows)
+                {
+                    if (y >= r.Top && y <= r.Top + r.Height)
+                    {
+                        foreach (Word w in r.Words)
+                        {
+                            if (y >= w.ScreenArea.Top && y <= w.ScreenArea.Bottom)
+                            {
+                                if (x >= w.ScreenArea.Left && x <= w.ScreenArea.Right)
+                                {
+                                    if (w.Element.Link != null)
+                                    {
                                         Link = true;
-                                        this._ActiveElement = w.Element.Link;
+                                        _ActiveElement = w.Element.Link;
                                         break;
                                     }
                                 }
@@ -962,50 +1186,63 @@ namespace Alsing.Windows.Forms.CoreLib
                     index++;
                 }
             }
-            if(Link){
-                this.Cursor = Cursors.Hand;
-                this.Invalidate();
-            } else{
-                this.Cursor = Cursors.Arrow;
-                this.Invalidate();
+            if (Link)
+            {
+                Cursor = Cursors.Hand;
+                Invalidate();
+            }
+            else
+            {
+                Cursor = Cursors.Arrow;
+                Invalidate();
             }
             base.OnMouseMove(e);
         }
+
         private void vScroll_Scroll(object sender, ScrollEventArgs e)
         {
-            this.Invalidate();
+            Invalidate();
         }
+
+
         public int GetWidth()
         {
             int max = 0;
-            foreach(Row r in this._Rows){
-                if(r.Width > max){
+            foreach (Row r in _Rows)
+            {
+                if (r.Width > max)
                     max = r.Width;
-                }
             }
-            return max + this.Margin * 2 + this.BorderWidth * 2;
+
+            return max + Margin*2 + BorderWidth*2;
         }
+
         public int GetHeight()
         {
             int max = 0;
-            foreach(Row r in this._Rows){
+            foreach (Row r in _Rows)
+            {
                 max += r.Height;
             }
-            return max + this.Margin * 2 + this.BorderWidth * 2;
+
+            return max + Margin*2 + BorderWidth*2;
         }
 
         #region PUBLIC PROPERTY MARGIN
+
         private int _Margin;
+
         public new int Margin
         {
-            get { return this._Margin; }
+            get { return _Margin; }
             set
             {
-                this._Margin = value;
-                this.CreateRows();
-                this.Invalidate();
+                _Margin = value;
+                CreateRows();
+                Invalidate();
             }
         }
+
         #endregion
     }
 }

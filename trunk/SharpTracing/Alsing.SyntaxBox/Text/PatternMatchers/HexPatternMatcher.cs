@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 namespace Alsing.Text.PatternMatchers
 {
     /// <summary>
@@ -15,20 +16,26 @@ namespace Alsing.Text.PatternMatchers
     public class HexPatternMatcher : PatternMatcherBase
     {
         public static readonly HexPatternMatcher Default = new HexPatternMatcher();
+
         //perform the match
         public override int Match(string textToMatch, int matchAtIndex)
         {
             int currentIndex = matchAtIndex;
-            do{
+            do
+            {
                 char currentChar = textToMatch[currentIndex];
-                if((currentChar >= '0' && currentChar <= '9') || (currentChar >= 'a' && currentChar <= 'f')
-                   || (currentChar >= 'A' && currentChar <= 'F')){
+                if ((currentChar >= '0' && currentChar <= '9') || (currentChar >= 'a' && currentChar <= 'f') ||
+                    (currentChar >= 'A' && currentChar <= 'F'))
+                {
                     //current char is hexchar
-                } else{
+                }
+                else
+                {
                     break;
                 }
                 currentIndex++;
-            } while(currentIndex < textToMatch.Length);
+            } while (currentIndex < textToMatch.Length);
+
             return currentIndex - matchAtIndex;
         }
     }

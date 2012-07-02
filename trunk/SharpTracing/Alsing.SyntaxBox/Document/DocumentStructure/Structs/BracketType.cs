@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 namespace Alsing.SourceCode
 {
     public enum BracketType

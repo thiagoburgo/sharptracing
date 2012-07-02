@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 using System;
 using System.Drawing;
 using System.Globalization;
@@ -20,6 +21,8 @@ namespace Alsing.SourceCode.SyntaxDocumentExporters
     public class CollapsingHTMLExporter
     {
         private StringBuilder sb;
+
+
         /// <summary>
         /// Exports the content of a SyntaxDocument to a HTML formatted string
         /// </summary>
@@ -28,8 +31,10 @@ namespace Alsing.SourceCode.SyntaxDocumentExporters
         /// <returns></returns>
         public string Export(SyntaxDocument doc, string ImagePath)
         {
-            return this.Export(doc, Color.Transparent, ImagePath, "");
+            return Export(doc, Color.Transparent, ImagePath, "");
         }
+
+
         /// <summary>
         /// Exports the content of a SyntaxDocument to a HTML formatted string
         /// </summary>
@@ -40,112 +45,137 @@ namespace Alsing.SourceCode.SyntaxDocumentExporters
         /// <returns></returns>
         public string Export(SyntaxDocument doc, Color BGColor, string ImagePath, string Style)
         {
-            this.sb = new StringBuilder();
+            sb = new StringBuilder();
             doc.ParseAll(true);
             int i = 0;
+
             string guid = DateTime.Now.Ticks.ToString(CultureInfo.InvariantCulture);
+
             //style=\"font-family:courier new;font-size:13px;\"
-            if(BGColor.A == 0){
-                this.Out("<table  ><tr><td nowrap><div style=\"" + Style + "\">");
-            } else{
-                this.Out("<table  style=\"background-color:" + GetHTMLColor(BGColor) + ";" + Style
-                         + "\"><tr><td nowrap><div>");
-            }
-            foreach(Row r in doc){
+            if (BGColor.A == 0)
+                Out("<table  ><tr><td nowrap><div style=\"" + Style + "\">");
+            else
+                Out("<table  style=\"background-color:" + GetHTMLColor(BGColor) + ";" + Style +
+                    "\"><tr><td nowrap><div>");
+            foreach (Row r in doc)
+            {
                 i++;
-                if(r.CanFold){
-                    this.RenderCollapsed(r.VirtualCollapsedRow, r, i, ImagePath, guid);
-                    this.Out("<div style=\"display:block;\" id=\"open" + guid + "_"
-                             + i.ToString(CultureInfo.InvariantCulture) + "\">");
+                if (r.CanFold)
+                {
+                    RenderCollapsed(r.VirtualCollapsedRow, r, i, ImagePath, guid);
+                    Out("<div style=\"display:block;\" id=\"open" + guid + "_" +
+                        i.ToString(CultureInfo.InvariantCulture) + "\">");
+
                     string img = "minus.gif";
-                    try{
-                        if(r.expansion_StartSpan.Parent.Parent == null){
+                    try
+                    {
+                        if (r.expansion_StartSpan.Parent.Parent == null)
                             img = "minusNoTopLine.gif";
+                    }
+                    catch {}
+                    Out("<img src=\"" + ImagePath + img + "\" align=top onclick=\"open" + guid + "_" +
+                        i.ToString(CultureInfo.InvariantCulture) + ".style.display='none'; closed" + guid + "_" +
+                        i.ToString(CultureInfo.InvariantCulture) + ".style.display='block'; \">");
+                }
+                else
+                {
+                    if (r.CanFoldEndPart)
+                    {
+                        Out("<img src=\"" + ImagePath + "L.gif\"  align=top>");
+                    }
+                    else
+                    {
+                        if (r.HasExpansionLine)
+                        {
+                            Out("<img src=\"" + ImagePath + "I.gif\"  align=top>");
                         }
-                    } catch{}
-                    this.Out("<img src=\"" + ImagePath + img + "\" align=top onclick=\"open" + guid + "_"
-                             + i.ToString(CultureInfo.InvariantCulture) + ".style.display='none'; closed" + guid + "_"
-                             + i.ToString(CultureInfo.InvariantCulture) + ".style.display='block'; \">");
-                } else{
-                    if(r.CanFoldEndPart){
-                        this.Out("<img src=\"" + ImagePath + "L.gif\"  align=top>");
-                    } else{
-                        if(r.HasExpansionLine){
-                            this.Out("<img src=\"" + ImagePath + "I.gif\"  align=top>");
-                        } else{
-                            this.Out("<img src=\"" + ImagePath + "clear.gif\"  align=top>");
+                        else
+                        {
+                            Out("<img src=\"" + ImagePath + "clear.gif\"  align=top>");
                         }
                     }
                 }
-                foreach(Word w in r){
-                    this.write(w.Text, w.Style);
+                foreach (Word w in r)
+                {
+                    write(w.Text, w.Style);
                 }
-                if(r.CanFoldEndPart){
-                    this.Out("</div>\n");
-                } else{
-                    this.Out("<br>\n");
-                }
+                if (r.CanFoldEndPart)
+                    Out("</div>\n");
+                else
+                    Out("<br>\n");
             }
-            this.Out("</div></td></tr></table>");
-            return this.sb.ToString();
+            Out("</div></td></tr></table>");
+
+            return sb.ToString();
         }
+
+
         private void RenderCollapsed(Row r, Row TrueRow, int i, string ImagePath, string guid)
         {
-            this.Out("<div style=\"display:none;\" id=\"closed" + guid + "_" + i.ToString(CultureInfo.InvariantCulture)
-                     + "\">");
+            Out("<div style=\"display:none;\" id=\"closed" + guid + "_" + i.ToString(CultureInfo.InvariantCulture) +
+                "\">");
             string img = "plus.gif";
-            try{
-                if(TrueRow.expansion_StartSpan.Parent.Parent == null){
+            try
+            {
+                if (TrueRow.expansion_StartSpan.Parent.Parent == null)
                     img = "PlusNoLines.gif";
-                }
-            } catch{}
-            this.Out("<img src=\"" + ImagePath + img + "\" align=top onclick=\"open" + guid + "_"
-                     + i.ToString(CultureInfo.InvariantCulture) + ".style.display='block'; closed" + guid + "_"
-                     + i.ToString(CultureInfo.InvariantCulture) + ".style.display='none'; \">");
-            foreach(Word w in r){
-                this.write(w.Text, w.Style);
             }
-            this.Out("</div>");
+            catch {}
+
+
+            Out("<img src=\"" + ImagePath + img + "\" align=top onclick=\"open" + guid + "_" +
+                i.ToString(CultureInfo.InvariantCulture) + ".style.display='block'; closed" + guid + "_" +
+                i.ToString(CultureInfo.InvariantCulture) + ".style.display='none'; \">");
+
+            foreach (Word w in r)
+            {
+                write(w.Text, w.Style);
+            }
+
+            Out("</div>");
         }
+
         private void write(string text, TextStyle s)
         {
-            if(s != null){
-                if(s.Bold){
-                    this.Out("<b>");
-                }
-                if(s.Italic){
-                    this.Out("<i>");
-                }
-                if(s.Transparent){
-                    this.Out("<span style=\"color:" + GetHTMLColor(s.ForeColor) + "\">");
-                } else{
-                    this.Out("<span style=\"color:" + GetHTMLColor(s.ForeColor) + ";background-color:"
-                             + GetHTMLColor(s.BackColor) + ";\">");
-                }
+            if (s != null)
+            {
+                if (s.Bold)
+                    Out("<b>");
+                if (s.Italic)
+                    Out("<i>");
+                if (s.Transparent)
+                    Out("<span style=\"color:" + GetHTMLColor(s.ForeColor) + "\">");
+                else
+                    Out("<span style=\"color:" + GetHTMLColor(s.ForeColor) + ";background-color:" +
+                        GetHTMLColor(s.BackColor) + ";\">");
             }
+
             text = text.Replace("&", "&amp;");
             text = text.Replace("<", "&lt;");
             text = text.Replace(">", "&gt;");
             text = text.Replace(" ", "&nbsp;");
             text = text.Replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
-            this.Out(text);
-            if(s != null){
-                this.Out("</span>");
-                if(s.Italic){
-                    this.Out("</i>");
-                }
-                if(s.Bold){
-                    this.Out("</b>");
-                }
+            Out(text);
+
+            if (s != null)
+            {
+                Out("</span>");
+
+                if (s.Italic)
+                    Out("</i>");
+                if (s.Bold)
+                    Out("</b>");
             }
         }
+
         private static string GetHTMLColor(Color c)
         {
             return string.Format("#{0}{1}{2}", c.R.ToString("x2"), c.G.ToString("x2"), c.B.ToString("x2"));
         }
+
         private void Out(string text)
         {
-            this.sb.Append(text);
+            sb.Append(text);
         }
     }
 }

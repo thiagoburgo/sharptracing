@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -22,23 +23,29 @@ namespace Alsing.Windows.Forms.SyntaxBox
     public class AutoListForm : Form
     {
         private IContainer components;
+
+
         /// <summary>
         /// The imagelist that should be used by the AutoListForm
         /// </summary>
         public ImageList Images;
+
         private TabListBox LB;
         private ToolTip tooltip;
+
         /// <summary>
         /// Default AltoListControl constructor.
         /// </summary>
         public AutoListForm()
         {
             // This call is required by the Windows.Forms Form Designer.
-            this.InitializeComponent();
+            InitializeComponent();
             //SetStyle(ControlStyles.ContainerControl  ,false);
-            this.SetStyle(ControlStyles.Selectable, true);
+            SetStyle(ControlStyles.Selectable, true);
+
             // TODO: Add any initialization after the InitForm call
         }
+
         /// <summary>
         /// Gets the "insert text" from the selected item.
         /// </summary>
@@ -46,54 +53,65 @@ namespace Alsing.Windows.Forms.SyntaxBox
         {
             get
             {
-                if(this.LB.SelectedItem == null){
+                if (LB.SelectedItem == null)
                     return "";
-                }
-                var li = (ListItem)this.LB.SelectedItem;
+
+                var li = (ListItem) LB.SelectedItem;
                 return li.InsertText;
             }
         }
+
         [DllImport("user32.dll", EntryPoint = "SendMessage")]
         private static extern int SendMessage(IntPtr hWnd, int message, int _data, int _id);
+
         public void SendKey(int KeyCode)
         {
-            SendMessage(this.LB.Handle, (int)WindowMessage.WM_KEYDOWN, KeyCode, 0);
+            SendMessage(LB.Handle, (int) WindowMessage.WM_KEYDOWN, KeyCode, 0);
         }
+
         /// <summary>		
         /// </summary>
         /// <param name="e"></param>
         protected override void OnPaint(PaintEventArgs e)
         {
             e.Graphics.Clear(SystemColors.Control);
-            ControlPaint.DrawBorder3D(e.Graphics, 0, 0, this.Width, this.Height, Border3DStyle.Raised);
+            ControlPaint.DrawBorder3D(e.Graphics, 0, 0, Width, Height, Border3DStyle.Raised);
         }
+
         public void SelectItem(string text)
         {
             text = text.ToLowerInvariant();
-            for(int i = 0; i < this.LB.Items.Count; i++){
-                var li = (ListItem)this.LB.Items[i];
+
+            for (int i = 0; i < LB.Items.Count; i++)
+            {
+                var li = (ListItem) LB.Items[i];
                 string lis = li.Text.ToLowerInvariant();
-                if(lis.StartsWith(text)){
-                    this.LB.SelectedIndex = i;
+                if (lis.StartsWith(text))
+                {
+                    LB.SelectedIndex = i;
                     break;
                 }
             }
         }
+
         private void LB_KeyDown(object sender, KeyEventArgs e)
         {
-            this.OnKeyDown(e);
+            OnKeyDown(e);
             //	e.Handled =true;
         }
+
         private void LB_KeyPress(object sender, KeyPressEventArgs e)
         {
-            this.OnKeyPress(e);
+            OnKeyPress(e);
             //	e.Handled =true;
         }
+
         private void LB_KeyUp(object sender, KeyEventArgs e)
         {
-            this.OnKeyUp(e);
+            OnKeyUp(e);
             //	e.Handled =true;
         }
+
         /// <summary>
         /// For public use only.
         /// </summary>
@@ -103,6 +121,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
         {
             return true;
         }
+
         /// <summary>
         /// For public use only.
         /// </summary>
@@ -112,6 +131,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
         {
             return true;
         }
+
         /// <summary>
         /// Adds a new ListItem to the AutoListForm.
         /// </summary>
@@ -120,8 +140,9 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// <returns></returns>
         public ListItem Add(string text, int ImageIndex)
         {
-            return this.Add(text, text, ImageIndex);
+            return Add(text, text, ImageIndex);
         }
+
         /// <summary>
         /// Adds a new ListItem to the AutoListForm.
         /// </summary>
@@ -132,135 +153,176 @@ namespace Alsing.Windows.Forms.SyntaxBox
         public ListItem Add(string text, string InsertText, int ImageIndex)
         {
             var li = new ListItem(text, ImageIndex, "", InsertText);
-            this.LB.Items.Add(li);
+            LB.Items.Add(li);
+
+
             //this.LB.Sorted =true;
             return li;
         }
+
         public ListItem Add(string text, string InsertText, string ToolTip, int ImageIndex)
         {
             var li = new ListItem(text, ImageIndex, "", InsertText);
-            this.LB.Items.Add(li);
+            LB.Items.Add(li);
             li.ToolTip = ToolTip;
             //this.LB.Sorted =true;
             return li;
         }
+
         /// <summary>
         /// Clears the content of the AutoList.
         /// </summary>
         public void Clear()
         {
-            this.LB.Items.Clear();
+            LB.Items.Clear();
         }
+
         private void LB_DrawItem(object sender, DrawItemEventArgs e)
         {
             bool selected = (e.State & DrawItemState.Selected) == DrawItemState.Selected;
-            if(e.Index == - 1){
+
+            if (e.Index == - 1)
                 return;
-            }
+
             const int Offset = 24;
-            var li = (ListItem)this.LB.Items[e.Index];
+
+            var li = (ListItem) LB.Items[e.Index];
             string text = li.Text;
             Brush bg, fg;
-            if(selected){
+
+            if (selected)
+            {
                 bg = SystemBrushes.Highlight;
                 fg = SystemBrushes.HighlightText;
                 //fg=Brushes.Black;
-            } else{
+            }
+            else
+            {
                 bg = SystemBrushes.Window;
                 fg = SystemBrushes.WindowText;
                 //bg=Brushes.White;
                 //fg=Brushes.Black;
             }
-            if(!selected){
-                e.Graphics.FillRectangle(bg, 0, e.Bounds.Top, e.Bounds.Width, this.LB.ItemHeight);
+
+            if (!selected)
+            {
+                e.Graphics.FillRectangle(bg, 0, e.Bounds.Top, e.Bounds.Width, LB.ItemHeight);
                 //e.Graphics.FillRectangle (SystemBrushes.Highlight,0,e.Bounds.Top,27 ,LB.ItemHeight); 
-            } else{
+            }
+            else
+            {
                 e.Graphics.FillRectangle(SystemBrushes.Window, Offset, e.Bounds.Top, e.Bounds.Width - Offset,
-                                         this.LB.ItemHeight);
+                                         LB.ItemHeight);
                 e.Graphics.FillRectangle(SystemBrushes.Highlight,
                                          new Rectangle(Offset + 1, e.Bounds.Top + 1, e.Bounds.Width - Offset - 2,
-                                                       this.LB.ItemHeight - 2));
+                                                       LB.ItemHeight - 2));
+
+
                 //e.Graphics.FillRectangle (SystemBrushes.Highlight,27,e.Bounds.Top,e.Bounds.Width-27 ,LB.ItemHeight); 
                 //e.Graphics.FillRectangle (new SolidBrush(Color.FromArgb (182,189,210)),new Rectangle (1+27,e.Bounds.Top+1,e.Bounds.Width-2- ,LB.ItemHeight-2));
+
+
                 ControlPaint.DrawFocusRectangle(e.Graphics,
                                                 new Rectangle(Offset, e.Bounds.Top, e.Bounds.Width - Offset,
-                                                              this.LB.ItemHeight));
+                                                              LB.ItemHeight));
             }
+
+
             e.Graphics.DrawString(text, e.Font, fg, Offset + 2, e.Bounds.Top + 1);
-            if(this.Images != null){
-                e.Graphics.DrawImage(this.Images.Images[li.Type], 6, e.Bounds.Top + 0);
-            }
+
+
+            if (Images != null)
+                e.Graphics.DrawImage(Images.Images[li.Type], 6, e.Bounds.Top + 0);
         }
+
         private void LB_DoubleClick(object sender, EventArgs e)
         {
-            this.OnDoubleClick(e);
+            OnDoubleClick(e);
         }
+
         public void BeginLoad()
         {
-            this.LB.Sorted = false;
-            this.LB.DrawMode = DrawMode.Normal;
-            this.LB.SuspendLayout();
+            LB.Sorted = false;
+            LB.DrawMode = DrawMode.Normal;
+            LB.SuspendLayout();
         }
+
         public void EndLoad()
         {
-            this.LB.ResumeLayout();
-            this.LB.Sorted = true;
-            this.LB.DrawMode = DrawMode.OwnerDrawFixed;
+            LB.ResumeLayout();
+            LB.Sorted = true;
+            LB.DrawMode = DrawMode.OwnerDrawFixed;
+
             //set height
-            this.Height = 0;
-            if(this.LB.Items.Count > 10){
-                this.Height = this.LB.ItemHeight * 11 + 12;
-            } else{
-                this.Height = this.LB.ItemHeight * (this.LB.Items.Count) + 12;
+            Height = 0;
+            if (LB.Items.Count > 10)
+            {
+                Height = LB.ItemHeight*11 + 12;
+            }
+            else
+            {
+                Height = LB.ItemHeight*(LB.Items.Count) + 12;
             }
             int max = 0;
-            Graphics g = this.LB.CreateGraphics();
-            foreach(ListItem li in this.LB.Items){
-                int w = (int)g.MeasureString(li.Text, this.LB.Font).Width + 45;
-                if(w > max){
+            Graphics g = LB.CreateGraphics();
+            foreach (ListItem li in LB.Items)
+            {
+                int w = (int) g.MeasureString(li.Text, LB.Font).Width + 45;
+                if (w > max)
                     max = w;
-                }
             }
-            this.Width = max + SystemInformation.VerticalScrollBarWidth;
-            this.Refresh();
+            Width = max + SystemInformation.VerticalScrollBarWidth;
+            Refresh();
             g.Dispose();
         }
+
+
         private void AutoListForm_Resize(object sender, EventArgs e)
         {
-            this.LB.Size = new Size(this.Width - 8, this.Height - 8);
+            LB.Size = new Size(Width - 8, Height - 8);
         }
+
         private void LB_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var li = (ListItem)this.LB.SelectedItem;
-            if(li.ToolTip != ""){
-                this.tooltip.ShowAlways = true;
-                this.tooltip.SetToolTip(this.LB, li.ToolTip);
-                this.tooltip.InitialDelay = 2;
-                this.tooltip.Active = true;
+            var li = (ListItem) LB.SelectedItem;
+
+            if (li.ToolTip != "")
+            {
+                tooltip.ShowAlways = true;
+                tooltip.SetToolTip(LB, li.ToolTip);
+                tooltip.InitialDelay = 2;
+                tooltip.Active = true;
             }
         }
+
         private void LB_MouseDown(object sender, MouseEventArgs e)
         {
-            this.SelectItem(e.X, e.Y);
+            SelectItem(e.X, e.Y);
         }
+
         private void SelectItem(int x, int y)
         {
             var p = new Point(x, y);
-            int r = (p.Y / this.LB.ItemHeight) + this.LB.TopIndex;
-            if(r != this.LB.SelectedIndex){
-                if(r < this.LB.Items.Count && r >= 0){
-                    this.LB.SelectedIndex = r;
+            int r = (p.Y/LB.ItemHeight) + LB.TopIndex;
+            if (r != LB.SelectedIndex)
+            {
+                if (r < LB.Items.Count && r >= 0)
+                {
+                    LB.SelectedIndex = r;
                 }
             }
         }
+
         private void LB_MouseMove(object sender, MouseEventArgs e)
         {
-            if(e.Button != 0){
-                this.SelectItem(e.X, e.Y);
+            if (e.Button != 0)
+            {
+                SelectItem(e.X, e.Y);
             }
         }
 
         #region Component Designer generated code
+
         /// <summary> 
         /// Required method for Designer support - do not modify 
         /// the contents of this method with the code editor.
@@ -277,7 +339,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
             this.LB.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.LB.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.LB.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular,
-                                                   System.Drawing.GraphicsUnit.Point, ((System.Byte)(0)));
+                                                   System.Drawing.GraphicsUnit.Point, ((System.Byte) (0)));
             this.LB.IntegralHeight = false;
             this.LB.ItemHeight = 16;
             this.LB.Location = new System.Drawing.Point(4, 4);
@@ -304,7 +366,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.ClientSize = new System.Drawing.Size(168, 165);
-            this.Controls.AddRange(new System.Windows.Forms.Control[]{this.LB});
+            this.Controls.AddRange(new System.Windows.Forms.Control[] {this.LB});
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "AutoListForm";
             this.ShowInTaskbar = false;
@@ -312,6 +374,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
             this.Resize += new System.EventHandler(this.AutoListForm_Resize);
             this.ResumeLayout(false);
         }
+
         #endregion
     }
 }

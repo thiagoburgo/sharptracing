@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices;
+using System;
 namespace DrawEngine.Renderer.Algebra
 {
     public enum Component
@@ -6,7 +8,7 @@ namespace DrawEngine.Renderer.Algebra
         Y,
         Z
     }
-
+    [Serializable, StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct Dominant
     {
         public Component Component;

@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 using System.Drawing;
 
 namespace Alsing.Windows.Forms.FormatLabel
@@ -30,25 +31,32 @@ namespace Alsing.Windows.Forms.FormatLabel
         public Color EffectColor = Color.Black;
         public Font Font;
         public Color ForeColor = Color.Black;
+
         public Element Link;
         public bool NewLine;
         public string Text = "";
         public Word[] words;
+
         public string TagName
         {
-            get { return this._TagName; }
+            get { return _TagName; }
         }
+
+
         public string Tag
         {
-            get { return this._Tag; }
+            get { return _Tag; }
             set
             {
-                this._Tag = value.ToLowerInvariant();
-                this._Tag = this._Tag.Replace("\t", " ");
-                if(this._Tag.IndexOf(" ") >= 0){
-                    this._TagName = this._Tag.Substring(0, this._Tag.IndexOf(" "));
-                } else{
-                    this._TagName = this._Tag;
+                _Tag = value.ToLowerInvariant();
+                _Tag = _Tag.Replace("\t", " ");
+                if (_Tag.IndexOf(" ") >= 0)
+                {
+                    _TagName = _Tag.Substring(0, _Tag.IndexOf(" "));
+                }
+                else
+                {
+                    _TagName = _Tag;
                 }
             }
         }

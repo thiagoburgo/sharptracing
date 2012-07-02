@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 using System;
 using Alsing.Text.PatternMatchers;
 
@@ -16,31 +17,42 @@ namespace Alsing.Text
     {
         public void AddPattern(IPatternMatcher matcher, bool caseSensitive, bool needSeparators, object[] tags)
         {
-            if(matcher == null){
+            if (matcher == null)
                 throw new ArgumentNullException("matcher");
-            }
-            this.AddPattern(null, matcher, caseSensitive, needSeparators, tags);
+
+            AddPattern(null, matcher, caseSensitive, needSeparators, tags);
         }
+
         public void AddPattern(string prefix, IPatternMatcher matcher, bool caseSensitive, bool needSeparators,
                                object[] tags)
         {
-            if(string.IsNullOrEmpty(prefix)){
-                this.AddPatternWithoutPrefix(matcher, caseSensitive, needSeparators, tags);
-            } else if(caseSensitive){
-                this.AddPatternWithCaseSensitivePrefix(prefix, matcher, needSeparators, tags);
-            } else{
-                this.AddPatternWithCaseInsensitivePrefix(prefix, matcher, needSeparators, tags);
+            if (string.IsNullOrEmpty(prefix))
+            {
+                AddPatternWithoutPrefix(matcher, caseSensitive, needSeparators, tags);
+            }
+            else if (caseSensitive)
+            {
+                AddPatternWithCaseSensitivePrefix(prefix, matcher, needSeparators, tags);
+            }
+            else
+            {
+                AddPatternWithCaseInsensitivePrefix(prefix, matcher, needSeparators, tags);
             }
         }
+
+
         public void AddToken(string text, bool caseSensitive, bool needSeparators, object[] tags)
         {
-            if(string.IsNullOrEmpty(text)){
+            if (string.IsNullOrEmpty(text))
                 throw new ArgumentNullException(text);
+
+            if (caseSensitive)
+            {
+                AddCaseSensitiveToken(text, needSeparators, tags);
             }
-            if(caseSensitive){
-                this.AddCaseSensitiveToken(text, needSeparators, tags);
-            } else{
-                this.AddCaseInsensitiveToken(text, needSeparators, tags);
+            else
+            {
+                AddCaseInsensitiveToken(text, needSeparators, tags);
             }
         }
     }

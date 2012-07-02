@@ -17,16 +17,18 @@ namespace DrawEngine.Renderer.Util.IO
             : this(input, Endianess.LittleEndian)
         {
         }
-        public EndianessBinaryReader(Stream input, Endianess endianess) : this(input, new UTF8Encoding(false, true), endianess)
+        public EndianessBinaryReader(Stream input, Endianess endianess)
+            : this(input, new UTF8Encoding(false, true), endianess)
         {
         }
-        public EndianessBinaryReader(Stream input, Encoding encoding, Endianess endianess) : base(input, encoding)
+        public EndianessBinaryReader(Stream input, Encoding encoding, Endianess endianess)
+            : base(input, encoding)
         {
             this.Endianess = endianess;
         }
         public Endianess Endianess { get; set; }
-        
-        
+
+
         public override short ReadInt16()
         {
             unsafe

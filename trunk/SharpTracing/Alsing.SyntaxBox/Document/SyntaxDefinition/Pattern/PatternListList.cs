@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 using System.Collections;
 
 namespace Alsing.SourceCode
@@ -17,44 +18,53 @@ namespace Alsing.SourceCode
     public sealed class PatternListList : IEnumerable
     {
         private readonly ArrayList mGroups = new ArrayList();
+
         /// <summary>
         /// 
         /// </summary>
         public bool IsKeyword;
+
         /// <summary>
         /// 
         /// </summary>
         public bool IsOperator;
+
         /// <summary>
         /// 
         /// </summary>
         public SpanDefinition Parent;
+
         /// <summary>
         /// 
         /// </summary>
         public PatternListList() {}
+
         public PatternListList(SpanDefinition parent)
         {
-            this.Parent = parent;
+            Parent = parent;
         }
+
         /// <summary>
         /// 
         /// </summary>
         public PatternList this[int index]
         {
-            get { return (PatternList)this.mGroups[index]; }
-            set { this.mGroups[index] = value; }
+            get { return (PatternList) mGroups[index]; }
+
+            set { mGroups[index] = value; }
         }
 
         #region IEnumerable Members
+
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
         public IEnumerator GetEnumerator()
         {
-            return this.mGroups.GetEnumerator();
+            return mGroups.GetEnumerator();
         }
+
         #endregion
 
         /// <summary>
@@ -64,19 +74,20 @@ namespace Alsing.SourceCode
         /// <returns></returns>
         public PatternList Add(PatternList Group)
         {
-            this.mGroups.Add(Group);
+            mGroups.Add(Group);
             Group.Parent = this;
-            if(this.Parent != null && this.Parent.Parent != null){
-                this.Parent.Parent.ChangeVersion();
-            }
+            if (Parent != null && Parent.Parent != null)
+                Parent.Parent.ChangeVersion();
+
             return Group;
         }
+
         /// <summary>
         /// 
         /// </summary>
         public void Clear()
         {
-            this.mGroups.Clear();
+            mGroups.Clear();
         }
     }
 }

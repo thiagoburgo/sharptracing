@@ -198,14 +198,13 @@ namespace DrawEngine.Renderer.Importers
     public class LoaderObjModel : AbstractLoaderModel
     {
         private Dictionary<string, int> elementCount;
-        private string path;
-        //private List<string[]> file;
-        public LoaderObjModel(string path)
-        {
-            this.path = path;
-            //this.LoaAllFile();
-            this.CountElements();
+        public LoaderObjModel()
+            : base()
+        {   
         }
+        public LoaderObjModel(string path)
+            : base()
+        { }
         public override event ElementLoadEventHandler OnElementLoaded;
         private void CountElements()
         {
@@ -231,12 +230,17 @@ namespace DrawEngine.Renderer.Importers
             if(!this.Validate()){
                 throw new Exception("Invalid file type!");
             }
+            this.CountElements();
             this.ParserObjModel();
             return this.triangles;
         }
         private bool Validate()
         {
             return Path.GetExtension(this.path).ToLower() == ".obj";
+        }
+        public override List<string> Extensions
+        {
+            get { return new List<string> { ".obj" }; }
         }
         private void ParserObjModel()
         {
@@ -251,7 +255,7 @@ namespace DrawEngine.Renderer.Importers
             char[] separator = new char[]{' '};
             Point3D p = Point3D.Zero;
             Vector3D v = Vector3D.Zero;
-            Point3D pmin = Point3D.Zero, pmax = Point3D.Zero;
+           
             //foreach (String[] line in file)
             //{
             using(StreamReader sr = new StreamReader(this.path)){
@@ -263,7 +267,7 @@ namespace DrawEngine.Renderer.Importers
                                 p.X = float.Parse(line[1], nfi);
                                 p.Y = float.Parse(line[2], nfi);
                                 p.Z = float.Parse(line[3], nfi);
-                                this.boundBox.Include(p);
+                                this.BoundBox.Include(p);
                                 vertices.Add(p);
                                 int percent = (int)(((float)vertices.Count / this.elementCount["v"]) * 100.0f);
                                 if((percent % 20) == 0){
@@ -318,13 +322,12 @@ namespace DrawEngine.Renderer.Importers
                 this.ProcessNormalsPerVertex(lPointersToVertex, triangles, vertices.Count);
             }
             this.triangles = triangles.ToArray();
-            triangles.Clear();
-            vertices.Clear();
             vertices = null;
             triangles = null;
             //this.file.Clear();
             //this.file = null;
             GC.Collect();
+            GC.WaitForPendingFinalizers();
         }
         private void ProcessNormalsPerVertex(List<PointerToVertex> pointersToVertex, List<Triangle> triangles,
                                                int verticesCount)
@@ -352,9 +355,10 @@ namespace DrawEngine.Renderer.Importers
                 }
             }
             pointersToVertex.Clear();
-            Array.Clear(normalsPerVertex, 0, normalsPerVertex.Length);
             pointersToVertex = null;
             normalsPerVertex = null;
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
         }
     }
 }

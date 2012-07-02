@@ -65,7 +65,7 @@
             // 
             this.syntaxBoxControl1.ActiveView = Alsing.Windows.Forms.ActiveView.BottomRight;
             this.syntaxBoxControl1.AutoListPosition = null;
-            this.syntaxBoxControl1.AutoListSelectedText = "";
+            this.syntaxBoxControl1.AutoListSelectedText = "a123";
             this.syntaxBoxControl1.AutoListVisible = false;
             this.syntaxBoxControl1.BackColor = System.Drawing.Color.White;
             this.syntaxBoxControl1.BorderStyle = Alsing.Windows.Forms.BorderStyle.None;
@@ -73,7 +73,8 @@
             this.syntaxBoxControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.syntaxBoxControl1.Document = this.syntaxDocument1;
             this.syntaxBoxControl1.FontName = "Courier new";
-            this.syntaxBoxControl1.HighLightedLineColor = System.Drawing.Color.PaleGoldenrod;
+            this.syntaxBoxControl1.HighLightActiveLine = true;
+            this.syntaxBoxControl1.HighLightedLineColor = System.Drawing.Color.PaleTurquoise;
             this.syntaxBoxControl1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.syntaxBoxControl1.Indent = Alsing.Windows.Forms.SyntaxBox.IndentStyle.Scope;
             this.syntaxBoxControl1.InfoTipCount = 1;
@@ -83,9 +84,9 @@
             this.syntaxBoxControl1.Location = new System.Drawing.Point(0, 0);
             this.syntaxBoxControl1.LockCursorUpdate = false;
             this.syntaxBoxControl1.Name = "syntaxBoxControl1";
-            this.syntaxBoxControl1.ShowScopeIndicator = false;
+            this.syntaxBoxControl1.ShowTabGuides = true;
             this.syntaxBoxControl1.Size = new System.Drawing.Size(665, 445);
-            this.syntaxBoxControl1.SmoothScroll = true;
+            this.syntaxBoxControl1.SmoothScroll = false;
             this.syntaxBoxControl1.SplitviewH = -4;
             this.syntaxBoxControl1.SplitviewV = -4;
             this.syntaxBoxControl1.TabGuideColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(219)))), ((int)(((byte)(214)))));
@@ -140,6 +141,7 @@
             this.ClientSize = new System.Drawing.Size(665, 470);
             this.Controls.Add(this.toolStripContainer1);
             this.DockAreas = ((WeifenLuo.WinFormsUI.Docking.DockAreas)((WeifenLuo.WinFormsUI.Docking.DockAreas.Float | WeifenLuo.WinFormsUI.Docking.DockAreas.Document)));
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.HideOnClose = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ScriptingForm";

@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -25,184 +26,222 @@ namespace Alsing.Windows.Forms
         private WeakReference _Control;
         private int _Count = 1;
         private int _SelectedIndex;
+
         private PictureBox btnNext;
         private PictureBox btnPrev;
+
         /// <summary>
         /// Required designer variable.
         /// </summary>
         private Container components;
+
         private FormatLabelControl InfoText;
+
         private Label lblIndex;
         private Panel panel1;
         private Panel panel2;
         private PictureBox picIcon;
         private Panel pnlImage;
         private Panel pnlSelect;
+
         /// <summary>
         /// 
         /// </summary>
         public InfoTipForm()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="parent"></param>
         public InfoTipForm(Control parent)
         {
-            this.ParentControl = parent;
-            if(this.CreateParams != null){
-                this.CreateParams.ClassName = "tooltips_class32";
-            }
-            this.InitializeComponent();
+            ParentControl = parent;
+            if (CreateParams != null) CreateParams.ClassName = "tooltips_class32";
+
+            InitializeComponent();
         }
+
         private Control ParentControl
         {
-            get { return this._Control != null ? (Control)this._Control.Target : null; }
-            set { this._Control = new WeakReference(value); }
+            get { return _Control != null ? (Control) _Control.Target : null; }
+            set { _Control = new WeakReference(value); }
         }
+
+
         public int SelectedIndex
         {
-            get { return this._SelectedIndex; }
+            get { return _SelectedIndex; }
             set
             {
-                if(value > this._Count){
+                if (value > _Count)
                     value = 1;
-                }
-                if(value < 1){
-                    value = this._Count;
-                }
-                this._SelectedIndex = value;
-                this.OnSelectedIndexChanged();
-                this.SetPos();
+                if (value < 1)
+                    value = _Count;
+
+                _SelectedIndex = value;
+                OnSelectedIndexChanged();
+                SetPos();
             }
         }
+
         public int Count
         {
-            get { return this._Count; }
-            set { this._Count = value; }
+            get { return _Count; }
+            set { _Count = value; }
         }
+
         public Image Image
         {
-            get { return this.picIcon.Image; }
+            get { return picIcon.Image; }
             set
             {
-                this.picIcon.Image = value;
-                if(value == null){
-                    this.pnlImage.Visible = false;
-                } else{
-                    this.pnlImage.Visible = true;
-                    this.pnlImage.Width = this.Image.Width + 6;
-                    this.picIcon.Size = this.Image.Size;
+                picIcon.Image = value;
+                if (value == null)
+                {
+                    pnlImage.Visible = false;
                 }
-                this.DoResize();
+                else
+                {
+                    pnlImage.Visible = true;
+                    pnlImage.Width = Image.Width + 6;
+                    picIcon.Size = Image.Size;
+                }
+                DoResize();
             }
         }
+
         public string Data
         {
-            get { return this.InfoText.Text; }
-            set { this.InfoText.Text = value; }
+            get { return InfoText.Text; }
+            set { InfoText.Text = value; }
         }
+
         [DllImport("user32.dll", EntryPoint = "SendMessage")]
         private static extern int SendMessage(IntPtr hWnd, int message, int _data, int _id);
+
         public event EventHandler SelectedIndexChanged = null;
+
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>
         protected override void Dispose(bool disposing)
         {
-            if(disposing){
-                if(this.components != null){
-                    this.components.Dispose();
+            if (disposing)
+            {
+                if (components != null)
+                {
+                    components.Dispose();
                 }
             }
             base.Dispose(disposing);
         }
+
+
         private void InfoText_Resize(object sender, EventArgs e)
         {
-            this.DoResize();
+            DoResize();
         }
+
         private void DoResize()
         {
-            int w = this.InfoText.Left + this.InfoText.Width + 8;
-            if(this.Count > 1){
-                w += this.pnlSelect.Width;
+            int w = InfoText.Left + InfoText.Width + 8;
+            if (Count > 1)
+            {
+                w += pnlSelect.Width;
             }
-            if(this.picIcon.Image != null){
-                w += this.pnlImage.Width;
+            if (picIcon.Image != null)
+            {
+                w += pnlImage.Width;
             }
-            int h = this.InfoText.Top + this.InfoText.Height + 6;
-            if(this.Image != null && this.Image.Height + this.picIcon.Top * 2 > h){
-                h = this.Image.Height + this.picIcon.Top * 2;
-            }
-            this.ClientSize = new Size(w, h);
+
+
+            int h = InfoText.Top + InfoText.Height + 6;
+            if (Image != null && Image.Height + picIcon.Top*2 > h)
+                h = Image.Height + picIcon.Top*2;
+
+            ClientSize = new Size(w, h);
         }
+
         /// <summary>
         /// 
         /// </summary>
         public void Init()
         {
-            this.SelectedIndex = 1;
-            this.SetPos();
+            SelectedIndex = 1;
+            SetPos();
         }
+
         private void btnNext_Click(object sender, EventArgs e)
         {
-            this.SelectedIndex++;
-            this.SetPos();
+            SelectedIndex++;
+            SetPos();
         }
+
         private void btnPrev_Click(object sender, EventArgs e)
         {
-            this.SelectedIndex--;
-            this.SetPos();
+            SelectedIndex--;
+            SetPos();
         }
+
         private void btnPrev_DoubleClick(object sender, EventArgs e)
         {
-            this.SelectedIndex--;
-            this.SetPos();
+            SelectedIndex--;
+            SetPos();
         }
+
         private void btnNext_DoubleClick(object sender, EventArgs e)
         {
-            this.SelectedIndex++;
-            this.SetPos();
+            SelectedIndex++;
+            SetPos();
         }
+
         private void SetPos()
         {
-            if(this.Count == 1){
-                this.pnlSelect.Visible = false;
-            } else{
-                this.pnlSelect.Visible = true;
+            if (Count == 1)
+            {
+                pnlSelect.Visible = false;
             }
-            this.DoResize();
-            this.lblIndex.Text = this.SelectedIndex.ToString((CultureInfo.InvariantCulture)) + " of "
-                                 + this.Count.ToString(CultureInfo.InvariantCulture);
-            if(this.ParentControl != null){
-                this.ParentControl.Focus();
+            else
+            {
+                pnlSelect.Visible = true;
             }
+            DoResize();
+
+            lblIndex.Text = SelectedIndex.ToString((CultureInfo.InvariantCulture)) + " of " +
+                            Count.ToString(CultureInfo.InvariantCulture);
+
+            if (ParentControl != null)
+                ParentControl.Focus();
         }
+
         private void InfoTipForm_Enter(object sender, EventArgs e)
         {
-            this.ParentControl.Focus();
+            ParentControl.Focus();
         }
+
         private void InfoText_Enter(object sender, EventArgs e)
         {
-            this.ParentControl.Focus();
+            ParentControl.Focus();
         }
+
         private void OnSelectedIndexChanged()
         {
-            if(this.SelectedIndexChanged != null){
-                this.SelectedIndexChanged(this, null);
-            }
+            if (SelectedIndexChanged != null)
+                SelectedIndexChanged(this, null);
         }
 
         #region Windows Form Designer generated code
+
         /// <summary>
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
         {
-            var resources = new System.Resources.ResourceManager(typeof(InfoTipForm));
+            var resources = new System.Resources.ResourceManager(typeof (InfoTipForm));
             this.pnlSelect = new System.Windows.Forms.Panel();
             this.btnNext = new System.Windows.Forms.PictureBox();
             this.btnPrev = new System.Windows.Forms.PictureBox();
@@ -232,7 +271,7 @@ namespace Alsing.Windows.Forms
             // btnNext
             // 
             this.btnNext.BackColor = System.Drawing.SystemColors.Control;
-            this.btnNext.Image = ((System.Drawing.Bitmap)(resources.GetObject("btnNext.Image")));
+            this.btnNext.Image = ((System.Drawing.Bitmap) (resources.GetObject("btnNext.Image")));
             this.btnNext.Location = new System.Drawing.Point(68, 6);
             this.btnNext.Name = "btnNext";
             this.btnNext.Size = new System.Drawing.Size(9, 11);
@@ -244,7 +283,7 @@ namespace Alsing.Windows.Forms
             // btnPrev
             // 
             this.btnPrev.BackColor = System.Drawing.SystemColors.Control;
-            this.btnPrev.Image = ((System.Drawing.Bitmap)(resources.GetObject("btnPrev.Image")));
+            this.btnPrev.Image = ((System.Drawing.Bitmap) (resources.GetObject("btnPrev.Image")));
             this.btnPrev.Location = new System.Drawing.Point(4, 6);
             this.btnPrev.Name = "btnPrev";
             this.btnPrev.Size = new System.Drawing.Size(9, 11);
@@ -265,7 +304,7 @@ namespace Alsing.Windows.Forms
             // 
             // panel2
             // 
-            this.panel2.Controls.AddRange(new System.Windows.Forms.Control[]{this.InfoText});
+            this.panel2.Controls.AddRange(new System.Windows.Forms.Control[] {this.InfoText});
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.DockPadding.All = 4;
             this.panel2.Location = new System.Drawing.Point(112, 0);
@@ -281,7 +320,7 @@ namespace Alsing.Windows.Forms
             this.InfoText.BorderColor = System.Drawing.Color.Black;
             this.InfoText.BorderStyle = Alsing.Windows.Forms.BorderStyle.None;
             this.InfoText.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular,
-                                                         System.Drawing.GraphicsUnit.Point, ((System.Byte)(0)));
+                                                         System.Drawing.GraphicsUnit.Point, ((System.Byte) (0)));
             this.InfoText.ImageList = null;
             this.InfoText.Link_Color = System.Drawing.Color.Blue;
             this.InfoText.Link_Color_Hover = System.Drawing.Color.Blue;
@@ -299,7 +338,7 @@ namespace Alsing.Windows.Forms
             // 
             // pnlImage
             // 
-            this.pnlImage.Controls.AddRange(new System.Windows.Forms.Control[]{this.picIcon});
+            this.pnlImage.Controls.AddRange(new System.Windows.Forms.Control[] {this.picIcon});
             this.pnlImage.Dock = System.Windows.Forms.DockStyle.Left;
             this.pnlImage.Name = "pnlImage";
             this.pnlImage.Size = new System.Drawing.Size(32, 35);
@@ -317,7 +356,8 @@ namespace Alsing.Windows.Forms
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.AddRange(new System.Windows.Forms.Control[]{this.panel2, this.pnlSelect, this.pnlImage});
+            this.panel1.Controls.AddRange(new System.Windows.Forms.Control[]
+                                          {this.panel2, this.pnlSelect, this.pnlImage});
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(240, 37);
@@ -329,7 +369,7 @@ namespace Alsing.Windows.Forms
             this.BackColor = System.Drawing.SystemColors.Info;
             this.ClientSize = new System.Drawing.Size(240, 37);
             this.ControlBox = false;
-            this.Controls.AddRange(new System.Windows.Forms.Control[]{this.panel1});
+            this.Controls.AddRange(new System.Windows.Forms.Control[] {this.panel1});
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "InfoTipForm";
             this.ShowInTaskbar = false;
@@ -341,6 +381,7 @@ namespace Alsing.Windows.Forms
             this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
         }
+
         #endregion
     }
 }

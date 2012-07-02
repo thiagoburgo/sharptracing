@@ -59,7 +59,7 @@ namespace DrawEngine.Renderer.Shaders
                                     color += (material.KDiff
                                               *
                                               material.Texture.GetPixel(
-                                                      intersection.HitPrimitive.CurrentTextureCoordinate) * light.Color
+                                                      intersection.CurrentTextureCoordinate) * light.Color
                                               * this.NL); //*this.lightFactor;
                                 } else{
                                     color += (material.KDiff * material.DiffuseColor * light.Color * this.NL);

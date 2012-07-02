@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 using System;
 using System.ComponentModel;
 using System.Windows.Forms;
@@ -25,6 +26,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
         {
             return true;
         }
+
         /// <summary>
         /// For public use only.
         /// </summary>
@@ -45,18 +47,22 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// The insert text of a ListItem
         /// </summary>
         public string InsertText = "";
+
         /// <summary>
         /// The text of a ListItem
         /// </summary>
         public string Text = "";
+
         /// <summary>
         /// The tooltip text that should be displayed when selecting a ListItem
         /// </summary>
         public string ToolTip = "";
+
         /// <summary>
         /// The type of the ListItem (the type is used as an index to choose what icon to display)
         /// </summary>
         public int Type;
+
         /// <summary>
         /// ListItem constructor , takes text and type as parameters
         /// </summary>
@@ -64,10 +70,11 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// <param name="type">The type of the ListItem</param>
         public ListItem(string text, int type)
         {
-            this.Text = text;
-            this.Type = type;
-            this.ToolTip = "";
+            Text = text;
+            Type = type;
+            ToolTip = "";
         }
+
         /// <summary>
         /// ListItem constructor , takes text , type and tooltip text as parameters
         /// </summary>
@@ -76,10 +83,11 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// <param name="tooltip">The tooltip text that should be assigned to the ListItem</param>
         public ListItem(string text, int type, string tooltip)
         {
-            this.Text = text;
-            this.Type = type;
-            this.ToolTip = tooltip;
+            Text = text;
+            Type = type;
+            ToolTip = tooltip;
         }
+
         /// <summary>
         /// ListItem constructor , takes text , type , tooltip text and insert text as parameters
         /// </summary>
@@ -89,13 +97,14 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// <param name="inserttext">The text that should be inserted into the text when this item is selected</param>
         public ListItem(string text, int type, string tooltip, string inserttext)
         {
-            this.Text = text;
-            this.Type = type;
-            this.ToolTip = tooltip;
-            this.InsertText = inserttext;
+            Text = text;
+            Type = type;
+            ToolTip = tooltip;
+            InsertText = inserttext;
         }
 
         #region Implementation of IComparable
+
         /// <summary>
         /// 
         /// </summary>
@@ -103,9 +112,10 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// <returns></returns>
         public int CompareTo(object obj)
         {
-            var li = (ListItem)obj;
-            return this.Text.CompareTo(li.Text);
+            var li = (ListItem) obj;
+            return Text.CompareTo(li.Text);
         }
+
         #endregion
 
         /// <summary>
@@ -114,7 +124,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// <returns></returns>
         public override string ToString()
         {
-            return this.Text;
+            return Text;
         }
     }
 }

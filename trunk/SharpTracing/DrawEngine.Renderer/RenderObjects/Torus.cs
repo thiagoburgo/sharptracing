@@ -10,12 +10,12 @@
  * Feel free to copy, modify and  give fixes 
  * suggestions. Keep the credits!
  */
- using System;
+using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using DrawEngine.Renderer.Algebra;
 using DrawEngine.Renderer.BasicStructures;
 using DrawEngine.Renderer.Mathematics.Algebra;
-
 namespace DrawEngine.Renderer.RenderObjects
 {
     [Serializable]
@@ -35,10 +35,11 @@ namespace DrawEngine.Renderer.RenderObjects
             this.MinorRadius = minorRadius;
             this.MajorRadius = majorRadius;
             this.RecalculateBoundBox();
+            Debug.Listeners.Add(new TextWriterTraceListener("C:\\temp\\debug.txt"));
         }
         public Torus(Point3D center, float minorRadius, float majorRadius)
-                : this(center, Vector3D.UnitY, minorRadius, majorRadius) {}
-        public Torus() : this(new Point3D(), 15, 25) {}
+            : this(center, Vector3D.UnitY, minorRadius, majorRadius) { }
+        public Torus() : this(new Point3D(), 15, 25) { }
         [RefreshProperties(RefreshProperties.All)]
         public Vector3D RadialAxis
         {
@@ -47,7 +48,8 @@ namespace DrawEngine.Renderer.RenderObjects
             {
                 this.axisA = value;
                 this.axisA -= (this.axisA * this.axisC) * this.axisC; // Make perpindicular to Center Axis
-                if(this.axisA.Length == 0.0f){
+                if (this.axisA.Length == 0.0f)
+                {
                     // Must not be parallel to Center Axis
                     //throw new Exception("Erro: O eixo central nao pode ter tamanho ZERO!");
                 }
@@ -88,7 +90,8 @@ namespace DrawEngine.Renderer.RenderObjects
             get { return this.minorRadius; }
             set
             {
-                if(value > 0.0f){
+                if (value > 0.0f)
+                {
                     this.minorRadius = value;
                     this.minorRadius2 = value * value;
                     this.RecalcCoeficients();
@@ -102,7 +105,8 @@ namespace DrawEngine.Renderer.RenderObjects
             get { return this.majorRadius; }
             set
             {
-                if(value > 0.0f){
+                if (value > 0.0f)
+                {
                     this.majorRadius = value;
                     this.majorRadius2 = value * value;
                     this.RecalcCoeficients();
@@ -177,7 +181,7 @@ namespace DrawEngine.Renderer.RenderObjects
         public override bool FindIntersection(Ray ray, out Intersection intersect)
         {
             intersect = new Intersection();
-            float A = 1.0f;
+            const float A = 1.0f;
             Vector3D viewPosRel = ray.Origin - this.center; // Origin relative to center
             float udotp = (ray.Direction * viewPosRel);
             float B = (udotp + udotp + udotp + udotp);
@@ -189,11 +193,25 @@ namespace DrawEngine.Renderer.RenderObjects
             float D = 4.0f * ((pSq - RadiiSqSum) * udotp + (this.majorRadius2 + this.majorRadius2) * ucdotp * ucdotu);
             float E = (pSq - (RadiiSqSum + RadiiSqSum)) * pSq + 4.0f * this.majorRadius2 * ucdotp * ucdotp
                       + ((this.majorRadius2 - this.minorRadius2) * (this.majorRadius2 - this.minorRadius2));
-            float[] roots = {0f, 0f, 0f, 0f};
+            float[] roots = { 0f, 0f, 0f, 0f };
             int numRoots = EquationSolver.SolveQuartic(A, B, C, D, E, out roots[0], out roots[1], out roots[2],
                                                        out roots[3]);
-            if(numRoots > 0){
-                if(roots[0] > 0.1f){
+            if (numRoots > 0)
+            {
+                Debug.WriteLine(ray.Direction.ToString());
+            }
+            //if (numRoots > 0)
+            //Debug.Write(String.Format("A={0},B={1},C={2},D={3},E={4} - ", A, B, C, D, E));
+            //for (int i = 0; i < numRoots; i++)
+            //{
+            //    Debug.Write(roots[i] + "|");
+            //}
+            //if (numRoots > 0)
+            //    Debug.Write("\r\n");
+            if (numRoots > 0)
+            {
+                if (roots[0] > 0.1f)
+                {
                     intersect.TMin = roots[0];
                     intersect.HitPoint = ray.Origin + intersect.TMin * ray.Direction;
                     // Intersection position (not relative to center)
@@ -209,7 +227,8 @@ namespace DrawEngine.Renderer.RenderObjects
                     intersect.Normal = intersect.Normal * -this.majorRadius + h;
                     // Negative point projected to center path of torus
                     intersect.Normal.Normalize(); // Fix roundoff error problems
-                    if(this.material != null && this.material.IsTexturized){
+                    if (this.material != null && this.material.IsTexturized)
+                    {
                         // u - v coordinates
                         double u = Math.Atan2(yCoord, xCoord);
                         u = u * (0.5 / Math.PI) + 0.5;
@@ -219,8 +238,8 @@ namespace DrawEngine.Renderer.RenderObjects
                         //int widthTex = this.material.Texture.Width - 1;
                         //int heightTex = this.material.Texture.Height - 1;
                         //this.material.Color = this.material.Texture.GetPixel((int)(u * widthTex), (int)(v * heightTex));
-                        this.currentTextureCoordinate.U = (float)u;
-                        this.currentTextureCoordinate.V = (float)v;
+                        intersect.CurrentTextureCoordinate.U = (float)u;
+                        intersect.CurrentTextureCoordinate.V = (float)v;
                     }
                     return true;
                 }

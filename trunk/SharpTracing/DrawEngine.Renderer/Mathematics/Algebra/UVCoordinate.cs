@@ -11,13 +11,16 @@
  * suggestions. Keep the credits!
  */
  using System;
+using System.Runtime.InteropServices;
 
 namespace DrawEngine.Renderer.Algebra
 {
+    [Serializable, StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct UVCoordinate
     {
         public float U;
         public float V;
+        public static readonly UVCoordinate Zero = new UVCoordinate();
         public UVCoordinate(float u, float v)
         {
             this.U = u;

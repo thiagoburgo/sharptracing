@@ -6,14 +6,15 @@ using System.Reflection;
 // associated with an assembly.
 //
 
-[assembly:AssemblyTitle("Alsing SyntaxBox")]
-[assembly:AssemblyDescription("SyntaxHighlight Edit Control")]
-[assembly:AssemblyConfiguration("")]
-[assembly:AssemblyCompany("Alsing")]
-[assembly:AssemblyProduct("SyntaxBox")]
-[assembly:AssemblyCopyright("2002-2003")]
-[assembly:AssemblyTrademark("")]
-[assembly:AssemblyCulture("")]
+[assembly : AssemblyTitle("Alsing SyntaxBox")]
+[assembly : AssemblyDescription("SyntaxHighlight Edit Control")]
+[assembly : AssemblyConfiguration("")]
+[assembly : AssemblyCompany("Alsing")]
+[assembly : AssemblyProduct("SyntaxBox")]
+[assembly : AssemblyCopyright("2002-2003")]
+[assembly : AssemblyTrademark("")]
+[assembly : AssemblyCulture("")]
+
 //
 // Version information for an assembly consists of the following four values:
 //
@@ -25,7 +26,8 @@ using System.Reflection;
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-[assembly:AssemblyVersion("1.4.10.*")]
+[assembly : AssemblyVersion("1.4.10.*")]
+
 //
 // In order to sign your assembly you must specify a key to use. Refer to the 
 // Microsoft .NET Framework documentation for more information on assembly signing.
@@ -52,6 +54,6 @@ using System.Reflection;
 //       documentation for more information on this.
 //
 
-[assembly:AssemblyDelaySign(false)]
-[assembly:AssemblyKeyFile("")]
-[assembly:AssemblyKeyName("")]
+[assembly : AssemblyDelaySign(false)]
+[assembly : AssemblyKeyFile("")]
+[assembly : AssemblyKeyName("")]

@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 namespace Alsing.Text.PatternMatchers
 {
     public class PatternMatchReference
@@ -15,9 +16,10 @@ namespace Alsing.Text.PatternMatchers
         public bool NeedSeparators;
         public PatternMatchReference NextSibling;
         public object[] Tags;
+
         public PatternMatchReference(IPatternMatcher matcher)
         {
-            this.Matcher = matcher;
+            Matcher = matcher;
         }
     }
 }

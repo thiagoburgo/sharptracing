@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 namespace Alsing.Text.PatternMatchers
 {
     /// <summary>
@@ -15,21 +16,28 @@ namespace Alsing.Text.PatternMatchers
     public class IntPatternMatcher : PatternMatcherBase
     {
         public static readonly IntPatternMatcher Default = new IntPatternMatcher();
+
         //perform the match
         public override int Match(string textToMatch, int matchAtIndex)
         {
             int currentIndex = matchAtIndex;
-            do{
+            do
+            {
                 char currentChar = textToMatch[currentIndex];
-                if(currentChar >= '0' && currentChar <= '9'){
+                if (currentChar >= '0' && currentChar <= '9')
+                {
                     //current char is hexchar
-                } else{
+                }
+                else
+                {
                     break;
                 }
                 currentIndex++;
-            } while(currentIndex < textToMatch.Length);
+            } while (currentIndex < textToMatch.Length);
+
             return currentIndex - matchAtIndex;
         }
+
         //public override string[] DefaultPrefixes
         //{
         //    get

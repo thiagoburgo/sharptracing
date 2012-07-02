@@ -16,9 +16,11 @@ using System.Drawing;
 using System.IO;
 using DrawEngine.Renderer.Algebra;
 using DrawEngine.Renderer.Util;
+using System.Runtime.InteropServices;
 
 namespace DrawEngine.Renderer.BasicStructures
 {
+    [Serializable, StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct Texture
     {
         //private RGBColor[,] textureMatrix;

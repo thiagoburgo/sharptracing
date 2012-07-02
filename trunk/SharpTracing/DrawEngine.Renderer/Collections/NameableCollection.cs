@@ -64,6 +64,7 @@ namespace DrawEngine.Renderer.Collections
         {
             int index = this.IndexOf(name);
             if(index > -1){
+                this[index] = default(T);
                 this.RemoveAt(index);
             }
         }

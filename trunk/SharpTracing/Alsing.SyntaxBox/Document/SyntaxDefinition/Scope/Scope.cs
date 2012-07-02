@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 namespace Alsing.SourceCode
 {
     /// <summary>
@@ -18,39 +19,49 @@ namespace Alsing.SourceCode
         /// Gets or Sets if the scope patterns is case sensitive
         /// </summary>
         public bool CaseSensitive;
+
         public bool CauseIndent;
+
         /// <summary>
         /// Gets or Sets if this block should be expanded or collapsed by default
         /// </summary>
         public bool DefaultExpanded = true;
+
         /// <summary>
         /// List of end patterns
         /// </summary>
         public PatternCollection EndPatterns = new PatternCollection();
+
         /// <summary>
         /// The text that should be displayed if the owner block is collapsed
         /// </summary>
         public string ExpansionText = "";
+
         /// <summary>
         /// Gets or Sets if the scope patterns should be case normalized
         /// </summary>
         public bool NormalizeCase = true;
+
         /// <summary>
         /// The owner spanDefinition
         /// </summary>
         public SpanDefinition Parent;
+
         /// <summary>
         /// spanDefinition that should be started directly after this block have ended
         /// </summary>
         public SpanDefinition spawnSpanOnEnd;
+
         /// <summary>
         /// spanDefinition that should be started directly after this block have started
         /// </summary>
         public SpanDefinition spawnSpanOnStart;
+
         /// <summary>
         /// The Start trigger Pattern
         /// </summary>
         public Pattern Start;
+
         /// <summary>
         /// The style that should be applied to the start and end patterns
         /// </summary>

@@ -12,12 +12,14 @@
  */
  using System;
 using System.Drawing;
+using System.Runtime.InteropServices;
 
 namespace DrawEngine.Renderer.BasicStructures
 {
     /// <summary>
     /// Provides Round-trip conversion from RGB to HSB and back
     /// </summary>
+    [Serializable, StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct HSBColor
     {
         int a;

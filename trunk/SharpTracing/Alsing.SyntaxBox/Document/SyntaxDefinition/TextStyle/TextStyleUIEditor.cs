@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -19,54 +20,72 @@ namespace Alsing.SourceCode
     public class TextStyleUIEditor : UITypeEditor
     {
         private IWindowsFormsEditorService edSvc;
+
         public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
         {
-            if(context != null && context.Instance != null && provider != null){
-                this.edSvc = (IWindowsFormsEditorService)provider.GetService(typeof(IWindowsFormsEditorService));
-                if(this.edSvc != null){
-                    var style = (TextStyle)value;
-                    using(var tsd = new TextStyleDesignerDialog(style)){
+            if (context != null && context.Instance != null && provider != null)
+            {
+                edSvc = (IWindowsFormsEditorService) provider.GetService(typeof (IWindowsFormsEditorService));
+
+
+                if (edSvc != null)
+                {
+                    var style = (TextStyle) value;
+                    using (var tsd = new TextStyleDesignerDialog(style))
+                    {
                         context.OnComponentChanging();
-                        if(this.edSvc.ShowDialog(tsd) == DialogResult.OK){
-                            this.ValueChanged(this, EventArgs.Empty);
+                        if (edSvc.ShowDialog(tsd) == DialogResult.OK)
+                        {
+                            ValueChanged(this, EventArgs.Empty);
                             context.OnComponentChanged();
                             return style;
                         }
                     }
                 }
             }
+
             return value;
         }
+
+
         public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
         {
             return UITypeEditorEditStyle.Modal;
         }
+
+
         private void ValueChanged(object sender, EventArgs e)
         {
-            if(this.edSvc != null){}
+            if (edSvc != null) {}
         }
+
         public override void PaintValue(PaintValueEventArgs e)
         {
-            var ts = (TextStyle)e.Value;
-            using(var b = new SolidBrush(ts.BackColor)){
+            var ts = (TextStyle) e.Value;
+            using (var b = new SolidBrush(ts.BackColor))
+            {
                 e.Graphics.FillRectangle(b, e.Bounds);
             }
+
             FontStyle fs = FontStyle.Regular;
-            if(ts.Bold){
+            if (ts.Bold)
                 fs |= FontStyle.Bold;
-            }
-            if(ts.Italic){
+            if (ts.Italic)
                 fs |= FontStyle.Italic;
-            }
-            if(ts.Underline){
+            if (ts.Underline)
                 fs |= FontStyle.Underline;
-            }
+
             var f = new Font("arial", 8f, fs);
-            using(var b = new SolidBrush(ts.ForeColor)){
+
+
+            using (var b = new SolidBrush(ts.ForeColor))
+            {
                 e.Graphics.DrawString("abc", f, b, e.Bounds);
             }
+
             f.Dispose();
         }
+
         public override bool GetPaintValueSupported(ITypeDescriptorContext context)
         {
             return true;

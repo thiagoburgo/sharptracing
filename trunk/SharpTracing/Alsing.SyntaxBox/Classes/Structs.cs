@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 using Alsing.Drawing.GDI;
 
 namespace Alsing.Windows.Forms.SyntaxBox
@@ -70,56 +71,71 @@ namespace Alsing.Windows.Forms.SyntaxBox.Painter
         /// The action that the SyntaxBoxControl is currently performing
         /// </summary>
         public EditAction Action;
+
         /// <summary>
         /// Width of a char (space) in pixels
         /// </summary>
         public int CharWidth;
+
+
         /// <summary>
         /// Height of the client area in pixels
         /// </summary>
         public int ClientAreaStart;
+
         /// <summary>
         /// Width of the client area in pixels
         /// </summary>
         public int ClientAreaWidth;
+
         /// <summary>
         /// Index of the first visible column
         /// </summary>
         public int FirstVisibleColumn;
+
         /// <summary>
         /// Index of the first visible row
         /// </summary>
         public int FirstVisibleRow;
+
         /// <summary>
         /// Width of the gutter margin in pixels
         /// </summary>
         public int GutterMarginWidth;
+
         /// <summary>
         /// Width of the Linenumber margin in pixels
         /// </summary>
         public int LineNumberMarginWidth;
+
         /// <summary>
         /// Height of a row in pixels
         /// </summary>
         public int RowHeight;
+
         /// <summary>
         /// Width of the text margin (sum of gutter + linenumber + folding margins)
         /// </summary>
         public int TextMargin;
+
         /// <summary>
         /// 
         /// </summary>
         public int TotalMarginWidth;
+
         /// <summary>
         /// Number of rows that can be displayed in the current view
         /// </summary>
         public int VisibleRowCount;
+
         /// <summary>
         /// Used for offsetting the screen in y axis.
         /// </summary>
         public int YOffset;
+
         //document items
     }
+
 
     /// <summary>
     /// Struct used by the NativePainter class.
@@ -130,70 +146,87 @@ namespace Alsing.Windows.Forms.SyntaxBox.Painter
         /// For internal use only
         /// </summary>
         public GDISurface BackBuffer; //backbuffer surface
+
         /// <summary>
         /// For internal use only
         /// </summary>
         public GDIBrush BackgroundBrush; //background brush
+
         /// <summary>
         /// For internal use only
         /// </summary>
         public GDIFont FontBold; //Font , bold
+
         /// <summary>
         /// For internal use only
         /// </summary>
         public GDIFont FontBoldItalic; //Font , bold & italic
+
         /// <summary>
         /// For internal use only
         /// </summary>
         public GDIFont FontBoldItalicUnderline; //Font , bold & italic
+
         /// <summary>
         /// For internal use only
         /// </summary>
         public GDIFont FontBoldUnderline; //Font , bold
+
         /// <summary>
         /// For internal use only
         /// </summary>
         public GDIFont FontItalic; //Font , italic
+
         /// <summary>
         /// For internal use only
         /// </summary>
         public GDIFont FontItalicUnderline; //Font , italic
+
         /// <summary>
         /// For internal use only
         /// </summary>
         public GDIFont FontNormal; //Font , no decoration		
+
         /// <summary>
         /// For internal use only
         /// </summary>
         public GDIFont FontUnderline; //Font , no decoration		
+
         /// <summary>
         /// For internal use only
         /// </summary>
         public GDIBrush GutterMarginBorderBrush; //Gutter magrin brush
+
         /// <summary>
         /// For internal use only
         /// </summary>
         public GDIBrush GutterMarginBrush; //Gutter magrin brush
+
         /// <summary>
         /// For internal use only
         /// </summary>
         public GDIBrush HighLightLineBrush; //background brush
+
         /// <summary>
         /// For internal use only
         /// </summary>
         public GDIBrush LineNumberMarginBorderBrush; //linenumber margin brush
+
         /// <summary>
         /// For internal use only
         /// </summary>
         public GDIBrush LineNumberMarginBrush; //linenumber margin brush
+
         /// <summary>
         /// For internal use only
         /// </summary>
         public GDIBrush OutlineBrush; //background brush
+
         /// <summary>
         /// For internal use only
         /// </summary>
         public GDISurface SelectionBuffer; //backbuffer surface
+
         /// <summary>
         /// For internal use only
         /// </summary>

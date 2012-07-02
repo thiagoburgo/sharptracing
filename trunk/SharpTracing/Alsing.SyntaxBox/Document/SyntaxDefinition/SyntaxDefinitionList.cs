@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 using System.Collections.Generic;
 using System.IO;
 
@@ -18,19 +19,25 @@ namespace Alsing.SourceCode
     public class SyntaxDefinitionList
     {
         private readonly List<SyntaxDefinition> languages;
+
+
         /// <summary>
         /// 
         /// </summary>
         public SyntaxDefinitionList()
         {
-            this.languages = new List<SyntaxDefinition>();
+            languages = new List<SyntaxDefinition>();
+
             string[] files = Directory.GetFiles(".", "*.syn");
-            foreach(string file in files){
+            foreach (string file in files)
+            {
                 var loader = new SyntaxDefinitionLoader();
                 SyntaxDefinition syntax = loader.Load(file);
-                this.languages.Add(syntax);
+                languages.Add(syntax);
             }
         }
+
+
         /// <summary>
         /// 
         /// </summary>
@@ -39,22 +46,24 @@ namespace Alsing.SourceCode
         public SyntaxDefinition GetLanguageFromFile(string path)
         {
             string extension = Path.GetExtension(path);
-            foreach(SyntaxDefinition syntax in this.languages){
-                foreach(FileType ft in syntax.FileTypes){
-                    if(extension.ToLowerInvariant() == ft.Extension.ToLowerInvariant()){
+            foreach (SyntaxDefinition syntax in languages)
+            {
+                foreach (FileType ft in syntax.FileTypes)
+                {
+                    if (extension.ToLowerInvariant() == ft.Extension.ToLowerInvariant())
                         return syntax;
-                    }
                 }
             }
             return null;
         }
+
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
         public List<SyntaxDefinition> GetSyntaxDefinitions()
         {
-            return this.languages;
+            return languages;
         }
     }
 }

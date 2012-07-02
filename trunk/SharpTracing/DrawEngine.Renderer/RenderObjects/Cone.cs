@@ -310,8 +310,8 @@ namespace DrawEngine.Renderer.RenderObjects
                         //int heightTex = this.material.Texture.Height - 1;
                         //this.material.Color =
                         //    this.material.Texture.GetPixel((int)(vdotuB * widthTex), (int)(vdotuA * heightTex));
-                        this.currentTextureCoordinate.U = vdotuB;
-                        this.currentTextureCoordinate.V = vdotuA;
+                        intersect.CurrentTextureCoordinate.U = vdotuB;
+                        intersect.CurrentTextureCoordinate.V = vdotuA;
                     }
                     break;
                 case HitSide.Cone: // Cone's side
@@ -327,8 +327,8 @@ namespace DrawEngine.Renderer.RenderObjects
                         //int heightTex = this.material.Texture.Height - 1;
                         //this.material.Color =
                         //    this.material.Texture.GetPixel((int)(uCoord * widthTex), (int)(vCoord * heightTex));
-                        this.currentTextureCoordinate.U = uCoord;
-                        this.currentTextureCoordinate.V = vCoord;
+                        intersect.CurrentTextureCoordinate.U = uCoord;
+                        intersect.CurrentTextureCoordinate.V = vCoord;
                     }
                     break;
             }

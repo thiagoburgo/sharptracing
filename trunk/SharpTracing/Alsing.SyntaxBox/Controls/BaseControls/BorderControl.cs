@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 using System;
 using System.Windows.Forms;
 
@@ -16,8 +17,9 @@ namespace Alsing.Windows.Forms
     {
         public ControlBorderPainter(IntPtr Handle)
         {
-            this.AssignHandle(Handle);
+            AssignHandle(Handle);
         }
+
         protected override void WndProc(ref Message m) {}
     }
 }

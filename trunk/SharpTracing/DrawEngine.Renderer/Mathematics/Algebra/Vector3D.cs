@@ -16,10 +16,12 @@ using System.Drawing.Design;
 using DrawEngine.Renderer.Algebra;
 using DrawEngine.Renderer.Mathematics.Algebra.Design;
 using Component=DrawEngine.Renderer.Algebra.Component;
+using System.Runtime.InteropServices;
 
 namespace DrawEngine.Renderer.Mathematics.Algebra
 {
     [Editor(typeof(VectorOrPointEditor), typeof(UITypeEditor)), TypeConverter(typeof(VectorOrPointTypeConverter))]
+    [Serializable, StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct Vector3D : ITransformable3D, IEquatable<Vector3D> {
         public static readonly Vector3D UnitX = new Vector3D(1, 0, 0);
         public static readonly Vector3D UnitY = new Vector3D(0, 1, 0);
@@ -351,24 +353,38 @@ namespace DrawEngine.Renderer.Mathematics.Algebra
             return this.X + "; " + this.Y + "; " + this.Z;
         }
         /// <summary>
-        /// Calculates the surface normal of a surface that includes the three specified points in counter-clockwise order
+        /// Calculates the surface normal of a surface that includes the three specified points in 
+        /// counter-clockwise order
         /// </summary>
         /// <param name="v1">First Vertex</param>
         /// <param name="v2">Second Vertex</param>
         /// <param name="v3">Third Vertex</param>
         /// <returns>A vector representing the surface normal</returns>
         public static Vector3D Normal(Point3D p1, Point3D p2, Point3D p3) {
+            return Normal(p1, p2, p3, true);
+        }
+        /// <summary>
+        /// Calculates the surface normal of a surface that includes the three specified points in 
+        /// counter-clockwise order
+        /// </summary>
+        /// <param name="v1">First Vertex</param>
+        /// <param name="v2">Second Vertex</param>
+        /// <param name="v3">Third Vertex</param>
+        /// <returns>A vector representing the surface normal</returns>
+        public static Vector3D Normal(Point3D p1, Point3D p2, Point3D p3, bool normalized)
+        {
             Vector3D v12 = p2 - p1;
             Vector3D v23 = p3 - p2;
-            /*v12.Cross(v23);
-			v12.Normalize();
-			return v12;*/
             //cross product is in left-handed coordinates, but we want CCW points, which is right-handed
             //so return opposite of usual order
             v23 = v23 ^ v12;
-            v23.Normalize();
+            if (normalized)
+            {
+                v23.Normalize();
+            }
             return v23;
         }
+
      
         /// <summary>
         /// Calculate the refracted vector 

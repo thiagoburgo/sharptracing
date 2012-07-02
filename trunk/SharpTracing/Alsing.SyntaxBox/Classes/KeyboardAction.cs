@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 using System.Windows.Forms;
 
 namespace Alsing.Windows.Forms.SyntaxBox
@@ -25,26 +26,34 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// Determines what key to associate with the action
         /// </summary>
         private Keys _Key = 0;
+
         public KeyboardAction() {}
+
         public KeyboardAction(Keys key, bool shift, bool control, bool alt, bool allowreadonly,
                               ActionDelegate actionDelegate)
         {
-            this.Key = key;
-            this.Control = control;
-            this.Alt = alt;
-            this.Shift = shift;
-            this.Action = actionDelegate;
-            this.AllowReadOnly = allowreadonly;
+            Key = key;
+            Control = control;
+            Alt = alt;
+            Shift = shift;
+            Action = actionDelegate;
+            AllowReadOnly = allowreadonly;
         }
+
         public bool Shift { get; set; }
+
         public bool Alt { get; set; }
+
         public bool Control { get; set; }
+
         public bool AllowReadOnly { get; set; }
+
         public Keys Key
         {
-            get { return this._Key; }
-            set { this._Key = value; }
+            get { return _Key; }
+            set { _Key = value; }
         }
+
         public ActionDelegate Action { get; set; }
     }
 }

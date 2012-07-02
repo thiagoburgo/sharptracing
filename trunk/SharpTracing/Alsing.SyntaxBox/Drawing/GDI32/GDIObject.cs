@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 using System;
 
 namespace Alsing.Drawing.GDI
@@ -17,20 +18,24 @@ namespace Alsing.Drawing.GDI
     public abstract class GDIObject : IDisposable
     {
         protected bool IsCreated;
+
         protected virtual void Destroy()
         {
-            this.IsCreated = false;
+            IsCreated = false;
         }
+
         protected void Create()
         {
-            this.IsCreated = true;
+            IsCreated = true;
         }
 
         #region Implementation of IDisposable
+
         public void Dispose()
         {
-            this.Destroy();
+            Destroy();
         }
+
         #endregion
     }
 }

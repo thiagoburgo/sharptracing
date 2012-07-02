@@ -199,8 +199,8 @@ namespace DrawEngine.Renderer.RenderObjects
                 if(uCoord < 0.0){
                     uCoord++;
                 }
-                this.currentTextureCoordinate.U = (float)uCoord;
-                this.currentTextureCoordinate.V = (float)vCoord;
+                intersect.CurrentTextureCoordinate.U = (float)uCoord;
+                intersect.CurrentTextureCoordinate.V = (float)vCoord;
                 //int w = this.material.Texture.Width;
                 //int h = this.material.Texture.Height;
                 //this.material.Color = this.material.Texture.GetPixel((int)(w * uCoord), (int)(h * vCoord));

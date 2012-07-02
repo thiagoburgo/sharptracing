@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
@@ -59,74 +60,91 @@ namespace Alsing.SourceCode
     public class SpanDefinition
     {
         private readonly List<Pattern> tmpSimplePatterns = new List<Pattern>();
+
         /// <summary>
         /// The background color of a span.
         /// </summary>
         public Color BackColor = Color.Transparent;
+
         /// <summary>
         /// A list containing which spanDefinitions are valid child spans in a specific span.
         /// eg. strings and comments are child spans for a code span
         /// </summary>
         public SpanDefinitionList childSpanDefinitions = new SpanDefinitionList();
+
         public PatternCollection ComplexPatterns = new PatternCollection();
+
         /// <summary>
         /// A list of keyword groups.
         /// For example , one keyword group could be "keywords" and another could be "datatypes"
         /// theese groups could have different color shemes assigned to them.
         /// </summary>
         public PatternListList KeywordsList; //new PatternListList (this);
+
         public Hashtable LookupTable = new Hashtable();
+
         /// <summary>
         /// Gets or Sets if the spanDefinition can span multiple lines or if it should terminate at the end of a line.
         /// </summary>
         public bool MultiLine;
+
         /// <summary>
         /// The name of this span.
         /// names are not required for span but can be a good help when interacting with the parser.
         /// </summary>
         public string Name = "";
+
         /// <summary>
         /// A list of operator groups.
         /// Each operator group can contain its own operator patterns and its own color shemes.
         /// </summary>
         public PatternListList OperatorsList; //new PatternListList (this);	
+
         /// <summary>
         /// A list of scopes , most span only contain one scope , eg a scope with start and end patterns "/*" and "*/"
         /// for multiline comments, but in some cases you will need more scopes , eg. PHP uses both "&lt;?" , "?&gt;" and "&lt;?PHP" , "PHP?&gt;"
         /// </summary>
         public ScopeList ScopePatterns;
+
         /// <summary>
         /// The style to use when colorizing the content of a span,
         /// meaning everything in this span except keywords , operators and childspans.
         /// </summary>
         public TextStyle Style;
+
         /// <summary>
         /// Gets or Sets if the parser should terminate any child span when it finds an end scope pattern for this span.
         /// for example %&gt; in asp terminates any asp span even if it appears inside an asp string.
         /// </summary>
         public bool TerminateChildren;
+
+
         /// <summary>
         /// Default spanDefinition constructor
         /// </summary>
         public SpanDefinition(SyntaxDefinition parent) : this()
         {
-            this.Parent = parent;
-            this.Parent.ChangeVersion();
+            Parent = parent;
+            Parent.ChangeVersion();
         }
+
         public SpanDefinition()
         {
-            this.KeywordsList = new PatternListList(this);
-            this.OperatorsList = new PatternListList(this);
-            this.Style = new TextStyle();
-            this.KeywordsList.Parent = this;
-            this.KeywordsList.IsKeyword = true;
-            this.OperatorsList.Parent = this;
-            this.OperatorsList.IsOperator = true;
-            this.ScopePatterns = new ScopeList(this);
+            KeywordsList = new PatternListList(this);
+            OperatorsList = new PatternListList(this);
+
+            Style = new TextStyle();
+            KeywordsList.Parent = this;
+            KeywordsList.IsKeyword = true;
+            OperatorsList.Parent = this;
+            OperatorsList.IsOperator = true;
+            ScopePatterns = new ScopeList(this);
         }
 
         #region PUBLIC PROPERTY PARENT
+
         public SyntaxDefinition Parent { get; set; }
+
         #endregion
 
         /// <summary>
@@ -134,71 +152,77 @@ namespace Alsing.SourceCode
         /// </summary>
         public bool Transparent
         {
-            get { return (this.BackColor.A == 0); }
+            get { return (BackColor.A == 0); }
         }
+
         public void ResetLookupTable()
         {
-            this.LookupTable.Clear();
-            this.tmpSimplePatterns.Clear();
-            this.ComplexPatterns.Clear();
+            LookupTable.Clear();
+            tmpSimplePatterns.Clear();
+            ComplexPatterns.Clear();
         }
+
         public void AddToLookupTable(Pattern pattern)
         {
-            if(pattern.IsComplex){
-                this.ComplexPatterns.Add(pattern);
+            if (pattern.IsComplex)
+            {
+                ComplexPatterns.Add(pattern);
                 return;
             }
-            this.tmpSimplePatterns.Add(pattern);
+            tmpSimplePatterns.Add(pattern);
         }
+
         public void BuildLookupTable()
         {
-            this.tmpSimplePatterns.Sort(new PatternComparer());
-            foreach(Pattern p in this.tmpSimplePatterns){
-                if(p.StringPattern.Length <= 2){
+            tmpSimplePatterns.Sort(new PatternComparer());
+            foreach (Pattern p in tmpSimplePatterns)
+            {
+                if (p.StringPattern.Length <= 2)
+                {
                     char c = p.StringPattern[0];
-                    if(!p.Parent.CaseSensitive){
+
+                    if (!p.Parent.CaseSensitive)
+                    {
                         char c1 = char.ToLowerInvariant(c);
-                        if(this.LookupTable[c1] == null){
-                            this.LookupTable[c1] = new PatternCollection();
-                        }
-                        var patterns = this.LookupTable[c1] as PatternCollection;
-                        if(patterns != null){
-                            if(!patterns.Contains(p)){
+                        if (LookupTable[c1] == null)
+                            LookupTable[c1] = new PatternCollection();
+
+                        var patterns = LookupTable[c1] as PatternCollection;
+                        if (patterns != null)
+                            if (!patterns.Contains(p))
                                 patterns.Add(p);
-                            }
-                        }
+
                         char c2 = char.ToUpper(c);
-                        if(this.LookupTable[c2] == null){
-                            this.LookupTable[c2] = new PatternCollection();
-                        }
-                        patterns = this.LookupTable[c2] as PatternCollection;
-                        if(patterns != null){
-                            if(!patterns.Contains(p)){
+                        if (LookupTable[c2] == null)
+                            LookupTable[c2] = new PatternCollection();
+
+                        patterns = LookupTable[c2] as PatternCollection;
+                        if (patterns != null)
+                            if (!patterns.Contains(p))
                                 patterns.Add(p);
-                            }
-                        }
-                    } else{
-                        if(this.LookupTable[c] == null){
-                            this.LookupTable[c] = new PatternCollection();
-                        }
-                        var patterns = this.LookupTable[c] as PatternCollection;
-                        if(patterns != null){
-                            if(!patterns.Contains(p)){
-                                patterns.Add(p);
-                            }
-                        }
                     }
-                } else{
+                    else
+                    {
+                        if (LookupTable[c] == null)
+                            LookupTable[c] = new PatternCollection();
+
+                        var patterns = LookupTable[c] as PatternCollection;
+                        if (patterns != null)
+                            if (!patterns.Contains(p))
+                                patterns.Add(p);
+                    }
+                }
+                else
+                {
                     string c = p.StringPattern.Substring(0, 3).ToLowerInvariant();
-                    if(this.LookupTable[c] == null){
-                        this.LookupTable[c] = new PatternCollection();
-                    }
-                    var patterns = this.LookupTable[c] as PatternCollection;
-                    if(patterns != null){
-                        if(!patterns.Contains(p)){
+
+                    if (LookupTable[c] == null)
+                        LookupTable[c] = new PatternCollection();
+
+                    var patterns = LookupTable[c] as PatternCollection;
+                    if (patterns != null)
+                        if (!patterns.Contains(p))
                             patterns.Add(p);
-                        }
-                    }
                 }
             }
         }
@@ -207,10 +231,12 @@ namespace Alsing.SourceCode
     public class PatternComparer : IComparer<Pattern>
     {
         #region IComparer<Pattern> Members
+
         public int Compare(Pattern x, Pattern y)
         {
             return y.StringPattern.Length.CompareTo(x.StringPattern.Length);
         }
+
         #endregion
     }
 }

@@ -10,7 +10,7 @@
  * Feel free to copy, modify and  give fixes 
  * suggestions. Keep the credits!
  */
- using System;
+using System;
 using DrawEngine.Renderer.Mathematics.Algebra;
 
 namespace DrawEngine.Renderer.Algebra
@@ -20,10 +20,12 @@ namespace DrawEngine.Renderer.Algebra
         public static int SolveLinear(float a, float b, out float root)
         {
             root = float.NaN;
-            if(a == 0.0f){
+            if (a == 0.0f)
+            {
                 return 0;
             }
-            if(b == 0.0f){
+            if (b == 0.0f)
+            {
                 root = 0.0f;
                 return 1;
             }
@@ -36,28 +38,35 @@ namespace DrawEngine.Renderer.Algebra
             root1 = float.NaN;
             root2 = float.NaN;
             // make sure we have a d2 equation
-            if(MathUtil.NearZero(a)){
+            if (MathUtil.NearZero(a))
+            {
                 return SolveLinear(b, c, out root1);
             }
             // normal for: x^2 + px + q
             p = b * 1.0f / (a + a);
             q = c * 1.0f / a;
             D = p * p - q;
-            if(MathUtil.NearZero(D)){
+            if (MathUtil.NearZero(D))
+            {
                 // one double root
                 root1 = root2 = -p;
                 return 1;
             }
-            if(D < 0.0f){
+
+            if (D < 0.0f)
+            {
                 // no real root
                 return 0;
-            } else{
+            }
+            else
+            {
                 // two real roots
                 float sqrt_D = (float)Math.Sqrt(D);
                 root1 = sqrt_D - p;
                 root2 = -sqrt_D - p;
                 //ordena as raizes
-                if(root1 > root2){
+                if (root1 > root2)
+                {
                     float temp = root1;
                     root1 = root2;
                     root2 = temp;
@@ -85,12 +94,16 @@ namespace DrawEngine.Renderer.Algebra
             // use Cardano's formula
             cb_p = p * p * p;
             D = q * q + cb_p;
-            if(MathUtil.NearZero(D)){
-                if(MathUtil.NearZero(q)){
+            if (MathUtil.NearZero(D))
+            {
+                if (MathUtil.NearZero(q))
+                {
                     // one triple solution
                     root1 = 0.0f;
                     num = 1;
-                } else{
+                }
+                else
+                {
                     // one single and one double solution
                     float u = (float)Math.Pow(-q, one_3);
                     root1 = u + u;
@@ -102,7 +115,9 @@ namespace DrawEngine.Renderer.Algebra
                     //}
                     num = 2;
                 }
-            } else if(D < 0.0f){
+            }
+            else if (D < 0.0f)
+            {
                 // casus irreductibilis: three real solutions
                 double phi = (one_3 * Math.Acos((-q / Math.Sqrt(-cb_p))));
                 double t = (2.0 * Math.Sqrt(-p));
@@ -120,13 +135,18 @@ namespace DrawEngine.Renderer.Algebra
                 //    }
                 //}
                 num = 3;
-            } else{
+            }
+            else
+            {
                 // one real solution
                 double sqrt_D = Math.Sqrt(D);
                 double u = Math.Pow(sqrt_D + Math.Abs(q), one_3);
-                if(q > 0.0f){
+                if (q > 0.0f)
+                {
                     root1 = (float)(-u + p * 1.0 / u);
-                } else{
+                }
+                else
+                {
                     root1 = (float)(u - p * 1.0 / u);
                 }
                 num = 1;
@@ -142,16 +162,19 @@ namespace DrawEngine.Renderer.Algebra
                                        out float root3, out float root4)
         {
             root1 = root2 = root3 = root4 = float.NaN;
-            if(a == 0.0){
+            if (a == 0.0)
+            {
                 throw new Exception(
                         "The coefficient of the fourth power of x is 0. Please use the utility for a THIRD degree quadratic. No further action  taken.");
             } //End if a == 0
-            if(e == 0.0){
+            if (e == 0.0)
+            {
                 //throw new Exception(
                 //    "One root is 0. Now divide through by x and use the utility for a THIRD degree quadratic to solve the resulting   equation for the other three roots. No further action taken.");
             } //End if e == 0
             float inv_a = 1.0f / a;
-            if(a != 1.0f){
+            if (a != 1.0f)
+            {
                 b *= inv_a;
                 c *= inv_a;
                 d *= inv_a;
@@ -170,7 +193,8 @@ namespace DrawEngine.Renderer.Algebra
             discrim = q * q * q + r * r;
             double one_3 = 0.333333333333333333333333333333333333;
             term1 = (cb * one_3);
-            if(discrim > 0.0){
+            if (discrim > 0.0)
+            {
                 // one root real, two are complex
                 s = r + Math.Sqrt(discrim);
                 s = ((s < 0.0) ? -Math.Pow(-s, one_3) : Math.Pow(s, one_3));
@@ -178,12 +202,15 @@ namespace DrawEngine.Renderer.Algebra
                 t = ((t < 0.0) ? -Math.Pow(-t, one_3) : Math.Pow(t, one_3));
                 y1 = -term1 + s + t;
             } // End if (discrim > 0)
-            else{
-                if(discrim == 0.0){
+            else
+            {
+                if (discrim == 0.0)
+                {
                     r13 = ((r < 0.0) ? -Math.Pow(-r, one_3) : Math.Pow(r, one_3));
                     y1 = -term1 + 2.0 * r13;
                 } // End if (discrim == 0)
-                else{
+                else
+                {
                     // else discrim < 0
                     q = -q;
                     dum1 = q * q * q;
@@ -197,19 +224,24 @@ namespace DrawEngine.Renderer.Algebra
             term1 = b * 0.25;
             sqR = -c + term1 * b + y1; // R-squared
             RRe = RIm = DRe = DIm = ERe = EIm = z1Re = z1Im = z2Re = 0.0;
-            if(sqR >= 0){
-                if(MathUtil.NearZero(sqR)){
+            if (sqR >= 0)
+            {
+                if (MathUtil.NearZero(sqR))
+                {
                     dum1 = -(4.0 * e) + y1 * y1;
-                    if(dum1 < 0) //D and E will be complex
+                    if (dum1 < 0) //D and E will be complex
                     {
                         z1Im = 2.0 * Math.Sqrt(-dum1);
-                    } else{
+                    }
+                    else
+                    {
                         //else (dum1 >= 0)
                         z1Re = 2.0 * Math.Sqrt(dum1);
                         z2Re = -z1Re;
                     } //End else (dum1 >= 0)
                 } //End if (sqR == 0)
-                else{
+                else
+                {
                     //(sqR > 0)
                     RRe = Math.Sqrt(sqR);
                     z1Re = -(8.0 * d + b * b * b) * 0.25 + b * c;
@@ -217,7 +249,8 @@ namespace DrawEngine.Renderer.Algebra
                     z2Re = -z1Re;
                 } // End else (sqR > 0)
             } //end if (sqR >= 0)
-            else{
+            else
+            {
                 //else (sqR < 0)
                 RIm = Math.Sqrt(-sqR);
                 z1Im = -(8.0 * d + b * b * b) / 4.0 + b * c;
@@ -227,20 +260,28 @@ namespace DrawEngine.Renderer.Algebra
             z1Re += -(2.0 * c + sqR) + 3.0 * b * term1;
             z2Re += -(2.0 * c + sqR) + 3.0 * b * term1;
             //At this point, z1 and z2 should be the terms under the square root for D and E
-            if(MathUtil.NearZero(z1Im)){
+            if (MathUtil.NearZero(z1Im))
+            {
                 // Both z1 and z2 real
-                if(z1Re >= 0.0){
+                if (z1Re >= 0.0)
+                {
                     DRe = Math.Sqrt(z1Re);
-                } else{
+                }
+                else
+                {
                     DIm = Math.Sqrt(-z1Re);
                 }
-                if(z2Re >= 0.0){
+                if (z2Re >= 0.0)
+                {
                     ERe = Math.Sqrt(z2Re);
-                } else{
+                }
+                else
+                {
                     EIm = Math.Sqrt(-z2Re);
                 }
             } // End if (zIm == 0)
-            else{
+            else
+            {
                 //else (zIm != 0); calculate root of a complex number********
                 r = Math.Sqrt(z1Re * z1Re + z1Im * z1Im); // Calculate r, the magnitude
                 r = Math.Sqrt(r);
@@ -252,21 +293,27 @@ namespace DrawEngine.Renderer.Algebra
             } // End else (z1Im != 0)
             int numRoots = 0;
             double imgRoot = -(RIm + EIm) * 0.5;
-            if(imgRoot == 0.0){
+            if (imgRoot == 0.0)
+            {
                 root1 = (float)(-(term1 + (RRe + ERe) * 0.5));
                 numRoots++;
                 imgRoot = (-RIm + EIm) * 0.5;
-                if(imgRoot == 0.0){
+                if (imgRoot == 0.0)
+                {
                     root2 = (float)(-(term1 + (RRe * 0.5)) + ERe * 0.5);
                     numRoots++;
                 }
-            } else{
+            }
+            else
+            {
                 imgRoot = (-DIm + RIm) * 0.5;
-                if(imgRoot == 0.0){
+                if (imgRoot == 0.0)
+                {
                     root1 = (float)(-(term1 + (DRe * 0.5)) + RRe * 0.5);
                     numRoots++;
                     imgRoot = (RIm + DIm) * 0.5;
-                    if(imgRoot == 0.0){
+                    if (imgRoot == 0.0)
+                    {
                         root2 = (float)(-term1 + (RRe + DRe) * 0.5);
                         numRoots++;
                     }
@@ -290,7 +337,8 @@ namespace DrawEngine.Renderer.Algebra
         public static float[] SolveQuadric(float a, float b, float c)
         {
             float disc = b * b - 4 * a * c;
-            if(disc < 0){
+            if (disc < 0)
+            {
                 return null;
             }
             disc = (float)Math.Sqrt(disc);
@@ -298,7 +346,7 @@ namespace DrawEngine.Renderer.Algebra
             float t0 = q / a;
             float t1 = c / q;
             // return sorted array
-            return (t0 > t1) ? new float[]{t1, t0} : new float[]{t0, t1};
+            return (t0 > t1) ? new float[] { t1, t0 } : new float[] { t0, t1 };
         }
         /// <summary> Solve a quartic equation of the form ax^4+bx^3+cx^2+cx^1+d=0. The roots
         /// are returned in a sorted array of floats in increasing order.
@@ -331,21 +379,29 @@ namespace DrawEngine.Renderer.Algebra
             float r = (float)((-0.01171875) * c12 * c12 + 0.0625 * c12 * c2 - 0.25 * c1 * c3 + c4);
             float z = SolveCubicForQuartic((-0.5f) * p, -r, 0.5f * r * p - 0.125f * q * q);
             float d1 = 2.0f * z - p;
-            if(d1 < 0){
-                if(d1 > 1.0e-10){
+            if (d1 < 0)
+            {
+                if (d1 > 1.0e-10)
+                {
                     d1 = 0;
-                } else{
+                }
+                else
+                {
                     return null;
                 }
             }
             float d2;
-            if(d1 < 1.0e-10){
+            if (d1 < 1.0e-10)
+            {
                 d2 = z * z - r;
-                if(d2 < 0){
+                if (d2 < 0)
+                {
                     return null;
                 }
                 d2 = (float)Math.Sqrt(d2);
-            } else{
+            }
+            else
+            {
                 d1 = (float)Math.Sqrt(d1);
                 d2 = 0.5f * q / d1;
             }
@@ -354,7 +410,8 @@ namespace DrawEngine.Renderer.Algebra
             float q2 = (-0.25f) * c1;
             float pm = q1 - 4 * (z - d2);
             float pp = q1 - 4 * (z + d2);
-            if(pm >= 0 && pp >= 0){
+            if (pm >= 0 && pp >= 0)
+            {
                 // 4 roots (!)
                 pm = (float)Math.Sqrt(pm);
                 pp = (float)Math.Sqrt(pp);
@@ -364,21 +421,27 @@ namespace DrawEngine.Renderer.Algebra
                 results[2] = 0.5f * (d1 + pp) + q2;
                 results[3] = 0.5f * (d1 - pp) + q2;
                 // tiny insertion sort
-                for(int i = 1; i < 4; i++){
-                    for(int j = i; j > 0 && results[j - 1] > results[j]; j--){
+                for (int i = 1; i < 4; i++)
+                {
+                    for (int j = i; j > 0 && results[j - 1] > results[j]; j--)
+                    {
                         float t = results[j];
                         results[j] = results[j - 1];
                         results[j - 1] = t;
                     }
                 }
                 return results;
-            } else if(pm >= 0){
+            }
+            else if (pm >= 0)
+            {
                 pm = (float)Math.Sqrt(pm);
                 float[] results = new float[2];
                 results[0] = (-0.5f) * (d1 + pm) + q2;
                 results[1] = (-0.5f) * (d1 - pm) + q2;
                 return results;
-            } else if(pp >= 0){
+            }
+            else if (pp >= 0)
+            {
                 pp = (float)Math.Sqrt(pp);
                 float[] results = new float[2];
                 results[0] = 0.5f * (d1 - pp) + q2;
@@ -409,16 +472,22 @@ namespace DrawEngine.Renderer.Algebra
             float R2 = R * R;
             float d = Q3 - R2;
             float an = p / 3.0f;
-            if(d >= 0){
+            if (d >= 0)
+            {
                 d = R / (float)Math.Sqrt(Q3);
                 float theta = (float)Math.Acos(d) / 3.0f;
                 float sQ = (-2.0f) * (float)Math.Sqrt(Q);
                 return sQ * (float)Math.Cos(theta) - an;
-            } else{
+            }
+            else
+            {
                 float sQ = (float)Math.Pow(Math.Sqrt(R2 - Q3) + Math.Abs(R), 1.0 / 3.0);
-                if(R < 0){
+                if (R < 0)
+                {
                     return (sQ + Q / sQ) - an;
-                } else{
+                }
+                else
+                {
                     return -(sQ + Q / sQ) - an;
                 }
             }

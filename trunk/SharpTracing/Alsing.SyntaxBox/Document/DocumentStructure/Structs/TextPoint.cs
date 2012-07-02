@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 using System;
 
 namespace Alsing.SourceCode
@@ -19,10 +20,12 @@ namespace Alsing.SourceCode
     {
         private int x;
         private int y;
+
         /// <summary>
         /// 
         /// </summary>
         public TextPoint() {}
+
         /// <summary>
         /// 
         /// </summary>
@@ -33,39 +36,42 @@ namespace Alsing.SourceCode
             this.X = X;
             this.Y = Y;
         }
+
         /// <summary>
         /// 
         /// </summary>
         public int X
         {
-            get { return this.x; }
+            get { return x; }
             set
             {
-                this.x = value;
-                this.OnChange();
+                x = value;
+                OnChange();
             }
         }
+
         /// <summary>
         /// 
         /// </summary>
         public int Y
         {
-            get { return this.y; }
+            get { return y; }
             set
             {
-                this.y = value;
-                this.OnChange();
+                y = value;
+                OnChange();
             }
         }
+
         /// <summary>
         /// Event fired when the X or Y property has changed.
         /// </summary>
         public event EventHandler Change = null;
+
         private void OnChange()
         {
-            if(this.Change != null){
-                this.Change(this, new EventArgs());
-            }
+            if (Change != null)
+                Change(this, new EventArgs());
         }
     }
 }

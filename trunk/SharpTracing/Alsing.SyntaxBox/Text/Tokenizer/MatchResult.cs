@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 namespace Alsing.Text
 {
     public struct MatchResult
@@ -16,29 +17,32 @@ namespace Alsing.Text
         public int Length;
         public object[] Tags;
         public string Text;
+
         public static MatchResult NoMatch
         {
             get
             {
-                var result = new MatchResult{Found = false};
+                var result = new MatchResult {Found = false};
                 return result;
             }
         }
+
         public override string ToString()
         {
-            if(this.Found == false){
+            if (Found == false)
                 return "no match"; // do not localize
-            }
-            if(this.Tags != null){
-                return this.Tags + "  " + this.Index + "  " + this.Length;
-            }
+
+            if (Tags != null)
+                return Tags + "  " + Index + "  " + Length;
+
             return "MatchResult";
         }
+
         public string GetText()
         {
-            if(this.Text != null){
-                return this.Text.Substring(this.Index, this.Length);
-            }
+            if (Text != null)
+                return Text.Substring(Index, Length);
+
             return "";
         }
     }

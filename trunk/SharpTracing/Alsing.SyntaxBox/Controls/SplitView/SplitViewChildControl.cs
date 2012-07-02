@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -24,206 +25,256 @@ namespace Alsing.Windows.Forms.CoreLib
         protected HScrollBar hScroll;
         public ThumbControl LeftThumb;
         public ThumbControl TopThumb;
+
         protected VScrollBar vScroll;
+
         public SplitViewChildControl()
         {
-            this.InitializeComponent();
-            //			Alsing.Windows.NativeMethods.OpenThemeData (this.Handle,"EDIT");
-            //			Alsing.Windows.NativeMethods.OpenThemeData (this.vScroll.Handle,"SCROLLBAR");
-            //			Alsing.Windows.NativeMethods.OpenThemeData (this.hScroll.Handle,"SCROLLBAR");
+            InitializeComponent();
+
+//			Alsing.Windows.NativeMethods.OpenThemeData (this.Handle,"EDIT");
+//			Alsing.Windows.NativeMethods.OpenThemeData (this.vScroll.Handle,"SCROLLBAR");
+//			Alsing.Windows.NativeMethods.OpenThemeData (this.hScroll.Handle,"SCROLLBAR");
         }
+
+
         protected Rectangle ClientArea
         {
             get
             {
-                Rectangle r = this.ClientRectangle;
-                r.Width -= this.vScroll.Width;
-                r.Height -= this.hScroll.Height;
+                Rectangle r = ClientRectangle;
+                r.Width -= vScroll.Width;
+                r.Height -= hScroll.Height;
                 return r;
             }
         }
+
+
         /// <summary>
         /// Gets or Sets if the Left side thumb control is visible or not.
         /// </summary>
         public bool LeftThumbVisible
         {
-            get { return this.LeftThumb.Visible; }
+            get { return LeftThumb.Visible; }
             set
             {
-                this.LeftThumb.Visible = value;
-                this.DoResize();
+                LeftThumb.Visible = value;
+                DoResize();
             }
         }
+
         /// <summary>
         /// Getd ot Sets if the Top thumb control is visible or not.
         /// </summary>
         public bool TopThumbVisible
         {
-            get { return this.TopThumb.Visible; }
+            get { return TopThumb.Visible; }
             set
             {
-                this.TopThumb.Visible = value;
-                this.DoResize();
+                TopThumb.Visible = value;
+                DoResize();
             }
         }
+
         [Browsable(false)]
         public int VisibleClientHeight
         {
             get
             {
-                if(this.hScroll.Visible){
-                    return this.ClientHeight - this.hScroll.Height;
-                } else{
-                    return this.ClientHeight;
-                }
+                if (hScroll.Visible)
+                    return ClientHeight - hScroll.Height;
+                else
+                    return ClientHeight;
             }
         }
+
         [Browsable(false)]
         public int VisibleClientWidth
         {
             get
             {
-                if(this.hScroll.Visible){
-                    return this.ClientWidth - this.vScroll.Width;
-                } else{
-                    return this.ClientWidth;
-                }
+                if (hScroll.Visible)
+                    return ClientWidth - vScroll.Width;
+                else
+                    return ClientWidth;
             }
         }
 
         #region public property ScrollBars
+
         private ScrollBars _ScrollBars;
+
+
         private bool HasThumbs;
+
         public ScrollBars ScrollBars
         {
-            get { return this._ScrollBars; }
+            get { return _ScrollBars; }
+
             set
             {
-                this._ScrollBars = value;
-                if(this.ScrollBars == ScrollBars.Both){
-                    this.hScroll.Visible = true;
-                    this.vScroll.Visible = true;
+                _ScrollBars = value;
+                if (ScrollBars == ScrollBars.Both)
+                {
+                    hScroll.Visible = true;
+                    vScroll.Visible = true;
                 }
-                if(this.ScrollBars == ScrollBars.None){
-                    this.hScroll.Visible = false;
-                    this.vScroll.Visible = false;
+                if (ScrollBars == ScrollBars.None)
+                {
+                    hScroll.Visible = false;
+                    vScroll.Visible = false;
                 }
-                if(this.ScrollBars == ScrollBars.Horizontal){
-                    this.hScroll.Visible = true;
-                    this.vScroll.Visible = false;
+                if (ScrollBars == ScrollBars.Horizontal)
+                {
+                    hScroll.Visible = true;
+                    vScroll.Visible = false;
                 }
-                if(this.ScrollBars == ScrollBars.Vertical){
-                    this.hScroll.Visible = false;
-                    this.vScroll.Visible = true;
+                if (ScrollBars == ScrollBars.Vertical)
+                {
+                    hScroll.Visible = false;
+                    vScroll.Visible = true;
                 }
-                this.Filler.Visible = this.hScroll.Visible & this.vScroll.Visible;
-                if(this.vScroll.Visible && this.HasThumbs){
-                    this.TopThumb.Height = 8;
-                } else{
-                    this.TopThumb.Height = 0;
+                Filler.Visible = hScroll.Visible & vScroll.Visible;
+
+                if (vScroll.Visible && HasThumbs)
+                {
+                    TopThumb.Height = 8;
                 }
-                if(this.hScroll.Visible && this.HasThumbs){
-                    this.LeftThumb.Width = 8;
-                } else{
-                    this.LeftThumb.Width = 0;
+                else
+                {
+                    TopThumb.Height = 0;
                 }
-                this.DoResize();
-                this.Refresh();
+                if (hScroll.Visible && HasThumbs)
+                {
+                    LeftThumb.Width = 8;
+                }
+                else
+                {
+                    LeftThumb.Width = 0;
+                }
+
+
+                DoResize();
+                Refresh();
             }
         }
+
         public void HideThumbs()
         {
-            this.TopThumb.Height = 0;
-            this.LeftThumb.Width = 0;
-            this.HasThumbs = false;
-            this.DoResize();
+            TopThumb.Height = 0;
+            LeftThumb.Width = 0;
+            HasThumbs = false;
+            DoResize();
         }
+
         public void ShowThumbs()
         {
-            this.TopThumb.Height = 8;
-            this.LeftThumb.Width = 8;
-            this.HasThumbs = true;
-            this.DoResize();
+            TopThumb.Height = 8;
+            LeftThumb.Width = 8;
+            HasThumbs = true;
+            DoResize();
         }
+
         #endregion
 
         protected override void Dispose(bool disposing)
         {
-            if(disposing){
-                if(this.components != null){
-                    this.components.Dispose();
+            if (disposing)
+            {
+                if (components != null)
+                {
+                    components.Dispose();
                 }
             }
             base.Dispose(disposing);
         }
+
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
-            this.DoResize();
+            DoResize();
         }
+
         private void DoResize()
         {
-            try{
-                if(this.TopThumb == null){
+            try
+            {
+                if (TopThumb == null)
                     return;
+
+                TopThumb.Width = SystemInformation.VerticalScrollBarWidth;
+                LeftThumb.Height = SystemInformation.HorizontalScrollBarHeight;
+                vScroll.Width = SystemInformation.VerticalScrollBarWidth;
+                hScroll.Height = SystemInformation.HorizontalScrollBarHeight;
+
+                if (TopThumbVisible)
+                {
+                    vScroll.Top = TopThumb.Height;
+                    if (hScroll.Visible)
+                        vScroll.Height = ClientHeight - hScroll.Height - TopThumb.Height;
+                    else
+                        vScroll.Height = ClientHeight - TopThumb.Height;
                 }
-                this.TopThumb.Width = SystemInformation.VerticalScrollBarWidth;
-                this.LeftThumb.Height = SystemInformation.HorizontalScrollBarHeight;
-                this.vScroll.Width = SystemInformation.VerticalScrollBarWidth;
-                this.hScroll.Height = SystemInformation.HorizontalScrollBarHeight;
-                if(this.TopThumbVisible){
-                    this.vScroll.Top = this.TopThumb.Height;
-                    if(this.hScroll.Visible){
-                        this.vScroll.Height = this.ClientHeight - this.hScroll.Height - this.TopThumb.Height;
-                    } else{
-                        this.vScroll.Height = this.ClientHeight - this.TopThumb.Height;
-                    }
-                } else{
-                    if(this.hScroll.Visible){
-                        this.vScroll.Height = this.ClientHeight - this.hScroll.Height;
-                    } else{
-                        this.vScroll.Height = this.ClientHeight;
-                    }
-                    this.vScroll.Top = 0;
+                else
+                {
+                    if (hScroll.Visible)
+                        vScroll.Height = ClientHeight - hScroll.Height;
+                    else
+                        vScroll.Height = ClientHeight;
+
+                    vScroll.Top = 0;
                 }
-                if(this.LeftThumbVisible){
-                    this.hScroll.Left = this.LeftThumb.Width;
-                    if(this.vScroll.Visible){
-                        this.hScroll.Width = this.ClientWidth - this.vScroll.Width - this.LeftThumb.Width;
-                    } else{
-                        this.hScroll.Width = this.ClientWidth - this.LeftThumb.Width;
-                    }
-                } else{
-                    if(this.vScroll.Visible){
-                        this.hScroll.Width = this.ClientWidth - this.vScroll.Width;
-                    } else{
-                        this.hScroll.Width = this.ClientWidth;
-                    }
-                    this.hScroll.Left = 0;
+
+                if (LeftThumbVisible)
+                {
+                    hScroll.Left = LeftThumb.Width;
+                    if (vScroll.Visible)
+                        hScroll.Width = ClientWidth - vScroll.Width - LeftThumb.Width;
+                    else
+                        hScroll.Width = ClientWidth - LeftThumb.Width;
                 }
-                this.vScroll.Left = this.ClientWidth - this.vScroll.Width;
-                this.hScroll.Top = this.ClientHeight - this.hScroll.Height;
-                this.LeftThumb.Left = 0;
-                this.LeftThumb.Top = this.hScroll.Top;
-                this.TopThumb.Left = this.vScroll.Left;
+                else
+                {
+                    if (vScroll.Visible)
+                        hScroll.Width = ClientWidth - vScroll.Width;
+                    else
+                        hScroll.Width = ClientWidth;
+
+                    hScroll.Left = 0;
+                }
+
+
+                vScroll.Left = ClientWidth - vScroll.Width;
+                hScroll.Top = ClientHeight - hScroll.Height;
+
+                LeftThumb.Left = 0;
+                LeftThumb.Top = hScroll.Top;
+
+                TopThumb.Left = vScroll.Left;
                 ;
-                this.TopThumb.Top = 0;
-                this.Filler.Left = this.vScroll.Left;
-                this.Filler.Top = this.hScroll.Top;
-                this.Filler.Width = this.vScroll.Width;
-                this.Filler.Height = this.hScroll.Height;
-            } catch{}
+                TopThumb.Top = 0;
+
+
+                Filler.Left = vScroll.Left;
+                Filler.Top = hScroll.Top;
+                Filler.Width = vScroll.Width;
+                Filler.Height = hScroll.Height;
+            }
+            catch {}
         }
 
         #region Component Designer generated code
+
         private void InitializeComponent()
         {
-            var resources = new System.Resources.ResourceManager(typeof(SplitViewChildControl));
+            var resources = new System.Resources.ResourceManager(typeof (SplitViewChildControl));
             this.hScroll = new System.Windows.Forms.HScrollBar();
             this.vScroll = new System.Windows.Forms.VScrollBar();
             this.Filler = new System.Windows.Forms.Panel();
             this.TopThumb = new Alsing.Windows.Forms.CoreLib.ThumbControl();
             this.LeftThumb = new Alsing.Windows.Forms.CoreLib.ThumbControl();
+
+
             this.SuspendLayout();
             // 
             // hScroll
@@ -232,6 +283,7 @@ namespace Alsing.Windows.Forms.CoreLib
             this.hScroll.Name = "hScroll";
             this.hScroll.Size = new System.Drawing.Size(440, 16);
             this.hScroll.TabIndex = 0;
+
             // 
             // vScroll
             // 
@@ -269,6 +321,7 @@ namespace Alsing.Windows.Forms.CoreLib
             this.LeftThumb.Size = new System.Drawing.Size(8, 16);
             this.LeftThumb.TabIndex = 3;
             this.LeftThumb.Visible = false;
+
             // 
             // SplitViewChildControl
             // 
@@ -278,6 +331,7 @@ namespace Alsing.Windows.Forms.CoreLib
             this.Size = new System.Drawing.Size(456, 376);
             this.ResumeLayout(false);
         }
+
         #endregion
     }
 }

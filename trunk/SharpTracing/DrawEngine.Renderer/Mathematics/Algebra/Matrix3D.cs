@@ -14,6 +14,7 @@
 using System.Diagnostics;
 using System.Text;
 using DrawEngine.Renderer.Mathematics.Algebra;
+using System.Runtime.InteropServices;
 
 // NOTE.  The (x,y,z) coordinate system is assumed to be right-handed.
 // Coordinate axis rotation matrices are of the form
@@ -35,6 +36,7 @@ namespace DrawEngine.Renderer.Algebra
     /// <summary>
     /// A 3x3 matrix which can represent rotations around axes.
     /// </summary>
+    [Serializable, StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct Matrix3D
     {
         #region Member variables and constants

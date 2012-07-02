@@ -7,6 +7,7 @@
 // * or http://www.gnu.org/copyleft/lesser.html for details.
 // *
 // *
+
 using System.Collections.Generic;
 
 namespace Alsing.SourceCode
@@ -20,6 +21,7 @@ namespace Alsing.SourceCode
         /// The file type extension
         /// </summary>
         public string Extension = "";
+
         /// <summary>
         /// The name of the file type
         /// </summary>
@@ -40,38 +42,49 @@ namespace Alsing.SourceCode
     public class SyntaxDefinition
     {
         #region PUBLIC PROPERTY SEPARATORS
+
         private string _Separators = ".,:;{}()[]+-*/\\ \t=&%$#@!|&";
+
         public string Separators
         {
-            get { return this._Separators; }
-            set { this._Separators = value; }
+            get { return _Separators; }
+            set { _Separators = value; }
         }
+
         #endregion
 
         #region PUBLIC PROPERTY VERSION
+
         private long _Version = long.MinValue;
+
         public long Version
         {
-            get { return this._Version; }
-            set { this._Version = value; }
+            get { return _Version; }
+            set { _Version = value; }
         }
+
         #endregion
 
         private readonly Dictionary<SpanDefinition, SpanDefinition> spanDefinitionLookup =
-                new Dictionary<SpanDefinition, SpanDefinition>();
+            new Dictionary<SpanDefinition, SpanDefinition>();
+
         private readonly Dictionary<TextStyle, TextStyle> styleLookup = new Dictionary<TextStyle, TextStyle>();
+
         /// <summary>
         /// List containing the valid filetypes for this syntax
         /// </summary>
         public List<FileType> FileTypes = new List<FileType>();
+
         /// <summary>
         /// The start spanDefinition for this syntax
         /// </summary>
         public SpanDefinition mainSpanDefinition;
+
         /// <summary>
         /// Name of the SyntaxDefinition
         /// </summary>
         public string Name = "";
+
         /// <summary>
         /// Gets all BlockTypes in a given syntax.
         /// </summary>
@@ -79,122 +92,153 @@ namespace Alsing.SourceCode
         {
             get
             {
-                this.spanDefinitionLookup.Clear();
-                this.FillBlocks(this.mainSpanDefinition);
-                var blocks = new SpanDefinition[this.spanDefinitionLookup.Values.Count];
+                spanDefinitionLookup.Clear();
+                FillBlocks(mainSpanDefinition);
+                var blocks = new SpanDefinition[spanDefinitionLookup.Values.Count];
                 int i = 0;
-                foreach(SpanDefinition bt in this.spanDefinitionLookup.Values){
+                foreach (SpanDefinition bt in spanDefinitionLookup.Values)
+                {
                     blocks[i] = bt;
                     i++;
                 }
+
                 return blocks;
             }
         }
+
         public TextStyle[] Styles
         {
             get
             {
-                this.styleLookup.Clear();
-                SpanDefinition[] spanDefinitions = this.SpanDefinitions;
-                foreach(SpanDefinition bt in spanDefinitions){
-                    this.styleLookup[bt.Style] = bt.Style;
-                    foreach(Scope sc in bt.ScopePatterns){
-                        if(sc.Style != null){
-                            this.styleLookup[sc.Style] = sc.Style;
-                        }
+                styleLookup.Clear();
+                SpanDefinition[] spanDefinitions = SpanDefinitions;
+                foreach (SpanDefinition bt in spanDefinitions)
+                {
+                    styleLookup[bt.Style] = bt.Style;
+
+                    foreach (Scope sc in bt.ScopePatterns)
+                    {
+                        if (sc.Style != null)
+                            styleLookup[sc.Style] = sc.Style;
                     }
-                    foreach(PatternList pl in bt.KeywordsList){
-                        if(pl.Style != null){
-                            this.styleLookup[pl.Style] = pl.Style;
-                        }
+
+                    foreach (PatternList pl in bt.KeywordsList)
+                    {
+                        if (pl.Style != null)
+                            styleLookup[pl.Style] = pl.Style;
                     }
-                    foreach(PatternList pl in bt.OperatorsList){
-                        if(pl.Style != null){
-                            this.styleLookup[pl.Style] = pl.Style;
-                        }
+
+                    foreach (PatternList pl in bt.OperatorsList)
+                    {
+                        if (pl.Style != null)
+                            styleLookup[pl.Style] = pl.Style;
                     }
                 }
-                var styles = new TextStyle[this.styleLookup.Values.Count];
+
+                var styles = new TextStyle[styleLookup.Values.Count];
                 int i = 0;
-                foreach(TextStyle st in this.styleLookup.Values){
+                foreach (TextStyle st in styleLookup.Values)
+                {
                     styles[i] = st;
                     i++;
                 }
                 return styles;
             }
         }
+
         public void UpdateLists()
         {
-            SpanDefinition[] spanDefinitions = this.SpanDefinitions;
-            foreach(SpanDefinition block in spanDefinitions){
+            SpanDefinition[] spanDefinitions = SpanDefinitions;
+            foreach (SpanDefinition block in spanDefinitions)
+            {
                 block.Parent = this;
                 block.ResetLookupTable();
+
                 block.KeywordsList.Parent = block;
-                foreach(PatternList patterns in block.KeywordsList){
+                foreach (PatternList patterns in block.KeywordsList)
+                {
                     patterns.Parent = block.KeywordsList;
-                    foreach(Pattern pattern in patterns){
+
+                    foreach (Pattern pattern in patterns)
+                    {
                         block.AddToLookupTable(pattern);
                     }
                 }
+
                 block.OperatorsList.Parent = block;
-                foreach(PatternList patterns in block.OperatorsList){
+                foreach (PatternList patterns in block.OperatorsList)
+                {
                     patterns.Parent = block.OperatorsList;
-                    foreach(Pattern pattern in patterns){
+
+                    foreach (Pattern pattern in patterns)
+                    {
                         block.AddToLookupTable(pattern);
                     }
                 }
                 block.BuildLookupTable();
             }
         }
+
         public void ChangeVersion()
         {
-            this.Version++;
-            if(this.Version > long.MaxValue - 10){
-                this.Version = long.MinValue;
-            }
+            Version++;
+            if (Version > long.MaxValue - 10)
+                Version = long.MinValue;
         }
+
         public static SyntaxDefinition FromSyntaxXml(string xml)
         {
             var sl = new SyntaxDefinitionLoader();
             return sl.LoadXML(xml);
         }
+
         public static SyntaxDefinition FromSyntaxFile(string filename)
         {
             var sl = new SyntaxDefinitionLoader();
             return sl.Load(filename);
         }
+
         public void MergeByMainBlock(SyntaxDefinition Target)
         {
-            SpanDefinition[] spanDefinitions = this.SpanDefinitions;
-            foreach(SpanDefinition bt in spanDefinitions){
+            SpanDefinition[] spanDefinitions = SpanDefinitions;
+            foreach (SpanDefinition bt in spanDefinitions)
+            {
                 bt.childSpanDefinitions.Insert(0, Target.mainSpanDefinition);
             }
         }
+
         public void MergeByChildBlocks(SyntaxDefinition Target)
         {
-            SpanDefinition[] spanDefinitions = this.SpanDefinitions;
-            foreach(SpanDefinition bt in spanDefinitions){
-                for(int i = Target.mainSpanDefinition.childSpanDefinitions.Count - 1; i >= 0; i--){
+            SpanDefinition[] spanDefinitions = SpanDefinitions;
+            foreach (SpanDefinition bt in spanDefinitions)
+            {
+                for (int i = Target.mainSpanDefinition.childSpanDefinitions.Count - 1; i >= 0; i--)
+                {
                     SpanDefinition child = Target.mainSpanDefinition.childSpanDefinitions[i];
                     bt.childSpanDefinitions.Insert(0, child);
                 }
             }
         }
+
+
         private void FillBlocks(SpanDefinition bt)
         {
-            if(bt == null){
+            if (bt == null)
                 return;
-            }
-            if(this.spanDefinitionLookup.ContainsKey(bt)){
+
+            if (spanDefinitionLookup.ContainsKey(bt))
                 return;
+
+            spanDefinitionLookup.Add(bt, bt);
+
+            foreach (SpanDefinition btc in bt.childSpanDefinitions)
+            {
+                FillBlocks(btc);
             }
-            this.spanDefinitionLookup.Add(bt, bt);
-            foreach(SpanDefinition btc in bt.childSpanDefinitions){
-                this.FillBlocks(btc);
-            }
-            foreach(Scope sc in bt.ScopePatterns){
-                this.FillBlocks(sc.spawnSpanOnEnd);
-                this.FillBlocks(sc.spawnSpanOnStart);
+            foreach (Scope sc in bt.ScopePatterns)
+            {
+                FillBlocks(sc.spawnSpanOnEnd);
+                FillBlocks(sc.spawnSpanOnStart);
             }
         }
     }
