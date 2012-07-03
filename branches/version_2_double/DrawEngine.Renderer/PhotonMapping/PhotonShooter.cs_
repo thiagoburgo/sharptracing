@@ -1,0 +1,259 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using DrawEngine.Renderer.Algebra;
+using DrawEngine.Renderer.BasicStructures;
+using DrawEngine.Renderer.Lights;
+using DrawEngine.Renderer.Tracers;
+using DrawEngine.Renderer.Materials;
+
+namespace DrawEngine.Renderer.PhotonMapping {
+    
+    public class PhotonShooter : RayCasting {
+        private enum EnlightenmentType {
+            Direct,
+            Indirect,
+            Caustics
+        }
+        private const int MaxRecursions = 500;
+        private const float IrradianceArea = 1.5f;
+        private const int IrradiancePhotonNumber = 1000000;
+
+        private int currentRecursions;
+
+        private int storedDirect;
+        private int storedIndirect;
+        private int storedCaustic;
+
+        private readonly int maxPhotons;
+
+        private readonly PhotonMap directEnlightenment;
+        private readonly PhotonMap indirectEnlightenment;
+        private readonly PhotonMap caustics;
+
+        public PhotonShooter(Scene scene, int maxPhotons) {
+            this.scene = scene;
+            this.maxPhotons = maxPhotons;
+
+            this.directEnlightenment = new PhotonMap(maxPhotons);
+            this.indirectEnlightenment = new PhotonMap(maxPhotons);
+            this.caustics = new PhotonMap(maxPhotons);
+        }
+        public override void Render(System.Drawing.Graphics g) {
+            float resX = this.scene.DefaultCamera.ResX; //g.VisibleClipBounds.Width; 
+            float resY = this.scene.DefaultCamera.ResY; //g.VisibleClipBounds.Height;
+            SolidBrush brush = new SolidBrush(Color.Black);
+            RGBColor[] colors = new RGBColor[this.scene.Sampler.SamplesPerPixel];
+            for(int y = 0; y < resY; y++) {
+                for(int x = 0; x < resX; x++) {
+                    Ray ray;
+                    if(this.scene.Sampler.SamplesPerPixel > 1) {
+                        int i = 0;
+                        foreach(Point2D sample in this.scene.Sampler.GenerateSamples(x, y)) {
+                            ray = this.scene.DefaultCamera.CreateRayFromScreen(sample.X, sample.Y);
+                            ray.PrevRefractIndex = this.scene.RefractIndex;
+                            colors[i++] = this.Trace(ray, 0);
+                        }
+                        brush.Color = AverageColors(colors).ToColor();
+                    }
+                    else {
+                        ray = this.scene.DefaultCamera.CreateRayFromScreen(x, y);
+                        brush.Color = this.Trace(ray, 0).ToColor();
+                    }
+                    g.FillRectangle(brush, x, y, 1, 1);
+                }
+            }
+        }
+        private Vector3D randomDirection() {
+            double x, y, z;
+
+            do {
+                x = new Random().NextDouble();
+                y = new Random().NextDouble();
+                z = new Random().NextDouble();
+            } while((x * x) + (y * y) + (z * z) > 1);
+
+            Vector3D randDir = new Vector3D((float)x, (float)y, (float)z);
+
+            return randDir;
+        }
+
+        private void scaleEnergy(RGBColor energy, RGBColor color) {
+            energy.R *= color.R;
+            energy.G *= color.G;
+            energy.B *= color.B;
+        }
+
+        private bool russianRoulette(double d) {
+            double e = new Random().NextDouble();
+
+            if(e < d) {
+                // Photon continues course
+                return false;
+            }
+            else {
+                // Photon absorbed
+                return true;
+            }
+        }
+
+        private void storePhoton(Point3D position, Vector3D direction, RGBColor energy, EnlightenmentType enlightenmentType) {
+
+            switch(enlightenmentType) {
+                case EnlightenmentType.Direct:
+                    storedDirect++;
+                    directEnlightenment.Store(energy, position, direction);
+                    break;
+                case EnlightenmentType.Indirect:
+                    storedIndirect++;
+                    directEnlightenment.Store(energy, position, direction);
+                    break;
+                case EnlightenmentType.Caustics:
+                    storedCaustic++;
+                    caustics.Store(energy, position, direction);
+                    break;
+            }
+        }
+
+        public void Trace(Ray ray, RGBColor energy, EnlightenmentType enlightenmentType) {
+            // TODO split refraction coeff for all waves (r, g and b)
+            currentRecursions++;
+            Intersection photonIntersection;
+            if(scene.FindIntersection(ray, out photonIntersection)) {
+                Material material = photonIntersection.HitPrimitive.Material;
+                Ray rRay = new Ray();
+                if(material.IsReflective) {
+                    if(russianRoulette(material.KSpec) || (currentRecursions >= MaxRecursions)) {
+                        storePhoton(photonIntersection.HitPoint, ray.Direction, energy, enlightenmentType);
+                    }
+                    else {
+                        Vector3D reflected = RayCasting.Reflected(photonIntersection.Normal, ray.Direction);
+                        rRay.Origin = photonIntersection.HitPoint;
+                        rRay.Direction = reflected;
+                        Trace(rRay, energy, enlightenmentType);
+                    }
+                }
+                if(material.IsTransparent) {
+
+                    if(russianRoulette(material.KTrans) || (currentRecursions >= MaxRecursions)) {
+                        storePhoton(photonIntersection.HitPoint, ray.Direction, energy, enlightenmentType);
+                    }
+                    else {
+                        Vector3D refracted;
+                        float eta = this.scene.RefractIndex * 1 / material.RefractIndex;
+                        if(RayCasting.Refracted(photonIntersection.Normal, ray.Direction, out refracted, eta)) {
+                            rRay.Origin = photonIntersection.HitPoint;
+                            rRay.Direction = refracted;
+                            rRay.PrevRefractIndex = material.RefractIndex;
+                            Trace(rRay, energy, enlightenmentType);
+                        }
+                    }
+
+                }
+
+                if(!material.IsReflective && !material.IsTransparent) {
+                    RGBColor objectColor = this.scene.Shader.Shade(ray, photonIntersection);
+                    //.getEnlightment().getColor(photonIntersection.getPoint(), photonIntersection.getNormal(), ray, scene.getLights());
+                    scaleEnergy(energy, objectColor);
+
+                    storePhoton(photonIntersection.HitPoint, ray.Direction, energy, enlightenmentType);
+
+                    if(!russianRoulette(material.KSpec) && !(currentRecursions >= MaxRecursions)) {
+                        Vector3D randDir = randomDirection();
+                        Ray reflected = new Ray(photonIntersection.HitPoint, randDir);
+                        Trace(reflected, energy, enlightenmentType);
+                    }
+                }
+            }
+        }
+
+        public void Shoot() {
+            //int lightNum = 0;
+
+            foreach(Light light in scene.Lights) {
+                //lightNum++;
+
+                int progress = 0;
+
+                storedDirect = 0;
+                storedIndirect = 0;
+                storedCaustic = 0;
+
+                while((storedDirect + storedIndirect + storedCaustic) < (maxPhotons / scene.Lights.Count)) {
+
+                    int done = (int)Math.Round(100.0 * ((storedDirect + storedIndirect + storedCaustic) + 1) / (maxPhotons / scene.Lights.Count));
+
+                    if(progress != done) {
+                        progress = done;
+
+                        //System.out.println("\r\tLight (" + lightNum + "/" + scene.getLights().size() + ") : " + progress + "%");
+                    }
+
+                    Vector3D randDir = randomDirection();
+                    Ray ray = new Ray(light.Position, randDir);
+
+                    RGBColor energy = light.Power * light.Color;
+
+                    currentRecursions = 0;
+                    Trace(ray, energy, EnlightenmentType.Direct);
+                }
+
+                /* Photons energy scaling */
+                if(storedDirect != 0) {
+                    directEnlightenment.ScalePhotonPower((1.0f / storedDirect));
+                }
+                if(storedIndirect != 0) {
+                    indirectEnlightenment.ScalePhotonPower((1.0f / storedIndirect));
+                }
+
+                if(storedCaustic != 0) {
+                    caustics.ScalePhotonPower((1.0f / storedCaustic));
+                }
+            }
+
+            //System.out.println("- Balancing direct photon map...");
+            directEnlightenment.Balance();
+
+            //System.out.println("- Balancing indirect photon map...");
+            indirectEnlightenment.Balance();
+
+            //System.out.println("- Balancing caustic photon map...");
+            caustics.Balance();
+        }
+
+        public RGBColor IrradianceEstimate(Intersection intersection) {
+
+
+            Point3D pos = intersection.HitPoint;
+            Vector3D normal = intersection.Normal;
+            // Direct enlightment component
+            RGBColor irradiance = directEnlightenment.IrradianceEstimate(pos, normal, IrradianceArea, Math.Min(IrradiancePhotonNumber, maxPhotons));
+
+            RGBColor color = new RGBColor();
+            color += irradiance;
+            //color.set(color.x + irradiance[0], color.y + irradiance[1], color.z + irradiance[2]);
+
+            // Indirect enlightment component
+
+            irradiance = indirectEnlightenment.IrradianceEstimate(pos, normal, IrradianceArea, Math.Min(IrradiancePhotonNumber, maxPhotons));
+
+            //color.set(color.x + irradiance[0], color.y + irradiance[1], color.z + irradiance[2]);
+            color += irradiance;
+
+            // Caustics component
+            //caustics.irradiance_estimate(irradiance, pos, normal, IrradianceArea, Math.min(IrradiancePhotonNumber, maxPhotons));
+            irradiance = caustics.IrradianceEstimate(pos, normal, IrradianceArea, Math.Min(IrradiancePhotonNumber, maxPhotons));
+
+            //color.set(color.x + irradiance[0], color.y + irradiance[1], color.z + irradiance[2]);
+            color += irradiance;
+
+            //Enlightment.normalize(color);
+            color.Clamp();
+            return color;
+        }
+
+
+    }
+}

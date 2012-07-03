@@ -1,0 +1,501 @@
+using System;
+using DrawEngine.Renderer.Algebra;
+using DrawEngine.Renderer.BasicStructures;
+
+namespace DrawEngine.Renderer.PhotonMapping
+{
+    //adapted from Realistic Image Synthesis Using Photon
+    //Mapping, by Henrik Wann Jensen
+    //************************************
+    //Photons are stored in a heap (after all photons
+    // have been accumulated
+    //************************************
+    //Note: a heap is a balanced binary tree stored in an array such that
+    // if a node is at index i, then its left child is at index 2*i
+    // and its right child is at 2*i+1
+    //This implies that indices start at 1, and NOT 0.
+    public class PhotonMap
+    {
+        private Point3D bbox_max;
+        private Point3D bbox_min;
+        private Photon[] heap;
+        //last index before leaves
+        private int lastbranch;
+        //maximum distance to search for photons
+        //maximum number of photons
+        private int maxPhotons;
+        //maximum number of photons per search
+        private int maxSamples;
+        private double maxSearchDist;
+        private NearestPhotonList nearest;
+        private int nphotons;
+        private Photon[] orig;
+        public PhotonMap(int maxPhotons)
+        {
+            this.nphotons = 0;
+            this.maxPhotons = maxPhotons;
+            this.orig = new Photon[maxPhotons + 1];
+            //so that heap can be addressed from index 1
+            this.heap = new Photon[maxPhotons + 1];
+            this.maxSearchDist = 1.0;
+            this.maxSamples = 100;
+            this.nearest = null;
+        }
+
+        #region Public Properties
+        public int PhotonsCount
+        {
+            get { return this.nphotons; }
+        }
+        //maximum distance to search for photons
+        public double MaxSearchDist
+        {
+            get { return this.maxSearchDist; }
+            set { this.maxSearchDist = value; }
+        }
+        //maximum number of photons
+        public int MaxPhotons
+        {
+            get { return this.maxPhotons; }
+            set { this.maxPhotons = value; }
+        }
+        //maximum number of photons per search
+        public int MaxSamples
+        {
+            get { return this.maxSamples; }
+            set { this.maxSamples = value; }
+        }
+        #endregion
+
+        #region Private Methods
+        private void swap(int i, int j)
+        {
+            Photon tmp;
+            tmp = this.orig[i];
+            this.orig[i] = this.orig[j];
+            this.orig[j] = tmp;
+        }
+        private void medianSplit(int start, int end, int median, int axis)
+        {
+            int left = start;
+            int right = end;
+            double v = 0.0;
+            while(right > left){
+                if(axis == 0){
+                    v = this.orig[right].Position.X;
+                }
+                if(axis == 1){
+                    v = this.orig[right].Position.Y;
+                }
+                if(axis == 2){
+                    v = this.orig[right].Position.Z;
+                }
+                int i = left - 1;
+                int j = right;
+                while(true){
+                    if(axis == 0){
+                        while(this.orig[i + 1].Position.X < v){
+                            i++;
+                        }
+                    }
+                    if(axis == 1){
+                        while(this.orig[i + 1].Position.Y < v){
+                            i++;
+                        }
+                    }
+                    if(axis == 2){
+                        while(this.orig[i + 1].Position.Z < v){
+                            i++;
+                        }
+                    }
+                    i++;
+                    if(axis == 0){
+                        while((this.orig[j - 1].Position.X > v) && (j - 1 > left)){
+                            j--;
+                        }
+                    }
+                    if(axis == 1){
+                        while((this.orig[j - 1].Position.Y > v) && (j - 1 > left)){
+                            j--;
+                        }
+                    }
+                    if(axis == 2){
+                        while((this.orig[j - 1].Position.Z > v) && (j - 1 > left)){
+                            j--;
+                        }
+                    }
+                    j--;
+                    if(i >= j){
+                        break;
+                    }
+                    this.swap(i, j);
+                }
+                this.swap(i, right);
+                if(i >= median){
+                    right = i - 1;
+                }
+                if(i <= median){
+                    left = i + 1;
+                }
+            }
+        }
+        private void balanceSegment(int index, int start, int end)
+        {
+            Vector3D extent;
+            //compute median
+            int median = 1;
+            while(4 * median <= (end - start + 1)){
+                median += median;
+            }
+            if(3 * median <= (end - start + 1)){
+                median += median;
+                median += start - 1;
+            } else{
+                median = end - median + 1;
+            }
+            //find splitting axis
+            extent = this.bbox_max - this.bbox_min;
+            int axis = 0;
+            if((extent.X > extent.Y) && (extent.X > extent.Z)){
+                axis = 0;
+            } else if(extent.Y > extent.Z){
+                axis = 1;
+            } else{
+                axis = 2;
+            }
+            //partition photons around median
+            this.medianSplit(start, end, median, axis);
+            this.heap[index] = this.orig[median];
+            this.heap[index].SplitAxis = axis;
+            //recursively balance left and right block
+            if(median > start){
+                //balance left segment
+                if(start < median - 1){
+                    Point3D tmp = this.bbox_max;
+                    if(axis == 0){
+                        this.bbox_max.X = this.heap[index].Position.X;
+                    }
+                    if(axis == 1){
+                        this.bbox_max.Y = this.heap[index].Position.Y;
+                    }
+                    if(axis == 2){
+                        this.bbox_max.Z = this.heap[index].Position.Z;
+                    }
+                    this.balanceSegment(2 * index, start, median - 1);
+                    this.bbox_max = tmp;
+                } else{
+                    this.heap[2 * index] = this.orig[start];
+                }
+            }
+            if(median < end){
+                //balance right segment
+                if(median + 1 < end){
+                    Point3D tmp = this.bbox_min;
+                    if(axis == 0){
+                        this.bbox_min.X = this.heap[index].Position.X;
+                    }
+                    if(axis == 1){
+                        this.bbox_min.Y = this.heap[index].Position.Y;
+                    }
+                    if(axis == 2){
+                        this.bbox_min.Z = this.heap[index].Position.Z;
+                    }
+                    this.balanceSegment(2 * index + 1, median + 1, end);
+                    this.bbox_min = tmp;
+                } else{
+                    this.heap[2 * index + 1] = this.orig[end];
+                }
+            }
+        }
+        private void locatePhotons(int index, Point3D pos)
+        {
+            Photon p = this.heap[index];
+            double dist1 = 0.0, dist2;
+            if(index < this.lastbranch){
+                if(p.SplitAxis == 0){
+                    dist1 = pos.X - p.Position.X;
+                }
+                if(p.SplitAxis == 1){
+                    dist1 = pos.Y - p.Position.Y;
+                }
+                if(p.SplitAxis == 2){
+                    dist1 = pos.Z - p.Position.Z;
+                }
+                if(dist1 > 0.0){
+                    //search the right half
+                    this.locatePhotons(2 * index + 1, pos);
+                    if(dist1 * dist1 < this.nearest.SearchDist){
+                        //interval overlaps left half
+                        this.locatePhotons(2 * index, pos);
+                    }
+                } else{
+                    //search the left half
+                    this.locatePhotons(2 * index, pos);
+                    if(dist1 * dist1 < this.nearest.SearchDist){
+                        //interval overlaps right half
+                        this.locatePhotons(2 * index + 1, pos);
+                    }
+                }
+            }
+            //calculate distance from photon to point
+            dist2 = (p.Position - pos) * (p.Position - pos);
+            if(dist2 < this.nearest.SearchDist){
+                //the photon must be added
+                this.nearest.addPhoton(p, dist2);
+            }
+        }
+        #endregion
+
+        #region Public Methods
+        public void Store(Point3D p, Vector3D dir, RGBColor power)
+        {
+            if(this.nphotons >= this.maxPhotons){
+                return;
+            }
+            Photon ph = new Photon(p, dir, power);
+            this.nphotons++;
+            this.orig[this.nphotons] = ph;
+        }
+        public void BuildHeap()
+        {
+            int i;
+            this.bbox_min = this.orig[1].Position;
+            this.bbox_max = this.orig[1].Position;
+            for(i = 2; i <= this.nphotons; i++){
+                this.heap[i] = this.orig[i];
+                if(this.orig[i].Position.X < this.bbox_min.X){
+                    this.bbox_min.X = this.orig[i].Position.X;
+                }
+                if(this.orig[i].Position.Y < this.bbox_min.Y){
+                    this.bbox_min.X = this.orig[i].Position.Y;
+                }
+                if(this.orig[i].Position.Z < this.bbox_min.Z){
+                    this.bbox_min.X = this.orig[i].Position.Z;
+                }
+                if(this.orig[i].Position.X > this.bbox_max.X){
+                    this.bbox_max.X = this.orig[i].Position.X;
+                }
+                if(this.orig[i].Position.Y > this.bbox_max.Y){
+                    this.bbox_max.X = this.orig[i].Position.Y;
+                }
+                if(this.orig[i].Position.Z > this.bbox_max.Z){
+                    this.bbox_max.X = this.orig[i].Position.Z;
+                }
+            }
+            this.balanceSegment(1, 1, this.nphotons);
+            this.lastbranch = this.nphotons / 2 - 1;
+            Console.Write("Heap built.\n");
+        }
+        //visualize the photon map 
+        public RGBColor ViewMap(Point3D p, double tolerance)
+        {
+            this.nearest = new NearestPhotonList(1);
+            this.nearest.MaxDist = this.maxSearchDist;
+            this.nearest.SearchDist = this.maxSearchDist * this.maxSearchDist;
+            this.nearest.CentralPoint = p;
+            this.locatePhotons(1, p);
+            if(this.nearest.SearchDist < tolerance){
+                return RGBColor.White;
+            } else{
+                return RGBColor.Black;
+            }
+        }
+        //Irradiance at p, with surface normal n
+        public RGBColor Irradiance(Point3D p, Vector3D n /*, Vector3D v, Material m*/)
+        {
+            int i;
+            double dist2;
+            if(this.nearest == null){
+                this.nearest = new NearestPhotonList(this.maxSamples);
+                this.nearest.MaxDist = this.maxSearchDist;
+                this.nearest.SearchDist = this.maxSearchDist * this.maxSearchDist;
+                this.nearest.CentralPoint = p;
+            } else{
+                //reuse existing photons distance to increase
+                //search speed (cached values) -- only if all samples
+                // are found
+                this.nearest.CentralPoint = p;
+                if(this.nearest.Count == this.maxSamples){
+                    dist2 = this.nearest.RecomputeExistingDistance();
+                    dist2 = dist2 + 1e-3;
+                } else{
+                    dist2 = this.maxSearchDist * this.maxSearchDist;
+                }
+                this.nearest.Count = 0;
+                this.nearest.MaxDist = this.maxSearchDist;
+                this.nearest.SearchDist = dist2;
+                //nearest.searchdist=maxdist*maxdist;
+            }
+            this.locatePhotons(1, p);
+            RGBColor irrad = RGBColor.Black;
+            if(this.nearest.Count < 2){
+                return irrad;
+            }
+            dist2 = this.nearest.SearchDist;
+            double w = 0.0, t = 0.0;
+            for(i = 0; i < this.nearest.Count; i++){
+                if(this.nearest[i].Direction * n < 0.0){
+                    irrad += this.nearest.Photons[i].Power;
+                    //irrad += m.Light(n, -nearest[i].Direction, v,
+                    //        RGBColor.Black,
+                    //        nearest[i].DiffusePower * 10000.0f / nearest[i].Source.photons,
+                    //        nearest[i].SpecularPower * 10000.0f / nearest[i].Source.photons);
+                }
+            }
+            double tmp = (1.0 / Math.PI) / (dist2 + 1e-7);
+            //System.Console.Write("{0}\n", dist2);
+            //double tmp=1.0/t/dist2;
+            //double tmp=1.0;
+            irrad *= (float)tmp;
+            return irrad;
+        }
+        #endregion
+
+        #region Inner Classes
+        private class NearestPhotonList
+        {
+            private Point3D centralPoint;
+            private int count;
+            private double[] dists;
+            private int maxCount;
+            private double maxDist;
+            private Photon[] photons;
+            private double searchDist;
+            public NearestPhotonList(int max)
+            {
+                this.maxCount = max;
+                this.count = 0;
+                this.photons = new Photon[max];
+                this.dists = new double[max];
+                this.searchDist = this.maxDist * this.maxDist;
+            }
+            public Point3D CentralPoint
+            {
+                get { return this.centralPoint; }
+                set { this.centralPoint = value; }
+            }
+            public double[] Dists
+            {
+                get { return this.dists; }
+                set { this.dists = value; }
+            }
+            public double MaxDist
+            {
+                get { return this.maxDist; }
+                set { this.maxDist = value; }
+            }
+            public double SearchDist
+            {
+                get { return this.searchDist; }
+                set { this.searchDist = value; }
+            }
+            public int MaxCount
+            {
+                get { return this.maxCount; }
+                set { this.maxCount = value; }
+            }
+            public Photon[] Photons
+            {
+                get { return this.photons; }
+                set { this.photons = value; }
+            }
+            public int Count
+            {
+                get { return this.count; }
+                set { this.count = value; }
+            }
+            public Photon this[int i]
+            {
+                get { return this.photons[i]; }
+            }
+            //recompute distances to photons
+            //maxdist must be changed, but
+            // searchdist should not be changed!
+            public double RecomputeExistingDistance()
+            {
+                int i;
+                if(this.count <= 0){
+                    return 1e-10;
+                }
+                for(i = 0; i < this.count; i++){
+                    this.dists[i] = (this.photons[i].Position - this.centralPoint)
+                                    * (this.photons[i].Position - this.centralPoint);
+                }
+                this.maxDist = this.dists[0];
+                for(i = 1; i < this.count; i++){
+                    if(this.dists[i] > this.maxDist){
+                        this.maxDist = this.dists[i];
+                    }
+                }
+                return this.maxDist;
+            }
+            public void addPhoton(Photon p, double dist)
+            {
+                int pos, i;
+                //always keep the largest photon in position 0.
+                if(this.count < this.maxCount){
+                    if(this.count == 0){
+                        this.photons[this.count] = p;
+                        this.dists[this.count] = dist;
+                        this.maxDist = dist;
+                    } else{
+                        if(dist > this.maxDist){
+                            this.photons[this.count] = this.photons[0];
+                            this.dists[this.count] = this.dists[0];
+                            this.photons[0] = p;
+                            this.dists[0] = dist;
+                            this.maxDist = dist;
+                        } else{
+                            this.photons[this.count] = p;
+                            this.dists[this.count] = dist;
+                        }
+                    }
+                    this.count++;
+                } else{
+                    if(dist < this.maxDist){
+                        this.photons[0] = p;
+                        this.dists[0] = dist;
+                    }
+                    this.maxDist = dist;
+                    pos = 0;
+                    for(i = 1; i < this.maxCount; i++){
+                        if(this.dists[i] > this.maxDist){
+                            this.maxDist = this.dists[i];
+                            pos = i;
+                        }
+                    }
+                    if(pos != 0){
+                        p = this.photons[0];
+                        this.photons[0] = this.photons[pos];
+                        this.photons[pos] = p;
+                        this.dists[pos] = this.dists[0];
+                        this.dists[0] = this.maxDist;
+                    }
+                    this.searchDist = this.maxDist;
+                }
+            }
+        }
+        #endregion
+    }
+
+    public class Photon
+    {
+        public Vector3D Direction;
+        public Point3D Position;
+        public RGBColor Power;
+        public int SplitAxis;
+        //public Photon() {
+        //    position = null;
+        //    direction = null;
+        //    source = null;
+        //    diffuseColor = null;
+        //    specularColor = null;
+        //}
+        public Photon(Point3D p, Vector3D dir, RGBColor power)
+        {
+            this.Position = p;
+            this.Direction = dir;
+            this.Power = power;
+        }
+    }
+}

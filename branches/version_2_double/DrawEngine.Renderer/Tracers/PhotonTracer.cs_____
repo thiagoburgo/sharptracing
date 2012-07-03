@@ -1,0 +1,269 @@
+﻿using System;
+using System.Drawing;
+using DrawEngine.Renderer.Algebra;
+using DrawEngine.Renderer.BasicStructures;
+using DrawEngine.Renderer.Lights;
+using DrawEngine.Renderer.Materials;
+using DrawEngine.Renderer.PhotonMapping;
+
+namespace DrawEngine.Renderer.Tracers
+{
+    public enum EnlightenmentType
+    {
+        Direct, 
+        Indirect,
+        Caustics
+    }
+
+    public class PhotonTracer : RayCasting
+    {
+        private readonly PhotonMap causticsEnlightenment;
+        private readonly PhotonMap indirectEnlightenment;
+        //private readonly int maxPhotons;
+        //private int currentRecursions;
+        private float irradianceArea = 1.5f;
+        private int irradiancePhotonNumber = 1000000;
+        private int maxRecursions = 500;
+        private int storedCaustic;
+        //private int storedDirect;
+        private int storedIndirect;
+        public PhotonTracer(Scene scene, int maxPhotons) : base(scene)
+        {
+            this.scene = scene;
+            //this.maxPhotons = maxPhotons;
+            this.indirectEnlightenment = new PhotonMap(maxPhotons);
+            this.causticsEnlightenment = new PhotonMap(maxPhotons);
+        }
+        public int MaxRecursions
+        {
+            get { return this.maxRecursions; }
+            set { this.maxRecursions = value; }
+        }
+        public float IrradianceArea
+        {
+            get { return this.irradianceArea; }
+            set { this.irradianceArea = value; }
+        }
+        public int IrradiancePhotonNumber
+        {
+            get { return this.irradiancePhotonNumber; }
+            set { this.irradiancePhotonNumber = value; }
+        }
+        public PhotonMap IndirectEnlightenment
+        {
+            get { return this.indirectEnlightenment; }
+        }
+        public PhotonMap CausticsEnlightenment
+        {
+            get { return this.causticsEnlightenment; }
+        }
+        private void ScatterPhotons()
+        {
+            foreach(Light light in this.scene.Lights){
+                int emittedPhotons = 0;
+                foreach(Photon photon in light.GeneratePhotons()){
+                    this.TracePhoton(photon, 0, EnlightenmentType.Direct);
+                    emittedPhotons++;
+                }
+                float inv_emittedPhotons = 1.0f / emittedPhotons;
+                this.CausticsEnlightenment.ScalePhotonPower(inv_emittedPhotons);
+                this.IndirectEnlightenment.ScalePhotonPower(inv_emittedPhotons);
+            }
+            this.CausticsEnlightenment.Balance();
+            this.IndirectEnlightenment.Balance();
+        }
+        public override void Render(Graphics g)
+        {
+            this.ScatterPhotons();
+
+            #region Progressive Render
+            //float resX = this.scene.DefaultCamera.ResX; //g.VisibleClipBounds.Width; 
+            //float resY = this.scene.DefaultCamera.ResY; //g.VisibleClipBounds.Height;
+            //float x, y;
+            //int iterations = 0;
+            //RGBColor[] colors = new RGBColor[this.scene.Sampler.SamplesPerPixel + 1];
+            //int pCol = 0, pRow = 0, pIteration = 1, pMax = 2;
+            //SolidBrush brush = new SolidBrush(Color.Black);
+            //float resTotal = resX * resY * this.scene.Sampler.SamplesPerPixel;
+            //while (iterations <= resTotal)
+            //{
+            //    //Render Pixels Out of Order With Increasing Resolution: 2x2, 4x4, 16x16... 512x512
+            //    if (pCol >= pMax)
+            //    {
+            //        pRow++;
+            //        pCol = 0;
+            //        if (pRow >= pMax)
+            //        {
+            //            pIteration++;
+            //            pRow = 0;
+            //            pMax = (int)Math.Pow(2, pIteration);
+            //        }
+            //    }
+            //    bool pNeedsDrawing = (pIteration == 1 || (pRow % 2 != 0) || (!(pRow % 2 != 0) && (pCol % 2 != 0)));
+            //    x = pCol * (resX / pMax);
+            //    y = pRow * (resY / pMax);
+            //    pCol++;
+            //    if (pNeedsDrawing)
+            //    {
+            //        iterations++;
+            //        Ray ray;
+            //        if (this.scene.Sampler.SamplesPerPixel > 1)
+            //        {
+            //            int i = 0;
+            //            foreach (Point2D sample in this.scene.Sampler.GenerateSamples(x, y))
+            //            {
+            //                //ray = this.scene.DefaultCamera.CreateRayFromScreen(x + sample.X, y + sample.Y);
+            //                ray = this.scene.DefaultCamera.CreateRayFromScreen(sample.X, sample.Y);
+            //                ray.PrevRefractIndex = this.scene.RefractIndex;
+            //                colors[i++] = this.Trace(ray, 0);
+            //            }
+            //            brush.Color = AverageColors(colors).ToColor();
+            //        }
+            //        else
+            //        {
+            //            ray = this.scene.DefaultCamera.CreateRayFromScreen(x, y);
+            //            brush.Color = this.Trace(ray, 0).ToColor();
+            //        }
+            //        g.FillRectangle(brush, x, y, (resX / pMax), (resY / pMax));
+            //    }
+            //}
+            #endregion
+
+            #region Linear Render
+            //float resX = this.scene.DefaultCamera.ResX; //g.VisibleClipBounds.Width; 
+            //float resY = this.scene.DefaultCamera.ResY; //g.VisibleClipBounds.Height;
+            //SolidBrush brush = new SolidBrush(Color.Black);
+            //RGBColor[] colors = new RGBColor[this.scene.Sampler.SamplesPerPixel];
+            //for(int y = 0; y < resY; y++) {
+            //    for(int x = 0; x < resX; x++) {
+            //        Ray ray;
+            //        if(this.scene.Sampler.SamplesPerPixel > 1) {
+            //            int i = 0;
+            //            foreach(Point2D sample in this.scene.Sampler.GenerateSamples(x, y)) {
+            //                ray = this.scene.DefaultCamera.CreateRayFromScreen(sample.X, sample.Y);
+            //                ray.PrevRefractIndex = this.scene.RefractIndex;
+            //                colors[i++] = this.TracePhoton(ray, 0);
+            //            }
+            //            brush.Color = AverageColors(colors).ToColor();
+            //        }
+            //        else {
+            //            ray = this.scene.DefaultCamera.CreateRayFromScreen(x, y);
+            //            brush.Color = this.TracePhoton(ray, 0, ).ToColor();
+            //        }
+            //        g.FillRectangle(brush, x, y, 1, 1);
+            //    }
+            //}
+            #endregion
+        }
+        public static float Max(float v1, float v2, float v3)
+        {
+            return Math.Max(v1, Math.Max(v2, v3));
+        }
+        public void TracePhoton(Photon photon, int depth, EnlightenmentType enlightenmentType)
+        {
+            Intersection intersection;
+            if(this.scene.FindIntersection(photon, out intersection) && (depth < this.MaxRecursions)){
+                Material material = intersection.HitPrimitive.Material;
+                this.scene.Shader = material.CreateShader(this.scene);
+                RGBColor color = this.scene.Shader.Shade(photon, intersection);
+                Photon rPhoton = new Photon();
+                //float colorAverage = color.Average;
+                //// Compute the diffuse reflection probability
+                //float probDiffuse = material.KDiff * colorAverage;
+                //// Compute the specular reflection probability
+                //float probSpecular = material.KSpec * colorAverage;
+                //// Compute the transmission probability
+                //float probTransmit = material.KTrans * colorAverage;
+                Random rdn = new Random(((int)DateTime.Now.Ticks) ^ 47);
+                double randomValue = rdn.NextDouble();
+                if(randomValue <= material.KTrans){
+                    Vector3D T;
+                    float eta = this.scene.RefractIndex * 1 / material.RefractIndex;
+                    if(Refracted(intersection.Normal, photon.Direction, out T, eta)){
+                        rPhoton.Position = intersection.HitPoint;
+                        rPhoton.Direction = T;
+                        //rRay.PrevRefractIndex = material.RefractIndex;
+                        rPhoton.Power = (photon.Power * material.KTrans);
+                        this.TracePhoton(rPhoton, depth + 1, EnlightenmentType.Caustics);
+                    }
+                } else if(randomValue <= material.KDiff + material.KSpec){
+                    #region Model
+                    //mu_0 = unif(0,1);
+                    //if( mu_0 < (kr) )
+                    //   Reflect a ray
+                    //else if( mu_0 < (kr + kt) )
+                    //   F_r = Fresnel term
+                    //   mu_1 = unif(0,1);
+                    //   if( mu_1 < F_r )
+                    //      Reflect a ray
+                    //   else
+                    //      Refract a ray
+                    //else if( mu_0 < (kr + kt + kd) )
+                    //   Diffusely scatter
+                    //else
+                    //   absorb 
+                    #endregion
+
+                    #region Luz com Area
+                    //Example: Diffuse square light
+                    //• Generate random position p on square
+                    //• Generate diffuse direction d
+                    //• Emit photon from p in direction d
+                    //// Generate diffuse direction
+                    //u = random();
+                    //v = 2*π*random();
+                    //d = vector(cos(v)Math.Sqrt(u) ,sin(v)Math.Sqrt(u) ,Math.Sqrt(1-u) ); 
+                    #endregion
+
+                    randomValue = rdn.NextDouble();
+                    float maxPower = Max(photon.Power.R, photon.Power.G, photon.Power.B);
+                    float probDiffuse = 0;
+                    float probSpecular =0;
+                    if(maxPower > 0){
+                        probDiffuse =
+                           Max(material.KDiff * photon.Power.R, material.KDiff * photon.Power.G,
+                               material.KDiff * photon.Power.B) / maxPower;
+                        probSpecular =
+                                Max(material.KSpec * photon.Power.R, material.KSpec * photon.Power.G,
+                                    material.KSpec * photon.Power.B) / maxPower;
+                    }
+                    if(randomValue <= probDiffuse){
+                        rPhoton.Position = intersection.HitPoint;
+                        rPhoton.Direction = ReflectedDiffuse(intersection.Normal);
+                        // Compute the diffuse power
+                        //rPhoton.Power = (photon.Power * color) / probDiffuse;
+                        rPhoton.Power = photon.Power * material.KDiff;
+                        this.TracePhoton(rPhoton, depth + 1, EnlightenmentType.Indirect);
+                    } else if(randomValue <= probDiffuse + probSpecular){
+                        rPhoton.Position = intersection.HitPoint;
+                        rPhoton.Direction = Reflected(intersection.Normal, rPhoton.Direction);
+                        //rPhoton.Power = (photon.Power * color) / probSpecular;
+                        rPhoton.Power = photon.Power * material.KSpec;
+                        this.TracePhoton(rPhoton, depth + 1, EnlightenmentType.Caustics);
+                    } else{
+                        this.storePhoton(photon, enlightenmentType);
+                    }
+                    //}else if(randomValue <= probDiffuse + probSpecular + probTransmit) {
+                } else{
+                    this.storePhoton(photon, enlightenmentType);
+                }
+            }
+        }
+        private void storePhoton(Photon photon, EnlightenmentType enlightenmentType)
+        {
+            switch(enlightenmentType){
+                //case EnlightenmentType.Direct:
+                    //Do nothing - Classic RayTracing
+                //    break;
+                case EnlightenmentType.Indirect:
+                    this.storedIndirect++;
+                    this.indirectEnlightenment.Store(photon);
+                    break;
+                case EnlightenmentType.Caustics:
+                    this.storedCaustic++;
+                    this.CausticsEnlightenment.Store(photon);
+                    break;
+            }
+        }
+    }
+}

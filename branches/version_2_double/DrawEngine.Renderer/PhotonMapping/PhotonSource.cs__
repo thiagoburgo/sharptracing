@@ -1,0 +1,80 @@
+using System.Collections.Generic;
+using DrawEngine.Renderer.Lights;
+using DrawEngine.Renderer.Algebra;
+using System;
+
+namespace DrawEngine.Renderer.PhotonMapping
+{
+    public abstract class PhotonSource
+    {   
+        private int max_photons;
+        private float power;
+        private Light light;
+        protected int nShots = 0;
+        protected Photon current_photon;
+
+        public PhotonSource(Light light, float power, int max_photons)
+        {
+            this.MaxPhotons = max_photons;
+            this.Power = power;
+            this.Light = light;
+            this.current_photon = new Photon(light.Position, light.Color, Vector3D.Zero);
+        }
+
+        public abstract bool GenerateNextPhoton();
+        public IEnumerable<Photon> Photons
+        {
+            get
+            {
+                while (this.GenerateNextPhoton())
+                {
+                    yield return this.current_photon;
+                }
+            }
+        }
+
+        public Photon CurrentPhoton
+        {
+            get { return current_photon; }
+            protected set { current_photon = value; }
+        }
+        public float Power
+        {
+            get { return power; }
+            set
+            {
+                power = value > 0 ? power : 0;
+            }
+        }
+        public int MaxPhotons
+        {
+            get { return max_photons; }
+            set
+            {
+                if (value <= 0)
+                {
+                    throw new ArgumentOutOfRangeException("MaxPhoton", "A quantidade máxima de Photons deve ser maior que ZERO!");
+                }
+                else
+                {
+                    max_photons = value;
+                }
+            }
+        }
+        public Light Light
+        {
+            get { return light; }
+            set {
+                if (value != null)
+                {
+                    light = value;
+                }
+                else
+                {
+                    throw new ArgumentNullException("Light");
+                }
+                
+            }
+        }
+    }
+}
