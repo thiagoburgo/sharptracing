@@ -25,7 +25,7 @@ namespace DrawEngine.Renderer.Mathematics.Algebra.Design
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
             string valor = value as string;
-            float x, y, z;
+            double x, y, z;
             if(valor != null){
                 string[] coord = valor.Split(new char[]{';'}, StringSplitOptions.RemoveEmptyEntries);
                 x = Convert.ToSingle(coord[0]);

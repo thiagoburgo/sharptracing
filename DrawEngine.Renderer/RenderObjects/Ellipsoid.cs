@@ -27,9 +27,9 @@ namespace DrawEngine.Renderer.RenderObjects
         private Vector3D axisB, axisC;
         private Vector3D axisCNonNorm;
         // private TextureType textureType = TextureType.Spherical;
-        private float radiusA, radiusB, radiusC;
+        private double radiusA, radiusB, radiusC;
         public Ellipsoid() : this(Point3D.Zero, Vector3D.UnitY, 20, 20, 35) {}
-        //public Ellipsoid(Point3D center, Vector3D axisA, Vector3D axisC, float radiusA, float radiusB, float radiusC)
+        //public Ellipsoid(Point3D center, Vector3D axisA, Vector3D axisC, double radiusA, double radiusB, double radiusC)
         //{
         //    this.center = center;
         //    this.CentralAxis = axisC;
@@ -38,7 +38,7 @@ namespace DrawEngine.Renderer.RenderObjects
         //    this.RadiusB = radiusB;
         //    this.RadiusC = radiusC;
         //}
-        public Ellipsoid(Point3D center, Vector3D axisC, float radiusA, float radiusB, float radiusC)
+        public Ellipsoid(Point3D center, Vector3D axisC, double radiusA, double radiusB, double radiusC)
         {
             this.center = center;
             this.CentralAxis = axisC;
@@ -48,8 +48,8 @@ namespace DrawEngine.Renderer.RenderObjects
         }
         /*
         private void RecalculateBoundBox() {
-            float L2 = (radiusA * radiusA) + (radiusC * radiusC);
-            float t = (float)Math.Sqrt(L2 + (radiusB * radiusB));
+            double L2 = (radiusA * radiusA) + (radiusC * radiusC);
+            double t = Math.Sqrt(L2 + (radiusB * radiusB));
             this.boundBox.PMin = (this.axisA - this.axisB - this.axisC) * t + center;
             this.boundBox.PMax = (this.axisA + this.axisB + this.axisC) * t + center;
         }
@@ -60,7 +60,7 @@ namespace DrawEngine.Renderer.RenderObjects
             get { return this.axisCNonNorm; }
             set
             {
-                if(value.Length == 0.0f){
+                if(value.Length == 0.0d){
                     throw new Exception("O eixo central nao pode ter comprimento Zero!");
                 }
                 this.axisC = value;
@@ -78,7 +78,7 @@ namespace DrawEngine.Renderer.RenderObjects
         //        this.axisA = value;
         //        this.axisANonNorm = value;
         //        Vector3D.Orthonormalize(this.axisC, out this.axisA);
-        //        //if((this.axisA * this.axisC) != 0.0f){
+        //        //if((this.axisA * this.axisC) != 0.0d){
         //        //    throw new Exception("Erro: Os eixos A e C nao sao ortogonais!");
         //        //}
         //        this.axisB = this.axisC ^ this.axisA; // Form 3rd axis with crossproduct
@@ -88,12 +88,12 @@ namespace DrawEngine.Renderer.RenderObjects
         //    }
         //}
         [RefreshProperties(RefreshProperties.All)]
-        public float RadiusA
+        public double RadiusA
         {
             get { return this.radiusA; }
             set
             {
-                if(value > 0.0f){
+                if(value > 0.0d){
                     this.radiusA = value;
                     this.axisA.Normalize();
                     this.axisA /= this.radiusA;
@@ -101,12 +101,12 @@ namespace DrawEngine.Renderer.RenderObjects
             }
         }
         [RefreshProperties(RefreshProperties.All)]
-        public float RadiusB
+        public double RadiusB
         {
             get { return this.radiusB; }
             set
             {
-                if(value > 0.0f){
+                if(value > 0.0d){
                     this.radiusB = value;
                     this.axisB.Normalize();
                     this.axisB /= this.radiusB;
@@ -114,12 +114,12 @@ namespace DrawEngine.Renderer.RenderObjects
             }
         }
         [RefreshProperties(RefreshProperties.All)]
-        public float RadiusC
+        public double RadiusC
         {
             get { return this.radiusC; }
             set
             {
-                if(value > 0.0f){
+                if(value > 0.0d){
                     this.radiusC = value;
                     this.axisC.Normalize();
                     this.axisC /= this.radiusC;
@@ -128,29 +128,29 @@ namespace DrawEngine.Renderer.RenderObjects
         }
 
         #region ITransformable3D Members
-        public void Rotate(float angle, Vector3D axis)
+        public void Rotate(double angle, Vector3D axis)
         {
             this.center.Rotate(angle, axis);
         }
-        public void RotateAxisX(float angle)
+        public void RotateAxisX(double angle)
         {
             this.center.Rotate(angle, Vector3D.UnitX);
         }
-        public void RotateAxisY(float angle)
+        public void RotateAxisY(double angle)
         {
             this.center.Rotate(angle, Vector3D.UnitY);
         }
-        public void RotateAxisZ(float angle)
+        public void RotateAxisZ(double angle)
         {
             this.center.Rotate(angle, Vector3D.UnitZ);
         }
-        public void Scale(float factor)
+        public void Scale(double factor)
         {
             this.RadiusA = this.radiusA * factor;
             this.RadiusB = this.radiusB * factor;
             this.RadiusC = this.radiusC * factor;
         }
-        public void Translate(float tx, float ty, float tz)
+        public void Translate(double tx, double ty, double tz)
         {
             this.center.Translate(tx, ty, tz);
         }
@@ -164,30 +164,30 @@ namespace DrawEngine.Renderer.RenderObjects
         {
             intersect = new Intersection();
             Vector3D v = ray.Origin - this.center;
-            float pdotuA = v * this.axisA;
-            float pdotuB = v * this.axisB;
-            float pdotuC = v * this.axisC;
-            float udotuA = ray.Direction * this.axisA;
-            float udotuB = ray.Direction * this.axisB;
-            float udotuC = ray.Direction * this.axisC;
-            float C = (pdotuA * pdotuA) + (pdotuB * pdotuB) + (pdotuC * pdotuC) - 1.0f;
-            float B = (pdotuA * udotuA + pdotuB * udotuB + pdotuC * udotuC);
-            if(C > 0.0f && B >= 0.0f){
+            double pdotuA = v * this.axisA;
+            double pdotuB = v * this.axisB;
+            double pdotuC = v * this.axisC;
+            double udotuA = ray.Direction * this.axisA;
+            double udotuB = ray.Direction * this.axisB;
+            double udotuC = ray.Direction * this.axisC;
+            double C = (pdotuA * pdotuA) + (pdotuB * pdotuB) + (pdotuC * pdotuC) - 1.0d;
+            double B = (pdotuA * udotuA + pdotuB * udotuB + pdotuC * udotuC);
+            if(C > 0.0d && B >= 0.0d){
                 return false; // Pointing away from the ellipsoid
             }
             B += B; // Double B to get final factor of 2.
-            float A = (udotuA * udotuA) + (udotuB * udotuB) + (udotuC * udotuC);
-            float alpha1, alpha2;
+            double A = (udotuA * udotuA) + (udotuB * udotuB) + (udotuC * udotuC);
+            double alpha1, alpha2;
             int numRoots = EquationSolver.SolveQuadric(A, B, C, out alpha1, out alpha2);
             if(numRoots == 0){
                 return false;
             }
-            if(alpha1 > 0.01f){
+            if(alpha1 > 0.01d){
                 // Found an intersection from outside.		    
                 intersect.TMin = alpha1;
                 intersect.TMax = alpha2;
                 intersect.HitFromInSide = false;
-            } else if(numRoots == 2 && alpha2 > 0.01f){
+            } else if(numRoots == 2 && alpha2 > 0.01d){
                 // Found an intersection from inside.		
                 intersect.TMin = alpha2;
                 intersect.TMax = alpha1;
@@ -198,9 +198,9 @@ namespace DrawEngine.Renderer.RenderObjects
             // Calculate intersection position
             intersect.HitPoint = ray.Origin + intersect.TMin * ray.Direction;
             intersect.Normal = intersect.HitPoint - this.center; // Now v is the relative position
-            float vdotuA = intersect.Normal * this.axisA;
-            float vdotuB = intersect.Normal * this.axisB;
-            float vdotuC = intersect.Normal * this.axisC;
+            double vdotuA = intersect.Normal * this.axisA;
+            double vdotuB = intersect.Normal * this.axisB;
+            double vdotuC = intersect.Normal * this.axisC;
             intersect.Normal = vdotuA * this.axisA + vdotuB * this.axisB + vdotuC * this.axisC;
             intersect.Normal.Normalize();
             intersect.HitPrimitive = this;
@@ -213,17 +213,17 @@ namespace DrawEngine.Renderer.RenderObjects
                 //int widthTex = this.material.Texture.Width - 1;
                 //int heightTex = this.material.Texture.Height - 1;
                 //this.material.Color = this.material.Texture.GetPixel((int)(uCoord * widthTex), (int)(vCoord * heightTex));
-                intersect.CurrentTextureCoordinate.U = (float)uCoord;
-                intersect.CurrentTextureCoordinate.V = (float)vCoord;
+                intersect.CurrentTextureCoordinate.U = uCoord;
+                intersect.CurrentTextureCoordinate.V = vCoord;
             }
             return true;
         }
         public override Vector3D NormalOnPoint(Point3D pointInPrimitive)
         {
             Vector3D normal = pointInPrimitive - this.center; // Now v is the relative position
-            float vdotuA = normal * this.axisA;
-            float vdotuB = normal * this.axisB;
-            float vdotuC = normal * this.axisC;
+            double vdotuA = normal * this.axisA;
+            double vdotuB = normal * this.axisB;
+            double vdotuC = normal * this.axisC;
             normal = vdotuA * this.axisA + vdotuB * this.axisB + vdotuC * this.axisC;
             normal.Normalize();
             return normal;

@@ -24,27 +24,27 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
         public KDTreeTriangleManager(List<Triangle> content) : base(content) {}
 
         #region ITransformable3D Members
-        public void Rotate(float angle, Vector3D axis)
+        public void Rotate(double angle, Vector3D axis)
         {
             throw new NotImplementedException();
         }
-        public void RotateAxisX(float angle)
+        public void RotateAxisX(double angle)
         {
             throw new NotImplementedException();
         }
-        public void RotateAxisY(float angle)
+        public void RotateAxisY(double angle)
         {
             throw new NotImplementedException();
         }
-        public void RotateAxisZ(float angle)
+        public void RotateAxisZ(double angle)
         {
             throw new NotImplementedException();
         }
-        public void Scale(float factor)
+        public void Scale(double factor)
         {
             throw new NotImplementedException();
         }
-        public void Translate(float tx, float ty, float tz)
+        public void Translate(double tx, double ty, double tz)
         {
             foreach(Triangle triangle in this.AccelerationUnits){
                 triangle.Translate(tx, ty, tz);
@@ -60,12 +60,12 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
         protected override Point3D CalculateMid(IList<Triangle> content)
         {
             Triangle currentTriangle = content[0];
-            Point3D mid = (1f / 3f) * (currentTriangle.Vertex1 + currentTriangle.Vertex2 + currentTriangle.Vertex3);
+            Point3D mid = (1d / 3d) * (currentTriangle.Vertex1 + currentTriangle.Vertex2 + currentTriangle.Vertex3);
             for(int i = 1; i < content.Count; i++){
                 currentTriangle = content[i];
-                mid = (i / (i + 1f)) * mid
+                mid = (i / (i + 1d)) * mid
                       +
-                      (1f / (i + 1f)) * (1f / 3f)
+                      (1d / (i + 1d)) * (1d / 3d)
                       * (currentTriangle.Vertex1 + currentTriangle.Vertex2 + currentTriangle.Vertex3);
             }
             return mid;

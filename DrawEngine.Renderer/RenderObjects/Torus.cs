@@ -22,13 +22,13 @@ namespace DrawEngine.Renderer.RenderObjects
     public class Torus : Primitive, ITransformable3D
     {
         private Vector3D axisA = Vector3D.UnitZ, axisB = Vector3D.UnitY, axisC = Vector3D.UnitX;
-        private float majorRadius;
-        private float majorRadius2;
-        private float minorRadius;
-        private float minorRadius2;
-        private float outerRadius;
-        //private float centerCoefA, centerCoefB, centerCoefC;
-        public Torus(Point3D center, Vector3D centralAxis, float minorRadius, float majorRadius)
+        private double majorRadius;
+        private double majorRadius2;
+        private double minorRadius;
+        private double minorRadius2;
+        private double outerRadius;
+        //private double centerCoefA, centerCoefB, centerCoefC;
+        public Torus(Point3D center, Vector3D centralAxis, double minorRadius, double majorRadius)
         {
             this.Center = center;
             this.CentralAxis = (centralAxis);
@@ -36,7 +36,7 @@ namespace DrawEngine.Renderer.RenderObjects
             this.MajorRadius = majorRadius;
             this.RecalculateBoundBox();
         }
-        public Torus(Point3D center, float minorRadius, float majorRadius)
+        public Torus(Point3D center, double minorRadius, double majorRadius)
             : this(center, Vector3D.UnitY, minorRadius, majorRadius) { }
         public Torus() : this(new Point3D(), 15, 25) { }
         [RefreshProperties(RefreshProperties.All)]
@@ -47,7 +47,7 @@ namespace DrawEngine.Renderer.RenderObjects
             {
                 this.axisA = value;
                 this.axisA -= (this.axisA * this.axisC) * this.axisC; // Make perpindicular to Center Axis
-                if (this.axisA.Length == 0.0f)
+                if (this.axisA.Length == 0.0d)
                 {
                     // Must not be parallel to Center Axis
                     //throw new Exception("Erro: O eixo central nao pode ter tamanho ZERO!");
@@ -84,12 +84,12 @@ namespace DrawEngine.Renderer.RenderObjects
             }
         }
         [RefreshProperties(RefreshProperties.All)]
-        public float MinorRadius
+        public double MinorRadius
         {
             get { return this.minorRadius; }
             set
             {
-                if (value > 0.0f)
+                if (value > 0.0d)
                 {
                     this.minorRadius = value;
                     this.minorRadius2 = value * value;
@@ -99,12 +99,12 @@ namespace DrawEngine.Renderer.RenderObjects
             }
         }
         [RefreshProperties(RefreshProperties.All)]
-        public float MajorRadius
+        public double MajorRadius
         {
             get { return this.majorRadius; }
             set
             {
-                if (value > 0.0f)
+                if (value > 0.0d)
                 {
                     this.majorRadius = value;
                     this.majorRadius2 = value * value;
@@ -115,7 +115,7 @@ namespace DrawEngine.Renderer.RenderObjects
         }
 
         #region ITransformable3D Members
-        public void Rotate(float angle, Vector3D axis)
+        public void Rotate(double angle, Vector3D axis)
         {
             this.center.Rotate(angle, axis);
             this.Center = this.center;
@@ -124,7 +124,7 @@ namespace DrawEngine.Renderer.RenderObjects
             this.axisA.Rotate(angle, axis);
             this.RadialAxis = this.axisA;
         }
-        public void RotateAxisX(float angle)
+        public void RotateAxisX(double angle)
         {
             this.center.RotateAxisX(angle);
             this.Center = this.center;
@@ -133,7 +133,7 @@ namespace DrawEngine.Renderer.RenderObjects
             this.axisA.RotateAxisX(angle);
             this.RadialAxis = this.axisA;
         }
-        public void RotateAxisY(float angle)
+        public void RotateAxisY(double angle)
         {
             this.center.RotateAxisY(angle);
             this.Center = this.center;
@@ -142,7 +142,7 @@ namespace DrawEngine.Renderer.RenderObjects
             this.axisA.RotateAxisY(angle);
             this.RadialAxis = this.axisA;
         }
-        public void RotateAxisZ(float angle)
+        public void RotateAxisZ(double angle)
         {
             this.center.RotateAxisZ(angle);
             this.Center = this.center;
@@ -151,12 +151,12 @@ namespace DrawEngine.Renderer.RenderObjects
             this.axisA.RotateAxisZ(angle);
             this.RadialAxis = this.axisA;
         }
-        public void Scale(float factor)
+        public void Scale(double factor)
         {
             this.MinorRadius *= factor;
             this.MajorRadius *= factor;
         }
-        public void Translate(float tx, float ty, float tz)
+        public void Translate(double tx, double ty, double tz)
         {
             this.center.Translate(tx, ty, tz);
             this.Center = this.center;
@@ -180,19 +180,19 @@ namespace DrawEngine.Renderer.RenderObjects
         public override bool FindIntersection(Ray ray, out Intersection intersect)
         {
             intersect = new Intersection();
-            const float A = 1.0f;
+            const double A = 1.0d;
             Vector3D viewPosRel = ray.Origin - this.center; // Origin relative to center
-            float udotp = (ray.Direction * viewPosRel);
-            float B = (udotp + udotp + udotp + udotp);
-            float RadiiSqSum = this.majorRadius2 + this.minorRadius2;
-            float ucdotp = (this.axisC * viewPosRel);
-            float ucdotu = (this.axisC * ray.Direction);
-            float pSq = (viewPosRel * viewPosRel);
-            float C = B * udotp + (pSq + pSq) - (RadiiSqSum + RadiiSqSum) + 4.0f * this.majorRadius2 * ucdotu * ucdotu;
-            float D = 4.0f * ((pSq - RadiiSqSum) * udotp + (this.majorRadius2 + this.majorRadius2) * ucdotp * ucdotu);
-            float E = (pSq - (RadiiSqSum + RadiiSqSum)) * pSq + 4.0f * this.majorRadius2 * ucdotp * ucdotp
+            double udotp = (ray.Direction * viewPosRel);
+            double B = (udotp + udotp + udotp + udotp);
+            double RadiiSqSum = this.majorRadius2 + this.minorRadius2;
+            double ucdotp = (this.axisC * viewPosRel);
+            double ucdotu = (this.axisC * ray.Direction);
+            double pSq = (viewPosRel * viewPosRel);
+            double C = B * udotp + (pSq + pSq) - (RadiiSqSum + RadiiSqSum) + 4.0d * this.majorRadius2 * ucdotu * ucdotu;
+            double D = 4.0d * ((pSq - RadiiSqSum) * udotp + (this.majorRadius2 + this.majorRadius2) * ucdotp * ucdotu);
+            double E = (pSq - (RadiiSqSum + RadiiSqSum)) * pSq + 4.0d * this.majorRadius2 * ucdotp * ucdotp
                       + ((this.majorRadius2 - this.minorRadius2) * (this.majorRadius2 - this.minorRadius2));
-            float[] roots = { 0f, 0f, 0f, 0f };
+            double[] roots = { 0d, 0d, 0d, 0d };
             int numRoots = EquationSolver.SolveQuartic(A, B, C, D, E, out roots[0], out roots[1], out roots[2],
                                                        out roots[3]);
             //if (numRoots > 0)
@@ -209,7 +209,7 @@ namespace DrawEngine.Renderer.RenderObjects
             //    Debug.Write("\r\n");
             if (numRoots > 0)
             {
-                if (roots[0] > 0.1f)
+                if (roots[0] > 0.1d)
                 {
                     intersect.TMin = roots[0];
                     intersect.HitPoint = ray.Origin + intersect.TMin * ray.Direction;
@@ -217,11 +217,11 @@ namespace DrawEngine.Renderer.RenderObjects
                     intersect.HitPrimitive = this;
                     // Outward normal
                     Vector3D h = intersect.HitPoint - this.center; // Now its the relative point
-                    float xCoord = h * this.axisA; // forward axis
-                    float yCoord = h * this.axisB; // rightward axis
-                    float zCoord = h * this.axisC; // upward axis
+                    double xCoord = h * this.axisA; // forward axis
+                    double yCoord = h * this.axisB; // rightward axis
+                    double zCoord = h * this.axisC; // upward axis
                     intersect.Normal = this.axisC * -zCoord + h;
-                    float outNnorm = intersect.Normal.Length;
+                    double outNnorm = intersect.Normal.Length;
                     intersect.Normal.Normalize();
                     intersect.Normal = intersect.Normal * -this.majorRadius + h;
                     // Negative point projected to center path of torus
@@ -237,8 +237,8 @@ namespace DrawEngine.Renderer.RenderObjects
                         //int widthTex = this.material.Texture.Width - 1;
                         //int heightTex = this.material.Texture.Height - 1;
                         //this.material.Color = this.material.Texture.GetPixel((int)(u * widthTex), (int)(v * heightTex));
-                        intersect.CurrentTextureCoordinate.U = (float)u;
-                        intersect.CurrentTextureCoordinate.V = (float)v;
+                        intersect.CurrentTextureCoordinate.U = u;
+                        intersect.CurrentTextureCoordinate.V = v;
                     }
                     return true;
                 }
@@ -272,13 +272,13 @@ namespace DrawEngine.Renderer.RenderObjects
         }
 
         #region
-        //private bool CollideTwoPlanes(float pdotn, float alpha, float dimen, ref bool insideFlag, ref float minDistBack, ref float maxDistFront) {
-        //    if (alpha > 0.0f) {
+        //private bool CollideTwoPlanes(double pdotn, double alpha, double dimen, ref bool insideFlag, ref double minDistBack, ref double maxDistFront) {
+        //    if (alpha > 0.0d) {
         //        if (pdotn >= dimen) {
         //            return false;			// Above top & pointing up
         //        }
-        //        float temp = dimen + pdotn;
-        //        if (temp < 0.0f) {
+        //        double temp = dimen + pdotn;
+        //        if (temp < 0.0d) {
         //            insideFlag = false;
         //            // Handle bottom from below 
         //            if (alpha * maxDistFront < -temp) {
@@ -301,12 +301,12 @@ namespace DrawEngine.Renderer.RenderObjects
         //                }
         //            }
         //        }
-        //    } else if (alpha < 0.0f) {
+        //    } else if (alpha < 0.0d) {
         //        if (pdotn <= -dimen) {
         //            return false;			// Below bottom and pointing down
         //        }
-        //        float temp = pdotn - dimen;
-        //        if (temp > 0.0f) {
+        //        double temp = pdotn - dimen;
+        //        if (temp > 0.0d) {
         //            insideFlag = false;
         //            // Handle top from above
         //            if (-alpha * maxDistFront < temp) {

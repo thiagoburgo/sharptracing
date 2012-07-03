@@ -105,7 +105,7 @@ namespace DrawEngine.Renderer.RenderObjects
         //    if (!this.boundBox.Intersect(ray)) {
         //        return false;
         //    }
-        //    intersect.TMin = float.PositiveInfinity;
+        //    intersect.TMin = double.PositiveInfinity;
         //    Intersection intersection_comp = new Intersection();
         //    Vector3D v1, v2, v3;
         //    bool hit = false;
@@ -174,23 +174,23 @@ namespace DrawEngine.Renderer.RenderObjects
         #endregion
 
         #region ITransformable3D Members
-        public void Rotate(float angle, Vector3D axis)
+        public void Rotate(double angle, Vector3D axis)
         {
             throw new Exception("The method or operation is not implemented.");
         }
-        public void RotateAxisX(float angle)
+        public void RotateAxisX(double angle)
         {
             throw new Exception("The method or operation is not implemented.");
         }
-        public void RotateAxisY(float angle)
+        public void RotateAxisY(double angle)
         {
             throw new Exception("The method or operation is not implemented.");
         }
-        public void RotateAxisZ(float angle)
+        public void RotateAxisZ(double angle)
         {
             throw new Exception("The method or operation is not implemented.");
         }
-        public void Scale(float factor)
+        public void Scale(double factor)
         {
             foreach(Triangle tri in this.triangles){
                 tri.Scale(factor);
@@ -198,7 +198,7 @@ namespace DrawEngine.Renderer.RenderObjects
             this.boundBox.Scale(factor);
             //this.manager.Scale(factor);
         }
-        public void Translate(float tx, float ty, float tz)
+        public void Translate(double tx, double ty, double tz)
         {
             //foreach (Triangle tri in triangles)
             //{
@@ -265,7 +265,7 @@ namespace DrawEngine.Renderer.RenderObjects
                 this.triangles = this.loader.Load();
                 this.loader.Dispose();
                 this.boundBox = this.loader.BoundBox;
-                float len = Math.Abs(this.boundBox.PMax.Y - this.boundBox.PMin.Y);
+                double len = Math.Abs(this.boundBox.PMax.Y - this.boundBox.PMin.Y);
                 this.boundBox.Scale(50 / len);
                 foreach(Triangle t in this.triangles){
                     t.Scale(50 / len);

@@ -18,10 +18,10 @@ namespace DrawEngine.Renderer.Algebra
     [Serializable, StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct UVCoordinate
     {
-        public float U;
-        public float V;
+        public double U;
+        public double V;
         public static readonly UVCoordinate Zero = new UVCoordinate();
-        public UVCoordinate(float u, float v)
+        public UVCoordinate(double u, double v)
         {
             this.U = u;
             this.V = v;
@@ -31,7 +31,7 @@ namespace DrawEngine.Renderer.Algebra
         }
         public bool IsValid
         {
-            get { return !(this.U < 0.0f || this.U > 1.0f || this.V < 0.0f || this.V > 1.0f || (this.U + this.V) > 1.0f); }
+            get { return !(this.U < 0.0d || this.U > 1.0d || this.V < 0.0d || this.V > 1.0d || (this.U + this.V) > 1.0d); }
         }
     }
 }

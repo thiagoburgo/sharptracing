@@ -73,8 +73,8 @@ namespace DrawEngine.Renderer.Importers
                 for (int i = 0; i < vertices.Length; i++)
                 {
                     str = this.sr.ReadLine().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                    vertices[i] = new Point3D(float.Parse(str[0], nfi), float.Parse(str[1], nfi),
-                                              float.Parse(str[2], nfi));
+                    vertices[i] = new Point3D(double.Parse(str[0], nfi), double.Parse(str[1], nfi),
+                                              double.Parse(str[2], nfi));
                     //pmin = this.boundBox.PMin;
                     //pmin.X = vertices[i].X < pmin.X ? vertices[i].X : pmin.X;
                     //pmin.Y = vertices[i].Y < pmin.Y ? vertices[i].Y : pmin.Y;

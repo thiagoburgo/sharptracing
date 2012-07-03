@@ -23,17 +23,17 @@ namespace DrawEngine.Renderer.BasicStructures
     public struct HSBColor
     {
         int a;
-        float b;
-        float h;
-        float s;
-        public HSBColor(float h, float s, float b)
+        double b;
+        double h;
+        double s;
+        public HSBColor(double h, double s, double b)
         {
             this.a = 0xff;
             this.h = Math.Min(Math.Max(h, 0), 255);
             this.s = Math.Min(Math.Max(s, 0), 255);
             this.b = Math.Min(Math.Max(b, 0), 255);
         }
-        public HSBColor(int a, float h, float s, float b)
+        public HSBColor(int a, double h, double s, double b)
         {
             this.a = a;
             this.h = Math.Min(Math.Max(h, 0), 255);
@@ -56,17 +56,17 @@ namespace DrawEngine.Renderer.BasicStructures
             this.s = temp.s;
             this.b = temp.b;
         }
-        public float H
+        public double H
         {
             get { return this.h; }
             set { this.h = value; }
         }
-        public float S
+        public double S
         {
             get { return this.s; }
             set { this.s = value; }
         }
-        public float B
+        public double B
         {
             get { return this.b; }
             set { this.b = value; }
@@ -86,12 +86,12 @@ namespace DrawEngine.Renderer.BasicStructures
             HSBColor retorno = new HSBColor(hsb1.h - hsb2.h, hsb1.s - hsb2.s, hsb1.b - hsb2.b);
             return retorno;
         }
-        public static HSBColor operator *(float escalar, HSBColor hsb)
+        public static HSBColor operator *(double escalar, HSBColor hsb)
         {
             HSBColor retorno = new HSBColor(escalar * hsb.h, escalar * hsb.s, escalar * hsb.b);
             return retorno;
         }
-        public static HSBColor operator *(HSBColor hsb, float escalar)
+        public static HSBColor operator *(HSBColor hsb, double escalar)
         {
             HSBColor retorno = new HSBColor(escalar * hsb.h, escalar * hsb.s, escalar * hsb.b);
             return retorno;
@@ -101,26 +101,26 @@ namespace DrawEngine.Renderer.BasicStructures
             HSBColor retorno = new HSBColor(hsb1.h * hsb.h, hsb1.s * hsb.s, hsb1.b * hsb.b);
             return retorno;
         }
-        public static HSBColor operator /(HSBColor hsb, float scalar)
+        public static HSBColor operator /(HSBColor hsb, double scalar)
         {
             HSBColor retorno = new HSBColor(hsb.h * (1 / scalar), hsb.s * (1 / scalar), hsb.b * (1 / scalar));
             return retorno;
         }
-        public static Color ShiftHue(Color c, float hueDelta)
+        public static Color ShiftHue(Color c, double hueDelta)
         {
             HSBColor hsb = FromColor(c);
             hsb.h += hueDelta;
             hsb.h = Math.Min(Math.Max(hsb.h, 0), 255);
             return ToColor(hsb);
         }
-        public static Color ShiftSaturation(Color c, float saturationDelta)
+        public static Color ShiftSaturation(Color c, double saturationDelta)
         {
             HSBColor hsb = FromColor(c);
             hsb.s += saturationDelta;
             hsb.s = Math.Min(Math.Max(hsb.s, 0), 255);
             return ToColor(hsb);
         }
-        public static Color ShiftBrighness(Color c, float brightnessDelta)
+        public static Color ShiftBrighness(Color c, double brightnessDelta)
         {
             HSBColor hsb = FromColor(c);
             hsb.b += brightnessDelta;
@@ -133,38 +133,38 @@ namespace DrawEngine.Renderer.BasicStructures
         }
         public static Color ToColor(HSBColor hsbColor)
         {
-            float r = hsbColor.b;
-            float g = hsbColor.b;
-            float b = hsbColor.b;
+            double r = hsbColor.b;
+            double g = hsbColor.b;
+            double b = hsbColor.b;
             if(hsbColor.s != 0){
-                float max = hsbColor.b;
-                float dif = hsbColor.b * hsbColor.s / 255f;
-                float min = hsbColor.b - dif;
-                float h = hsbColor.h * 360f / 255f;
-                if(h < 60f){
+                double max = hsbColor.b;
+                double dif = hsbColor.b * hsbColor.s / 255d;
+                double min = hsbColor.b - dif;
+                double h = hsbColor.h * 360d / 255d;
+                if(h < 60d){
                     r = max;
-                    g = h * dif / 60f + min;
+                    g = h * dif / 60d + min;
                     b = min;
-                } else if(h < 120f){
-                    r = -(h - 120f) * dif / 60f + min;
+                } else if(h < 120d){
+                    r = -(h - 120d) * dif / 60d + min;
                     g = max;
                     b = min;
-                } else if(h < 180f){
+                } else if(h < 180d){
                     r = min;
                     g = max;
-                    b = (h - 120f) * dif / 60f + min;
-                } else if(h < 240f){
+                    b = (h - 120d) * dif / 60d + min;
+                } else if(h < 240d){
                     r = min;
-                    g = -(h - 240f) * dif / 60f + min;
+                    g = -(h - 240d) * dif / 60d + min;
                     b = max;
-                } else if(h < 300f){
-                    r = (h - 240f) * dif / 60f + min;
+                } else if(h < 300d){
+                    r = (h - 240d) * dif / 60d + min;
                     g = min;
                     b = max;
-                } else if(h <= 360f){
+                } else if(h <= 360d){
                     r = max;
                     g = min;
-                    b = -(h - 360f) * dif / 60 + min;
+                    b = -(h - 360d) * dif / 60 + min;
                 } else{
                     r = 0;
                     g = 0;
@@ -177,35 +177,35 @@ namespace DrawEngine.Renderer.BasicStructures
         }
         public static HSBColor FromColor(Color color)
         {
-            HSBColor ret = new HSBColor(0f, 0f, 0f);
+            HSBColor ret = new HSBColor(0d, 0d, 0d);
             ret.a = color.A;
-            float r = color.R;
-            float g = color.G;
-            float b = color.B;
-            float max = Math.Max(r, Math.Max(g, b));
+            double r = color.R;
+            double g = color.G;
+            double b = color.B;
+            double max = Math.Max(r, Math.Max(g, b));
             if(max <= 0){
                 return ret;
             }
-            float min = Math.Min(r, Math.Min(g, b));
-            float dif = max - min;
+            double min = Math.Min(r, Math.Min(g, b));
+            double dif = max - min;
             if(max > min){
                 if(g == max){
-                    ret.h = (b - r) / dif * 60f + 120f;
+                    ret.h = (b - r) / dif * 60d + 120d;
                 } else if(b == max){
-                    ret.h = (r - g) / dif * 60f + 240f;
+                    ret.h = (r - g) / dif * 60d + 240d;
                 } else if(b > g){
-                    ret.h = (g - b) / dif * 60f + 360f;
+                    ret.h = (g - b) / dif * 60d + 360d;
                 } else{
-                    ret.h = (g - b) / dif * 60f;
+                    ret.h = (g - b) / dif * 60d;
                 }
                 if(ret.h < 0){
-                    ret.h = ret.h + 360f;
+                    ret.h = ret.h + 360d;
                 }
             } else{
                 ret.h = 0;
             }
-            ret.h *= 255f / 360f;
-            ret.s = (dif / max) * 255f;
+            ret.h *= 255d / 360d;
+            ret.s = (dif / max) * 255d;
             ret.b = max;
             return ret;
         }

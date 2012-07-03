@@ -21,24 +21,24 @@ namespace DrawEngine.Renderer.Cameras
     public class PinholeCamera : Camera
     {
         public PinholeCamera() : base() {}
-        public PinholeCamera(Point3D eye, Point3D lookAt, Vector3D up, float fov, float resX, float resY)
+        public PinholeCamera(Point3D eye, Point3D lookAt, Vector3D up, double fov, double resX, double resY)
                 : base(eye, lookAt, up, fov, resX, resY) {}
        
-        public override Ray CreateRayFromScreen(float x, float y)
+        public override Ray CreateRayFromScreen(double x, double y)
         {
-            float du = -this.au + ((2.0f * this.au * x) * 1f / (this.resX));
-            float dv = -this.av + ((2.0f * this.av * y) * 1f / (this.resY));
+            double du = -this.au + ((2.0d * this.au * x) * 1d / (this.resX));
+            double dv = -this.av + ((2.0d * this.av * y) * 1d / (this.resY));
             return new Ray(this.eye, this.basis.Transform(new Vector3D(du, dv, -1)));
             
         }
         //public PinholeCamera() { }
-        //public PinholeCamera(Point3D eye, Point3D lookAt, Vector3D viewUp, float fov, float resX, float resY) {
+        //public PinholeCamera(Point3D eye, Point3D lookAt, Vector3D viewUp, double fov, double resX, double resY) {
         //    this.eye = eye;
         //    this.lookAt = lookAt;
         //    this.viewUp = viewUp;            
         //    this.fov = fov;
-        //    this.resX = ((resX > 0) ? resX : 0.0f);
-        //    this.resY = ((resY > 0) ? resY : 0.0f);
+        //    this.resX = ((resX > 0) ? resX : 0.0d);
+        //    this.resY = ((resY > 0) ? resY : 0.0d);
         //    this.n = new Vector3D();
         //    this.u = new Vector3D();
         //    this.v = new Vector3D();

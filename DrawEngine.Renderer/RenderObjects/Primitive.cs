@@ -140,12 +140,12 @@ namespace DrawEngine.Renderer.RenderObjects
             return base.Equals(obj);
         }
         //#region ITransformable3D Members
-        //public abstract void Rotate(float angle, Vector3D axis);
-        //public abstract void RotateAxisX(float angle);
-        //public abstract void RotateAxisY(float angle);
-        //public abstract void RotateAxisZ(float angle);
-        //public abstract void Scale(float factor);
-        //public abstract void Translate(float tx, float ty, float tz);
+        //public abstract void Rotate(double angle, Vector3D axis);
+        //public abstract void RotateAxisX(double angle);
+        //public abstract void RotateAxisY(double angle);
+        //public abstract void RotateAxisZ(double angle);
+        //public abstract void Scale(double factor);
+        //public abstract void Translate(double tx, double ty, double tz);
         //public abstract void Translate(Vector3D translateVector);
         //#endregion
     }

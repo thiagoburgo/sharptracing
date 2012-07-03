@@ -20,10 +20,10 @@ namespace DrawEngine.Renderer.PhotonMapping
 {
     public sealed class PhotonMap
     {
-        private readonly float[] cosPhi = new float[256];
-        private readonly float[] cosTheta = new float[256];
-        private readonly float[] sinPhi = new float[256];
-        private readonly float[] sinTheta = new float[256];
+        private readonly double[] cosPhi = new double[256];
+        private readonly double[] cosTheta = new double[256];
+        private readonly double[] sinPhi = new double[256];
+        private readonly double[] sinTheta = new double[256];
 
         private readonly int max_photons;
         public readonly Photon[] Photons;
@@ -39,18 +39,18 @@ namespace DrawEngine.Renderer.PhotonMapping
             this.stored_photons = 0;
             this.prev_scale = 1;
             this.Photons = new Photon[max_photons + 1];
-            this.bbox_min.X = this.bbox_min.Y = this.bbox_min.Z = float.PositiveInfinity;
-            this.bbox_max.X = this.bbox_max.Y = this.bbox_max.Z = float.NegativeInfinity;
+            this.bbox_min.X = this.bbox_min.Y = this.bbox_min.Z = double.PositiveInfinity;
+            this.bbox_max.X = this.bbox_max.Y = this.bbox_max.Z = double.NegativeInfinity;
             //----------------------------------------
             // initialize direction conversion tables
             //----------------------------------------
             for (int i = 0; i < 256; i++)
             {
                 double angle = i * (1.0 / 256.0) * Math.PI;
-                this.cosTheta[i] = (float)Math.Cos(angle);
-                this.sinTheta[i] = (float)Math.Sin(angle);
-                this.cosPhi[i] = (float)Math.Cos(2.0 * angle);
-                this.sinPhi[i] = (float)Math.Sin(2.0 * angle);
+                this.cosTheta[i] = Math.Cos(angle);
+                this.sinTheta[i] = Math.Sin(angle);
+                this.cosPhi[i] = Math.Cos(2.0 * angle);
+                this.sinPhi[i] = Math.Sin(2.0 * angle);
             }
         }
         private Vector3D photonDir(Photon p)
@@ -63,11 +63,11 @@ namespace DrawEngine.Renderer.PhotonMapping
         //OK
         //irradiance_estimate computes an irradiance estimate
         // at a given surface position
-        public RGBColor IrradianceEstimate(Point3D pos, Vector3D normal, float max_dist, int nphotons)
+        public RGBColor IrradianceEstimate(Point3D pos, Vector3D normal, double max_dist, int nphotons)
         {
             RGBColor irrad = RGBColor.Black;
             NearestPhotons np = new NearestPhotons();
-            np.Dist2 = new float[nphotons + 1];
+            np.Dist2 = new double[nphotons + 1];
             np.Index = new Photon[nphotons + 1];
             np.Pos = pos;
             np.Max = nphotons;
@@ -89,12 +89,12 @@ namespace DrawEngine.Renderer.PhotonMapping
                 // the photon_dir call and following if can be omitted (for speed)
                 // if the scene does not have any thin surfaces
                 pdir = this.photonDir(p);
-                if ((pdir * normal) < 0.0f)
+                if ((pdir * normal) < 0.0d)
                 {
                     irrad += p.Power;
                 }
             }
-            float tmp = (float)((1.0f / Math.PI) / (np.Dist2[0])); // estimate of
+            double tmp = ((1.0d / Math.PI) / (np.Dist2[0])); // estimate of
             // density
             irrad *= tmp;
             //Use Array.Clear();
@@ -110,7 +110,7 @@ namespace DrawEngine.Renderer.PhotonMapping
             Photon p = this.Photons[index];
             if (index < this.half_stored_photons)
             {
-                float dist1 = np.Pos[p.Plane] - p.Position[p.Plane];
+                double dist1 = np.Pos[p.Plane] - p.Position[p.Plane];
                 if (dist1 > 0.0)
                 {
                     // if dist1 is positive search right plane
@@ -132,12 +132,12 @@ namespace DrawEngine.Renderer.PhotonMapping
             }
             // compute squared distance between current photon and np.pos
             //dist1 = p.pos[0] - np.pos[0];
-            //float dist2 = dist1 * dist1;
+            //double dist2 = dist1 * dist1;
             //dist1 = p.pos[1] - np.pos[1];
             //dist2 += dist1 * dist1;
             //dist1 = p.pos[2] - np.pos[2];
             //dist2 += dist1 * dist1;
-            float dist2 = (p.Position - np.Pos).Length2;
+            double dist2 = (p.Position - np.Pos).Length2;
             if (dist2 < np.Dist2[0])
             {
                 // we found a photon :) Insert it in the candidate list
@@ -155,7 +155,7 @@ namespace DrawEngine.Renderer.PhotonMapping
                     {
                         // Do we need to build the heap?
                         // Build heap
-                        float dst2;
+                        double dst2;
                         Photon phot;
                         int half_found = np.Found >> 1;
                         for (int k = half_found; k >= 1; k--)
@@ -295,7 +295,7 @@ namespace DrawEngine.Renderer.PhotonMapping
         // photons once they have been emitted from the light
         // source. scale = 1/(#emitted photons).
         // Call this function after each light source is processed.
-        public void ScalePhotonPower(float scale)
+        public void ScalePhotonPower(double scale)
         {
             for (int i = this.prev_scale; i <= this.stored_photons; i++)
             {
@@ -384,7 +384,7 @@ namespace DrawEngine.Renderer.PhotonMapping
             int right = end;
             while (right > left)
             {
-                float v = p[right].Position[axis];
+                double v = p[right].Position[axis];
                 int i = left - 1;
                 int j = right;
                 while (true)
@@ -458,7 +458,7 @@ namespace DrawEngine.Renderer.PhotonMapping
                 // balance left segment
                 if (start < median - 1)
                 {
-                    float tmp = this.bbox_max[axis];
+                    double tmp = this.bbox_max[axis];
                     this.bbox_max[axis] = pbal[index].Position[axis];
                     this.BalanceSegment(pbal, porg, 2 * index, start, median - 1);
                     this.bbox_max[axis] = tmp;
@@ -474,7 +474,7 @@ namespace DrawEngine.Renderer.PhotonMapping
                 // balance right segment
                 if (median + 1 < end)
                 {
-                    float tmp = this.bbox_min[axis];
+                    double tmp = this.bbox_min[axis];
                     this.bbox_min[axis] = pbal[index].Position[axis];
                     this.BalanceSegment(pbal, porg, 2 * index + 1, median + 1, end);
                     this.bbox_min[axis] = tmp;

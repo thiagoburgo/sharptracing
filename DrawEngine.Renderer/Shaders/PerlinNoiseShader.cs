@@ -35,9 +35,9 @@ namespace DrawEngine.Renderer.Shaders
             //        fy = F(n[0], n[1] + .0001, n[2], noisetype),
             //        fz = F(n[0], n[1], n[2] + .0001, noisetype);
             //// SUBTRACT THE FUNCTION'S GRADIENT FROM THE SURFACE NORMAL
-            //n[0] -= (float)((fx - f0) / .0001);
-            //n[1] -= (float)((fy - f0) / .0001);
-            //n[2] -= (float)((fz - f0) / .0001);
+            //n[0] -= ((fx - f0) / .0001);
+            //n[1] -= ((fy - f0) / .0001);
+            //n[2] -= ((fz - f0) / .0001);
             //n.Normalize();
             ////intersection.HitPrimitive.Material.Color = new RGBColor(n[0], n[1], n[2]);
             //intersection.Normal = n;
@@ -73,9 +73,9 @@ namespace DrawEngine.Renderer.Shaders
                     //    PerlinNoiseFilter.Noise(x, y, z, 2),
                     //    PerlinNoiseFilter.Noise(x, y, z, 2), w, 5);
                     //return .05 *
-                    //    PerlinNoiseFilter.Noise((float)Math.Cos(x * Math.PI), y, z, 10) *
-                    //    PerlinNoiseFilter.Noise(x, (float)Math.Cos(y * Math.PI), z, 10) *
-                    //    PerlinNoiseFilter.Noise(x, y, (float)Math.Cos(z * Math.PI), 10);
+                    //    PerlinNoiseFilter.Noise(Math.Cos(x * Math.PI), y, z, 10) *
+                    //    PerlinNoiseFilter.Noise(x, Math.Cos(y * Math.PI), z, 10) *
+                    //    PerlinNoiseFilter.Noise(x, y, Math.Cos(z * Math.PI), 10);
                     return .03 * Math.Cos(PerlinNoiseFilter.Noise(x, y, z));
                     //return .01 * PerlinNoiseFilter.Stripes(x + 2 * PerlinNoiseFilter.Turbulence(x, y, z, w, 1), 1.6);
                     //return 0.05 * PerlinNoiseFilter.Stripes3(x - PerlinNoiseFilter.Noise(x, y, z, 1), z - PerlinNoiseFilter.Turbulence(x, y, z, w, 1));

@@ -14,10 +14,10 @@ namespace DrawEngine.Renderer.BasicStructures
         public IPrimitive HitPrimitive;
         public Vector3D Normal;
         public UVCoordinate CurrentTextureCoordinate;
-        public float TMax;
-        public float TMin;
+        public double TMax;
+        public double TMin;
         public static readonly Intersection Zero = new Intersection();
-        public Intersection(IPrimitive hitPrimitive, Point3D hitPoint, Vector3D normal, float tMin, float tMax,
+        public Intersection(IPrimitive hitPrimitive, Point3D hitPoint, Vector3D normal, double tMin, double tMax,
                             bool hitFromInSide)
         {
             this.HitPoint = hitPoint;

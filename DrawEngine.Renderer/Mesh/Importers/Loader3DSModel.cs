@@ -187,15 +187,15 @@ namespace DrawEngine.Renderer.Importers
         {
             RGBColor result = RGBColor.Black;
             switch(dataSegment.Tag){
-                case 0x0010: // Color is in float format
+                case 0x0010: // Color is in double format
                     result.R = dataSegment.GetFloat();
                     result.G = dataSegment.GetFloat();
                     result.B = dataSegment.GetFloat();
                     break;
                 case 0x0011: // Color is in byte format
-                    result.R = dataSegment.GetByte() / 255.0f;
-                    result.G = dataSegment.GetByte() / 255.0f;
-                    result.B = dataSegment.GetByte() / 255.0f;
+                    result.R = dataSegment.GetByte() / 255.0d;
+                    result.G = dataSegment.GetByte() / 255.0d;
+                    result.B = dataSegment.GetByte() / 255.0d;
                     break;
                 default: // If there are any other formats, then we ignore them
                     break;
@@ -212,9 +212,9 @@ namespace DrawEngine.Renderer.Importers
         {
             switch(dataSegment.Tag){
                 case 0x0030: // Percentage is in short format
-                    this.currentMaterialData.textureWeight = ((float)dataSegment.GetUShort()) / (float)100.0;
+                    this.currentMaterialData.textureWeight = (dataSegment.GetUShort()) / 100.0;
                     break;
-                case 0x0031: // Percentage is in float format
+                case 0x0031: // Percentage is in double format
                     this.currentMaterialData.textureWeight = dataSegment.GetFloat();
                     break;
                 default: // There should be no other formats, but if there are then we ignore
@@ -585,14 +585,14 @@ namespace DrawEngine.Renderer.Importers
             public RGBColor diffuse;
             public string name;
             public string textureName;
-            public float textureWeight;
+            public double textureWeight;
             public MaterialData3DS()
             {
                 this.ambient = RGBColor.Black;
                 this.diffuse = RGBColor.Black;
                 this.name = "";
                 this.textureName = "";
-                this.textureWeight = (float)0.0;
+                this.textureWeight = 0.0;
             }
         }
         #endregion

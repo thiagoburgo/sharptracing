@@ -133,14 +133,14 @@ namespace DrawEngine.Renderer.Util
             }
         }
         // Bilinear interpolation 
-        public RGBColor GetPixel(float x, float y)
+        public RGBColor GetPixel(double x, double y)
         {
             int pixelX1 = (int)Math.Floor(x);
             int pixelX2 = (int)Math.Ceiling(x);
-            float xLerp = x - (float)Math.Truncate(x);
+            double xLerp = x - Math.Truncate(x);
             int pixelY1 = (int)Math.Floor(y);
             int pixelY2 = (int)Math.Ceiling(y);
-            float yLerp = y - (float)Math.Truncate(y);
+            double yLerp = y - Math.Truncate(y);
             RGBColor c11 = this.GetPixel(pixelX1, pixelY1);
             RGBColor c12 = this.GetPixel(pixelX1, pixelY2);
             RGBColor c21 = this.GetPixel(pixelX2, pixelY1);

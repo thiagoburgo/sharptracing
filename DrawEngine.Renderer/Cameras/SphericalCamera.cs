@@ -21,24 +21,24 @@ namespace DrawEngine.Renderer.Cameras
     public class SphericalCamera : Camera
     {
         private SphericalCamera() {}
-        public SphericalCamera(Point3D eye, Point3D lookAt, Vector3D up, float fov, float resX, float resY)
+        public SphericalCamera(Point3D eye, Point3D lookAt, Vector3D up, double fov, double resX, double resY)
                 : base(eye, lookAt, up, fov, resX, resY) {}
        
-        public override Ray CreateRayFromScreen(float x, float y)
+        public override Ray CreateRayFromScreen(double x, double y)
         {
-            float cx = 2.0f * x / this.resX - 1;
-            float cy = 2.0f * y / this.resY - 1;
-            float r2 = cx * cx + cy * cy;
+            double cx = 2.0d * x / this.resX - 1;
+            double cy = 2.0d * y / this.resY - 1;
+            double r2 = cx * cx + cy * cy;
             //if (r2 > 1) {
             //    // outside the fisheye
-            //    return new Ray(new Point3D(float.NegativeInfinity, float.NegativeInfinity, float.NegativeInfinity),
-            //                   new Vector3D(float.NegativeInfinity, float.NegativeInfinity, float.NegativeInfinity));
+            //    return new Ray(new Point3D(double.NegativeInfinity, double.NegativeInfinity, double.NegativeInfinity),
+            //                   new Vector3D(double.NegativeInfinity, double.NegativeInfinity, double.NegativeInfinity));
             //}
-            return new Ray(this.eye, new Vector3D(cx, -cy, (float)Math.Sqrt(1.0f - r2)));
+            return new Ray(this.eye, new Vector3D(cx, -cy, Math.Sqrt(1.0d - r2)));
             // Generate environment camera ray direction
             //double theta = 2 * Math.PI * x / this.resX + Math.PI / 2;
             //double phi = Math.PI * (this.resY - 1 - y) / this.resY;
-            //return new Ray(this.eye, this.basis.Transform(new Vector3D((float)(Math.Cos(theta) * Math.Sin(phi)), -(float)(Math.Cos(phi)), (float)(Math.Sin(theta) * Math.Sin(phi)))));
+            //return new Ray(this.eye, this.basis.Transform(new Vector3D((Math.Cos(theta) * Math.Sin(phi)), -(Math.Cos(phi)), (Math.Sin(theta) * Math.Sin(phi)))));
         }
     }
 }

@@ -42,17 +42,17 @@ namespace DrawEngine.Renderer.Algebra
         #region Member variables and constants
         private static readonly Matrix3D identityMatrix = new Matrix3D(1, 0, 0, 0, 1, 0, 0, 0, 1);
         private static readonly Matrix3D zeroMatrix = new Matrix3D(0, 0, 0, 0, 0, 0, 0, 0, 0);
-        public float M00, M01, M02;
-        public float M10, M11, M12;
-        public float M20, M21, M22;
+        public double M00, M01, M02;
+        public double M10, M11, M12;
+        public double M20, M21, M22;
         #endregion
 
         #region Constructors
         /// <summary>
         ///		Creates a new Matrix3D with all the specified parameters.
         /// </summary>
-        public Matrix3D(float m00, float m01, float m02, float m10, float m11, float m12, float m20, float m21,
-                        float m22)
+        public Matrix3D(double m00, double m01, double m02, double m10, double m11, double m12, double m20, double m21,
+                        double m22)
         {
             this.M00 = m00;
             this.M01 = m01;
@@ -119,7 +119,7 @@ namespace DrawEngine.Renderer.Algebra
         {
             Debug.Assert(col >= 0 && col < 3, "Attempt to retreive a column of a Matrix3D greater than 2.");
             unsafe{
-                fixed(float* pM = &this.M00){
+                fixed(double* pM = &this.M00){
                     return new Vector3D(*(pM + col), //m[0,col], 
                                         *(pM + 3 + col), //m[1,col], 
                                         *(pM + 6 + col)); //m[2,col]);
@@ -157,17 +157,17 @@ namespace DrawEngine.Renderer.Algebra
         /// <param name="yaw"></param>
         /// <param name="pitch"></param>
         /// <param name="roll"></param>
-        public void FromEulerAnglesXYZ(float yaw, float pitch, float roll)
+        public void FromEulerAnglesXYZ(double yaw, double pitch, double roll)
         {
             double cos = Math.Cos(yaw);
             double sin = Math.Sin(yaw);
-            Matrix3D xMat = new Matrix3D(1, 0, 0, 0, (float)cos, (float)-sin, 0, (float)sin, (float)cos);
+            Matrix3D xMat = new Matrix3D(1, 0, 0, 0, cos, -sin, 0, sin, cos);
             cos = Math.Cos(pitch);
             sin = Math.Sin(pitch);
-            Matrix3D yMat = new Matrix3D((float)cos, 0, (float)sin, 0, 1, 0, (float)-sin, 0, (float)cos);
+            Matrix3D yMat = new Matrix3D(cos, 0, sin, 0, 1, 0, -sin, 0, cos);
             cos = Math.Cos(roll);
             sin = Math.Sin(roll);
-            Matrix3D zMat = new Matrix3D((float)cos, (float)-sin, 0, (float)sin, (float)cos, 0, 0, 0, 1);
+            Matrix3D zMat = new Matrix3D(cos, -sin, 0, sin, cos, 0, 0, 0, 1);
             this = xMat * (yMat * zMat);
         }
         #endregion
@@ -176,13 +176,13 @@ namespace DrawEngine.Renderer.Algebra
         /// <summary>
         /// Indexer for accessing the matrix like a 2d array (i.e. matrix[2,3]).
         /// </summary>
-        public float this[int row, int col]
+        public double this[int row, int col]
         {
             get
             {
                 //Debug.Assert((row >= 0 && row < 3) && (col >= 0 && col < 3), "Attempt to access Matrix3D indexer out of bounds.");
                 unsafe{
-                    fixed(float* pM = &this.M00){
+                    fixed(double* pM = &this.M00){
                         return *(pM + ((3 * row) + col));
                     }
                 }
@@ -191,7 +191,7 @@ namespace DrawEngine.Renderer.Algebra
             {
                 //Debug.Assert((row >= 0 && row < 3) && (col >= 0 && col < 3), "Attempt to access Matrix3D indexer out of bounds.");
                 unsafe{
-                    fixed(float* pM = &this.M00){
+                    fixed(double* pM = &this.M00){
                         *(pM + ((3 * row) + col)) = value;
                     }
                 }
@@ -200,13 +200,13 @@ namespace DrawEngine.Renderer.Algebra
         /// <summary>
         ///		Allows the Matrix to be accessed linearly (m[0] -> m[8]).  
         /// </summary>
-        public float this[int index]
+        public double this[int index]
         {
             get
             {
                 //Debug.Assert(index >= 0 && index <= 8, "Attempt to access Matrix4D linear indexer out of bounds.");
                 unsafe{
-                    fixed(float* pMatrix = &this.M00){
+                    fixed(double* pMatrix = &this.M00){
                         return *(pMatrix + index);
                     }
                 }
@@ -215,7 +215,7 @@ namespace DrawEngine.Renderer.Algebra
             {
                 //Debug.Assert(index >= 0 && index <= 8, "Attempt to access Matrix4D linear indexer out of bounds.");
                 unsafe{
-                    fixed(float* pMatrix = &this.M00){
+                    fixed(double* pMatrix = &this.M00){
                         *(pMatrix + index) = value;
                     }
                 }
@@ -329,7 +329,7 @@ namespace DrawEngine.Renderer.Algebra
         /// <param name="matrix"></param>
         /// <param name="scalar"></param>
         /// <returns></returns>
-        public static Matrix3D Multiply(Matrix3D matrix, float scalar)
+        public static Matrix3D Multiply(Matrix3D matrix, double scalar)
         {
             return matrix * scalar;
         }
@@ -339,7 +339,7 @@ namespace DrawEngine.Renderer.Algebra
         /// <param name="matrix"></param>
         /// <param name="scalar"></param>
         /// <returns></returns>
-        public static Matrix3D operator *(Matrix3D matrix, float scalar)
+        public static Matrix3D operator *(Matrix3D matrix, double scalar)
         {
             Matrix3D result = new Matrix3D();
             result.M00 = matrix.M00 * scalar;
@@ -359,7 +359,7 @@ namespace DrawEngine.Renderer.Algebra
         /// <param name="matrix"></param>
         /// <param name="scalar"></param>
         /// <returns></returns>
-        public static Matrix3D Multiply(float scalar, Matrix3D matrix)
+        public static Matrix3D Multiply(double scalar, Matrix3D matrix)
         {
             return scalar * matrix;
         }
@@ -369,7 +369,7 @@ namespace DrawEngine.Renderer.Algebra
         /// <param name="matrix"></param>
         /// <param name="scalar"></param>
         /// <returns></returns>
-        public static Matrix3D operator *(float scalar, Matrix3D matrix)
+        public static Matrix3D operator *(double scalar, Matrix3D matrix)
         {
             Matrix3D result = new Matrix3D();
             result.M00 = matrix.M00 * scalar;
@@ -485,14 +485,14 @@ namespace DrawEngine.Renderer.Algebra
         #endregion
 
         #region Properties
-        public float Determinant
+        public double Determinant
         {
             get
             {
-                float cofactor00 = this.M11 * this.M22 - this.M12 * this.M21;
-                float cofactor10 = this.M12 * this.M20 - this.M10 * this.M22;
-                float cofactor20 = this.M10 * this.M21 - this.M11 * this.M20;
-                float result = this.M00 * cofactor00 + this.M01 * cofactor10 + this.M02 * cofactor20;
+                double cofactor00 = this.M11 * this.M22 - this.M12 * this.M21;
+                double cofactor10 = this.M12 * this.M20 - this.M10 * this.M22;
+                double cofactor20 = this.M10 * this.M21 - this.M11 * this.M20;
+                double result = this.M00 * cofactor00 + this.M01 * cofactor10 + this.M02 * cofactor20;
                 return result;
             }
         }
@@ -525,7 +525,7 @@ namespace DrawEngine.Renderer.Algebra
         {
             int hashCode = 0;
             unsafe{
-                fixed(float* pM = &this.M00){
+                fixed(double* pM = &this.M00){
                     for(int i = 0; i < 9; i++){
                         hashCode ^= (int)(*(pM + i));
                     }

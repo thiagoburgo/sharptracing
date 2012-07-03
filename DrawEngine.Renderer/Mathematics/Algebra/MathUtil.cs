@@ -32,19 +32,19 @@ namespace DrawEngine.Renderer.Mathematics.Algebra
         {
             return (x >= -tolerance && x <= tolerance);
         }
-        public static float ConvertDegreeToRadians(float degree)
+        public static double ConvertDegreeToRadians(double degree)
         {
-            return (float)(Math.PI * 1.0 / 180.0) * degree;
+            return (Math.PI * 1.0 / 180.0) * degree;
         }
-        public static float ConvertRadiansToDegree(float rad)
+        public static double ConvertRadiansToDegree(double rad)
         {
-            return (float)(180.0 / Math.PI) * rad;
+            return (180.0 / Math.PI) * rad;
         }
-        public static float Lerp(float t, float v1, float v2)
+        public static double Lerp(double t, double v1, double v2)
         {
-            return (1.0f - t) * v1 + t * v2;
+            return (1.0d - t) * v1 + t * v2;
         }
-        public static float Clamp(float val, float low, float high)
+        public static double Clamp(double val, double low, double high)
         {
             if(val < low){
                 return low;

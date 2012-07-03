@@ -21,7 +21,7 @@ namespace DrawEngine.Renderer.RenderObjects
     [Serializable]
     public class Plane : Primitive, ITransformable3D, IPreprocess
     {
-        private float d;
+        private double d;
         private Vector3D normal;
         private Point3D pointOnPlane;
         //Equação do plano ax+by+cz+d=0        
@@ -32,11 +32,11 @@ namespace DrawEngine.Renderer.RenderObjects
             this.PointOnPlane = pointOnPlane;
             this.Normal = normal;
             //this.normal.Normalize();
-            //this.BoundBox = new BoundBox(0.0f, 0.0f, float.PositiveInfinity, 0.0f, 0.0f, float.PositiveInfinity);
+            //this.BoundBox = new BoundBox(0.0d, 0.0d, double.PositiveInfinity, 0.0d, 0.0d, double.PositiveInfinity);
             this.Name = name;
         }
         [Browsable(false)]
-        public float D
+        public double D
         {
             get { return this.d; }
         }
@@ -76,25 +76,25 @@ namespace DrawEngine.Renderer.RenderObjects
         #endregion
 
         #region ITransformable3D Members
-        public void Rotate(float angle, Vector3D axis)
+        public void Rotate(double angle, Vector3D axis)
         {
             this.pointOnPlane.Rotate(angle, axis);
             this.Preprocess();
         }
-        public void RotateAxisX(float angle)
+        public void RotateAxisX(double angle)
         {
             this.Rotate(angle, Vector3D.UnitX);
         }
-        public void RotateAxisY(float angle)
+        public void RotateAxisY(double angle)
         {
             this.Rotate(angle, Vector3D.UnitY);
         }
-        public void RotateAxisZ(float angle)
+        public void RotateAxisZ(double angle)
         {
             this.Rotate(angle, Vector3D.UnitZ);
         }
-        public void Scale(float factor) {}
-        public void Translate(float tx, float ty, float tz)
+        public void Scale(double factor) {}
+        public void Translate(double tx, double ty, double tz)
         {
             this.pointOnPlane.Translate(tx, ty, tz);
             this.Preprocess();
@@ -110,12 +110,12 @@ namespace DrawEngine.Renderer.RenderObjects
             intersect = new Intersection();
             //t = -(N • Ro + D) / (N • Rd)	
             //Vector3D origin = ray.Origin.ToVector3D();
-            float NRd = this.normal * ray.Direction;
-            if(NRd == 0.0f){
+            double NRd = this.normal * ray.Direction;
+            if(NRd == 0.0d){
                 return false;
             }
-            float t = -(this.normal * ray.Origin + this.d) / NRd;
-            if (t < 0.000001f)
+            double t = -(this.normal * ray.Origin + this.d) / NRd;
+            if (t < 0.000001d)
             {
                 return false;
             }
@@ -123,8 +123,8 @@ namespace DrawEngine.Renderer.RenderObjects
             intersect.HitPoint = ray.Origin + (t * ray.Direction);
             intersect.HitPrimitive = this;
             intersect.TMin = t;
-            //float size = 10f;
-            //if(intersect.HitPoint.X > 0.0f){
+            //double size = 10d;
+            //if(intersect.HitPoint.X > 0.0d){
             //    if(((int)(intersect.HitPoint.X / size) % 2) == Math.Abs(((int)(intersect.HitPoint.Z / size) % 2))
             //       ^ (intersect.HitPoint.Z > 0)){
             //        this.material.DiffuseColor = RGBColor.Black;

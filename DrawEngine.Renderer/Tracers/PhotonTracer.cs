@@ -33,7 +33,7 @@ namespace DrawEngine.Renderer.Tracers {
         private readonly PhotonMap indirectEnlightenment;
         private readonly int maxPhotons;
         //private int currentRecursions;
-        private float irradianceArea = 2.5f;
+        private double irradianceArea = 2.5d;
         private int irradiancePhotonNumber = 500;
         private int maxRecursions = 20;
         private int storedCaustic;
@@ -65,7 +65,7 @@ namespace DrawEngine.Renderer.Tracers {
             get { return this.maxRecursions; }
             set { this.maxRecursions = value; }
         }
-        public float IrradianceArea {
+        public double IrradianceArea {
             get { return this.irradianceArea; }
             set { this.irradianceArea = value; }
         }
@@ -89,7 +89,7 @@ namespace DrawEngine.Renderer.Tracers {
                     this.ShootPhoton(photon, 0, EnlightenmentType.Direct);
                     emittedPhotons++;
                 }
-                //float inv_emittedPhotons = 1.0f / emittedPhotons;
+                //double inv_emittedPhotons = 1.0d / emittedPhotons;
                 //this.causticsEnlightenment.ScalePhotonPower(inv_emittedPhotons);
                 //this.IndirectEnlightenment.ScalePhotonPower(inv_emittedPhotons);
             }
@@ -101,14 +101,14 @@ namespace DrawEngine.Renderer.Tracers {
                 this.ScatterPhotons();
                 buildPhotonMaps = false;
             }
-            float resX = this.scene.DefaultCamera.ResX; //g.VisibleClipBounds.Width; 
-            float resY = this.scene.DefaultCamera.ResY; //g.VisibleClipBounds.Height;
-            float x, y;
+            double resX = this.scene.DefaultCamera.ResX; //g.VisibleClipBounds.Width; 
+            double resY = this.scene.DefaultCamera.ResY; //g.VisibleClipBounds.Height;
+            double x, y;
             int iterations = 0;
             RayTracer tracer = new RayTracer(this.scene);
             int pCol = 0, pRow = 0, pIteration = 1, pMax = 2;
             SolidBrush brush = new SolidBrush(Color.Black);
-            float resTotal = resX * resY;
+            double resTotal = resX * resY;
             while(iterations < resTotal) {
                 //Render Pixels Out of Order With Increasing Resolution: 2x2, 4x4, 16x16... 512x512
                 if(pCol >= pMax) {
@@ -133,7 +133,7 @@ namespace DrawEngine.Renderer.Tracers {
                     Intersection intersection;
                     if(this.scene.FindIntersection(ray, out intersection)) {
                         brush.Color = this.indirectEnlightenment.IrradianceEstimate(intersection.HitPoint, intersection.Normal, this.IrradianceArea,  this.IrradiancePhotonNumber).ToColor();
-                        g.FillRectangle(brush, x, y, (resX / pMax), (resY / pMax));
+                        g.FillRectangle(brush, (float)x, (float)y, (float)(resX / pMax), (float)(resY / pMax));
                     }
                 }
             }
@@ -155,11 +155,11 @@ namespace DrawEngine.Renderer.Tracers {
                     }
                     if(material.IsTransparent) {
                         Vector3D T;
-                        //float eta = intersection.HitFromInSide
+                        //double eta = intersection.HitFromInSide
                         //                ? material.RefractIndex * 1 / this.scene.RefractIndex
                         //                : this.scene.RefractIndex * 1 / material.RefractIndex;
-                        //float eta = this.scene.RefractIndex * 1 / material.RefractIndex;
-                        float eta = (ray.PrevRefractIndex == material.RefractIndex)
+                        //double eta = this.scene.RefractIndex * 1 / material.RefractIndex;
+                        double eta = (ray.PrevRefractIndex == material.RefractIndex)
                                         ? material.RefractIndex * 1 / this.scene.RefractIndex
                                         : this.scene.RefractIndex * 1 / material.RefractIndex;
                         if(Vector3D.Refracted(intersection.Normal, ray.Direction, out T, eta)) {
@@ -175,10 +175,10 @@ namespace DrawEngine.Renderer.Tracers {
             }
             return this.scene.IsEnvironmentMapped ? this.scene.EnvironmentMap.GetColor(ray) : this.scene.BackgroundColor;
         }
-        private static float Max(float v1, float v2, float v3) {
+        private static double Max(double v1, double v2, double v3) {
             return Math.Max(v1, Math.Max(v2, v3));
         }
-        private static float Prob(RGBColor pPower, float coeff) {
+        private static double Prob(RGBColor pPower, double coeff) {
             RGBColor colorFact = pPower * coeff;
             return Max(colorFact.R, colorFact.G, colorFact.B) / Max(pPower.R, pPower.G, pPower.B);
         }
@@ -189,15 +189,15 @@ namespace DrawEngine.Renderer.Tracers {
                 //this.scene.Shader = material.CreateShader(this.scene);
                 //RGBColor color = this.scene.Shader.Shade(photon, intersection);
 
-                //float avgPower = photon.Power.Average;
-                //float probDiff = avgPower * material.KDiff;
-                //float probSpec = avgPower * material.KSpec;
-                //float avgPower = photon.Power.Average;
+                //double avgPower = photon.Power.Average;
+                //double probDiff = avgPower * material.KDiff;
+                //double probSpec = avgPower * material.KSpec;
+                //double avgPower = photon.Power.Average;
                 RGBColor mixColor = (photon.Power * material.DiffuseColor);
-                float maxColor = Max(mixColor.R, mixColor.G, mixColor.B) / Max(photon.Power.R, photon.Power.G, photon.Power.B);
-                float probDiff = maxColor * material.KDiff;
-                float probTrans = maxColor * material.KTrans;
-                float probSpec = maxColor * material.KSpec;
+                double maxColor = Max(mixColor.R, mixColor.G, mixColor.B) / Max(photon.Power.R, photon.Power.G, photon.Power.B);
+                double probDiff = maxColor * material.KDiff;
+                double probTrans = maxColor * material.KTrans;
+                double probSpec = maxColor * material.KSpec;
                 Photon rPhoton = new Photon();
                 Random rdn = new Random();
                 double randomValue = rdn.NextDouble();
@@ -220,11 +220,11 @@ namespace DrawEngine.Renderer.Tracers {
                     this.ShootPhoton(rPhoton, depth + 1, EnlightenmentType.Caustics);
                 }else if(randomValue <= probSpec + probDiff + probTrans) {
                     Vector3D T;
-                    //float eta = intersection.HitFromInSide
+                    //double eta = intersection.HitFromInSide
                     //                ? material.RefractIndex * 1 / this.scene.RefractIndex
                     //                : this.scene.RefractIndex * 1 / material.RefractIndex;
-                    //float eta = this.scene.RefractIndex * 1 / material.RefractIndex;
-                    float eta = (photon.PrevRefractIndex == material.RefractIndex)
+                    //double eta = this.scene.RefractIndex * 1 / material.RefractIndex;
+                    double eta = (photon.PrevRefractIndex == material.RefractIndex)
                                     ? material.RefractIndex * 1 / this.scene.RefractIndex
                                     : this.scene.RefractIndex * 1 / material.RefractIndex;
                     if(Vector3D.Refracted(intersection.Normal, photon.Direction, out T, eta)) {

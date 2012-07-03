@@ -4,7 +4,7 @@ namespace DrawEngine.Renderer.PhotonMapping
 {
     public class NearestPhotons
     {
-        public float[] Dist2;
+        public double[] Dist2;
         public int Found;
         public int GotHeap;
         public Photon[] Index;

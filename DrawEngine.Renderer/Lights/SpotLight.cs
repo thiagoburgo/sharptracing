@@ -23,32 +23,32 @@ namespace DrawEngine.Renderer.Lights
     {
         // A ideia eh ter 2 angulos para criar a ilusao de area de atuacao. Um mais interno onde a atenuacao nao existe.
         // A area entre os 2 circulos dah a ilusao de atenuacao
-        protected float[] apertureAngles;
-        protected float[] cosApertureAngles;
+        protected double[] apertureAngles;
+        protected double[] cosApertureAngles;
         protected Vector3D direction;
         // Contribuicao dada pela spotlight para ambiente fora do cone de luz.
-        protected float fallOff;
+        protected double fallOff;
         protected Point3D towardsAt;
         public SpotLight() : base()
         {
             this.TowardsAt = Point3D.Zero;
-            this.fallOff = 0.5f;
-            this.apertureAngles = new float[2]{15f, 25f};
-            this.cosApertureAngles = new float[2];
-            this.cosApertureAngles[0] = (float)Math.Cos(Math.PI * this.apertureAngles[0] / 180);
-            this.cosApertureAngles[1] = (float)Math.Cos(Math.PI * this.apertureAngles[1] / 180);
+            this.fallOff = 0.5d;
+            this.apertureAngles = new double[2]{15d, 25d};
+            this.cosApertureAngles = new double[2];
+            this.cosApertureAngles[0] = Math.Cos(Math.PI * this.apertureAngles[0] / 180);
+            this.cosApertureAngles[1] = Math.Cos(Math.PI * this.apertureAngles[1] / 180);
         }
-        public SpotLight(RGBColor luminousIntensityBase, Point3D luminousPoint, Point3D towardsAt, float fallOff,
-                         float minApertureAngle, float maxApertureAngle) : base(luminousIntensityBase, luminousPoint)
+        public SpotLight(RGBColor luminousIntensityBase, Point3D luminousPoint, Point3D towardsAt, double fallOff,
+                         double minApertureAngle, double maxApertureAngle) : base(luminousIntensityBase, luminousPoint)
         {
             this.TowardsAt = towardsAt;
             this.fallOff = fallOff;
-            this.apertureAngles = new float[2];
-            this.cosApertureAngles = new float[2];
+            this.apertureAngles = new double[2];
+            this.cosApertureAngles = new double[2];
             this.apertureAngles[0] = minApertureAngle;
             this.apertureAngles[1] = maxApertureAngle;
-            this.cosApertureAngles[0] = (float)Math.Cos(Math.PI * this.apertureAngles[0] / 180);
-            this.cosApertureAngles[1] = (float)Math.Cos(Math.PI * this.apertureAngles[1] / 180);
+            this.cosApertureAngles[0] = Math.Cos(Math.PI * this.apertureAngles[0] / 180);
+            this.cosApertureAngles[1] = Math.Cos(Math.PI * this.apertureAngles[1] / 180);
         }
         public Vector3D Direction
         {
@@ -60,7 +60,7 @@ namespace DrawEngine.Renderer.Lights
                 //this.towardsAt = this.position + this.direction;
             }
         }
-        public float FallOff
+        public double FallOff
         {
             get { return this.fallOff; }
             set
@@ -72,7 +72,7 @@ namespace DrawEngine.Renderer.Lights
                 }
             }
         }
-        public float MinApertureAngle
+        public double MinApertureAngle
         {
             get { return this.apertureAngles[0]; }
             set
@@ -84,7 +84,7 @@ namespace DrawEngine.Renderer.Lights
                 }
             }
         }
-        public float MaxApertureAngle
+        public double MaxApertureAngle
         {
             get { return this.apertureAngles[1]; }
             set
@@ -112,16 +112,16 @@ namespace DrawEngine.Renderer.Lights
         /// </summary>
         /// <param name="pointToLight"></param>
         /// <returns></returns>
-        public override float GetColorFactor(Vector3D pointToLight)
+        public override double GetColorFactor(Vector3D pointToLight)
         {
             //pointToLight.Normalize();
-            float factor = -pointToLight * this.direction;
+            double factor = -pointToLight * this.direction;
             if(factor > this.cosApertureAngles[0]){
                 return factor;
             } else if(factor < this.cosApertureAngles[1]){
                 return this.fallOff;
             } else{
-                float r = 1.0f
+                double r = 1.0d
                           -
                           ((factor - this.cosApertureAngles[0])
                            / (this.cosApertureAngles[1] - this.cosApertureAngles[0]));
@@ -132,27 +132,27 @@ namespace DrawEngine.Renderer.Lights
         {
             return "SpotLight[LuminousPoint" + this.position.ToString() + ", Intensity" + this.color.ToString() + "]";
         }
-        public override void Rotate(float angle, Vector3D axis)
+        public override void Rotate(double angle, Vector3D axis)
         {
             this.position.Rotate(angle, axis);
         }
-        public override void RotateAxisX(float angle)
+        public override void RotateAxisX(double angle)
         {
             this.position.RotateAxisX(angle);
         }
-        public override void RotateAxisY(float angle)
+        public override void RotateAxisY(double angle)
         {
             this.position.RotateAxisY(angle);
         }
-        public override void RotateAxisZ(float angle)
+        public override void RotateAxisZ(double angle)
         {
             this.position.RotateAxisZ(angle);
         }
-        public override void Scale(float factor)
+        public override void Scale(double factor)
         {
             this.position.Scale(factor);
         }
-        public override void Translate(float tx, float ty, float tz)
+        public override void Translate(double tx, double ty, double tz)
         {
             this.position.Translate(tx, ty, tz);
         }

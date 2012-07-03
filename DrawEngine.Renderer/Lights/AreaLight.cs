@@ -29,9 +29,9 @@ namespace DrawEngine.Renderer.Lights
         //private AreaLightType areaLightType = Lights.AreaLightType.Quandragle;
         private readonly Quadrilatero lightShape;
         private Vector3D direction;
-        private float height;
+        private double height;
         private Point3D towardsAt;
-        private float width;
+        private double width;
         public AreaLight() : base()
         {
             this.Width = 50;
@@ -39,7 +39,7 @@ namespace DrawEngine.Renderer.Lights
             this.TowardsAt = Point3D.Zero;
             this.lightShape = new Quadrilatero(this.position, this.direction, this.width, this.height);
         }
-        public AreaLight(RGBColor intensity, Point3D position, Point3D towardsAt, float width, float height)
+        public AreaLight(RGBColor intensity, Point3D position, Point3D towardsAt, double width, double height)
                 : base(intensity, position)
         {
             this.Width = width;
@@ -47,7 +47,7 @@ namespace DrawEngine.Renderer.Lights
             this.TowardsAt = towardsAt;
             this.lightShape = new Quadrilatero(position, this.direction, this.width, this.height);
         }
-        public float Width
+        public double Width
         {
             get { return this.width; }
             set { this.width = value; }
@@ -72,7 +72,7 @@ namespace DrawEngine.Renderer.Lights
                 //this.towardsAt = this.position + this.direction;
             }
         }
-        public float Height
+        public double Height
         {
             get { return this.height; }
             set { this.height = value; }
@@ -81,14 +81,14 @@ namespace DrawEngine.Renderer.Lights
         {
             Random rnd = new Random(((int)DateTime.Now.Ticks) ^ 47);
             Vector3D rndVect1 = (this.lightShape.Vertex2 - this.lightShape.Vertex1).Normalized * this.width
-                                * (float)rnd.NextDouble();
+                                * rnd.NextDouble();
             Vector3D rndVect2 = (this.lightShape.Vertex4 - this.lightShape.Vertex1).Normalized * this.height
-                                * (float)rnd.NextDouble();
+                                * rnd.NextDouble();
             return this.lightShape.Vertex1 + rndVect1 + rndVect2;
         }
-        public override float GetColorFactor(Vector3D pointToLight)
+        public override double GetColorFactor(Vector3D pointToLight)
         {
-            return 1.0f;
+            return 1.0d;
         }
         public override IEnumerable<Photon> GeneratePhotons()
         {
@@ -96,27 +96,27 @@ namespace DrawEngine.Renderer.Lights
         }
 
         #region ITransformable members
-        public override void Rotate(float angle, Vector3D axis)
+        public override void Rotate(double angle, Vector3D axis)
         {
             throw new NotImplementedException();
         }
-        public override void RotateAxisX(float angle)
+        public override void RotateAxisX(double angle)
         {
             throw new NotImplementedException();
         }
-        public override void RotateAxisY(float angle)
+        public override void RotateAxisY(double angle)
         {
             throw new NotImplementedException();
         }
-        public override void RotateAxisZ(float angle)
+        public override void RotateAxisZ(double angle)
         {
             throw new NotImplementedException();
         }
-        public override void Scale(float factor)
+        public override void Scale(double factor)
         {
             throw new NotImplementedException();
         }
-        public override void Translate(float tx, float ty, float tz)
+        public override void Translate(double tx, double ty, double tz)
         {
             throw new NotImplementedException();
         }

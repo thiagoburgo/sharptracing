@@ -20,10 +20,10 @@ namespace DrawEngine.Renderer.RenderObjects {
     [Serializable]
     public class Quadrilatero : Polygon, ITransformable3D {
         private bool calcDimensions;
-        private float height;
-        private float width;
+        private double height;
+        private double width;
         public Quadrilatero() : this(Point3D.Zero, Vector3D.UnitY, 100, 100) { }
-        public Quadrilatero(Point3D center, Vector3D normal, float width, float height) {
+        public Quadrilatero(Point3D center, Vector3D normal, double width, double height) {
             this.calcDimensions = false;
             this.width = width;
             this.height = height;
@@ -46,7 +46,7 @@ namespace DrawEngine.Renderer.RenderObjects {
             }
         }
         [RefreshProperties(RefreshProperties.All)]
-        public float Height {
+        public double Height {
             get { return this.height; }
             set {
                 if(value > 0) {
@@ -59,7 +59,7 @@ namespace DrawEngine.Renderer.RenderObjects {
             }
         }
         [RefreshProperties(RefreshProperties.All)]
-        public float Width {
+        public double Width {
             get { return this.width; }
             set {
                 if(value > 0) {
@@ -114,25 +114,25 @@ namespace DrawEngine.Renderer.RenderObjects {
         }
 
         #region ITransformable3D Members
-        public void Rotate(float angle, Vector3D axis) {
+        public void Rotate(double angle, Vector3D axis) {
             this.center.Rotate(angle, axis);
             this.Preprocess();
         }
-        public void RotateAxisX(float angle) {
+        public void RotateAxisX(double angle) {
             this.Rotate(angle, Vector3D.UnitX);
         }
-        public void RotateAxisY(float angle) {
+        public void RotateAxisY(double angle) {
             this.Rotate(angle, Vector3D.UnitY);
         }
-        public void RotateAxisZ(float angle) {
+        public void RotateAxisZ(double angle) {
             this.Rotate(angle, Vector3D.UnitZ);
         }
-        public void Scale(float factor) {
+        public void Scale(double factor) {
             this.width = this.width * factor;
             this.height = this.height * factor;
             this.Preprocess();
         }
-        public void Translate(float tx, float ty, float tz) {
+        public void Translate(double tx, double ty, double tz) {
             this.center.Translate(tx, ty, tz);
             this.Preprocess();
         }
@@ -157,39 +157,39 @@ namespace DrawEngine.Renderer.RenderObjects {
                     this.vertices = new NotifyList<Point3D> { Point3D.Zero, Point3D.Zero, Point3D.Zero, Point3D.Zero };
                 }
 
-                this.vertices[0] = this.center + edge12 * this.width * 0.5f + edge23 * -this.height * 0.5f;
-                this.vertices[1] = this.center + edge12 * this.width * 0.5f + edge23 * this.height * 0.5f;
-                this.vertices[2] = this.center + edge12 * -this.width * 0.5f + edge23 * this.height * 0.5f;
-                this.vertices[3] = this.center + edge12 * -this.width * 0.5f + edge23 * -this.height * 0.5f;
+                this.vertices[0] = this.center + edge12 * this.width * 0.5d + edge23 * -this.height * 0.5d;
+                this.vertices[1] = this.center + edge12 * this.width * 0.5d + edge23 * this.height * 0.5d;
+                this.vertices[2] = this.center + edge12 * -this.width * 0.5d + edge23 * this.height * 0.5d;
+                this.vertices[3] = this.center + edge12 * -this.width * 0.5d + edge23 * -this.height * 0.5d;
             }
             this.d = -(this.normal.X * this.vertices[0].X) - (this.normal.Y * this.vertices[0].Y)
                      - (this.normal.Z * this.vertices[0].Z);
         }
         //public bool FindIntersection(Ray ray) {
-        //    float NRd = (this.normal * ray.Direction);
-        //    if(NRd == 0.0f) {
+        //    double NRd = (this.normal * ray.Direction);
+        //    if(NRd == 0.0d) {
         //        return false;
         //    }
-        //    float tMin = (ray.Origin * this.normal) - this.coefQuadrangle;
-        //    tMin = -tMin * 1.0f / NRd;
-        //    if(tMin < 0.0001f) {
+        //    double tMin = (ray.Origin * this.normal) - this.coefQuadrangle;
+        //    tMin = -tMin * 1.0d / NRd;
+        //    if(tMin < 0.0001d) {
         //        return false;
         //    }
         //    Point3D hitPoint = ray.Origin + (tMin * ray.Direction);
         //    //FIM INTERSECCAO COM O PLANO
-        //    float hitDotNorm12 = (hitPoint * this.normal12);
+        //    double hitDotNorm12 = (hitPoint * this.normal12);
         //    if(hitDotNorm12 < this.coef12) {
         //        return false;
         //    }
-        //    float hitDotNorm23 = (hitPoint * this.normal23);
+        //    double hitDotNorm23 = (hitPoint * this.normal23);
         //    if(hitDotNorm23 < this.coef23) {
         //        return false;
         //    }
-        //    float hitDotNorm34 = (hitPoint * this.normal34);
+        //    double hitDotNorm34 = (hitPoint * this.normal34);
         //    if(hitDotNorm34 < this.coef34) {
         //        return false;
         //    }
-        //    float hitDotNorm41 = (hitPoint * this.normal41);
+        //    double hitDotNorm41 = (hitPoint * this.normal41);
         //    if(hitDotNorm41 < this.coef41) {
         //        return false;
         //    }

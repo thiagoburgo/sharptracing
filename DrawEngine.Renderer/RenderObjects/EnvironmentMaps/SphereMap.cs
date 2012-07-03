@@ -25,10 +25,10 @@ namespace DrawEngine.Renderer.RenderObjects.EnvironmentMaps
     {
         private string imagePath;
         private Texture panorama;
-        private float radius;
-        private float radius2;
+        private double radius;
+        private double radius2;
         public SphereMap() : this(300, null) {}
-        public SphereMap(float radius, string imagePath)
+        public SphereMap(double radius, string imagePath)
         {
             this.ImagePath = imagePath;
             this.Radius = radius;
@@ -44,7 +44,7 @@ namespace DrawEngine.Renderer.RenderObjects.EnvironmentMaps
                 }
             }
         }
-        public float Radius
+        public double Radius
         {
             get { return this.radius; }
             set
@@ -56,25 +56,25 @@ namespace DrawEngine.Renderer.RenderObjects.EnvironmentMaps
         public override RGBColor GetColor(Ray ray)
         {
             Vector3D oc = Point3D.Zero - ray.Origin;
-            float l2oc = (oc * oc);
-            float tmin = float.PositiveInfinity;
+            double l2oc = (oc * oc);
+            double tmin = double.PositiveInfinity;
             if(l2oc < this.radius2){
                 // starts inside of the sphere
-                float tca = (oc * ray.Direction);
-                float l2hc = (this.radius2 - l2oc) / (ray.Direction * ray.Direction) + tca * tca; // division
-                tmin = tca + (float)Math.Sqrt(l2hc);
+                double tca = (oc * ray.Direction);
+                double l2hc = (this.radius2 - l2oc) / (ray.Direction * ray.Direction) + tca * tca; // division
+                tmin = tca + Math.Sqrt(l2hc);
             } else{
-                float tca = (oc * ray.Direction);
+                double tca = (oc * ray.Direction);
                 if(tca < 0) // points away from the sphere
                 {
                     return RGBColor.Black;
                 }
-                float l2hc = (this.radius2 - l2oc) / (ray.Direction * ray.Direction) + (tca * tca); // division
+                double l2hc = (this.radius2 - l2oc) / (ray.Direction * ray.Direction) + (tca * tca); // division
                 if(l2hc > 0){
-                    tmin = tca - (float)Math.Sqrt(l2hc);
+                    tmin = tca - Math.Sqrt(l2hc);
                 }
             }
-            if(tmin != float.PositiveInfinity){
+            if(tmin != double.PositiveInfinity){
                 Point3D hitPoint = ray.Origin + tmin * ray.Direction;
                 Vector3D normal = hitPoint.ToVector3D().Normalized;
                 double uCoord, vCoord;
@@ -86,8 +86,8 @@ namespace DrawEngine.Renderer.RenderObjects.EnvironmentMaps
                 if(uCoord < 0.0){
                     uCoord++;
                 }
-                return this.panorama.GetPixel((float)((this.panorama.Width - 1) * uCoord),
-                                              (float)((this.panorama.Height - 1) * vCoord));
+                return this.panorama.GetPixel(((this.panorama.Width - 1) * uCoord),
+                                              ((this.panorama.Height - 1) * vCoord));
             }
             return RGBColor.Black;
         }

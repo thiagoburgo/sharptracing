@@ -53,13 +53,13 @@ namespace DrawEngine.Renderer.Tracers
         }
         public virtual void Render(Graphics g) {
             #region Progressive Render from http://www.cc.gatech.edu/~phlosoft/photon/
-            float resX = this.scene.DefaultCamera.ResX; //g.VisibleClipBounds.Width; 
-            float resY = this.scene.DefaultCamera.ResY; //g.VisibleClipBounds.Height;
-            float x, y;
+            double resX = this.scene.DefaultCamera.ResX; //g.VisibleClipBounds.Width; 
+            double resY = this.scene.DefaultCamera.ResY; //g.VisibleClipBounds.Height;
+            double x, y;
             int iterations = 0;
             int pCol = 0, pRow = 0, pIteration = 1, pMax = 2;
             SolidBrush brush = new SolidBrush(Color.Black);
-            float resTotal = resX * resY;
+            double resTotal = resX * resY;
             while(iterations < resTotal) {
                 //Render Pixels Out of Order With Increasing Resolution: 2x2, 4x4, 16x16... 512x512
                 if(pCol >= pMax) {
@@ -86,29 +86,29 @@ namespace DrawEngine.Renderer.Tracers
                             ray.PrevRefractIndex = this.scene.RefractIndex;
                             finalColor += this.Trace(ray, 0);
                         }
-                        //brush.Color = (finalColor * (1f / this.scene.Sampler.SamplesPerPixel)).ToColor();
-                        finalColor = (finalColor * (1f / this.scene.Sampler.SamplesPerPixel));
+                        //brush.Color = (finalColor * (1d / this.scene.Sampler.SamplesPerPixel)).ToColor();
+                        finalColor = (finalColor * (1d / this.scene.Sampler.SamplesPerPixel));
                     }
                     else {
                         ray = this.scene.DefaultCamera.CreateRayFromScreen(x, y);
                         finalColor = this.Trace(ray, 0);
                     }
                     // pseudo photo exposure
-                    //finalColor.R = (float)(1.0 - Math.Exp(-1.5f*finalColor.R));
-                    //finalColor.G = (float)(1.0 - Math.Exp(-1.5f * finalColor.G));
-                    //finalColor.B = (float)(1.0 - Math.Exp(-1.5f * finalColor.B));
+                    //finalColor.R = (1.0 - Math.Exp(-1.5d*finalColor.R));
+                    //finalColor.G = (1.0 - Math.Exp(-1.5d * finalColor.G));
+                    //finalColor.B = (1.0 - Math.Exp(-1.5d * finalColor.B));
 
                     //finalColor.R = srgbEncode(finalColor.R);
                     //finalColor.G = srgbEncode(finalColor.G);
                     //finalColor.B = srgbEncode(finalColor.B);
                     brush.Color = finalColor.ToColor();
-                    g.FillRectangle(brush, x, y, (resX / pMax), (resY / pMax));
+                    g.FillRectangle(brush, (float)x, (float)y, (float)(resX / pMax), (float)(resY / pMax));
                 }
             }
             #endregion
             #region Linear Render
-            //float resX = this.scene.DefaultCamera.ResX; //g.VisibleClipBounds.Width; 
-            //float resY = this.scene.DefaultCamera.ResY; //g.VisibleClipBounds.Height;
+            //double resX = this.scene.DefaultCamera.ResX; //g.VisibleClipBounds.Width; 
+            //double resY = this.scene.DefaultCamera.ResY; //g.VisibleClipBounds.Height;
             //SolidBrush brush = new SolidBrush(Color.Black);
 
             //for(int y = 0; y < resY; y++) {
@@ -121,7 +121,7 @@ namespace DrawEngine.Renderer.Tracers
             //                ray.PrevRefractIndex = this.scene.RefractIndex;
             //                finalColor += this.Trace(ray, 0);
             //            }
-            //            brush.Color = (finalColor * 1f / this.scene.Sampler.SamplesPerPixel).ToColor();
+            //            brush.Color = (finalColor * 1d / this.scene.Sampler.SamplesPerPixel).ToColor();
             //        }
             //        else {
             //            ray = this.scene.DefaultCamera.CreateRayFromScreen(x, y);
@@ -133,19 +133,19 @@ namespace DrawEngine.Renderer.Tracers
             #endregion
         }
 
-        //float srgbEncode(float c) {
-        //    if(c <= 0.0031308f) {
-        //        return 12.92f * c;
+        //double srgbEncode(double c) {
+        //    if(c <= 0.0031308d) {
+        //        return 12.92d * c;
         //    }
         //    else {
-        //        return 1.055f * (float)(Math.Pow(c, 0.4166667) - 0.055); // Inverse gamma 2.4
+        //        return 1.055d * (Math.Pow(c, 0.4166667) - 0.055); // Inverse gamma 2.4
         //    }
         //}
         protected abstract RGBColor Trace(Ray ray, int depth);
         protected static RGBColor AverageColors(params RGBColor[] colors)
         {
-            float r = 0, g = 0, b = 0;
-            float len_inv = 1f / colors.Length;
+            double r = 0, g = 0, b = 0;
+            double len_inv = 1d / colors.Length;
             foreach(RGBColor color in colors){
                 r = (r + color.R);
                 g = (g + color.G);

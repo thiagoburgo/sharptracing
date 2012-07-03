@@ -21,9 +21,9 @@ namespace DrawEngine.Renderer.Materials
     {
         private readonly PhongShader shader = new PhongShader();
         public PhongMaterial() : base() {}
-        public PhongMaterial(float kdiff, float kspec, float kamb, float refractIndex, float ktrans, float glossy, float shiness,
+        public PhongMaterial(double kdiff, double kspec, double kamb, double refractIndex, double ktrans, double glossy, double shiness,
                              RGBColor color) : base(kdiff, kspec, kamb, refractIndex, ktrans, glossy, shiness, color) {}
-        public PhongMaterial(float kdiff, float kspec, float kamb, float refractIndex, float ktrans, float glossy, float shiness,
+        public PhongMaterial(double kdiff, double kspec, double kamb, double refractIndex, double ktrans, double glossy, double shiness,
                              Texture texture)
             : base(kdiff, kspec, kamb, refractIndex, ktrans, glossy, shiness, texture) { }
         public override Shader CreateShader(Scene scene)

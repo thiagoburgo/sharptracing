@@ -258,7 +258,7 @@ namespace DrawEngine.Renderer.Mathematics.QMCRandom
             }
             // compute direct numbers...
             for(int i = 0; i < d; i++){
-                this.directNumbers[i] = (double)(this.m0[i]) / Math.Pow(2, (i + 1));
+                this.directNumbers[i] = (this.m0[i]) / Math.Pow(2, (i + 1));
             }
             for(int i = d; i < nd; i++){
                 int tmp = (int)(m[i - d] * Math.Pow(2, d));
@@ -267,7 +267,7 @@ namespace DrawEngine.Renderer.Mathematics.QMCRandom
                     int tmp2 = this.usedPolynome[j + 1] * m[i - j - 1] * (int)Math.Pow(2, j + 1);
                     m[i] ^= tmp2;
                 }
-                this.directNumbers[i] = (double)m[i] / Math.Pow(2, i + 1);
+                this.directNumbers[i] = m[i] / Math.Pow(2, i + 1);
             }
             this.vInt = new double[nd];
             double pot = Math.Pow(2.0, 32);

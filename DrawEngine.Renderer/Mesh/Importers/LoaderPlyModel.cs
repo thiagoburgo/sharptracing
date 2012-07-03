@@ -176,7 +176,7 @@ namespace DrawEngine.Renderer.Importers
 			this.Elements = new NamedList<ElementDescription>();
 		}
 		public PlyFormat Format { get; set; }
-		public float Vesion { get; set; }
+		public double Vesion { get; set; }
 		public List<String> Comments { get; set; }
 		public NamedList<ElementDescription> Elements { get; set; }
 
@@ -299,7 +299,7 @@ namespace DrawEngine.Renderer.Importers
 						NumberFormatInfo nfi = new NumberFormatInfo();
 						nfi.NumberDecimalSeparator = ".";
 						nfi.NumberGroupSeparator = ",";
-						headerObj.Vesion = float.Parse(lineSplits[1], nfi);
+						headerObj.Vesion = double.Parse(lineSplits[1], nfi);
 						break;
 					case "comment":
 						headerObj.Comments.Add(lineSplits[1]);
@@ -345,12 +345,12 @@ namespace DrawEngine.Renderer.Importers
 			{
 
 				str = sr.ReadLine().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-				vertices[i] = new Point3D(float.Parse(str[0], nfi), float.Parse(str[1], nfi),
-										  float.Parse(str[2], nfi));
+				vertices[i] = new Point3D(double.Parse(str[0], nfi), double.Parse(str[1], nfi),
+										  double.Parse(str[2], nfi));
 				//Adjusting BoundBox...
 				this.BoundBox.Include(vertices[i]);
 				//Reporting progress
-				int percent = (int)(((float)i / vertices.Length) * 100.0f);
+				int percent = (int)(((float)i / vertices.Length) * 100.0d);
 				if ((percent % 20) == 0)
 				{
 					this.OnElementLoaded(percent, ElementMesh.Vertex);
@@ -365,7 +365,7 @@ namespace DrawEngine.Renderer.Importers
 				this.triangles[i] = new Triangle(vertices[pointersToVertex[i].Vertex1],
 												 vertices[pointersToVertex[i].Vertex2],
 												 vertices[pointersToVertex[i].Vertex3]);
-				int percent = (int)(((float)i / this.triangles.Length) * 100.0f);
+				int percent = (int)(((float)i / this.triangles.Length) * 100.0d);
 				if ((percent % 20) == 0)
 				{
 					this.OnElementLoaded(percent, ElementMesh.Triangle);
@@ -397,12 +397,12 @@ namespace DrawEngine.Renderer.Importers
 			for (int i = 0; i < vertices.Length; i++)
 			{
 				str = sr.ReadLine().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-				vertices[i] = new Point3D(float.Parse(str[0], nfi), float.Parse(str[1], nfi),
-										  float.Parse(str[2], nfi));
+				vertices[i] = new Point3D(double.Parse(str[0], nfi), double.Parse(str[1], nfi),
+										  double.Parse(str[2], nfi));
 				//Adjusting BoundBox...
 				this.BoundBox.Include(vertices[i]);
 				//Reporting progress
-				int percent = (int)(((float)i / vertices.Length) * 100.0f);
+				int percent = (int)(((float)i / vertices.Length) * 100.0d);
 				if ((percent % 20) == 0)
 				{
 					this.OnElementLoaded(percent, ElementMesh.Vertex);
@@ -417,7 +417,7 @@ namespace DrawEngine.Renderer.Importers
 				this.triangles[i] = new Triangle(vertices[pointersToVertex[i].Vertex1],
 												 vertices[pointersToVertex[i].Vertex2],
 												 vertices[pointersToVertex[i].Vertex3]);
-				int percent = (int)(((float)i / this.triangles.Length) * 100.0f);
+				int percent = (int)(((float)i / this.triangles.Length) * 100.0d);
 				if ((percent % 20) == 0)
 				{
 					this.OnElementLoaded(percent, ElementMesh.Triangle);
@@ -472,7 +472,7 @@ namespace DrawEngine.Renderer.Importers
 																		 vertices[pointersToVertex[e].Vertex3]);
 
 
-										int percent = (int)(((float)e / this.triangles.Length) * 100.0f);
+										int percent = (int)(((float)e / this.triangles.Length) * 100.0d);
 										if ((percent % 20) == 0)
 										{
 											this.OnElementLoaded(percent, ElementMesh.Triangle);
@@ -513,7 +513,7 @@ namespace DrawEngine.Renderer.Importers
 									//Adjusting BoundBox...
 									this.BoundBox.Include(vertices[e]);
 									//Reporting progress
-									int percent = (int)(((float)e / vertices.Length) * 100.0f);
+									int percent = (int)(((float)e / vertices.Length) * 100.0d);
 									if ((percent % 20) == 0)
 									{
 										this.OnElementLoaded(percent, ElementMesh.Vertex);
@@ -555,7 +555,7 @@ namespace DrawEngine.Renderer.Importers
 								//        //Adjusting BoundBox...
 								//        this.BoundBox.Include(vertices[e]);
 								//        //Reporting progress
-								//        int percent = (int)(((float)e / vertices.Length) * 100.0f);
+								//        int percent = (int)(((float)e / vertices.Length) * 100.0d);
 								//        if ((percent % 20) == 0)
 								//        {
 								//            this.OnElementLoaded(percent, ElementMesh.Vertex);
@@ -589,7 +589,7 @@ namespace DrawEngine.Renderer.Importers
 				normalsPerVertex[pointersToVertex[i].Vertex2] += this.triangles[i].Normal;
 				normalsPerVertex[pointersToVertex[i].Vertex3] += this.triangles[i].Normal;
 
-				int percent = (int)(((float)i / this.triangles.Length) * 100.0f);
+				int percent = (int)(((float)i / this.triangles.Length) * 100.0d);
 				if ((percent % 20) == 0)
 				{
 					this.OnElementLoaded(percent, ElementMesh.VertexNormal);
@@ -603,7 +603,7 @@ namespace DrawEngine.Renderer.Importers
 				this.triangles[i].NormalOnVertex2.Normalize();
 				this.triangles[i].NormalOnVertex3 = normalsPerVertex[pointersToVertex[i].Vertex3];
 				this.triangles[i].NormalOnVertex3.Normalize();
-				int percent = (int)(((float)i / this.triangles.Length) * 100.0f);
+				int percent = (int)(((float)i / this.triangles.Length) * 100.0d);
 				if ((percent % 20) == 0)
 				{
 					this.OnElementLoaded(percent / 2 + 50, ElementMesh.VertexNormal);

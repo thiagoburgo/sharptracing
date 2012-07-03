@@ -23,18 +23,18 @@ namespace DrawEngine.Renderer.Cameras
     [XmlInclude(typeof(PinholeCamera)), XmlInclude(typeof(SphericalCamera)), XmlInclude(typeof(ThinLensCamera)), Serializable]
     public abstract class Camera : ITransformable3D, INameable
     {
-        private float aspect;
-        protected float au, av;
+        private double aspect;
+        protected double au, av;
         protected OrthoNormalBasis basis;
         protected Point3D eye; //LF
-        private float fov;
+        private double fov;
         private Point3D lookAt; //LA
         private string name;
-        protected float resX;
-        protected float resY;
+        protected double resX;
+        protected double resY;
         private Vector3D up; //VUP
-        protected Camera() : this(new Point3D(0, 50, -150), Point3D.Zero, Vector3D.UnitY, 0.5f, 512f, 512f) {}
-        protected Camera(Point3D eye, Point3D lookAt, Vector3D up, float fov, float resX, float resY)
+        protected Camera() : this(new Point3D(0, 50, -150), Point3D.Zero, Vector3D.UnitY, 0.5d, 512d, 512d) {}
+        protected Camera(Point3D eye, Point3D lookAt, Vector3D up, double fov, double resX, double resY)
         {
             this.ResX = resX;
             this.ResY = resY;
@@ -44,8 +44,8 @@ namespace DrawEngine.Renderer.Cameras
             this.up = up;
             this.LookAt = lookAt;
             this.basis = OrthoNormalBasis.MakeFromWV(eye - lookAt, up);
-            this.au = (float)Math.Tan(fov * 0.5f);
-            this.av = this.au * 1.0f / this.aspect;
+            this.au = Math.Tan(fov * 0.5d);
+            this.av = this.au * 1.0d / this.aspect;
         }
         public Vector3D ViewUp
         {
@@ -56,15 +56,15 @@ namespace DrawEngine.Renderer.Cameras
                 this.basis = OrthoNormalBasis.MakeFromWV(this.eye - this.lookAt, this.up);
             }
         }
-        public float Fov
+        public double Fov
         {
             get { return this.fov; }
             set
             {
-                if(value > 0.0f && value <= Math.PI){
+                if(value > 0.0d && value <= Math.PI){
                     this.fov = value;
-                    this.au = (float)Math.Tan(this.fov * 0.5f);
-                    this.av = this.au * 1.0f / this.aspect;
+                    this.au = Math.Tan(this.fov * 0.5d);
+                    this.av = this.au * 1.0d / this.aspect;
                 }
             }
         }
@@ -84,12 +84,12 @@ namespace DrawEngine.Renderer.Cameras
             {
                 this.eye = value;
                 if(value.Z == 0){
-                    value.Z = float.MinValue;
+                    value.Z = double.MinValue;
                 }
                 this.basis = OrthoNormalBasis.MakeFromWV(value - this.lookAt, this.up);
             }
         }
-        public float ResX
+        public double ResX
         {
             get { return this.resX; }
             set
@@ -97,13 +97,13 @@ namespace DrawEngine.Renderer.Cameras
                 if(value > 0){
                     this.resX = value;
                     this.aspect = this.resX / this.resY;
-                    this.av = this.au * 1.0f / this.aspect;
+                    this.av = this.au * 1.0d / this.aspect;
                 } else{
                     throw new ArgumentException("The value must be greater than ZERO!");
                 }
             }
         }
-        public float ResY
+        public double ResY
         {
             get { return this.resY; }
             set
@@ -111,7 +111,7 @@ namespace DrawEngine.Renderer.Cameras
                 if(value > 0){
                     this.resY = value;
                     this.aspect = this.resX / this.resY;
-                    this.av = this.au * 1.0f / this.aspect;
+                    this.av = this.au * 1.0d / this.aspect;
                 } else{
                     throw new ArgumentException("The value must be greater than ZERO!");
                 }
@@ -149,27 +149,27 @@ namespace DrawEngine.Renderer.Cameras
         #endregion
 
         #region ITransformable3D Members
-        public void Rotate(float angle, Vector3D axis)
+        public void Rotate(double angle, Vector3D axis)
         {
             throw new Exception("The method or operation is not implemented.");
         }
-        public void RotateAxisX(float angle)
+        public void RotateAxisX(double angle)
         {
             throw new Exception("The method or operation is not implemented.");
         }
-        public void RotateAxisY(float angle)
+        public void RotateAxisY(double angle)
         {
             throw new Exception("The method or operation is not implemented.");
         }
-        public void RotateAxisZ(float angle)
+        public void RotateAxisZ(double angle)
         {
             throw new Exception("The method or operation is not implemented.");
         }
-        public void Scale(float factor)
+        public void Scale(double factor)
         {
             throw new Exception("The method or operation is not implemented.");
         }
-        public void Translate(float tx, float ty, float tz)
+        public void Translate(double tx, double ty, double tz)
         {
             throw new Exception("The method or operation is not implemented.");
         }
@@ -183,7 +183,7 @@ namespace DrawEngine.Renderer.Cameras
         {
             return CreateRayFromScreen(pointOnScreen.X, pointOnScreen.Y);
         }
-        public abstract Ray CreateRayFromScreen(float x, float y);
+        public abstract Ray CreateRayFromScreen(double x, double y);
         public override string ToString()
         {
             if(!String.IsNullOrEmpty(this.name)){

@@ -147,7 +147,7 @@ namespace Util.Conversion
         /// <summary>
         /// Converts the given array of bytes to a single precision floating number.
         /// </summary>
-        public static float ToSingle(byte[] value, int startIndex, ByteOrder from, ByteOrder to)
+        public static double ToSingle(byte[] value, int startIndex, ByteOrder from, ByteOrder to)
         {
             byte[] data = CheckData(value, startIndex, 4, from, to);
             return BitConverter.ToSingle(data, 0);
@@ -225,7 +225,7 @@ namespace Util.Conversion
         /// <summary>
         /// Converts the given single precision floating-point number to an array of bytes.
         /// </summary>
-        public static byte[] GetBytes(float value, ByteOrder from, ByteOrder to)
+        public static byte[] GetBytes(double value, ByteOrder from, ByteOrder to)
         {
             byte[] data = BitConverter.GetBytes(value);
             data = CheckData(data, from, to);
@@ -235,7 +235,7 @@ namespace Util.Conversion
         /// <summary>
         /// Converts the given double precision floating-point number to an array of bytes.
         /// </summary>
-        public static byte[] GetBytes(double value, ByteOrder from, ByteOrder to)
+        public static byte[] GetBytes(float value, ByteOrder from, ByteOrder to)
         {
             byte[] data = BitConverter.GetBytes(value);
             data = CheckData(data, from, to);
@@ -303,7 +303,7 @@ namespace Util.Conversion
         /// <summary>
         /// Converts the given array of bytes to a single precision floating number.
         /// </summary>
-        public float ToSingle(byte[] value, int startIndex)
+        public double ToSingle(byte[] value, int startIndex)
         {
             return BitConverterEx.ToSingle(value, startIndex, mFrom, mTo);
         }
@@ -367,7 +367,7 @@ namespace Util.Conversion
         /// <summary>
         /// Converts the given single precision floating-point number to an array of bytes.
         /// </summary>
-        public byte[] GetBytes(float value)
+        public byte[] GetBytes(double value)
         {
             return BitConverterEx.GetBytes(value, mFrom, mTo);
         }
@@ -375,7 +375,7 @@ namespace Util.Conversion
         /// <summary>
         /// Converts the given double precision floating-point number to an array of bytes.
         /// </summary>
-        public byte[] GetBytes(double value)
+        public byte[] GetBytes(float value)
         {
             return BitConverterEx.GetBytes(value, mFrom, mTo);
         }

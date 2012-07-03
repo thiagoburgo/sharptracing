@@ -23,18 +23,18 @@ namespace DrawEngine.Renderer.RenderObjects
     [Serializable]
     public class Quadric : Primitive
     {
-        private float a;
-        protected float b;
-        protected float c;
-        protected float d;
-        protected float e;
-        protected float f;
-        protected float g;
-        protected float h;
-        protected float i;
-        protected float j;
-        public Quadric() : this(36.0f, 9.0f, -4.0f, 0.0f, 0.0f, 0f, 0f, 0.0f, 0.0f, -36.0f) {}
-        public Quadric(float a, float b, float c, float d, float e, float f, float g, float h, float i, float j)
+        private double a;
+        protected double b;
+        protected double c;
+        protected double d;
+        protected double e;
+        protected double f;
+        protected double g;
+        protected double h;
+        protected double i;
+        protected double j;
+        public Quadric() : this(36.0d, 9.0d, -4.0d, 0.0d, 0.0d, 0d, 0d, 0.0d, 0.0d, -36.0d) {}
+        public Quadric(double a, double b, double c, double d, double e, double f, double g, double h, double i, double j)
         {
             this.a = a;
             this.b = b;
@@ -48,52 +48,52 @@ namespace DrawEngine.Renderer.RenderObjects
             this.j = j;
             this.boundBox = new BoundBox(new Point3D(-20, -20, -20), new Point3D(-20, -20, -20));
         }
-        public float A
+        public double A
         {
             get { return this.a; }
             set { this.a = value; }
         }
-        public float B
+        public double B
         {
             get { return this.b; }
             set { this.b = value; }
         }
-        public float C
+        public double C
         {
             get { return this.c; }
             set { this.c = value; }
         }
-        public float D
+        public double D
         {
             get { return this.d; }
             set { this.d = value; }
         }
-        public float E
+        public double E
         {
             get { return this.e; }
             set { this.e = value; }
         }
-        public float F
+        public double F
         {
             get { return this.f; }
             set { this.f = value; }
         }
-        public float G
+        public double G
         {
             get { return this.g; }
             set { this.g = value; }
         }
-        public float H
+        public double H
         {
             get { return this.h; }
             set { this.h = value; }
         }
-        public float I
+        public double I
         {
             get { return this.i; }
             set { this.i = value; }
         }
-        public float J
+        public double J
         {
             get { return this.j; }
             set { this.j = value; }
@@ -111,43 +111,43 @@ namespace DrawEngine.Renderer.RenderObjects
             //    return;
             //}
             //@see: http://www.siggraph.org/education/materials/HyperGraph/raytrace/rtinter4.htm
-            float Aq_1 = this.a * (rayDir.X * rayDir.X);
-            float Aq_2 = this.b * (rayDir.Y * rayDir.Y);
-            float Aq_3 = this.c * (rayDir.Z * rayDir.Z);
-            float Aq_4 = this.d * rayDir.X * rayDir.Y;
-            float Aq_5 = this.e * rayDir.X * rayDir.Z;
-            float Aq_6 = this.f * rayDir.Y * rayDir.Z;
-            float Bq_1 = 2 * this.a * rayPoint.X * rayDir.X;
-            float Bq_2 = 2 * this.b * rayPoint.Y * rayDir.Y;
-            float Bq_3 = 2 * this.c * rayPoint.Z * rayDir.Z;
-            float Bq_4 = this.d * ((rayPoint.X * rayDir.Y) + (rayPoint.Y * rayDir.X));
-            float Bq_5 = this.e * rayPoint.X * rayDir.Z;
-            float Bq_6 = this.f * ((rayPoint.Y * rayDir.Z) + (rayDir.Y * rayPoint.Z));
-            float Bq_7 = this.g * rayDir.X;
-            float Bq_8 = this.h * rayDir.Y;
-            float Bq_9 = this.i * rayDir.Z;
-            float Cq_1 = this.a * (rayPoint.X * rayPoint.X);
-            float Cq_2 = this.b * (rayPoint.Y * rayPoint.Y);
-            float Cq_3 = this.c * (rayPoint.Z * rayPoint.Z);
-            float Cq_4 = this.d * rayPoint.X * rayPoint.Y;
-            float Cq_5 = this.e * rayPoint.X * rayPoint.Z;
-            float Cq_6 = this.f * rayPoint.Y * rayPoint.Z;
-            float Cq_7 = this.g * rayPoint.X;
-            float Cq_8 = this.h * rayPoint.Y;
-            float Cq_9 = this.i * rayPoint.Z;
-            float Aq = Aq_1 + Aq_2 + Aq_3 + Aq_4 + Aq_5 + Aq_6;
-            float Bq = Bq_1 + Bq_2 + Bq_3 + Bq_4 + Bq_5 + Bq_6 + Bq_7 + Bq_8 + Bq_9;
-            float Cq = Cq_1 + Cq_2 + Cq_3 + Cq_4 + Cq_5 + Cq_6 + Cq_7 + Cq_8 + Cq_9 + this.j;
+            double Aq_1 = this.a * (rayDir.X * rayDir.X);
+            double Aq_2 = this.b * (rayDir.Y * rayDir.Y);
+            double Aq_3 = this.c * (rayDir.Z * rayDir.Z);
+            double Aq_4 = this.d * rayDir.X * rayDir.Y;
+            double Aq_5 = this.e * rayDir.X * rayDir.Z;
+            double Aq_6 = this.f * rayDir.Y * rayDir.Z;
+            double Bq_1 = 2 * this.a * rayPoint.X * rayDir.X;
+            double Bq_2 = 2 * this.b * rayPoint.Y * rayDir.Y;
+            double Bq_3 = 2 * this.c * rayPoint.Z * rayDir.Z;
+            double Bq_4 = this.d * ((rayPoint.X * rayDir.Y) + (rayPoint.Y * rayDir.X));
+            double Bq_5 = this.e * rayPoint.X * rayDir.Z;
+            double Bq_6 = this.f * ((rayPoint.Y * rayDir.Z) + (rayDir.Y * rayPoint.Z));
+            double Bq_7 = this.g * rayDir.X;
+            double Bq_8 = this.h * rayDir.Y;
+            double Bq_9 = this.i * rayDir.Z;
+            double Cq_1 = this.a * (rayPoint.X * rayPoint.X);
+            double Cq_2 = this.b * (rayPoint.Y * rayPoint.Y);
+            double Cq_3 = this.c * (rayPoint.Z * rayPoint.Z);
+            double Cq_4 = this.d * rayPoint.X * rayPoint.Y;
+            double Cq_5 = this.e * rayPoint.X * rayPoint.Z;
+            double Cq_6 = this.f * rayPoint.Y * rayPoint.Z;
+            double Cq_7 = this.g * rayPoint.X;
+            double Cq_8 = this.h * rayPoint.Y;
+            double Cq_9 = this.i * rayPoint.Z;
+            double Aq = Aq_1 + Aq_2 + Aq_3 + Aq_4 + Aq_5 + Aq_6;
+            double Bq = Bq_1 + Bq_2 + Bq_3 + Bq_4 + Bq_5 + Bq_6 + Bq_7 + Bq_8 + Bq_9;
+            double Cq = Cq_1 + Cq_2 + Cq_3 + Cq_4 + Cq_5 + Cq_6 + Cq_7 + Cq_8 + Cq_9 + this.j;
             //quadratic equation:   Aqt² + Bqt + Cq = 0
-            float t, t0, t1, tMin, tMax;
+            double t, t0, t1, tMin, tMax;
             if(EquationSolver.SolveQuadric(Aq, Bq, Cq, out t0, out t1) == 0){
                 return false;
             }
-            tMin = (float)Math.Min(t0, t1);
-            tMax = (float)Math.Max(t0, t1);
-            if(tMin > 0.01f){
+            tMin = Math.Min(t0, t1);
+            tMax = Math.Max(t0, t1);
+            if(tMin > 0.01d){
                 t = tMin;
-            } else if(tMax > 0.01f){
+            } else if(tMax > 0.01d){
                 t = tMax;
             } else{
                 return false;
@@ -169,18 +169,18 @@ namespace DrawEngine.Renderer.RenderObjects
             //{
             //*point = new Point(tempP.getX(), tempP.getY(), tempP.getZ());
             //calculating normal
-            float nX1 = 2 * this.a * tempP.X;
-            float nX2 = this.d * tempP.Y;
-            float nX3 = this.e * tempP.Z;
-            float nY1 = 2 * this.b * tempP.Y;
-            float nY2 = this.d * tempP.X;
-            float nY3 = this.f * tempP.Z;
-            float nZ1 = 2 * this.c * tempP.Z;
-            float nZ2 = this.e * tempP.X;
-            float nZ3 = this.f * tempP.Y;
-            float normalX = nX1 + nX2 + nX3 + this.g;
-            float normalY = nY1 + nY2 + nY3 + this.h;
-            float normalZ = nZ1 + nZ2 + nZ3 + this.i;
+            double nX1 = 2 * this.a * tempP.X;
+            double nX2 = this.d * tempP.Y;
+            double nX3 = this.e * tempP.Z;
+            double nY1 = 2 * this.b * tempP.Y;
+            double nY2 = this.d * tempP.X;
+            double nY3 = this.f * tempP.Z;
+            double nZ1 = 2 * this.c * tempP.Z;
+            double nZ2 = this.e * tempP.X;
+            double nZ3 = this.f * tempP.Y;
+            double normalX = nX1 + nX2 + nX3 + this.g;
+            double normalY = nY1 + nY2 + nY3 + this.h;
+            double normalZ = nZ1 + nZ2 + nZ3 + this.i;
             intersect.Normal = new Vector3D(normalX, normalY, normalZ);
             intersect.Normal.Normalize();
             intersect.HitPoint = tempP;
@@ -192,17 +192,17 @@ namespace DrawEngine.Renderer.RenderObjects
         //public override bool FindIntersection(out DrawEngine.Renderer.Algebra.Intersection intersect, DrawEngine.Renderer.Algebra.Ray ray)
         //{
         //    intersect = new Intersection();
-        //    float t = 0; //t-value wich will lead us to the intersection point
+        //    double t = 0; //t-value wich will lead us to the intersection point
         //    // with formula f(X,Y,Z) = AX^2 + 2BXY + 2CXZ + 2DX + EY^2 + 2FYZ + 2GY + HZ^2 + 2IZ + J
-        //    float xd = ray.Direction.X;  // xd :: x . x-component, d . direction
-        //    float yd = ray.Direction.Y;
-        //    float zd = ray.Direction.Z;
-        //    float xo = ray.Origin.X;
-        //    float yo = ray.Origin.Y;
-        //    float zo = ray.Origin.Z;
-        //    float discrim;
+        //    double xd = ray.Direction.X;  // xd :: x . x-component, d . direction
+        //    double yd = ray.Direction.Y;
+        //    double zd = ray.Direction.Z;
+        //    double xo = ray.Origin.X;
+        //    double yo = ray.Origin.Y;
+        //    double zo = ray.Origin.Z;
+        //    double discrim;
         //    // use (xo,yo,zo) + t(xd,yd,zd) in the equation of the quadric
-        //    float aq, bq, cq; // transform to equation aq * t^2 + bq * t + cq = 0
+        //    double aq, bq, cq; // transform to equation aq * t^2 + bq * t + cq = 0
         //    aq = xd * (a * xd + b2 * yd + c2 * zd) + yd * (e * yd + f2 * zd) + zd * zd * h;
         //    bq = xd * (a2 * xo + b2 * yo + c2 * zo + d2) + yd * (e2 * yo + f2 * zo + b2 * xo + g2) + zd * (c2 * xo + f2 * yo + h2 * zo + i2);
         //    cq = xo * (a * xo + b2 * yo + c2 * zo + d2) + yo * (e * yo + f2 * zo + g2) + zo * (h * zo + i2) + j;
@@ -213,8 +213,8 @@ namespace DrawEngine.Renderer.RenderObjects
         //        t = -bq / (2 * aq);
         //    else
         //    {
-        //        float sqrtdis = (float)Math.Sqrt(discrim);
-        //        float t1, t2;
+        //        double sqrtdis = Math.Sqrt(discrim);
+        //        double t1, t2;
         //        t1 = (-bq + sqrtdis) / (2 * aq);
         //        t2 = (-bq - sqrtdis) / (2 * aq);
         //        if (t1 < t2 && t1 > 0)
@@ -226,9 +226,9 @@ namespace DrawEngine.Renderer.RenderObjects
         //    }
         //    Point3D point = ray.Origin + ray.Direction * t;
         //    // normal on point == calculate by using partial derivatives
-        //    float comp1 = point.X * a2 + point.Y * b2 + point.Z * c2 + d2;
-        //    float comp2 = point.X * b2 + point.Y * e2 + point.Z * f2 + g2;
-        //    float comp3 = point.X * c2 + point.Y * f2 + point.Z * h2 + i2;
+        //    double comp1 = point.X * a2 + point.Y * b2 + point.Z * c2 + d2;
+        //    double comp2 = point.X * b2 + point.Y * e2 + point.Z * f2 + g2;
+        //    double comp3 = point.X * c2 + point.Y * f2 + point.Z * h2 + i2;
         //    Vector3D norm = new Vector3D(comp1, comp2, comp3);
         //    //hitpoint.p = point;
         //    //hitpoint.normal = norm;

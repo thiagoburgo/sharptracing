@@ -35,18 +35,18 @@ namespace DrawEngine.Renderer.Tracers
                 Ray rRay = new Ray();
                 if (depth < this.maxDepth)
                 {
-                    float n1 = this.scene.RefractIndex;
-                    float n2 = material.RefractIndex;
+                    double n1 = this.scene.RefractIndex;
+                    double n2 = material.RefractIndex;
                     //if (ray.PrevRefractIndex == material.RefractIndex)
                     if (ray.PrevPrimitive == intersection.HitPrimitive)
                     {
-                        float temp = n1;
+                        double temp = n1;
                         n1 = n2;
                         n2 = temp;
                     }
-                    float kSpec = material.KSpec;
+                    double kSpec = material.KSpec;
                     bool specFromRefract = false;
-                    float fresnelFactor = 0;
+                    double fresnelFactor = 0;
                     if (material.KTrans > 0)
                     {
                         Vector3D T;
@@ -59,16 +59,16 @@ namespace DrawEngine.Renderer.Tracers
                             rRay.PrevPrimitive = intersection.HitPrimitive;
                            
                             fresnelFactor = Vector3D.FresnelBySchlick(intersection.Normal, ray.Direction, n1, n2);
-                            float kTrans = material.KTrans - fresnelFactor;
+                            double kTrans = material.KTrans - fresnelFactor;
                             kSpec += fresnelFactor;
                             specFromRefract = true;
                             kTrans = kTrans < 0 ? 0 : kTrans;
                             color += this.Trace(rRay, depth + 1) * kTrans ;
-                            //float term  = (float)Math.Exp(material.Absorptivity * -intersection.TMin);
+                            //double term  = Math.Exp(material.Absorptivity * -intersection.TMin);
                             //color *= term * material.DiffuseColor;
-                            //RGBColor transparency = new RGBColor((float)Math.Exp(absorbance.R), 
-                            //                                     (float)Math.Exp(absorbance.G),
-                            //                                     (float)Math.Exp(absorbance.B));
+                            //RGBColor transparency = new RGBColor(Math.Exp(absorbance.R), 
+                            //                                     Math.Exp(absorbance.G),
+                            //                                     Math.Exp(absorbance.B));
                         }
                     }
                     

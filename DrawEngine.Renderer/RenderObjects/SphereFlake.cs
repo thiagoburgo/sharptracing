@@ -22,12 +22,12 @@ namespace DrawEngine.Renderer.RenderObjects
     [Serializable]
     public class SphereFlake : Primitive, ITransformable3D
     {
-        private float initialRadius;
+        private double initialRadius;
         private int maxDepth;
         private List<Primitive> sphereFlake;
         private KDTreePrimitiveManager sphereFlakeKDTree;
         public SphereFlake() : this(Point3D.Zero, 20, 1) {}
-        public SphereFlake(Point3D center, float initialRadius, int maxDepth)
+        public SphereFlake(Point3D center, double initialRadius, int maxDepth)
         {
             this.center = center;
             this.initialRadius = initialRadius;
@@ -54,7 +54,7 @@ namespace DrawEngine.Renderer.RenderObjects
                 this.redoFlake();
             }
         }
-        public float InitialRadius
+        public double InitialRadius
         {
             get { return this.initialRadius; }
             set
@@ -74,32 +74,32 @@ namespace DrawEngine.Renderer.RenderObjects
         }
 
         #region ITransformable3D Members
-        public void Rotate(float angle, Vector3D axis)
+        public void Rotate(double angle, Vector3D axis)
         {
             this.center.Rotate(angle, axis);
             this.redoFlake();
         }
-        public void RotateAxisX(float angle)
+        public void RotateAxisX(double angle)
         {
             this.center.RotateAxisX(angle);
             this.redoFlake();
         }
-        public void RotateAxisY(float angle)
+        public void RotateAxisY(double angle)
         {
             this.center.RotateAxisY(angle);
             this.redoFlake();
         }
-        public void RotateAxisZ(float angle)
+        public void RotateAxisZ(double angle)
         {
             this.center.RotateAxisZ(angle);
             this.redoFlake();
         }
-        public void Scale(float factor)
+        public void Scale(double factor)
         {
             this.initialRadius = this.initialRadius * factor;
             this.redoFlake();
         }
-        public void Translate(float tx, float ty, float tz)
+        public void Translate(double tx, double ty, double tz)
         {
             this.center.Translate(tx, ty, tz);
             this.redoFlake();
@@ -116,7 +116,7 @@ namespace DrawEngine.Renderer.RenderObjects
             this.doFlake(this.center.X, this.center.Y, this.center.Z, this.initialRadius, 0, "000000");
             this.sphereFlakeKDTree.Optimize();
         }
-        private void doFlake(float cX, float cY, float cZ, float radius, int depth, string skip)
+        private void doFlake(double cX, double cY, double cZ, double radius, int depth, string skip)
         {
             if(depth > this.maxDepth){
                 return;
@@ -124,8 +124,8 @@ namespace DrawEngine.Renderer.RenderObjects
             Sphere sphere = new Sphere(radius, new Point3D(cX, cY, cZ));
             sphere.Material = this.Material;
             this.sphereFlake.Add(sphere);
-            float hRadius = radius * 0.5f;
-            float slopeRadius = radius + hRadius;
+            double hRadius = radius * 0.5d;
+            double slopeRadius = radius + hRadius;
             if(skip != "100000"){
                 this.doFlake(cX + slopeRadius, cY, cZ, hRadius, depth + 1, "000100");
             }

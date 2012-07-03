@@ -152,7 +152,7 @@ namespace DrawEngine.Renderer.Mathematics.QMCRandom
         {
             try{
                 int milliSecond = DateTime.Now.Millisecond;
-                this.seedRandom = (int)(((double)milliSecond / (double)1000) * maxLong);
+                this.seedRandom = (int)((milliSecond / 1000) * maxLong);
                 this.Initialize();
             } catch(Exception e){
                 throw new Exception("QMCHaltonRandom:" + e.Message);
