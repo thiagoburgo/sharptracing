@@ -25,6 +25,21 @@ namespace DrawEngine.SharpTracingUI {
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            WeifenLuo.WinFormsUI.Docking.DockPanelSkin dockPanelSkin2 = new WeifenLuo.WinFormsUI.Docking.DockPanelSkin();
+            WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin autoHideStripSkin2 = new WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin();
+            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient4 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient8 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin dockPaneStripSkin2 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin();
+            WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient dockPaneStripGradient2 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient9 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient5 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient10 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient dockPaneStripToolWindowGradient2 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient11 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient12 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient6 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient13 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient14 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -48,6 +63,8 @@ namespace DrawEngine.SharpTracingUI {
             this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.formatCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.toolBarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusBarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -82,8 +99,6 @@ namespace DrawEngine.SharpTracingUI {
             this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
-            this.formatCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.toolStrip.SuspendLayout();
             this.SuspendLayout();
@@ -162,8 +177,8 @@ namespace DrawEngine.SharpTracingUI {
             // 
             this.saveAllToolStripMenuItem.Image = global::DrawEngine.SharpTracingUI.Properties.Resources.SaveAllHS;
             this.saveAllToolStripMenuItem.Name = "saveAllToolStripMenuItem";
-            this.saveAllToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
-                        | System.Windows.Forms.Keys.S)));
+            this.saveAllToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.S)));
             this.saveAllToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.saveAllToolStripMenuItem.Text = "Save &All";
             this.saveAllToolStripMenuItem.Click += new System.EventHandler(this.saveAllToolStripMenuItem_Click);
@@ -238,7 +253,7 @@ namespace DrawEngine.SharpTracingUI {
             this.undoToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Black;
             this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
             this.undoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
-            this.undoToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+            this.undoToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.undoToolStripMenuItem.Text = "&Undo";
             this.undoToolStripMenuItem.Click += new System.EventHandler(this.undoToolStripMenuItem_Click);
             // 
@@ -255,7 +270,7 @@ namespace DrawEngine.SharpTracingUI {
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(153, 6);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(201, 6);
             // 
             // cutToolStripMenuItem
             // 
@@ -263,7 +278,7 @@ namespace DrawEngine.SharpTracingUI {
             this.cutToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Black;
             this.cutToolStripMenuItem.Name = "cutToolStripMenuItem";
             this.cutToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-            this.cutToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+            this.cutToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.cutToolStripMenuItem.Text = "Cu&t";
             this.cutToolStripMenuItem.Click += new System.EventHandler(this.CutToolStripMenuItem_Click);
             // 
@@ -273,7 +288,7 @@ namespace DrawEngine.SharpTracingUI {
             this.copyToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Black;
             this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
             this.copyToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.copyToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.copyToolStripMenuItem.Text = "&Copy";
             this.copyToolStripMenuItem.Click += new System.EventHandler(this.CopyToolStripMenuItem_Click);
             // 
@@ -283,22 +298,36 @@ namespace DrawEngine.SharpTracingUI {
             this.pasteToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Black;
             this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
             this.pasteToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.pasteToolStripMenuItem.Text = "&Paste";
             this.pasteToolStripMenuItem.Click += new System.EventHandler(this.PasteToolStripMenuItem_Click);
             // 
             // toolStripSeparator7
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(153, 6);
+            this.toolStripSeparator7.Size = new System.Drawing.Size(201, 6);
             // 
             // selectAllToolStripMenuItem
             // 
             this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
             this.selectAllToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
-            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.selectAllToolStripMenuItem.Text = "Select &All";
             this.selectAllToolStripMenuItem.Click += new System.EventHandler(this.selectAllToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(201, 6);
+            // 
+            // formatCodeToolStripMenuItem
+            // 
+            this.formatCodeToolStripMenuItem.Name = "formatCodeToolStripMenuItem";
+            this.formatCodeToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.F)));
+            this.formatCodeToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
+            this.formatCodeToolStripMenuItem.Text = "&Format Code";
+            this.formatCodeToolStripMenuItem.Click += new System.EventHandler(this.formatCodeToolStripMenuItem_Click);
             // 
             // viewMenu
             // 
@@ -576,28 +605,61 @@ namespace DrawEngine.SharpTracingUI {
             this.dockPanel.ActiveAutoHideContent = null;
             this.dockPanel.AllowDrop = true;
             this.dockPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dockPanel.DockBackColor = System.Drawing.SystemColors.Control;
             this.dockPanel.Font = new System.Drawing.Font("Tahoma", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.World);
             this.dockPanel.Location = new System.Drawing.Point(0, 49);
             this.dockPanel.Name = "dockPanel";
             this.dockPanel.Size = new System.Drawing.Size(698, 382);
+            dockPanelGradient4.EndColor = System.Drawing.SystemColors.ControlLight;
+            dockPanelGradient4.StartColor = System.Drawing.SystemColors.ControlLight;
+            autoHideStripSkin2.DockStripGradient = dockPanelGradient4;
+            tabGradient8.EndColor = System.Drawing.SystemColors.Control;
+            tabGradient8.StartColor = System.Drawing.SystemColors.Control;
+            tabGradient8.TextColor = System.Drawing.SystemColors.ControlDarkDark;
+            autoHideStripSkin2.TabGradient = tabGradient8;
+            autoHideStripSkin2.TextFont = new System.Drawing.Font("Tahoma", 8.25F);
+            dockPanelSkin2.AutoHideStripSkin = autoHideStripSkin2;
+            tabGradient9.EndColor = System.Drawing.SystemColors.ControlLightLight;
+            tabGradient9.StartColor = System.Drawing.SystemColors.ControlLightLight;
+            tabGradient9.TextColor = System.Drawing.SystemColors.ControlText;
+            dockPaneStripGradient2.ActiveTabGradient = tabGradient9;
+            dockPanelGradient5.EndColor = System.Drawing.SystemColors.Control;
+            dockPanelGradient5.StartColor = System.Drawing.SystemColors.Control;
+            dockPaneStripGradient2.DockStripGradient = dockPanelGradient5;
+            tabGradient10.EndColor = System.Drawing.SystemColors.ControlLight;
+            tabGradient10.StartColor = System.Drawing.SystemColors.ControlLight;
+            tabGradient10.TextColor = System.Drawing.SystemColors.ControlText;
+            dockPaneStripGradient2.InactiveTabGradient = tabGradient10;
+            dockPaneStripSkin2.DocumentGradient = dockPaneStripGradient2;
+            dockPaneStripSkin2.TextFont = new System.Drawing.Font("Tahoma", 8.25F);
+            tabGradient11.EndColor = System.Drawing.SystemColors.ActiveCaption;
+            tabGradient11.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
+            tabGradient11.StartColor = System.Drawing.SystemColors.GradientActiveCaption;
+            tabGradient11.TextColor = System.Drawing.SystemColors.ActiveCaptionText;
+            dockPaneStripToolWindowGradient2.ActiveCaptionGradient = tabGradient11;
+            tabGradient12.EndColor = System.Drawing.SystemColors.Control;
+            tabGradient12.StartColor = System.Drawing.SystemColors.Control;
+            tabGradient12.TextColor = System.Drawing.SystemColors.ControlText;
+            dockPaneStripToolWindowGradient2.ActiveTabGradient = tabGradient12;
+            dockPanelGradient6.EndColor = System.Drawing.SystemColors.ControlLight;
+            dockPanelGradient6.StartColor = System.Drawing.SystemColors.ControlLight;
+            dockPaneStripToolWindowGradient2.DockStripGradient = dockPanelGradient6;
+            tabGradient13.EndColor = System.Drawing.SystemColors.InactiveCaption;
+            tabGradient13.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
+            tabGradient13.StartColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            tabGradient13.TextColor = System.Drawing.SystemColors.InactiveCaptionText;
+            dockPaneStripToolWindowGradient2.InactiveCaptionGradient = tabGradient13;
+            tabGradient14.EndColor = System.Drawing.Color.Transparent;
+            tabGradient14.StartColor = System.Drawing.Color.Transparent;
+            tabGradient14.TextColor = System.Drawing.SystemColors.ControlDarkDark;
+            dockPaneStripToolWindowGradient2.InactiveTabGradient = tabGradient14;
+            dockPaneStripSkin2.ToolWindowGradient = dockPaneStripToolWindowGradient2;
+            dockPanelSkin2.DockPaneStripSkin = dockPaneStripSkin2;
+            this.dockPanel.Skin = dockPanelSkin2;
             this.dockPanel.TabIndex = 4;
-            this.dockPanel.DragDrop += new System.Windows.Forms.DragEventHandler(this.dockPanel_DragDrop);
             this.dockPanel.ActiveDocumentChanged += new System.EventHandler(this.dockPanel_ActiveDocumentChanged);
+            this.dockPanel.DragDrop += new System.Windows.Forms.DragEventHandler(this.dockPanel_DragDrop);
             this.dockPanel.DragEnter += new System.Windows.Forms.DragEventHandler(this.dockPanel_DragEnter);
-            // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(153, 6);
-            // 
-            // formatCodeToolStripMenuItem
-            // 
-            this.formatCodeToolStripMenuItem.Name = "formatCodeToolStripMenuItem";
-            this.formatCodeToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
-                        | System.Windows.Forms.Keys.F)));
-            this.formatCodeToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
-            this.formatCodeToolStripMenuItem.Text = "&Format Code";
-            this.formatCodeToolStripMenuItem.Click += new System.EventHandler(this.formatCodeToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -611,7 +673,7 @@ namespace DrawEngine.SharpTracingUI {
             this.IsMdiContainer = true;
             this.MainMenuStrip = this.menuStrip;
             this.Name = "MainForm";
-            this.Text = "MainForm";
+            this.Text = "Sharp Tracing";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.menuStrip.ResumeLayout(false);
