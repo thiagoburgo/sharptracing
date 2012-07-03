@@ -100,9 +100,9 @@ namespace PhotonVisualization
             // Lock returns an array of positionColored objects.
             CustomVertex.PositionColored[] vertices = (CustomVertex.PositionColored[])this.m_VertexBuffer.Lock(0, 0);
             for(int i = 1; i < photons.Length && photons[i] != null; i++){
-                vertices[i].X = photons[i].Position.X;
-                vertices[i].Y = photons[i].Position.Y;
-                vertices[i].Z = photons[i].Position.Z;
+                vertices[i].X = (float)photons[i].Position.X;
+                vertices[i].Y = (float)photons[i].Position.Y;
+                vertices[i].Z = (float)photons[i].Position.Z;
                 //Color color = photons[i].Power.ToColor();
                 //int argb = 0;
                 //argb = argb | color.A;
@@ -149,7 +149,7 @@ namespace PhotonVisualization
             // World Matrix:
             //const int TICKS_PER_REV = 4000;
             //double angle = Environment.TickCount * (2 * Math.PI) / TICKS_PER_REV;
-            //m_Device.Transform.World = Matrix.RotationAxis(new Vector3(1f, 1f, 1f), (float)angle);
+            //m_Device.Transform.World = Matrix.RotationAxis(new Vector3(1f, 1f, 1f), (double)angle);
             // View Matrix:
             this.m_Device.Transform.View = Matrix.LookAtLH(new Vector3(0, 20, -150), new Vector3(0, 0, 0),
                                                            new Vector3(0, 1, 0));
