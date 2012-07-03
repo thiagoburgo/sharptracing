@@ -168,7 +168,7 @@ namespace DrawEngine.Renderer.Importers
         /// Assumes that the .NET implementation preserves correct endian-ness.
         /// </summary>
         /// <returns>Returns the next binary System.Single.</returns>
-        public float GetFloat()
+        public double GetFloat()
         {
             return this.currentSegment.ReadSingle();
         }

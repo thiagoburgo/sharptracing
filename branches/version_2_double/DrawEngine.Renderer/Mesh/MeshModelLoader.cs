@@ -64,7 +64,7 @@ namespace DrawEngine.Renderer.Mesh
                throw new IOException("MeshImport not found for this file type. Extension: " + ext);
             }
             import.Import(ref mesh);
-            //float len = Math.Abs(mesh.BoundBox.PMax.Y - mesh.BoundBox.PMin.Y);
+            //double len = Math.Abs(mesh.BoundBox.PMax.Y - mesh.BoundBox.PMin.Y);
             //mesh.Scale(50 / len);
             //mesh.Translate(-mesh.BoundBox.Center.X, -mesh.BoundBox.Center.Y, -mesh.BoundBox.Center.Z);
 

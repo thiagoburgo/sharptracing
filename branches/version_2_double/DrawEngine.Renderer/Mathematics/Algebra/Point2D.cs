@@ -5,8 +5,8 @@ namespace DrawEngine.Renderer.Algebra
     [Serializable, StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct Point2D
     {
-        public float X, Y;
-        public Point2D(float x, float y)
+        public double X, Y;
+        public Point2D(double x, double y)
         {
             this.X = x;
             this.Y = y;
@@ -43,15 +43,15 @@ namespace DrawEngine.Renderer.Algebra
         {
             return new Point2D(-p1.X, -p1.Y);
         }
-        public static Point2D operator *(Point2D p1, float scalar)
+        public static Point2D operator *(Point2D p1, double scalar)
         {
             return new Point2D((p1.X * scalar), (p1.Y * scalar));
         }
-        public static Point2D operator *(float scalar, Point2D p1)
+        public static Point2D operator *(double scalar, Point2D p1)
         {
             return new Point2D((p1.X * scalar), (p1.Y * scalar));
         }
-        public static Point2D operator /(Point2D p1, float scalar)
+        public static Point2D operator /(Point2D p1, double scalar)
         {
             return new Point2D((p1.X * 1 / scalar), (p1.Y * 1 / scalar));
         }

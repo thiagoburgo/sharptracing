@@ -87,30 +87,30 @@ namespace DrawEngine.Renderer.RenderObjects
         }
 
         #region ITransformable3D Members
-        public void Rotate(float angle, Vector3D axis)
+        public void Rotate(double angle, Vector3D axis)
         {
             throw new Exception("The method or operation is not implemented.");
         }
-        public void RotateAxisX(float angle)
+        public void RotateAxisX(double angle)
         {
             throw new Exception("The method or operation is not implemented.");
         }
-        public void RotateAxisY(float angle)
+        public void RotateAxisY(double angle)
         {
             throw new Exception("The method or operation is not implemented.");
         }
-        public void RotateAxisZ(float angle)
+        public void RotateAxisZ(double angle)
         {
             throw new Exception("The method or operation is not implemented.");
         }
-        public void Scale(float factor)
+        public void Scale(double factor)
         {
             this.vertex1.Scale(factor);
             this.vertex2.Scale(factor);
             this.vertex3.Scale(factor);
             this.AdjustTriangle();
         }
-        public void Translate(float tx, float ty, float tz)
+        public void Translate(double tx, double ty, double tz)
         {
             this.vertex1.Translate(tx, ty, tz);
             this.vertex2.Translate(tx, ty, tz);
@@ -140,14 +140,14 @@ namespace DrawEngine.Renderer.RenderObjects
         //{
         //    intersect = Intersection.Zero;
         //    Vector3D pvec, qvec, tvec;
-        //    float det, inv_det;
-        //    float u, v;
+        //    double det, inv_det;
+        //    double u, v;
         //    /* begin calculating determinant - also used to calculate U parameter */
         //    pvec = ray.Direction ^ edge2;
 
         //    /* if determinant is near zero, ray lies in plane of triangle */
         //    det = edge1 * pvec;
-        //    const float EPSILON = 0.00001f;
+        //    const double EPSILON = 0.00001d;
         //    if (det > EPSILON)
         //    {
         //        /* calculate distance from vert0 to ray origin */
@@ -174,7 +174,7 @@ namespace DrawEngine.Renderer.RenderObjects
 
         //        /* calculate U parameter and test bounds */
         //        u = tvec * pvec;
-        //        /*      printf("*u=%f\n",(float)*u); */
+        //        /*      printf("*u=%f\n",*u); */
         //        /*      printf("det=%f\n",det); */
         //        if (u > 0 || u < det)
         //            return false;
@@ -190,7 +190,7 @@ namespace DrawEngine.Renderer.RenderObjects
         //    else return false;  /* ray is parallell to the plane of the triangle */
 
 
-        //    inv_det = 1.0f / det;
+        //    inv_det = 1.0d / det;
 
         //    /* calculate t, ray intersects triangle */
         //    intersect.TMin = (edge2 * qvec) * inv_det;
@@ -198,7 +198,7 @@ namespace DrawEngine.Renderer.RenderObjects
         //    v *= inv_det;
         //    intersect.Normal = this.normal;
         //    intersect.HitPoint = ray.Origin + (intersect.TMin * ray.Direction);
-        //    this.CurrentBarycentricCoordinate = new BarycentricCoordinate(1.0f - (u + v), u, v);
+        //    this.CurrentBarycentricCoordinate = new BarycentricCoordinate(1.0d - (u + v), u, v);
         //    intersect.HitPrimitive = this;
         //    if (this.material != null && this.material.IsTexturized)
         //    {
@@ -216,30 +216,30 @@ namespace DrawEngine.Renderer.RenderObjects
         {
             intersect = new Intersection();
             Vector3D vect0, vect1, nvect;
-            float det, inv_det;
+            double det, inv_det;
             /* orientation of the ray with respect to the triangle's normal, 
                also used to calculate output parameters*/
             det = -(ray.Direction * this.normalNonNormalized);
             /* the non-culling branch */
             /* if determinant is near zero, ray is parallel to the plane of triangle */
-            if (det > -0.000001f && det < 0.000001f) return false;
+            if (det > -0.000001d && det < 0.000001d) return false;
             /* calculate vector from ray origin to this.vertex1 */
             vect0 = this.vertex1 - ray.Origin;
             /* normal vector used to calculate u and v parameters */
             nvect = ray.Direction ^ vect0;
-            inv_det = 1.0f / det;
+            inv_det = 1.0d / det;
             /* calculate vector from ray origin to this.vertex2*/
             vect1 = this.vertex2 - ray.Origin;
             /* calculate v parameter and test bounds */
-            float v = -(vect1 * nvect) * inv_det;
-            if (v < 0.0f || v > 1.0f) return false;
+            double v = -(vect1 * nvect) * inv_det;
+            if (v < 0.0d || v > 1.0d) return false;
             /* calculate vector from ray origin to this.vertex3*/
             vect1 = this.vertex3 - ray.Origin;
             /* calculate v parameter and test bounds */
-            float u = (vect1 * nvect) * inv_det;
-            if (u < 0.0f || u + v > 1.0f) return false;
+            double u = (vect1 * nvect) * inv_det;
+            if (u < 0.0d || u + v > 1.0d) return false;
             /* calculate t, ray intersects triangle */
-            float t = -(vect0 * this.normalNonNormalized) * inv_det;
+            double t = -(vect0 * this.normalNonNormalized) * inv_det;
             //if (t < 100)
             //    return false;
             // return 1;
@@ -248,7 +248,7 @@ namespace DrawEngine.Renderer.RenderObjects
                 intersect.TMin = t;
                 
                 intersect.HitPoint = ray.Origin + (t * ray.Direction);
-                this.CurrentBarycentricCoordinate = new BarycentricCoordinate(1.0f - (u + v), u, v);
+                this.CurrentBarycentricCoordinate = new BarycentricCoordinate(1.0d - (u + v), u, v);
                 intersect.HitPrimitive = this;
                 if (this.material != null && this.material.IsTexturized)
                 {
@@ -267,13 +267,13 @@ namespace DrawEngine.Renderer.RenderObjects
         //public override bool FindIntersection(Ray ray, out Intersection intersect)
         //{
         //    intersect = new Intersection();
-        //    float NRd = this.normal * ray.Direction;
-        //    if (NRd == 0.0f)
+        //    double NRd = this.normal * ray.Direction;
+        //    if (NRd == 0.0d)
         //    {
         //        return false;
         //    }
-        //    float t = -(this.normal * ray.Origin + this.d) / NRd;
-        //    if (t < 0.01f)
+        //    double t = -(this.normal * ray.Origin + this.d) / NRd;
+        //    if (t < 0.01d)
         //    {
         //        return false;
         //    }
@@ -283,10 +283,10 @@ namespace DrawEngine.Renderer.RenderObjects
         //    dot23 = (this.edge2 * v1ToPoint);
 
 
-        //    float u = (dot11 * dot13 - dot12 * dot23) * invDenom;
-        //    float v = (dot11 * dot23 - dot12 * dot13) * invDenom;
+        //    double u = (dot11 * dot13 - dot12 * dot23) * invDenom;
+        //    double v = (dot11 * dot23 - dot12 * dot13) * invDenom;
 
-        //    this.CurrentBarycentricCoordinate = new BarycentricCoordinate(1.0f - (u + v), u, v);
+        //    this.CurrentBarycentricCoordinate = new BarycentricCoordinate(1.0d - (u + v), u, v);
 
         //    intersect.Normal = this.normal;
         //    intersect.HitPrimitive = this;
@@ -300,28 +300,28 @@ namespace DrawEngine.Renderer.RenderObjects
         //{
         //    intersect = new Intersection();
         //    Vector3D tvec, pvec, qvec;
-        //    float det, inv_det;
+        //    double det, inv_det;
 
         //    pvec = ray.Direction ^ edge2;
         //    det = edge1 * pvec;
-        //    if (det > -0.000001f && det < 0.000001f)
+        //    if (det > -0.000001d && det < 0.000001d)
         //        return false;
 
-        //    inv_det = 1.0f / det;
+        //    inv_det = 1.0d / det;
 
         //    tvec = ray.Origin - vertex1;
 
-        //    float u = (tvec * pvec) * inv_det;
-        //    if (u < 0.0f || u > 1.0f)
+        //    double u = (tvec * pvec) * inv_det;
+        //    if (u < 0.0d || u > 1.0d)
         //        return false;
 
         //    qvec = (tvec ^ edge1);
 
-        //    float v = (ray.Direction * qvec) * inv_det;
-        //    if (v < 0.0f || u + v > 1.0f)
+        //    double v = (ray.Direction * qvec) * inv_det;
+        //    if (v < 0.0d || u + v > 1.0d)
         //        return false;
 
-        //    float t = (edge2 * qvec) * -inv_det;
+        //    double t = (edge2 * qvec) * -inv_det;
 
 
         //    intersect.TMin = t;
@@ -346,14 +346,14 @@ namespace DrawEngine.Renderer.RenderObjects
         //        {
         //            intersect = new Intersection();
         //            Vector3D tvec, pvec, qvec;
-        //            float det, inv_det, u, v, t;
+        //            double det, inv_det, u, v, t;
         //            /* begin calculating determinant - also used to calculate U parameter */
         //            pvec = ray.Direction ^ this.edge2;
         //            /* if determinant is near zero, ray lies in plane of triangle */
         //            det = this.edge1 * pvec;
         //#if TEST_CULL           
         //                /* define TEST_CULL if culling is desired */
-        //                   if (det < 0.000001f)
+        //                   if (det < 0.000001d)
         //                      return false;
 
         //                   /* calculate distance from vert0 to ray origin */
@@ -361,7 +361,7 @@ namespace DrawEngine.Renderer.RenderObjects
 
         //                   /* calculate U parameter and test bounds */
         //                   u = tvec * pvec;
-        //                   if (u < 0.0f || u > det)
+        //                   if (u < 0.0d || u > det)
         //                      return false;
 
         //                   /* prepare to test V parameter */
@@ -369,27 +369,27 @@ namespace DrawEngine.Renderer.RenderObjects
 
         //                    /* calculate V parameter and test bounds */
         //                   v = ray.Direction * qvec;
-        //                   if (v < 0.0f || u + v > det)
+        //                   if (v < 0.0d || u + v > det)
         //                      return false;
 
         //                   /* calculate t, scale parameters, ray intersects triangle */
         //                   t = edge2 * qvec;
-        //                   inv_det = 1.0f / det;
+        //                   inv_det = 1.0d / det;
         //                   t *= inv_det;
         //                   u *= inv_det;
         //                   v *= inv_det;
         //#else
         //            /* the non-culling branch */
-        //            if (det > -0.000001f && det < 0.000001f)
+        //            if (det > -0.000001d && det < 0.000001d)
         //            {
         //                return false;
         //            }
-        //            inv_det = 1.0f / det;
+        //            inv_det = 1.0d / det;
         //            /* calculate distance from vert0 to ray origin */
         //            tvec = ray.Origin - this.vertex1;
         //            /* calculate U parameter and test bounds */
         //            u = (tvec * pvec) * inv_det;
-        //            if (u < 0.0f || u > 1.0f)
+        //            if (u < 0.0d || u > 1.0d)
         //            {
         //                return false;
         //            }
@@ -397,7 +397,7 @@ namespace DrawEngine.Renderer.RenderObjects
         //            qvec = tvec ^ this.edge1;
         //            /* calculate V parameter and test bounds */
         //            v = (ray.Direction * qvec) * inv_det;
-        //            if (v < 0.0f || u + v > 1.0f)
+        //            if (v < 0.0d || u + v > 1.0d)
         //            {
         //                return false;
         //            }
@@ -434,7 +434,7 @@ namespace DrawEngine.Renderer.RenderObjects
         //{
         //    intersect = new Intersection();
         //    Vector3D tvec, pvec, qvec;
-        //    float det, inv_det, u, v, t;
+        //    double det, inv_det, u, v, t;
 
 
 
@@ -446,11 +446,11 @@ namespace DrawEngine.Renderer.RenderObjects
 
         //    /* calculate distance from vert0 to ray ray.Originin */
         //    tvec = ray.Origin - vertex1;
-        //    inv_det = 1.0f / det;
+        //    inv_det = 1.0d / det;
 
         //    qvec = tvec ^ edge1;
 
-        //    if (det > 0.000001f)
+        //    if (det > 0.000001d)
         //    {
         //        u = (tvec * pvec);
         //        if (u < 0 || u > det)
@@ -462,7 +462,7 @@ namespace DrawEngine.Renderer.RenderObjects
         //            return false;
 
         //    }
-        //    else if (det < -0.000001f)
+        //    else if (det < -0.000001d)
         //    {
         //        /* calculate U parameter and test bounds */
         //        u = (tvec * pvec);
@@ -484,7 +484,7 @@ namespace DrawEngine.Renderer.RenderObjects
         //    intersect.TMin = t;
         //    //intersect.Normal = this.normal;
         //    intersect.HitPoint = ray.Origin + (t * ray.Direction);
-        //    this.CurrentBarycentricCoordinate = new BarycentricCoordinate(1.0f - (u + v), u, v);
+        //    this.CurrentBarycentricCoordinate = new BarycentricCoordinate(1.0d - (u + v), u, v);
         //    intersect.HitPrimitive = this;
         //    if (this.material != null && this.material.IsTexturized)
         //    {
@@ -537,15 +537,15 @@ namespace DrawEngine.Renderer.RenderObjects
         //private static Vector3D halfVector;
         //private static Vector3D normal = new Vector3D();
         private static Vector3D e0, e1, e2;
-        private static float max;
-        private static float min;
-        private static float p0, p1, p2, rad;
+        private static double max;
+        private static double min;
+        private static double p0, p1, p2, rad;
         private static Vector3D v0, v1, v2;
         private static Vector3D vmax;
         private static Vector3D vmin;
         public override bool IsOverlap(BoundBox bb)
         {
-            float d, fex, fey, fez;
+            double d, fex, fey, fez;
             v0 = (this.Vertex1 - bb.Center);
             v1 = (this.Vertex2 - bb.Center);
             v2 = (this.Vertex3 - bb.Center);
@@ -623,7 +623,7 @@ namespace DrawEngine.Renderer.RenderObjects
             d = -this.Normal * v0;
             return PlaneBoxOverlap(this.Normal, bb.HalfVector, d);
         }
-        private static void FindMinMax(float x0, float x1, float x2)
+        private static void FindMinMax(double x0, double x1, double x2)
         {
             min = max = x0;
             if (x1 < min)
@@ -643,9 +643,9 @@ namespace DrawEngine.Renderer.RenderObjects
                 max = x2;
             }
         }
-        private static bool PlaneBoxOverlap(Vector3D normal, Vector3D halfVector, float d)
+        private static bool PlaneBoxOverlap(Vector3D normal, Vector3D halfVector, double d)
         {
-            if (normal.X > 0.0f)
+            if (normal.X > 0.0d)
             {
                 vmin.X = -halfVector.X;
                 vmax.X = halfVector.X;
@@ -655,7 +655,7 @@ namespace DrawEngine.Renderer.RenderObjects
                 vmin.X = halfVector.X;
                 vmax.X = -halfVector.X;
             }
-            if (normal.Y > 0.0f)
+            if (normal.Y > 0.0d)
             {
                 vmin.Y = -halfVector.Y;
                 vmax.Y = halfVector.Y;
@@ -665,7 +665,7 @@ namespace DrawEngine.Renderer.RenderObjects
                 vmin.Y = halfVector.Y;
                 vmax.Y = -halfVector.Y;
             }
-            if (normal.Z > 0.0f)
+            if (normal.Z > 0.0d)
             {
                 vmin.Z = -halfVector.Z;
                 vmax.Z = halfVector.Z;
@@ -675,14 +675,14 @@ namespace DrawEngine.Renderer.RenderObjects
                 vmin.Z = halfVector.Z;
                 vmax.Z = -halfVector.Z;
             }
-            if ((normal * vmin) + d > 0.0f)
+            if ((normal * vmin) + d > 0.0d)
             {
                 return false;
             }
-            return ((normal * vmax) + d >= 0.0f);
+            return ((normal * vmax) + d >= 0.0d);
         }
         /*======================== X-tests ========================*/
-        private static bool AXISTEST_X01(float a, float b, float fa, float fb, Vector3D halfVector)
+        private static bool AXISTEST_X01(double a, double b, double fa, double fb, Vector3D halfVector)
         {
             p0 = a * v0.Y - b * v0.Z;
             p2 = a * v2.Y - b * v2.Z;
@@ -699,7 +699,7 @@ namespace DrawEngine.Renderer.RenderObjects
             rad = fa * halfVector.Y + fb * halfVector.Z;
             return !(min > rad || max < -rad);
         }
-        private static bool AXISTEST_X2(float a, float b, float fa, float fb, Vector3D halfVector)
+        private static bool AXISTEST_X2(double a, double b, double fa, double fb, Vector3D halfVector)
         {
             p0 = a * v0.Y - b * v0.Z;
             p1 = a * v1.Y - b * v1.Z;
@@ -717,7 +717,7 @@ namespace DrawEngine.Renderer.RenderObjects
             return !(min > rad || max < -rad);
         }
         /*======================== Y-tests ========================*/
-        private static bool AXISTEST_Y02(float a, float b, float fa, float fb, Vector3D halfVector)
+        private static bool AXISTEST_Y02(double a, double b, double fa, double fb, Vector3D halfVector)
         {
             p0 = -a * v0.X + b * v0.Z;
             p2 = -a * v2.X + b * v2.Z;
@@ -734,7 +734,7 @@ namespace DrawEngine.Renderer.RenderObjects
             rad = fa * halfVector.X + fb * halfVector.Z;
             return !(min > rad || max < -rad);
         }
-        private static bool AXISTEST_Y1(float a, float b, float fa, float fb, Vector3D halfVector)
+        private static bool AXISTEST_Y1(double a, double b, double fa, double fb, Vector3D halfVector)
         {
             p0 = -a * v0.X + b * v0.Z;
             p1 = -a * v1.X + b * v1.Z;
@@ -752,7 +752,7 @@ namespace DrawEngine.Renderer.RenderObjects
             return !(min > rad || max < -rad);
         }
         /*======================== Z-tests ========================*/
-        private static bool AXISTEST_Z12(float a, float b, float fa, float fb, Vector3D halfVector)
+        private static bool AXISTEST_Z12(double a, double b, double fa, double fb, Vector3D halfVector)
         {
             p1 = a * v1.X - b * v1.Y;
             p2 = a * v2.X - b * v2.Y;
@@ -769,7 +769,7 @@ namespace DrawEngine.Renderer.RenderObjects
             rad = fa * halfVector.X + fb * halfVector.Y;
             return !(min > rad || max < -rad);
         }
-        private static bool AXISTEST_Z0(float a, float b, float fa, float fb, Vector3D halfVector)
+        private static bool AXISTEST_Z0(double a, double b, double fa, double fb, Vector3D halfVector)
         {
             p0 = a * v0.X - b * v0.Y;
             p1 = a * v1.X - b * v1.Y;

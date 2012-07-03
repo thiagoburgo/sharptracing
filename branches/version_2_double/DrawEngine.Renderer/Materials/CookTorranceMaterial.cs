@@ -21,25 +21,25 @@ namespace DrawEngine.Renderer.Materials
     public class CookTorranceMaterial : Material
     {
         private readonly CookTorranceShader shader = new CookTorranceShader();
-        private float roughness;
+        private double roughness;
         public CookTorranceMaterial() : base()
         {
-            this.roughness = 1.5f;
+            this.roughness = 1.5d;
         }
-        public CookTorranceMaterial(float kdiff, float kspec, float kamb, float refractIndex, float ktrans,
-                                    float glossy,float shiness, float roughness, RGBColor color)
+        public CookTorranceMaterial(double kdiff, double kspec, double kamb, double refractIndex, double ktrans,
+                                    double glossy,double shiness, double roughness, RGBColor color)
             : base(kdiff, kspec, kamb, refractIndex, ktrans, glossy, shiness, color)
         {
             this.roughness = roughness;
         }
-        public CookTorranceMaterial(float kdiff, float kspec, float kamb, float refractIndex, float ktrans,
-                                    float glossy, float shiness, float roughness, Texture texture)
+        public CookTorranceMaterial(double kdiff, double kspec, double kamb, double refractIndex, double ktrans,
+                                    double glossy, double shiness, double roughness, Texture texture)
                 : base(kdiff, kspec, kamb, refractIndex, ktrans, glossy,shiness, texture)
         {
             this.roughness = roughness;
         }
-        [DefaultValue(1.5f)]
-        public float Roughness
+        [DefaultValue(1.5d)]
+        public double Roughness
         {
             get { return this.roughness; }
             set

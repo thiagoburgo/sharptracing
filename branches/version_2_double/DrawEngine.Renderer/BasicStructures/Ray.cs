@@ -24,15 +24,15 @@ namespace DrawEngine.Renderer.BasicStructures
         private Vector3D direction;
         private Vector3D inv_direction;
         public Point3D Origin;
-        public float PrevRefractIndex;
+        public double PrevRefractIndex;
         public IPrimitive PrevPrimitive;
         public Ray(Point3D origin, Vector3D direction)
         {
             this.direction = direction;
             this.direction.Normalize();
-            this.inv_direction.X = 1.0f / this.direction.X;
-            this.inv_direction.Y = 1.0f / this.direction.Y;
-            this.inv_direction.Z = 1.0f / this.direction.Z;
+            this.inv_direction.X = 1.0d / this.direction.X;
+            this.inv_direction.Y = 1.0d / this.direction.Y;
+            this.inv_direction.Z = 1.0d / this.direction.Z;
             this.Origin = origin;
             this.PrevRefractIndex = -1;
             this.PrevPrimitive = null;
@@ -44,12 +44,12 @@ namespace DrawEngine.Renderer.BasicStructures
             {
                 this.direction = value;
                 this.direction.Normalize();
-                //this.inv_direction.X = this.direction.X != 0f ? 1.0f / this.direction.X : 1f;
-                //this.inv_direction.Y = this.direction.Y != 0f ? 1.0f / this.direction.Y : 1f;
-                //this.inv_direction.Z = this.direction.Z != 0f ? 1.0f / this.direction.Z : 1f;
-                this.inv_direction.X = 1.0f / this.direction.X;
-                this.inv_direction.Y = 1.0f / this.direction.Y;
-                this.inv_direction.Z = 1.0f / this.direction.Z;
+                //this.inv_direction.X = this.direction.X != 0d ? 1.0d / this.direction.X : 1d;
+                //this.inv_direction.Y = this.direction.Y != 0d ? 1.0d / this.direction.Y : 1d;
+                //this.inv_direction.Z = this.direction.Z != 0d ? 1.0d / this.direction.Z : 1d;
+                this.inv_direction.X = 1.0d / this.direction.X;
+                this.inv_direction.Y = 1.0d / this.direction.Y;
+                this.inv_direction.Z = 1.0d / this.direction.Z;
             }
         }
         public Vector3D Inv_Direction
@@ -58,29 +58,29 @@ namespace DrawEngine.Renderer.BasicStructures
         }
 
         #region ITransformable3D Members BUGADO
-        public void Rotate(float angle, Vector3D axis)
+        public void Rotate(double angle, Vector3D axis)
         {
             this.Origin.Rotate(angle, axis);
             this.direction.Rotate(angle, axis);
             this.Direction = this.direction;
         }
-        public void RotateAxisX(float angle)
+        public void RotateAxisX(double angle)
         {
             this.Rotate(angle, Vector3D.UnitX);
         }
-        public void RotateAxisY(float angle)
+        public void RotateAxisY(double angle)
         {
             this.Rotate(angle, Vector3D.UnitY);
         }
-        public void RotateAxisZ(float angle)
+        public void RotateAxisZ(double angle)
         {
             this.Rotate(angle, Vector3D.UnitZ);
         }
-        public void Scale(float factor)
+        public void Scale(double factor)
         {
             this.Direction = direction * factor;
         }
-        public void Translate(float tx, float ty, float tz)
+        public void Translate(double tx, double ty, double tz)
         {
             this.Origin.Translate(tx, ty, tz);
             this.direction.Translate(tx, ty, tz);

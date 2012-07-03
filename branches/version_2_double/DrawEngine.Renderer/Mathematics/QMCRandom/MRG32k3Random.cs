@@ -67,7 +67,7 @@ namespace DrawEngine.Renderer.Mathematics.QMCRandom
                 this.a23n = 1370589;
                 this.norm = 2.328306549295728e-10;
                 if(seed != 0){
-                    this.s10 = this.s11 = this.s12 = this.s20 = this.s21 = this.s22 = (double)(seed * (double)maxLong);
+                    this.s10 = this.s11 = this.s12 = this.s20 = this.s21 = this.s22 = (seed * maxLong);
                 } else{
                     this.s10 = this.s11 = this.s12 = this.s20 = this.s21 = this.s22 = 12345;
                 }
@@ -91,7 +91,7 @@ namespace DrawEngine.Renderer.Mathematics.QMCRandom
                 this.a23n = 1370589;
                 this.norm = 2.328306549295728e-10;
                 int milliSecond = DateTime.Now.Millisecond;
-                seed = (double)(((double)milliSecond / (double)1000) * maxLong);
+                seed = ((milliSecond / 1000) * maxLong);
                 if(seed != 0){
                     this.s10 = this.s11 = this.s12 = this.s20 = this.s21 = this.s22 = seed;
                 } else{
@@ -115,7 +115,7 @@ namespace DrawEngine.Renderer.Mathematics.QMCRandom
                     throw new Exception("seed out of range, it must be [0..1[");
                 }
                 if(seed != 0){
-                    this.s10 = this.s11 = this.s12 = this.s20 = this.s21 = this.s22 = (double)(seed * maxLong);
+                    this.s10 = this.s11 = this.s12 = this.s20 = this.s21 = this.s22 = (seed * maxLong);
                 } else{
                     this.s10 = this.s11 = this.s12 = this.s20 = this.s21 = this.s22 = 12345;
                 }
@@ -153,9 +153,9 @@ namespace DrawEngine.Renderer.Mathematics.QMCRandom
             this.s22 = this.p2;
             /* Combination */
             if(this.p1 <= this.p2){
-                resultAux = (double)((this.p1 - this.p2 + this.m1) * this.norm);
+                resultAux = ((this.p1 - this.p2 + this.m1) * this.norm);
             } else{
-                resultAux = (double)((this.p1 - this.p2) * this.norm);
+                resultAux = ((this.p1 - this.p2) * this.norm);
             }
             result = resultAux;
             return (result);

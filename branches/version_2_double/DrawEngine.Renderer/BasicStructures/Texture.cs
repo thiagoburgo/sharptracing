@@ -111,7 +111,7 @@ namespace DrawEngine.Renderer.BasicStructures
         {
             return this.texture.GetPixel(x, y);
         }
-        public RGBColor GetPixel(float x, float y)
+        public RGBColor GetPixel(double x, double y)
         {
             return this.texture.GetPixel(x, y);
         }

@@ -28,28 +28,28 @@ namespace DrawEngine.Renderer.Lights {
             return null;
         }
 
-        public override void Rotate(float angle, Vector3D axis) {
+        public override void Rotate(double angle, Vector3D axis) {
         }
 
-        public override void RotateAxisX(float angle) {
+        public override void RotateAxisX(double angle) {
         }
 
-        public override void RotateAxisY(float angle) {
+        public override void RotateAxisY(double angle) {
         }
 
-        public override void RotateAxisZ(float angle) {
+        public override void RotateAxisZ(double angle) {
         }
 
-        public override void Scale(float factor) {
+        public override void Scale(double factor) {
         }
 
-        public override void Translate(float tx, float ty, float tz) {
+        public override void Translate(double tx, double ty, double tz) {
         }
 
         public override void Translate(Vector3D translateVector) {
         }
 
-        public override float GetColorFactor(Vector3D pointToLight) {
+        public override double GetColorFactor(Vector3D pointToLight) {
             return 1;
         }
         #endregion

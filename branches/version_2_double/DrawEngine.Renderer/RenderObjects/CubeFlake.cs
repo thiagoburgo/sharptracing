@@ -23,10 +23,10 @@ namespace DrawEngine.Renderer.RenderObjects
     {
         private List<Primitive> cubeFlake;
         private KDTreePrimitiveManager cubeFlakeKDTree;
-        private float initialLength;
+        private double initialLength;
         private int maxDepth;
         public CubeFlake() : this(Point3D.Zero, 20, 1) {}
-        public CubeFlake(Point3D center, float initialLength, int maxDepth)
+        public CubeFlake(Point3D center, double initialLength, int maxDepth)
         {
             this.center = center;
             this.initialLength = initialLength;
@@ -44,7 +44,7 @@ namespace DrawEngine.Renderer.RenderObjects
                 this.redoFlake();
             }
         }
-        public float InitialLength
+        public double InitialLength
         {
             get { return this.initialLength; }
             set
@@ -73,7 +73,7 @@ namespace DrawEngine.Renderer.RenderObjects
          * Thus 000100 means skip the -x direction.
          * Thus 10000 means skip the +x direction.
          */
-        private void doFlake(float cX, float cY, float cZ, float radius, int depth, string skip)
+        private void doFlake(double cX, double cY, double cZ, double radius, int depth, string skip)
         {
             if(depth > this.maxDepth){
                 return;
@@ -81,8 +81,8 @@ namespace DrawEngine.Renderer.RenderObjects
             Box box = new Box(new Point3D(cX, cY, cZ), 2 * radius, 2 * radius, 2 * radius);
             //box.Material = this.Material;
             this.cubeFlake.Add(box);
-            float hRadius = radius * 0.5f;
-            float slopeRadius = radius + hRadius;
+            double hRadius = radius * 0.5d;
+            double slopeRadius = radius + hRadius;
             if(skip != "100000"){
                 this.doFlake(cX + slopeRadius, cY, cZ, hRadius, depth + 1, "000100");
             }

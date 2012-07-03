@@ -49,9 +49,9 @@ namespace DrawEngine.Renderer.Mathematics.Algebra
         }
         public Vector3D Transform(Vector3D a)
         {
-            float x = (a.X * this.u.X) + (a.Y * this.v.X) + (a.Z * this.w.X);
-            float y = (a.X * this.u.Y) + (a.Y * this.v.Y) + (a.Z * this.w.Y);
-            float z = (a.X * this.u.Z) + (a.Y * this.v.Z) + (a.Z * this.w.Z);
+            double x = (a.X * this.u.X) + (a.Y * this.v.X) + (a.Z * this.w.X);
+            double y = (a.X * this.u.Y) + (a.Y * this.v.Y) + (a.Z * this.w.Y);
+            double z = (a.X * this.u.Z) + (a.Y * this.v.Z) + (a.Z * this.w.Z);
             a.X = x;
             a.Y = y;
             a.Z = z;
@@ -59,23 +59,23 @@ namespace DrawEngine.Renderer.Mathematics.Algebra
         }
         public Vector3D UnTransform(Vector3D a)
         {
-            float x = (a * this.u);
-            float y = (a * this.v);
-            float z = (a * this.w);
+            double x = (a * this.u);
+            double y = (a * this.v);
+            double z = (a * this.w);
             a.X = x;
             a.Y = y;
             a.Z = z;
             return a;
         }
-        public float UnTransformX(Vector3D a)
+        public double UnTransformX(Vector3D a)
         {
             return (a * this.u);
         }
-        public float UnTransformY(Vector3D a)
+        public double UnTransformY(Vector3D a)
         {
             return (a * this.v);
         }
-        public float UnTransformZ(Vector3D a)
+        public double UnTransformZ(Vector3D a)
         {
             return (a * this.w);
         }

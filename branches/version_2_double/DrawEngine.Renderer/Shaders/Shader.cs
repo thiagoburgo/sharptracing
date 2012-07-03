@@ -43,7 +43,7 @@ namespace DrawEngine.Renderer.Shaders
         public abstract RGBColor Shade(Ray ray, Intersection intersection);
         //protected virtual bool InShadow(Intersection intersect, Vector3D L) {
         //    if(this.scene.IsShadowActive) {
-        //        float len = L.Length;
+        //        double len = L.Length;
         //        Ray shadowRay = new Ray(intersect.HitPoint, L);
         //        //foreach(Primitive primitive in this.scene.Primitives) {
         //        if(this.scene.FindIntersection(shadowRay, out intersect)
@@ -54,13 +54,13 @@ namespace DrawEngine.Renderer.Shaders
         //    }
         //    return false;
         //}
-        protected virtual float ShadowFactor(Intersection intersect, Vector3D L, Light light)
+        protected virtual double ShadowFactor(Intersection intersect, Vector3D L, Light light)
         {
-            float shadowFactor = 1; //[0..1] 1 = not in shadow, 0 = total shadow
+            double shadowFactor = 1; //[0..1] 1 = not in shadow, 0 = total shadow
             if(this.scene.IsShadowActive){
                 Ray shadowRay;
                 if(!this.scene.IsSoftShadowActive){
-                    float len = L.Length;
+                    double len = L.Length;
                     shadowRay = new Ray(intersect.HitPoint, L);
                     if(this.scene.FindIntersection(shadowRay, out intersect) && intersect.TMin < len){
                         shadowFactor = 0; //Total Shadow
@@ -69,7 +69,7 @@ namespace DrawEngine.Renderer.Shaders
                     AreaLight areaLight = light as AreaLight;
                     if(areaLight != null){
                         Vector3D toRndPointInLight;
-                        float reductFactor = 1.0f / this.scene.SoftShadowSamples;
+                        double reductFactor = 1.0d / this.scene.SoftShadowSamples;
                         for(int i = 0; i < this.scene.SoftShadowSamples; i++){
                             toRndPointInLight = areaLight.GetRandomPoint() - intersect.HitPoint;
                             shadowRay = new Ray(intersect.HitPoint, toRndPointInLight);

@@ -29,7 +29,7 @@ namespace DrawEngine.Renderer.RenderObjects {
     [Serializable]
     public class Polygon : Primitive, IPreprocess, ITransformable3D {
         private const double maxAngle = ((2.0 * Math.PI) * 0.9999);
-        protected float d;
+        protected double d;
         protected Vector3D normal;
         protected NotifyList<Point3D> vertices = new NotifyList<Point3D>();
         //Equação do plano ax+by+cz+d=0        
@@ -55,15 +55,15 @@ namespace DrawEngine.Renderer.RenderObjects {
             this.normal = Vector3D.Normal(this.vertices[0], this.vertices[1], this.vertices[2]);
             this.d = -(this.normal.X * this.vertices[0].X) - (this.normal.Y * this.vertices[0].Y)
                      - (this.normal.Z * this.vertices[0].Z);
-            if(this.normal.Length == 0.0f) {
+            if(this.normal.Length == 0.0d) {
                 throw new ArgumentException("Polygon has a zero-length normal");
             }
             #region calculate bounding box
-            //float
+            //double
             //    minX = vertices[0].X,
             //    minY = vertices[0].Y,
             //    minZ = vertices[0].Z;
-            //float
+            //double
             //    maxX = vertices[0].X,
             //    maxY = vertices[0].Y,
             //    maxZ = vertices[0].Z;
@@ -160,7 +160,7 @@ namespace DrawEngine.Renderer.RenderObjects {
         #endregion
 
         #region ITransformable3D Members
-        public void Rotate(float angle, Vector3D axis) {
+        public void Rotate(double angle, Vector3D axis) {
             this.vertices.NotificationsEnabled = false;
             for(int i = 0; i < this.vertices.Count; i++) {
                 Point3D vertex = this.vertices[i];
@@ -170,19 +170,19 @@ namespace DrawEngine.Renderer.RenderObjects {
             this.vertices.NotificationsEnabled = true;
             this.Preprocess();
         }
-        public void RotateAxisX(float angle) {
+        public void RotateAxisX(double angle) {
             this.Rotate(angle, Vector3D.UnitX);
         }
-        public void RotateAxisY(float angle) {
+        public void RotateAxisY(double angle) {
             this.Rotate(angle, Vector3D.UnitY);
         }
-        public void RotateAxisZ(float angle) {
+        public void RotateAxisZ(double angle) {
             this.Rotate(angle, Vector3D.UnitZ);
         }
-        public void Scale(float factor) {
+        public void Scale(double factor) {
             throw new NotImplementedException();
         }
-        public void Translate(float tx, float ty, float tz) {
+        public void Translate(double tx, double ty, double tz) {
             this.vertices.NotificationsEnabled = false;
             for(int i = 0; i < this.vertices.Count; i++) {
                 Point3D vertex = this.vertices[i];
@@ -210,12 +210,12 @@ namespace DrawEngine.Renderer.RenderObjects {
             intersect = new Intersection();
             //t = -(N • Ro + D) / (N • Rd)	
             //Vector3D origin = ray.Origin.ToVector3D();
-            float NRd = this.normal * ray.Direction;
-            if(NRd == 0.0f) {
+            double NRd = this.normal * ray.Direction;
+            if(NRd == 0.0d) {
                 return false;
             }
-            float t = -(this.normal * ray.Origin.ToVector3D() + this.d) / NRd;
-            if(t < 0.01f) {
+            double t = -(this.normal * ray.Origin.ToVector3D() + this.d) / NRd;
+            if(t < 0.01d) {
                 return false;
             }
             intersect.Normal = this.normal;
@@ -230,7 +230,7 @@ namespace DrawEngine.Renderer.RenderObjects {
         /// <param name="point">Point at which to calculate the normal</param>
         /// <returns>Surface normal of the polygon</returns>
         public override Vector3D NormalOnPoint(Point3D point) {
-            if((point * this.normal) < 0.0f) {
+            if((point * this.normal) < 0.0d) {
                 return -this.normal;
             }
             return this.normal;

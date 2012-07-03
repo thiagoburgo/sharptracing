@@ -92,23 +92,23 @@ namespace DrawEngine.Renderer.Importers
     //                    switch (line[0])
     //                    {
     //                        case "v": //vertex
-    //                            p.X = float.Parse(line[1], nfi);
-    //                            p.Y = float.Parse(line[2], nfi);
-    //                            p.Z = float.Parse(line[3], nfi);
+    //                            p.X = double.Parse(line[1], nfi);
+    //                            p.Y = double.Parse(line[2], nfi);
+    //                            p.Z = double.Parse(line[3], nfi);
     //                            this.boundBox.IncludePoint(p);
     //                            vertices.Add(p);
-    //                            int percent = (int)(((float)vertices.Count / this.elementCount["v"]) * 100.0f);
+    //                            int percent = (int)(((float)vertices.Count / this.elementCount["v"]) * 100.0d);
     //                            if ((percent % 20) == 0)
     //                            {
     //                                OnElementLoaded(percent, ElementMesh.Vertex);
     //                            }
     //                            break;
     //                        case "vn": //vertex normal
-    //                            p.X = float.Parse(line[1], nfi);
-    //                            p.Y = float.Parse(line[2], nfi);
-    //                            p.Z = float.Parse(line[3], nfi);
+    //                            p.X = double.Parse(line[1], nfi);
+    //                            p.Y = double.Parse(line[2], nfi);
+    //                            p.Z = double.Parse(line[3], nfi);
     //                            vertexNormals.Add(p);
-    //                            percent = (int)(((float)vertexNormals.Count / this.elementCount["vn"]) * 100.0f);
+    //                            percent = (int)((vertexNormals.Count / this.elementCount["vn"]) * 100.0d);
     //                            if ((percent % 20) == 0)
     //                            {
     //                                OnElementLoaded(percent, ElementMesh.VertexNormal);
@@ -140,7 +140,7 @@ namespace DrawEngine.Renderer.Importers
     //                                lPointersToVertex.Add(new PointerToVertex(pToFace1, pToFace2, pToFace3));
     //                                triangles.Add(t);
     //                            }
-    //                            percent = (int)(((float)triangles.Count / this.elementCount["f"]) * 100.0f);
+    //                            percent = (int)((triangles.Count / this.elementCount["f"]) * 100.0d);
     //                            if ((percent % 20) == 0)
     //                            {
     //                                OnElementLoaded(percent, ElementMesh.Triangle);
@@ -169,7 +169,7 @@ namespace DrawEngine.Renderer.Importers
     //            normalsPerVertex[pointersToVertex[i].Vertex1] += triangles[i].Normal;
     //            normalsPerVertex[pointersToVertex[i].Vertex2] += triangles[i].Normal;
     //            normalsPerVertex[pointersToVertex[i].Vertex3] += triangles[i].Normal;
-    //            int percent = (int)(((float)i / triangles.Count) * 100.0f);
+    //            int percent = (int)(((float)i / triangles.Count) * 100.0d);
     //            if ((percent % 20) == 0)
     //            {
     //                OnElementLoaded(percent / 2, ElementMesh.VertexNormal);
@@ -183,7 +183,7 @@ namespace DrawEngine.Renderer.Importers
     //            triangles[i].NormalOnVertex2.Normalize();
     //            triangles[i].NormalOnVertex3 = normalsPerVertex[pointersToVertex[i].Vertex3];
     //            triangles[i].NormalOnVertex3.Normalize();
-    //            int percent = (int)(((float)i / triangles.Count) * 100.0f);
+    //            int percent = (int)(((float)i / triangles.Count) * 100.0d);
     //            if ((percent % 20) == 0)
     //            {
     //                OnElementLoaded(percent / 2 + 50, ElementMesh.VertexNormal);
@@ -264,22 +264,22 @@ namespace DrawEngine.Renderer.Importers
                     if(line.Length != 0){
                         switch(line[0]){
                             case "v": //vertex
-                                p.X = float.Parse(line[1], nfi);
-                                p.Y = float.Parse(line[2], nfi);
-                                p.Z = float.Parse(line[3], nfi);
+                                p.X = double.Parse(line[1], nfi);
+                                p.Y = double.Parse(line[2], nfi);
+                                p.Z = double.Parse(line[3], nfi);
                                 this.BoundBox.Include(p);
                                 vertices.Add(p);
-                                int percent = (int)(((float)vertices.Count / this.elementCount["v"]) * 100.0f);
+                                int percent = (int)(((float)vertices.Count / this.elementCount["v"]) * 100.0d);
                                 if((percent % 20) == 0){
                                     this.OnElementLoaded(percent, ElementMesh.Vertex);
                                 }
                                 break;
                             case "vn": //vertex normal
-                                v.X = float.Parse(line[1], nfi);
-                                v.Y = float.Parse(line[2], nfi);
-                                v.Z = float.Parse(line[3], nfi);
+                                v.X = double.Parse(line[1], nfi);
+                                v.Y = double.Parse(line[2], nfi);
+                                v.Z = double.Parse(line[3], nfi);
                                 vertexNormals.Add(v);
-                                percent = (int)(((float)vertexNormals.Count / this.elementCount["vn"]) * 100.0f);
+                                percent = (int)((vertexNormals.Count / this.elementCount["vn"]) * 100.0d);
                                 if((percent % 20) == 0){
                                     this.OnElementLoaded(percent, ElementMesh.VertexNormal);
                                 }
@@ -307,7 +307,7 @@ namespace DrawEngine.Renderer.Importers
                                     lPointersToVertex.Add(new PointerToVertex(pToFace1, pToFace2, pToFace3));
                                     triangles.Add(t);
                                 }
-                                percent = (int)(((float)triangles.Count / this.elementCount["f"]) * 100.0f);
+                                percent = (int)((triangles.Count / this.elementCount["f"]) * 100.0d);
                                 if((percent % 20) == 0){
                                     this.OnElementLoaded(percent, ElementMesh.Triangle);
                                 }
@@ -337,7 +337,7 @@ namespace DrawEngine.Renderer.Importers
                 normalsPerVertex[pointersToVertex[i].Vertex1] += triangles[i].Normal;
                 normalsPerVertex[pointersToVertex[i].Vertex2] += triangles[i].Normal;
                 normalsPerVertex[pointersToVertex[i].Vertex3] += triangles[i].Normal;
-                int percent = (int)(((float)i / triangles.Count) * 100.0f);
+                int percent = (int)(((float)i / triangles.Count) * 100.0d);
                 if((percent % 20) == 0){
                     this.OnElementLoaded(percent / 2, ElementMesh.VertexNormal);
                 }
@@ -349,7 +349,7 @@ namespace DrawEngine.Renderer.Importers
                 triangles[i].NormalOnVertex2.Normalize();
                 triangles[i].NormalOnVertex3 = normalsPerVertex[pointersToVertex[i].Vertex3];
                 triangles[i].NormalOnVertex3.Normalize();
-                int percent = (int)(((float)i / triangles.Count) * 100.0f);
+                int percent = (int)(((float)i / triangles.Count) * 100.0d);
                 if((percent % 20) == 0){
                     this.OnElementLoaded(percent / 2 + 50, ElementMesh.VertexNormal);
                 }

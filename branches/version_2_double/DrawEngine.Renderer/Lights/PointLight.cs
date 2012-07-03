@@ -24,35 +24,35 @@ namespace DrawEngine.Renderer.Lights
         public PointLight() : base() {}
         public PointLight(RGBColor luminousIntensityBase, Point3D luminousPoint)
                 : base(luminousIntensityBase, luminousPoint) {}
-        public override float GetColorFactor(Vector3D pointToLight)
+        public override double GetColorFactor(Vector3D pointToLight)
         {
-            return 1.0f;
+            return 1.0d;
         }
         public override string ToString()
         {
             return "OminiLight[LuminousPoint" + this.position.ToString() + ", Intensity" + this.color.ToString() + "]";
         }
-        public override void Rotate(float angle, Vector3D axis)
+        public override void Rotate(double angle, Vector3D axis)
         {
             this.position.Rotate(angle, axis);
         }
-        public override void RotateAxisX(float angle)
+        public override void RotateAxisX(double angle)
         {
             this.position.RotateAxisX(angle);
         }
-        public override void RotateAxisY(float angle)
+        public override void RotateAxisY(double angle)
         {
             this.position.RotateAxisY(angle);
         }
-        public override void RotateAxisZ(float angle)
+        public override void RotateAxisZ(double angle)
         {
             this.position.RotateAxisZ(angle);
         }
-        public override void Scale(float factor)
+        public override void Scale(double factor)
         {
             this.position.Scale(factor);
         }
-        public override void Translate(float tx, float ty, float tz)
+        public override void Translate(double tx, double ty, double tz)
         {
             this.position.Translate(tx, ty, tz);
         }
@@ -66,12 +66,12 @@ namespace DrawEngine.Renderer.Lights
             while(nShot < this.MaxPhotons){
                 nShot++;
                 yield return new Photon(Vector3D.CreateRandomVector().Normalized, this.position, this.color);
-                //float x, y, z;
+                //double x, y, z;
                 //Random rnd = new Random();
                 //do{
-                //    x = -1 + 2 * (float)rnd.NextDouble();
-                //    y = -1 + 2 * (float)rnd.NextDouble();
-                //    z = -1 + 2 * (float)rnd.NextDouble();
+                //    x = -1 + 2 * rnd.NextDouble();
+                //    y = -1 + 2 * rnd.NextDouble();
+                //    z = -1 + 2 * rnd.NextDouble();
                 //} while(x * x + y *y + z * z > 1);
                 //nShot++;
                 //yield return new Photon(new Vector3D(x, y, z), this.position, this.color);

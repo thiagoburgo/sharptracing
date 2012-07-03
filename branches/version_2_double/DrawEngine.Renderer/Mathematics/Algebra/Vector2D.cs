@@ -18,15 +18,15 @@ namespace DrawEngine.Renderer.Algebra
     [Serializable, StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct Vector2D
     {
-        public float X, Y;
-        public Vector2D(float x, float y)
+        public double X, Y;
+        public Vector2D(double x, double y)
         {
             this.X = x;
             this.Y = y;
         }
-        public float Length
+        public double Length
         {
-            get { return (float)Math.Sqrt((this.X * this.X) + (this.Y * this.Y)); }
+            get { return Math.Sqrt((this.X * this.X) + (this.Y * this.Y)); }
         }
         public Vector2D Normalized
         {
@@ -43,10 +43,10 @@ namespace DrawEngine.Renderer.Algebra
         }
         public void Normalize()
         {
-            float len = this.Length;
-            if(len == 0.0f){
-                this.X = 0.0f;
-                this.Y = 0.0f;
+            double len = this.Length;
+            if(len == 0.0d){
+                this.X = 0.0d;
+                this.Y = 0.0d;
             } else{
                 this.X = this.X * 1 / len;
                 this.Y = this.Y * 1 / len;
@@ -67,7 +67,7 @@ namespace DrawEngine.Renderer.Algebra
         }
         public static void Orthogonalize(ref Vector2D v1, Vector2D v2)
         {
-            float div = (v2 * v2);
+            double div = (v2 * v2);
             if(div != 0){
                 v1 = v1 - (((v1 * v2) * 1 / div) * v2);
             }
@@ -112,7 +112,7 @@ namespace DrawEngine.Renderer.Algebra
         /// <param name="vector">Vetor para aumento da magnitude</param>
         /// <param name="scalar">Escalar que aumenta a magnitude do vetor</param>        
         /// <returns>Vetor com a magnitude aumentada</returns>	
-        public static Vector2D operator *(Vector2D vector, float scalar)
+        public static Vector2D operator *(Vector2D vector, double scalar)
         {
             return new Vector2D((vector.X * scalar), (vector.Y * scalar));
         }
@@ -122,7 +122,7 @@ namespace DrawEngine.Renderer.Algebra
         /// <param name="scalar">Escalar que aumenta a magnitude do vetor</param>
         /// <param name="vector">Vetor para aumento da magnitude</param>
         /// <returns>Vetor com a magnitude aumentada</returns>
-        public static Vector2D operator *(float scalar, Vector2D vector)
+        public static Vector2D operator *(double scalar, Vector2D vector)
         {
             return new Vector2D((vector.X * scalar), (vector.Y * scalar));
         }
@@ -132,7 +132,7 @@ namespace DrawEngine.Renderer.Algebra
         /// <param name="vector">Vetor que terá sua magnitude será dividida</param>
         /// <param name="scalar">Divisor da magnitude do vetor</param>
         /// <returns>Vetor dividido</returns>
-        public static Vector2D operator /(Vector2D vector, float scalar)
+        public static Vector2D operator /(Vector2D vector, double scalar)
         {
             return new Vector2D((vector.X / scalar), (vector.Y / scalar));
         }
@@ -142,7 +142,7 @@ namespace DrawEngine.Renderer.Algebra
         /// <param name="v1">Vetor1</param>
         /// <param name="v2">Vetor2</param>
         /// <returns>Retorna o tamalho da projecao do Vetor1 sobre o Vetor2</returns>
-        public static float operator *(Vector2D v1, Vector2D v2)
+        public static double operator *(Vector2D v1, Vector2D v2)
         {
             return ((v1.X * v2.X) + (v1.Y * v2.Y));
         }

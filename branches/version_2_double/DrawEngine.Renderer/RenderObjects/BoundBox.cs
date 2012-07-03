@@ -26,19 +26,19 @@ namespace DrawEngine.Renderer.RenderObjects
         private Point3D pMax;
         private Point3D pMin;
         public static readonly BoundBox Zero = new BoundBox();
-        public BoundBox(float xMin, float yMin, float zMin, float xMax, float yMax, float zMax)
+        public BoundBox(double xMin, double yMin, double zMin, double xMax, double yMax, double zMax)
         {
             this.pMin = new Point3D(xMin, yMin, zMin);
             this.pMax = new Point3D(xMax, yMax, zMax);
-            this.halfVector = (this.pMax - this.pMin) * 0.5f;
-            this.center = (this.pMax + this.pMin) * 0.5f;
+            this.halfVector = (this.pMax - this.pMin) * 0.5d;
+            this.center = (this.pMax + this.pMin) * 0.5d;
         }
         public BoundBox(Point3D pMin, Point3D pMax)
         {
             this.pMin = pMin;
             this.pMax = pMax;
-            this.halfVector = (pMax - pMin) * 0.5f;
-            this.center = (pMax + pMin) * 0.5f;
+            this.halfVector = (pMax - pMin) * 0.5d;
+            this.center = (pMax + pMin) * 0.5d;
         }
         public Point3D PMin
         {
@@ -46,8 +46,8 @@ namespace DrawEngine.Renderer.RenderObjects
             set
             {
                 this.pMin = value;
-                this.halfVector = (this.pMax - this.pMin) * 0.5f;
-                this.center = (this.pMax + this.pMin) * 0.5f;
+                this.halfVector = (this.pMax - this.pMin) * 0.5d;
+                this.center = (this.pMax + this.pMin) * 0.5d;
             }
         }
         public Point3D PMax
@@ -56,8 +56,8 @@ namespace DrawEngine.Renderer.RenderObjects
             set
             {
                 this.pMax = value;
-                this.halfVector = (this.pMax - this.pMin) * 0.5f;
-                this.center = (this.pMax + this.pMin) * 0.5f;
+                this.halfVector = (this.pMax - this.pMin) * 0.5d;
+                this.center = (this.pMax + this.pMin) * 0.5d;
             }
         }
         public Point3D this[int index]
@@ -95,37 +95,37 @@ namespace DrawEngine.Renderer.RenderObjects
         }
 
         #region ITransformable3D Members
-        public void Rotate(float angle, Vector3D axis)
+        public void Rotate(double angle, Vector3D axis)
         {
             throw new Exception("The method or operation is not implemented.");
         }
-        public void RotateAxisX(float angle)
+        public void RotateAxisX(double angle)
         {
             throw new Exception("The method or operation is not implemented.");
         }
-        public void RotateAxisY(float angle)
+        public void RotateAxisY(double angle)
         {
             throw new Exception("The method or operation is not implemented.");
         }
-        public void RotateAxisZ(float angle)
+        public void RotateAxisZ(double angle)
         {
             throw new Exception("The method or operation is not implemented.");
         }
-        public void Scale(float factor)
+        public void Scale(double factor)
         {
             this.pMin.Scale(factor);
             this.pMax.Scale(factor);
             this.PMax = this.pMax;
             this.PMin = this.pMin;
         }
-        public void Translate(float tx, float ty, float tz)
+        public void Translate(double tx, double ty, double tz)
         {
             this.pMin.Translate(tx, ty, tz);
             this.pMax.Translate(tx, ty, tz);
             //this.pMin = pMin;
             //this.pMax = pMax;
-            this.halfVector = (this.pMax - this.pMin) * 0.5f;
-            this.center = (this.pMax + this.pMin) * 0.5f;
+            this.halfVector = (this.pMax - this.pMin) * 0.5d;
+            this.center = (this.pMax + this.pMin) * 0.5d;
             //this.PMax = this.pMax;
             //this.PMin = this.pMin;
         }
@@ -137,9 +137,9 @@ namespace DrawEngine.Renderer.RenderObjects
 
         public bool IsInside(Point3D point)
         {
-            return ((point.X >= this.pMin.X - 0.001f && point.X <= this.pMax.X + 0.001f)
-                    && (point.Y >= this.pMin.Y - 0.001f && point.Y <= this.pMax.Y + 0.001f)
-                    && (point.Z >= this.pMin.Z - 0.001f && point.Z <= this.pMax.Z + 0.001f));
+            return ((point.X >= this.pMin.X - 0.001d && point.X <= this.pMax.X + 0.001d)
+                    && (point.Y >= this.pMin.Y - 0.001d && point.Y <= this.pMax.Y + 0.001d)
+                    && (point.Z >= this.pMin.Z - 0.001d && point.Z <= this.pMax.Z + 0.001d));
         }
         public void IncludePoint(Point3D p)
         {
@@ -203,9 +203,9 @@ namespace DrawEngine.Renderer.RenderObjects
             //if (this.IsEmpty) {
             //    return false;
             //}
-            float tmin, tmax, tymin, tymax, tzmin, tzmax;
-            float oX = ray.Origin.X, oY = ray.Origin.Y, oZ = ray.Origin.Z;
-            float inv_dX = ray.Inv_Direction.X, inv_dY = ray.Inv_Direction.Y, inv_dZ = ray.Inv_Direction.Z;
+            double tmin, tmax, tymin, tymax, tzmin, tzmax;
+            double oX = ray.Origin.X, oY = ray.Origin.Y, oZ = ray.Origin.Z;
+            double inv_dX = ray.Inv_Direction.X, inv_dY = ray.Inv_Direction.Y, inv_dZ = ray.Inv_Direction.Z;
             if (inv_dX > 0)
             {
                 tmin = (this.pMin.X - oX) * inv_dX;
@@ -262,16 +262,16 @@ namespace DrawEngine.Renderer.RenderObjects
             }
             return true;
         }
-        public bool Intersect(Ray ray, out float t)
+        public bool Intersect(Ray ray, out double t)
         {
-            t = float.PositiveInfinity;
+            t = double.PositiveInfinity;
             //if (this.IsEmpty)
             //{
             //    return false;
             //}
-            float tmin, tmax, tymin, tymax, tzmin, tzmax;
-            float oX = ray.Origin.X, oY = ray.Origin.Y, oZ = ray.Origin.Z;
-            float inv_dX = ray.Inv_Direction.X, inv_dY = ray.Inv_Direction.Y, inv_dZ = ray.Inv_Direction.Z;
+            double tmin, tmax, tymin, tymax, tzmin, tzmax;
+            double oX = ray.Origin.X, oY = ray.Origin.Y, oZ = ray.Origin.Z;
+            double inv_dX = ray.Inv_Direction.X, inv_dY = ray.Inv_Direction.Y, inv_dZ = ray.Inv_Direction.Z;
             if (ray.Inv_Direction.X >= 0)
             {
                 tmin = (this.pMin.X - oX) * inv_dX;
@@ -329,11 +329,11 @@ namespace DrawEngine.Renderer.RenderObjects
             t = tmin;
             return true;
         }
-        public bool Intersect(Ray ray, ref float ltmin, ref float ltmax)
+        public bool Intersect(Ray ray, ref double ltmin, ref double ltmax)
         {
-            ltmin = float.MaxValue;
-            ltmax = float.MaxValue;
-            float tmin, tmax, tymin, tymax, tzmin, tzmax;
+            ltmin = double.MaxValue;
+            ltmax = double.MaxValue;
+            double tmin, tmax, tymin, tymax, tzmin, tzmax;
             if (ray.Inv_Direction.X >= 0)
             {
                 tmin = (this.pMin.X - ray.Origin.X) * ray.Inv_Direction.X;

@@ -20,7 +20,7 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
         public virtual bool FindIntersection(Ray ray, out Intersection intersection)
         {
             intersection = new Intersection();
-            intersection.TMin = float.MaxValue;
+            intersection.TMin = double.MaxValue;
             Intersection intersection_comp;
             bool hit = false;
             foreach(T hitPrimitive in this.AccelerationUnits){

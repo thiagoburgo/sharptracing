@@ -21,10 +21,10 @@ namespace DrawEngine.Renderer.RenderObjects
 {
     public class RegularPolygon : Polygon, ITransformable3D
     {
-        private float radius;
+        private double radius;
         private int verticesCount;
-        public RegularPolygon() : this(Point3D.Zero, Vector3D.UnitY, 5, 20f) {}
-        public RegularPolygon(Point3D center, Vector3D normal, int numVertices, float radius)
+        public RegularPolygon() : this(Point3D.Zero, Vector3D.UnitY, 5, 20d) {}
+        public RegularPolygon(Point3D center, Vector3D normal, int numVertices, double radius)
         {
             this.vertices.NotificationsEnabled = false;
             this.VerticesCount = numVertices;
@@ -74,7 +74,7 @@ namespace DrawEngine.Renderer.RenderObjects
                 this.Preprocess();
             }
         }
-        public float Radius
+        public double Radius
         {
             get { return this.radius; }
             set
@@ -88,28 +88,28 @@ namespace DrawEngine.Renderer.RenderObjects
         }
 
         #region ITransformable3D Members
-        public void Rotate(float angle, Vector3D axis)
+        public void Rotate(double angle, Vector3D axis)
         {
             this.center.Rotate(angle, axis);
             this.Preprocess();
         }
-        public void RotateAxisX(float angle)
+        public void RotateAxisX(double angle)
         {
             this.Rotate(angle, Vector3D.UnitX);
         }
-        public void RotateAxisY(float angle)
+        public void RotateAxisY(double angle)
         {
             this.Rotate(angle, Vector3D.UnitY);
         }
-        public void RotateAxisZ(float angle)
+        public void RotateAxisZ(double angle)
         {
             this.Rotate(angle, Vector3D.UnitZ);
         }
-        public void Scale(float factor)
+        public void Scale(double factor)
         {
             this.Radius = this.radius * factor;
         }
-        public void Translate(float tx, float ty, float tz)
+        public void Translate(double tx, double ty, double tz)
         {
             this.center.Translate(tx, ty, tz);
             this.Preprocess();
@@ -130,7 +130,7 @@ namespace DrawEngine.Renderer.RenderObjects
                 Point3D initialPoint = this.center + this.radius * inPlaneVector;
                 this.vertices.Clear();
                 this.vertices.Add(initialPoint);
-                float angleToRotation = (float)(2 * Math.PI) / this.verticesCount;
+                double angleToRotation = (2 * Math.PI) / this.verticesCount;
                 for(int i = 1; i < this.verticesCount; i++){
                     inPlaneVector.Rotate(angleToRotation, this.normal);
                     initialPoint = this.center + this.radius * inPlaneVector;

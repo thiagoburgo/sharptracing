@@ -26,16 +26,16 @@ namespace DrawEngine.Renderer.Mathematics.Algebra {
     [Serializable, StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct Point3D : ITransformable3D, IEquatable<Point3D> {
         public static readonly Point3D Zero;
-        public float X;
-        public float Y;
-        public float Z;
+        public double X;
+        public double Y;
+        public double Z;
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="x">X coordinate</param>
         /// <param name="y">Y coordinate</param>
         /// <param name="z">Z coordinate</param>
-        public Point3D(float x, float y, float z) {
+        public Point3D(double x, double y, double z) {
             this.X = x;
             this.Y = y;
             this.Z = z;
@@ -46,9 +46,9 @@ namespace DrawEngine.Renderer.Mathematics.Algebra {
         [Browsable(false)]
         public Dominant Dominant {
             get {
-                float z = Math.Abs(this.Z);
-                float y = Math.Abs(this.Y);
-                float x = Math.Abs(this.X);
+                double z = Math.Abs(this.Z);
+                double y = Math.Abs(this.Y);
+                double x = Math.Abs(this.X);
                 return (x > y
                                 ? (x > z ? new Dominant(Component.X, this.X) : new Dominant(Component.Z, this.Z))
                                 : (y > z ? new Dominant(Component.Y, this.Y) : new Dominant(Component.Z, this.Z)));
@@ -60,7 +60,7 @@ namespace DrawEngine.Renderer.Mathematics.Algebra {
         /// </summary>
         /// <param name="index">Index of a component</param>
         /// <returns>Value of component indexed</returns>
-        public float this[int index] {
+        public double this[int index] {
             get {
                 if(index > 2) {
                     index = index % 3;
@@ -96,7 +96,7 @@ namespace DrawEngine.Renderer.Mathematics.Algebra {
         /// </summary>
         /// <param name="index">Index of a component</param>
         /// <returns>Value of component indexed</returns>
-        public float this[Component index] {
+        public double this[Component index] {
             get {
                 switch(index) {
                     case Component.X:
@@ -131,9 +131,9 @@ namespace DrawEngine.Renderer.Mathematics.Algebra {
         #endregion
 
         #region ITransformable3D Members
-        public void Rotate(float angle, Vector3D axis) {
-            float sin = (float)Math.Sin(angle);
-            float oneMinusCos = (float)(1.0 - Math.Cos(angle));
+        public void Rotate(double angle, Vector3D axis) {
+            double sin = Math.Sin(angle);
+            double oneMinusCos = (1.0 - Math.Cos(angle));
             axis.Normalize();
             this = this
                    *
@@ -147,25 +147,25 @@ namespace DrawEngine.Renderer.Mathematics.Algebra {
                                 (oneMinusCos * axis.Y * axis.Z) + axis.X * sin,
                                 1 + oneMinusCos * ((axis.Z * axis.Z) - 1));
         }
-        public void RotateAxisX(float angle) {
-            float sin = (float)Math.Sin(angle);
-            float cos = (float)Math.Cos(angle);
+        public void RotateAxisX(double angle) {
+            double sin = Math.Sin(angle);
+            double cos = Math.Cos(angle);
             this = this * new Matrix3D(1, 0, 0, 0, cos, -sin, 0, sin, cos);
         }
-        public void RotateAxisY(float angle) {
-            float sin = (float)Math.Sin(angle);
-            float cos = (float)Math.Cos(angle);
+        public void RotateAxisY(double angle) {
+            double sin = Math.Sin(angle);
+            double cos = Math.Cos(angle);
             this = this * new Matrix3D(cos, 0, sin, 0, 1, 0, -sin, 0, cos);
         }
-        public void RotateAxisZ(float angle) {
-            float sin = (float)Math.Sin(angle);
-            float cos = (float)Math.Cos(angle);
+        public void RotateAxisZ(double angle) {
+            double sin = Math.Sin(angle);
+            double cos = Math.Cos(angle);
             this = this * new Matrix3D(cos, -sin, 0, sin, cos, 0, 0, 0, 1);
         }
-        public void Scale(float factor) {
+        public void Scale(double factor) {
             this = this * factor;
         }
-        public void Translate(float tx, float ty, float tz) {
+        public void Translate(double tx, double ty, double tz) {
             this.Translate(new Vector3D(tx, ty, tz));
         }
         public void Translate(Vector3D translateVector) {
@@ -231,41 +231,41 @@ namespace DrawEngine.Renderer.Mathematics.Algebra {
             p1.Z = -p1.Z;
             return p1;
         }
-        public static Point3D operator *(Point3D p1, float scalar) {
+        public static Point3D operator *(Point3D p1, double scalar) {
             p1.X *= scalar;
             p1.Y *= scalar;
             p1.Z *= scalar;
             return p1;
             //return new Point3D((point3D.X * scalar), (point3D.Y * scalar), (point3D.Z * scalar));
         }
-        public static Point3D operator *(float scalar, Point3D p1) {
+        public static Point3D operator *(double scalar, Point3D p1) {
             p1.X *= scalar;
             p1.Y *= scalar;
             p1.Z *= scalar;
             return p1;
             //return new Point3D((point3D.X * scalar), (point3D.Y * scalar), (point3D.Z * scalar));
         }
-        public static Point3D operator /(Point3D p1, float scalar) {
+        public static Point3D operator /(Point3D p1, double scalar) {
             p1.X /= scalar;
             p1.Y /= scalar;
             p1.Z /= scalar;
             return p1;
             //return new Point3D((point3D.X * 1 / scalar), (point3D.Y * 1 / scalar), (point3D.Z * 1 / scalar));
         }
-        public static implicit operator float[](Point3D point) {
+        public static implicit operator double[](Point3D point) {
             return new[] { point.X, point.Y, point.Z };
         }
-        public static implicit operator Point3D(float[] point) {
+        public static implicit operator Point3D(double[] point) {
             return new Point3D(point[0], point[1], point[2]);
         }
         //TODO Verificar se isso é certo
-        public static float operator *(Point3D p1, Point3D p2) {
+        public static double operator *(Point3D p1, Point3D p2) {
             return ((p1.X * p2.X) + (p1.Y * p2.Y) + (p1.Z * p2.Z));
         }
-        public static float operator *(Point3D p, Vector3D v) {
+        public static double operator *(Point3D p, Vector3D v) {
             return ((p.X * v.X) + (p.Y * v.Y) + (p.Z * v.Z));
         }
-        public static float operator *(Vector3D v, Point3D p) {
+        public static double operator *(Vector3D v, Point3D p) {
             return ((p.X * v.X) + (p.Y * v.Y) + (p.Z * v.Z));
         }
         /// <summary>

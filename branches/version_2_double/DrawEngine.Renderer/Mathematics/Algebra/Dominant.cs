@@ -12,8 +12,8 @@ namespace DrawEngine.Renderer.Algebra
     public struct Dominant
     {
         public Component Component;
-        public float Value;
-        public Dominant(Component comp, float value)
+        public double Value;
+        public Dominant(Component comp, double value)
         {
             this.Component = comp;
             this.Value = value;

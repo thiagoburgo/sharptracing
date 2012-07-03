@@ -8,7 +8,7 @@
 //    public static class MeshContentOptimizer
 //    {
 //        public const int AssumedVertexCacheSize = 24;
-//        public const float DefaultAmbientOcclusion = 0.875f;
+//        public const double DefaultAmbientOcclusion = 0.875d;
 
 //        public static void Apply(MeshContent content, MeshOptimizationFlags flags)
 //        {
@@ -31,11 +31,11 @@
 
 //                if (flags.IsSet(MeshOptimizationFlags.OptimizeForVertexCache))
 //                {
-//                    //float cacheMisses = (float)CheckVertexCacheMisses(c_assumedVertexCacheSize, content) / (float)content.Indices.Length;
+//                    //double cacheMisses = CheckVertexCacheMisses(c_assumedVertexCacheSize, content) / content.Indices.Length;
 //                    Tipsify(content, flags.IsSet(MeshOptimizationFlags.ApproximateAmbientOcclusion));
 //                    //XnaOptimizeForCache(content);
-//                    //float newCacheMisses = (float)CheckVertexCacheMisses(c_assumedVertexCacheSize, content) / (float)content.Indices.Length;
-//                    //Console.WriteLine("Cache misses reduced from " + (int)(cacheMisses * 100.0f) + "% to " + (int)(newCacheMisses * 100.0f) + "%");
+//                    //double newCacheMisses = CheckVertexCacheMisses(c_assumedVertexCacheSize, content) / content.Indices.Length;
+//                    //Console.WriteLine("Cache misses reduced from " + (int)(cacheMisses * 100.0d) + "% to " + (int)(newCacheMisses * 100.0d) + "%");
 
 //                    int removed = ReorderVertices(content);
 //                    // Console.WriteLine("Reordered vertices for linear read and removed " + removed + " unused vertices");
@@ -76,12 +76,12 @@
 //            Vector3[] faceNormals = new Vector3[indices.Length / 3];
 //            for (int i = 0; i < vertices.Length; i++)
 //            {
-//                float lenSqrd = vertices[i].Normal.LengthSquared();
-//                if (lenSqrd == 0.0f)
+//                double lenSqrd = vertices[i].Normal.LengthSquared();
+//                if (lenSqrd == 0.0d)
 //                {
 //                    vertexFixNeeded[i] = true;
 //                }
-//                else if (Math.Abs(lenSqrd - 1.0f) > 0.001f)
+//                else if (Math.Abs(lenSqrd - 1.0d) > 0.001d)
 //                {
 //                    vertices[i].Normal.Normalize();
 //                }
@@ -281,7 +281,7 @@
 //                }
 
 //                if (numAdds > 1)
-//                    normal *= (1.0f / numAdds);
+//                    normal *= (1.0d / numAdds);
 
 //                content.Vertices[i].Normal = normal;
 //            }
@@ -327,7 +327,7 @@
 //            return SetAmbientOcclusion(content, DefaultAmbientOcclusion);
 //        }
 
-//        public static string SetAmbientOcclusion(MeshContent content, float ambientOcclusion)
+//        public static string SetAmbientOcclusion(MeshContent content, double ambientOcclusion)
 //        {
 //            for (int i = 0; i < content.Vertices.Length; i++)
 //                content.Vertices[i].AmbientOcclusion = ambientOcclusion;
@@ -338,7 +338,7 @@
 //        {
 //            double startTime = GlobalServices.TimeService.Now;
 
-//            float rayBegin = content.LocalBoundingSphere.Radius * 2;
+//            double rayBegin = content.LocalBoundingSphere.Radius * 2;
 
 //            MeshContent tmpRayContent = MeshContentGenerator.CreateUnitSphere(2);
 
@@ -352,12 +352,12 @@
 //                Ray ray = new Ray(nrm * rayBegin, -nrm);
 
 //                int tri;
-//                float dist;
+//                double dist;
 //                if (content.Intersect(ray, out dist, out tri))
 //                    triHits[tri]++;
 //            }
 
-//            SetAmbientOcclusion(content, 0.0f);
+//            SetAmbientOcclusion(content, 0.0d);
 
 //            for (int i = 0; i < triHits.Length; i++)
 //            {
@@ -369,9 +369,9 @@
 //                int idx2 = content.Indices[i + 1];
 //                int idx3 = content.Indices[i + 2];
 
-//                content.Vertices[idx1].AmbientOcclusion += (0.25f * (float)hits);
-//                content.Vertices[idx2].AmbientOcclusion += (0.25f * (float)hits);
-//                content.Vertices[idx3].AmbientOcclusion += (0.25f * (float)hits);
+//                content.Vertices[idx1].AmbientOcclusion += (0.25d * hits);
+//                content.Vertices[idx2].AmbientOcclusion += (0.25d * hits);
+//                content.Vertices[idx3].AmbientOcclusion += (0.25d * hits);
 //            }
 //        }
 
@@ -396,7 +396,7 @@
 //                        {
 //                            m_tmpRays[i] = tmpRayContent.Vertices[i].Position;
 //                            m_tmpRays[i].Normalize();
-//                            m_tmpRaysOffset[i] = m_tmpRays[i] * 0.000000001f;
+//                            m_tmpRaysOffset[i] = m_tmpRays[i] * 0.000000001d;
 //                        }
 //                        tmpRayContent = null;
 //                    }
@@ -413,10 +413,10 @@
 //            //{
 
 //            // Old singlethreaded code
-//            float maxDist = (content.LocalBoundingSphere.Radius * 2);
-//            float totalDist = maxDist * m_tmpRays.Length;
+//            double maxDist = (content.LocalBoundingSphere.Radius * 2);
+//            double totalDist = maxDist * m_tmpRays.Length;
 
-//            Dictionary<int, float> store = new Dictionary<int, float>(content.Vertices.Length);
+//            Dictionary<int, double> store = new Dictionary<int, double>(content.Vertices.Length);
 
 //            for (int i = 0; i < content.Vertices.Length; i++)
 //            {
@@ -424,7 +424,7 @@
 
 //                int hash = vert.Position.X.GetHashCode() ^ vert.Position.Y.GetHashCode() ^ vert.Position.Z.GetHashCode();
 
-//                float tmp;
+//                double tmp;
 //                if (store.TryGetValue(hash, out tmp))
 //                {
 //                    content.Vertices[i].AmbientOcclusion = tmp;
@@ -432,7 +432,7 @@
 //                }
 
 //                // send rays
-//                float accumulatedDist = 0;
+//                double accumulatedDist = 0;
 //                for (int r = 0; r < m_tmpRays.Length; r++)
 //                {
 //                    Ray ray;
@@ -441,11 +441,11 @@
 //                    ray.Position.Z = vert.Position.Z - m_tmpRaysOffset[r].Z;
 //                    ray.Direction = m_tmpRays[r];
 
-//                    float dist;
+//                    double dist;
 //                    int triIdx;
 //                    if (content.Intersect(ray, out dist, out triIdx))
 //                    {
-//                        //if (dist > maxDist || dist < 0.0f)
+//                        //if (dist > maxDist || dist < 0.0d)
 //                        //      Console.WriteLine("Ouch; maxdist is " + maxDist + " dist is " + dist);
 //                        accumulatedDist += dist;
 //                    }
@@ -455,7 +455,7 @@
 //                    }
 //                }
 
-//                float ao = accumulatedDist / totalDist;
+//                double ao = accumulatedDist / totalDist;
 //                store[hash] = ao;
 
 //                content.Vertices[i].AmbientOcclusion = ao;
@@ -554,8 +554,8 @@
 //        {
 //            public int IndexStart;
 //            public int IndexCount;
-//            public float Occlusion;
-//            public TriangleCluster(int idxStart, int idxCount, float occlusion)
+//            public double Occlusion;
+//            public TriangleCluster(int idxStart, int idxCount, double occlusion)
 //            {
 //                IndexStart = idxStart;
 //                IndexCount = idxCount;
@@ -693,15 +693,15 @@
 //            Vector3 modelCentroid = Vector3.Zero;
 //            for (int i = 0; i < content.Vertices.Length; i++)
 //                modelCentroid += content.Vertices[i].Position;
-//            modelCentroid *= (1.0f / content.Vertices.Length);
+//            modelCentroid *= (1.0d / content.Vertices.Length);
 
-//            float[] occlusionSum = null;
+//            double[] occlusionSum = null;
 //            int[] occlusionCount = null;
 
 //            if (doApproximateAmbientOcclusion)
 //            {
 //                occlusionCount = new int[content.Vertices.Length];
-//                occlusionSum = new float[content.Vertices.Length];
+//                occlusionSum = new double[content.Vertices.Length];
 //            }
 
 //            // average normals for each cluster
@@ -719,15 +719,15 @@
 //                    int clusterIndexCount = (clusterBoundary[currentCluster] - clusterStart);
 //                    int clusterFaceCount = clusterIndexCount / 3;
 
-//                    Vector3 clusterCenter = positionSum * (1.0f / (float)clusterIndexCount);
+//                    Vector3 clusterCenter = positionSum * (1.0d / clusterIndexCount);
 //                    Vector3 averageNormal = Vector3.Normalize(normalSum);
 //                    Vector3 a = clusterCenter - modelCentroid;
 //                    a.Normalize();
-//                    float occlusion = Vector3.Dot(averageNormal, a);
-//                    occlusion += 1.0f;
-//                    occlusion *= 0.5f;
-//                    if (occlusion > 1.0f)
-//                        occlusion = 1.0f;
+//                    double occlusion = Vector3.Dot(averageNormal, a);
+//                    occlusion += 1.0d;
+//                    occlusion *= 0.5d;
+//                    if (occlusion > 1.0d)
+//                        occlusion = 1.0d;
 
 //                    clusters[currentCluster++] = new TriangleCluster(clusterStart, clusterIndexCount, occlusion);
 
@@ -753,9 +753,9 @@
 //                    Vector3 ia = p1 - modelCentroid;
 //                    ia.Normalize();
 
-//                    float iocclusion = ((Vector3.Dot(nrm, ia) + 1.25f) * 0.5f);
-//                    if (iocclusion > 1.0f)
-//                        iocclusion = 1.0f;
+//                    double iocclusion = ((Vector3.Dot(nrm, ia) + 1.25d) * 0.5d);
+//                    if (iocclusion > 1.0d)
+//                        iocclusion = 1.0d;
 
 //                    occlusionSum[idx1] += iocclusion;
 //                    occlusionCount[idx1]++;
@@ -784,9 +784,9 @@
 //            {
 //                for (int i = 0; i < content.Vertices.Length; i++)
 //                {
-//                    float ao = 0.35f + (occlusionSum[i] / (float)occlusionCount[i]);
-//                    if (ao > 1.0f)
-//                        ao = 1.0f;
+//                    double ao = 0.35d + (occlusionSum[i] / occlusionCount[i]);
+//                    if (ao > 1.0d)
+//                        ao = 1.0d;
 //                    content.Vertices[i].AmbientOcclusion = ao;
 //                }
 //            }
@@ -819,11 +819,11 @@
 //            Vector3 modelCentroid = Vector3.Zero;
 //            for (int i = 0; i < content.Vertices.Length; i++)
 //                modelCentroid += content.Vertices[i].Position;
-//            modelCentroid *= (1.0f / content.Vertices.Length);
+//            modelCentroid *= (1.0d / content.Vertices.Length);
 
 //            int[] indices = content.Indices;
 
-//            float[] occlusionSum = new float[content.Vertices.Length];
+//            double[] occlusionSum = new double[content.Vertices.Length];
 //            int[] occlusionCount = new int[content.Vertices.Length];
 
 //            // calculate normal per triangle
@@ -838,7 +838,7 @@
 //                Vector3 a = modelCentroid - p1;
 //                a.Normalize();
 
-//                float occlusion = (Vector3.Dot(a, nrm) + 1) * 0.5f;
+//                double occlusion = (Vector3.Dot(a, nrm) + 1) * 0.5d;
 //                //occlusion = Math.Max(0, occlusion);
 
 //                // color all vertices
@@ -857,7 +857,7 @@
 //            }
 
 //            for (int i = 0; i < content.Vertices.Length; i++)
-//                content.Vertices[i].AmbientOcclusion = occlusionSum[i] / (float)occlusionCount[i];
+//                content.Vertices[i].AmbientOcclusion = occlusionSum[i] / occlusionCount[i];
 
 //            return;
 //        }

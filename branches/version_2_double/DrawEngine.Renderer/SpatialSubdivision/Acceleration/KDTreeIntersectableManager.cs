@@ -36,8 +36,8 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
         public int MaxHeight;
         public Node Root;
         // Properties
-        private float weightDivisionQuality;
-        private float weightSum;
+        private double weightDivisionQuality;
+        private double weightSum;
         // Constructors
         protected KDTreeIntersectableManager() : this(new List<T>()) {}
         protected KDTreeIntersectableManager(IList<T> content) : base(content)
@@ -46,12 +46,12 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
             this.Content = content;
             this.MaxDesiredObjectsPerLeafCount = 1;
             this.MaxHeight = 50;
-            this.WeightDivisionQuality = 0.5f;
+            this.WeightDivisionQuality = 0.5d;
             this.WeightSum = 1 - this.weightDivisionQuality;
             this.Height = 1;
             //LeafesCount = 1;
         }
-        public float WeightDivisionQuality
+        public double WeightDivisionQuality
         {
             get { return this.weightDivisionQuality; }
             set
@@ -63,7 +63,7 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
                 this.weightSum = 1 - value;
             }
         }
-        public float WeightSum
+        public double WeightSum
         {
             get { return this.weightSum; }
             set
@@ -100,23 +100,23 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
             // This should be the one wich divides the content best
             // and does have the least content in both sides
             Axis splitAxis = Axis.X;
-            float planePosition = mid.X;
+            double planePosition = mid.X;
             IList<T> leftContent, rightContent;
             this.SplitOnPlane(leaf.Content, Axis.X, mid, out leftContent, out rightContent);
-            float currentDivisionQuality = leftContent.Count > rightContent.Count
-                                                   ? ((float)rightContent.Count) / leftContent.Count
-                                                   : ((float)leftContent.Count) / rightContent.Count;
-            float currentSum = leftContent.Count + rightContent.Count;
+            double currentDivisionQuality = leftContent.Count > rightContent.Count
+                                                   ? (rightContent.Count) / leftContent.Count
+                                                   : (leftContent.Count) / rightContent.Count;
+            double currentSum = leftContent.Count + rightContent.Count;
             IList<T> alternativeLeftContent, alternativeRightContent;
             this.SplitOnPlane(leaf.Content, Axis.Y, mid, out alternativeLeftContent, out alternativeRightContent);
-            float alternativeDivisionQuality = alternativeLeftContent.Count > alternativeRightContent.Count
-                                                       ? ((float)alternativeRightContent.Count)
+            double alternativeDivisionQuality = alternativeLeftContent.Count > alternativeRightContent.Count
+                                                       ? (alternativeRightContent.Count)
                                                          / alternativeLeftContent.Count
-                                                       : ((float)alternativeLeftContent.Count)
+                                                       : (alternativeLeftContent.Count)
                                                          / alternativeRightContent.Count;
-            float alternativeSum = alternativeLeftContent.Count + alternativeRightContent.Count;
+            double alternativeSum = alternativeLeftContent.Count + alternativeRightContent.Count;
             if((this.WeightDivisionQuality * alternativeDivisionQuality / currentDivisionQuality
-                + this.WeightSum * currentSum / alternativeSum) > 1f){
+                + this.WeightSum * currentSum / alternativeSum) > 1d){
                 leftContent = alternativeLeftContent;
                 rightContent = alternativeRightContent;
                 splitAxis = Axis.Y;
@@ -126,11 +126,11 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
             }
             this.SplitOnPlane(leaf.Content, Axis.Z, mid, out alternativeLeftContent, out alternativeRightContent);
             alternativeDivisionQuality = alternativeLeftContent.Count > alternativeRightContent.Count
-                                                 ? ((float)alternativeRightContent.Count) / alternativeLeftContent.Count
-                                                 : ((float)alternativeLeftContent.Count) / alternativeRightContent.Count;
+                                                 ? (alternativeRightContent.Count) / alternativeLeftContent.Count
+                                                 : (alternativeLeftContent.Count) / alternativeRightContent.Count;
             alternativeSum = alternativeLeftContent.Count + alternativeRightContent.Count;
             if((this.WeightDivisionQuality * alternativeDivisionQuality / currentDivisionQuality
-                + this.WeightSum * currentSum / alternativeSum) > 1f){
+                + this.WeightSum * currentSum / alternativeSum) > 1d){
                 leftContent = alternativeLeftContent;
                 rightContent = alternativeRightContent;
                 splitAxis = Axis.Z;
@@ -148,10 +148,10 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
             // Create and return new inner node                        
             return new Inner(leftNode, rightNode, splitAxis, planePosition);
         }
-        protected bool Traverse(Ray ray, Node node, float tMin, float tMax, out Intersection firstIntersection)
+        protected bool Traverse(Ray ray, Node node, double tMin, double tMax, out Intersection firstIntersection)
         {
             firstIntersection = new Intersection();
-            firstIntersection.TMin = float.MaxValue;
+            firstIntersection.TMin = double.MaxValue;
             bool hit = false;
             if(node.IsLeaf){
                 Leaf leaf = (Leaf)node;
@@ -170,7 +170,7 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
             //    Leaf leaf = (Leaf)node;
             //    firstIntersection = new Intersection();
             //    Intersection currentIntersection;
-            //    float currentT = float.PositiveInfinity;
+            //    double currentT = double.PositiveInfinity;
             //    foreach (IIntersectable obj in leaf.Content)
             //    {
             //        if (obj.FindIntersection(ray, out currentIntersection))
@@ -188,9 +188,9 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
             //}
             Inner inner = (Inner)node;
             Node near, far;
-            float tSplit;
+            double tSplit;
             this.CalculateInner(ray, inner, out near, out far, out tSplit);
-            if((tSplit >= tMax) || (tSplit < 0f)){
+            if((tSplit >= tMax) || (tSplit < 0d)){
                 return this.Traverse(ray, near, tMin, tMax, out firstIntersection);
             } else if(tSplit < tMin){
                 return this.Traverse(ray, far, tMin, tMax, out firstIntersection);
@@ -203,7 +203,7 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
                 return this.Traverse(ray, far, tSplit, tMax, out firstIntersection);
             }
         }
-        //protected int Traverse(Ray ray, Node node, float tMin, float tMax, ref SortedList<float, RayIntersectionPoint> intersections)
+        //protected int Traverse(Ray ray, Node node, double tMin, double tMax, ref SortedList<double, RayIntersectionPoint> intersections)
         //{
         //    if (node.IsLeaf)
         //    {
@@ -217,9 +217,9 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
         //    }
         //    Inner inner = (Inner)node;
         //    Node near, far;
-        //    float tSplit;
+        //    double tSplit;
         //    CalculateInner(ray, inner, out near, out far, out tSplit);
-        //    if ((tSplit >= tMax) || (tSplit < 0f))
+        //    if ((tSplit >= tMax) || (tSplit < 0d))
         //        return Traverse(ray, near, tMin, tMax, ref intersections);
         //    else if (tSplit < tMin)
         //        return Traverse(ray, far, tMin, tMax, ref intersections);
@@ -229,11 +229,11 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
         //        return numCurrentIntersections + Traverse(ray, far, tSplit, tMax, ref intersections);
         //    }
         //}
-        protected void CalculateInner(Ray ray, Inner inner, out Node near, out Node far, out float tSplit)
+        protected void CalculateInner(Ray ray, Inner inner, out Node near, out Node far, out double tSplit)
         {
             near = null;
             far = null;
-            tSplit = 0f;
+            tSplit = 0d;
             switch(inner.Axis){
                 case Axis.X:
                     if(ray.Origin.X > inner.PlanePosition){
@@ -243,8 +243,8 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
                         near = inner.Left;
                         far = inner.Right;
                     }
-                    if(ray.Direction.X == 0f){
-                        tSplit = float.PositiveInfinity;
+                    if(ray.Direction.X == 0d){
+                        tSplit = double.PositiveInfinity;
                     } else{
                         tSplit = (inner.PlanePosition - ray.Origin.X) / ray.Direction.X;
                     }
@@ -257,8 +257,8 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
                         near = inner.Left;
                         far = inner.Right;
                     }
-                    if(ray.Direction.Y == 0f){
-                        tSplit = float.PositiveInfinity;
+                    if(ray.Direction.Y == 0d){
+                        tSplit = double.PositiveInfinity;
                     } else{
                         tSplit = (inner.PlanePosition - ray.Origin.Y) / ray.Direction.Y;
                     }
@@ -271,8 +271,8 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
                         near = inner.Left;
                         far = inner.Right;
                     }
-                    if(ray.Direction.Z == 0f){
-                        tSplit = float.PositiveInfinity;
+                    if(ray.Direction.Z == 0d){
+                        tSplit = double.PositiveInfinity;
                     } else{
                         tSplit = (inner.PlanePosition - ray.Origin.Z) / ray.Direction.Z;
                     }
@@ -282,11 +282,11 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
         public bool Intersect(Ray ray)
         {
             Intersection dummy;
-            return this.Traverse(ray, this.Root, 0f, float.PositiveInfinity, out dummy);
+            return this.Traverse(ray, this.Root, 0d, double.PositiveInfinity, out dummy);
         }
         public override bool FindIntersection(Ray ray, out Intersection firstIntersection)
         {
-            return this.Traverse(ray, this.Root, 0f, float.PositiveInfinity, out firstIntersection);
+            return this.Traverse(ray, this.Root, 0d, double.PositiveInfinity, out firstIntersection);
         }
 
         #region Nested type: Inner
@@ -294,9 +294,9 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
         {
             public Axis Axis;
             public Node Left;
-            public float PlanePosition;
+            public double PlanePosition;
             public Node Right;
-            public Inner(Node left, Node right, Axis axis, float planePosition) : base(false)
+            public Inner(Node left, Node right, Axis axis, double planePosition) : base(false)
             {
                 this.Left = left;
                 this.Right = right;

@@ -47,7 +47,7 @@ namespace DrawEngine.Renderer.RenderObjects
         public override bool FindIntersection(Ray ray, out Intersection intersect)
         {
             intersect = new Intersection();
-            intersect.TMin = float.MaxValue;
+            intersect.TMin = double.MaxValue;
             Intersection intersection_comp;
             bool hit = false;
             foreach(Primitive hitPrimitive in this.cornellBoxGroup.Values){

@@ -585,28 +585,28 @@ namespace DrawEngine.Renderer.BasicStructures
             get { return FromColor(Color.YellowGreen); }
         }
         #endregion
-        public float B;
-        public float G;
-        public float R;
-        public RGBColor(float r, float g, float b)
+        public double B;
+        public double G;
+        public double R;
+        public RGBColor(double r, double g, double b)
         {
             this.R = r;
             this.G = g;
             this.B = b;
         }
 
-        public float Luminance
+        public double Luminance
         {
             get
             {
-                return (0.2989f * R) + (0.5866f * G) + (0.1145f * B);
+                return (0.2989d * R) + (0.5866d * G) + (0.1145d * B);
             }
         }
-        public float Max
+        public double Max
         {
             get
             {
-                float max = this.R;
+                double max = this.R;
                 if (max < this.G)
                 {
                     max = this.G;
@@ -629,13 +629,13 @@ namespace DrawEngine.Renderer.BasicStructures
         //public static implicit operator Color(RGBColor color)
         //{
         //    color.Clamp();
-        //    return Color.FromArgb((int)(color.r * 255f), (int)(color.g * 255f), (int)(color.b * 255f));
+        //    return Color.FromArgb((int)(color.r * 255d), (int)(color.g * 255d), (int)(color.b * 255d));
         //}
-        public float Average
+        public double Average
         {
-            get { return ((this.R + this.G + this.B) / 3f); }
+            get { return ((this.R + this.G + this.B) / 3d); }
         }
-        public float Sum
+        public double Sum
         {
             get { return (this.R + this.G + this.B); }
         }
@@ -658,44 +658,44 @@ namespace DrawEngine.Renderer.BasicStructures
 
         public void Clamp()
         {
-            if (this.R > 1.0f)
+            if (this.R > 1.0d)
             {
-                this.R = 1.0f;
+                this.R = 1.0d;
             }
-            else if (this.R < 0.0f)
+            else if (this.R < 0.0d)
             {
-                this.R = 0.0f;
+                this.R = 0.0d;
             }
-            if (this.G > 1.0f)
+            if (this.G > 1.0d)
             {
-                this.G = 1.0f;
+                this.G = 1.0d;
             }
-            else if (this.G < 0.0f)
+            else if (this.G < 0.0d)
             {
-                this.G = 0.0f;
+                this.G = 0.0d;
             }
-            if (this.B > 1.0f)
+            if (this.B > 1.0d)
             {
-                this.B = 1.0f;
+                this.B = 1.0d;
             }
-            else if (this.B < 0.0f)
+            else if (this.B < 0.0d)
             {
-                this.B = 0.0f;
+                this.B = 0.0d;
             }
         }
         public void Normalize()
         {
             if (this.R > 0)
             {
-                this.R *= 1 / 255f;
+                this.R *= 1 / 255d;
             }
             if (this.G > 0)
             {
-                this.G *= 1 / 255f;
+                this.G *= 1 / 255d;
             }
             if (this.B > 0)
             {
-                this.B *= 1 / 255f;
+                this.B *= 1 / 255d;
             }
         }
         public Color ToColor()
@@ -734,7 +734,7 @@ namespace DrawEngine.Renderer.BasicStructures
             rgb1.B -= rgb2.B;
             return rgb1;
         }
-        public static RGBColor operator *(float escalar, RGBColor rgb)
+        public static RGBColor operator *(double escalar, RGBColor rgb)
         {
             //RGBColor retorno = new RGBColor(escalar * rgb.red, escalar * rgb.green, escalar * rgb.blue);
             //return retorno;
@@ -743,7 +743,7 @@ namespace DrawEngine.Renderer.BasicStructures
             rgb.B *= escalar;
             return rgb;
         }
-        public static RGBColor operator *(RGBColor rgb, float escalar)
+        public static RGBColor operator *(RGBColor rgb, double escalar)
         {
             //RGBColor retorno = new RGBColor(escalar * rgb.red, escalar * rgb.green, escalar * rgb.blue);
             //return retorno;
@@ -761,13 +761,13 @@ namespace DrawEngine.Renderer.BasicStructures
             rgb1.B *= rgb.B;
             return rgb1;
         }
-        public static RGBColor operator /(RGBColor rgb, float scalar)
+        public static RGBColor operator /(RGBColor rgb, double scalar)
         {
-            //RGBColor retorno = new RGBColor(rgb.red * (1f / scalar), rgb.green * (1f / scalar), rgb.blue * (1f / scalar));
+            //RGBColor retorno = new RGBColor(rgb.red * (1d / scalar), rgb.green * (1d / scalar), rgb.blue * (1d / scalar));
             //return retorno;
-            rgb.R *= (1f / scalar);
-            rgb.G *= (1f / scalar);
-            rgb.B *= (1f / scalar);
+            rgb.R *= (1d / scalar);
+            rgb.G *= (1d / scalar);
+            rgb.B *= (1d / scalar);
             return rgb;
         }
         public override string ToString()

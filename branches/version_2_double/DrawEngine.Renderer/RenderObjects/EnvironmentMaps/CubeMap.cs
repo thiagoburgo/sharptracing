@@ -26,20 +26,20 @@ namespace DrawEngine.Renderer.RenderObjects.EnvironmentMaps
         private String basePath;
         private string fileNamePattern;
         private bool isLoaded = false;
-        private float xMax;
+        private double xMax;
         private Texture xMaxTexture;
-        private float xMin;
+        private double xMin;
         private Texture xMinTexture;
-        private float yMax;
+        private double yMax;
         private Texture yMaxTexture;
-        private float yMin;
+        private double yMin;
         private Texture yMinTexture;
-        private float zMax;
+        private double zMax;
         private Texture zMaxTexture;
-        private float zMin;
+        private double zMin;
         private Texture zMinTexture;
         public CubeMap() : this(300, 300, 300, null, null) {}
-        public CubeMap(float width, float height, float depth, string pathBase, string fileNamePrefix)
+        public CubeMap(double width, double height, double depth, string pathBase, string fileNamePrefix)
         {
             this.FileNamePattern = fileNamePrefix;
             this.BasePath = pathBase;
@@ -47,31 +47,31 @@ namespace DrawEngine.Renderer.RenderObjects.EnvironmentMaps
             this.Height = height;
             this.Depth = depth;
         }
-        public float Width
+        public double Width
         {
             get { return this.xMax - this.xMin; }
             set
             {
-                this.xMin = -(value * 0.5f);
-                this.xMax = value * 0.5f;
+                this.xMin = -(value * 0.5d);
+                this.xMax = value * 0.5d;
             }
         }
-        public float Height
+        public double Height
         {
             get { return this.yMax - this.yMin; }
             set
             {
-                this.yMin = -(value * 0.5f);
-                this.yMax = value * 0.5f;
+                this.yMin = -(value * 0.5d);
+                this.yMax = value * 0.5d;
             }
         }
-        public float Depth
+        public double Depth
         {
             get { return this.zMax - this.zMin; }
             set
             {
-                this.zMin = -(value * 0.5f);
-                this.zMax = value * 0.5f;
+                this.zMin = -(value * 0.5d);
+                this.zMax = value * 0.5d;
             }
         }
         public string FileNamePattern
@@ -119,7 +119,7 @@ namespace DrawEngine.Renderer.RenderObjects.EnvironmentMaps
         public override RGBColor GetColor(Ray ray)
         {
             if(this.isLoaded){
-                float t;
+                double t;
                 Point3D posWS = ray.Origin; // Position where the ray starts in world space
                 Vector3D dirWS = ray.Direction; // Direction of the ray in world space
                 // Test if ray intersects right plane
@@ -127,20 +127,20 @@ namespace DrawEngine.Renderer.RenderObjects.EnvironmentMaps
                     t = (this.xMax - posWS.X) / dirWS.X;
                     Point3D p = posWS + dirWS * t;
                     if(p.Y <= this.yMax && p.Y >= this.yMin && p.Z >= this.zMin && p.Z <= this.zMax){
-                        float xTex = (-p.Z + this.zMax) / (this.zMax - this.zMin);
-                        float yTex = (-p.Y + this.yMax) / (this.yMax - this.yMin);
-                        float pixelX = (xTex * (this.xMaxTexture.Width - 1));
-                        float pixelY = (yTex * (this.xMaxTexture.Height - 1));
+                        double xTex = (-p.Z + this.zMax) / (this.zMax - this.zMin);
+                        double yTex = (-p.Y + this.yMax) / (this.yMax - this.yMin);
+                        double pixelX = (xTex * (this.xMaxTexture.Width - 1));
+                        double pixelY = (yTex * (this.xMaxTexture.Height - 1));
                         return this.xMaxTexture.GetPixel(pixelX, pixelY);
                     }
                 } else if(dirWS.X < 0){
                     t = (this.xMin - posWS.X) / dirWS.X;
                     Point3D p = posWS + dirWS * t;
                     if(p.Y <= this.yMax && p.Y >= this.yMin && p.Z >= this.zMin && p.Z <= this.zMax){
-                        float xTex = (p.Z + this.zMax) / (this.zMax - this.zMin);
-                        float yTex = (-p.Y + this.yMax) / (this.yMax - this.yMin);
-                        float pixelX = (xTex * (this.xMinTexture.Width - 1));
-                        float pixelY = (yTex * (this.xMinTexture.Height - 1));
+                        double xTex = (p.Z + this.zMax) / (this.zMax - this.zMin);
+                        double yTex = (-p.Y + this.yMax) / (this.yMax - this.yMin);
+                        double pixelX = (xTex * (this.xMinTexture.Width - 1));
+                        double pixelY = (yTex * (this.xMinTexture.Height - 1));
                         //int pixelX = (int)(xTex * (xMinTexture.Width-1));
                         //int pixelY = (int)(yTex * (xMinTexture.Height-1));
                         return this.xMinTexture.GetPixel(pixelX, pixelY);
@@ -150,20 +150,20 @@ namespace DrawEngine.Renderer.RenderObjects.EnvironmentMaps
                     t = (this.yMax - posWS.Y) / dirWS.Y;
                     Point3D p = posWS + dirWS * t;
                     if(p.X <= this.xMax && p.X >= this.xMin && p.Z >= this.zMin && p.Z <= this.zMax){
-                        float xTex = (p.X + this.xMax) / (this.xMax - this.xMin);
-                        float yTex = (p.Z + this.zMax) / (this.zMax - this.zMin);
-                        float pixelX = (xTex * (this.yMaxTexture.Width - 1));
-                        float pixelY = (yTex * (this.yMaxTexture.Height - 1));
+                        double xTex = (p.X + this.xMax) / (this.xMax - this.xMin);
+                        double yTex = (p.Z + this.zMax) / (this.zMax - this.zMin);
+                        double pixelX = (xTex * (this.yMaxTexture.Width - 1));
+                        double pixelY = (yTex * (this.yMaxTexture.Height - 1));
                         return this.yMaxTexture.GetPixel(pixelX, pixelY);
                     }
                 } else if(dirWS.Y < 0){
                     t = (this.yMin - posWS.Y) / dirWS.Y;
                     Point3D p = posWS + dirWS * t;
                     if(p.X <= this.xMax && p.X >= this.xMin && p.Z >= this.zMin && p.Z <= this.zMax){
-                        float xTex = (p.X + this.xMax) / (this.xMax - this.xMin);
-                        float yTex = (-p.Z + this.zMax) / (this.zMax - this.zMin);
-                        float pixelX = (xTex * (this.yMinTexture.Width - 1));
-                        float pixelY = (yTex * (this.yMinTexture.Height - 1));
+                        double xTex = (p.X + this.xMax) / (this.xMax - this.xMin);
+                        double yTex = (-p.Z + this.zMax) / (this.zMax - this.zMin);
+                        double pixelX = (xTex * (this.yMinTexture.Width - 1));
+                        double pixelY = (yTex * (this.yMinTexture.Height - 1));
                         return this.yMinTexture.GetPixel(pixelX, pixelY);
                     }
                 }
@@ -171,20 +171,20 @@ namespace DrawEngine.Renderer.RenderObjects.EnvironmentMaps
                     t = (this.zMax - posWS.Z) / dirWS.Z;
                     Point3D p = posWS + dirWS * t;
                     if(p.X <= this.xMax && p.X >= this.xMin && p.Y >= this.yMin && p.Y <= this.yMax){
-                        float xTex = (p.X + this.xMax) / (this.xMax - this.xMin);
-                        float yTex = (-p.Y + this.yMax) / (this.yMax - this.yMin);
-                        float pixelX = xTex * (this.zMaxTexture.Width - 1);
-                        float pixelY = yTex * (this.zMaxTexture.Height - 1);
+                        double xTex = (p.X + this.xMax) / (this.xMax - this.xMin);
+                        double yTex = (-p.Y + this.yMax) / (this.yMax - this.yMin);
+                        double pixelX = xTex * (this.zMaxTexture.Width - 1);
+                        double pixelY = yTex * (this.zMaxTexture.Height - 1);
                         return this.zMaxTexture.GetPixel(pixelX, pixelY);
                     }
                 } else if(dirWS.Z < 0){
                     t = (this.zMin - posWS.Z) / dirWS.Z;
                     Point3D p = posWS + dirWS * t;
                     if(p.X <= this.xMax && p.X >= this.xMin && p.Y >= this.yMin && p.Y <= this.yMax){
-                        float xTex = (-p.X + this.xMax) / (this.xMax - this.xMin);
-                        float yTex = (-p.Y + this.yMax) / (this.yMax - this.yMin);
-                        float pixelX = (xTex * (this.zMinTexture.Width - 1));
-                        float pixelY = (yTex * (this.zMinTexture.Height - 1));
+                        double xTex = (-p.X + this.xMax) / (this.xMax - this.xMin);
+                        double yTex = (-p.Y + this.yMax) / (this.yMax - this.yMin);
+                        double pixelX = (xTex * (this.zMinTexture.Width - 1));
+                        double pixelY = (yTex * (this.zMinTexture.Height - 1));
                         return this.zMinTexture.GetPixel(pixelX, pixelY);
                     }
                 }

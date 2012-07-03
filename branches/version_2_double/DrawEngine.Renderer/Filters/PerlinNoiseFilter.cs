@@ -100,7 +100,7 @@ namespace DrawEngine.Renderer.Filters
         {
             double t = -.5;
             for(; freq <= width / 12; freq *= 2){
-                t += Math.Abs(Noise(x, y, z, freq) * 1.0f / freq);
+                t += Math.Abs(Noise(x, y, z, freq) * 1.0d / freq);
             }
             return t;
         }

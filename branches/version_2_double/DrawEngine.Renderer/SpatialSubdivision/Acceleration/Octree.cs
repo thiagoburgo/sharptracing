@@ -30,8 +30,8 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
         private readonly int maxUnitsInBox = 4;
         private BoundBox box;
         private bool isLeaf;
-        private float ltmax;
-        private float ltmin;
+        private double ltmax;
+        private double ltmin;
         private Octree<T>[] octrees;
         public  List<BoundBox> AllBoundBoxes = new List<BoundBox>();
         public Octree(BoundBox box, T[] acceleationUnits)
@@ -80,23 +80,23 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
         #endregion
 
         #region ITransformable3D Members
-        public void Rotate(float angle, Vector3D axis)
+        public void Rotate(double angle, Vector3D axis)
         {
             throw new Exception("The method or operation is not implemented.");
         }
-        public void RotateAxisX(float angle)
+        public void RotateAxisX(double angle)
         {
             throw new Exception("The method or operation is not implemented.");
         }
-        public void RotateAxisY(float angle)
+        public void RotateAxisY(double angle)
         {
             throw new Exception("The method or operation is not implemented.");
         }
-        public void RotateAxisZ(float angle)
+        public void RotateAxisZ(double angle)
         {
             throw new Exception("The method or operation is not implemented.");
         }
-        public void Scale(float factor)
+        public void Scale(double factor)
         {
             //ScaleAllBoundBoxes(this, factor);
             foreach (BoundBox bb in this.AllBoundBoxes)
@@ -108,7 +108,7 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
                 accu.Scale(factor);
             }
         }
-        public void Translate(float tx, float ty, float tz)
+        public void Translate(double tx, double ty, double tz)
         {
             //TranslateAllBoundBoxes(this, tx, ty, tz);
             //this.box.Translate(tx, ty, tz);
@@ -230,7 +230,7 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
             //{
             //    return false;
             //}
-            intersect.TMin = float.MaxValue;
+            intersect.TMin = double.MaxValue;
             bool hit = false;
             if (this.isLeaf)
             {
@@ -268,9 +268,9 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
         }
         public bool BoxIntersect(Ray ray)
         {
-            this.ltmin = float.MaxValue;
-            this.ltmax = float.MaxValue;
-            float tmin, tmax, tymin, tymax, tzmin, tzmax;
+            this.ltmin = double.MaxValue;
+            this.ltmax = double.MaxValue;
+            double tmin, tmax, tymin, tymax, tzmin, tzmax;
             if (ray.Inv_Direction.X > 0)
             {
                 tmin = (this.box.PMin.X - ray.Origin.X) * ray.Inv_Direction.X;
@@ -333,7 +333,7 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
             }
             return false;
         }
-        private static void TranslateAllBoundBoxes(Octree<T> oct, float tx, float ty, float tz)
+        private static void TranslateAllBoundBoxes(Octree<T> oct, double tx, double ty, double tz)
         {
             List<Octree<T>> octs = GetAllOctrees(oct);
             foreach (Octree<T> octree in octs)
@@ -352,7 +352,7 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
                 unit.Translate(tx, ty, tz);
             }
         }
-        private static void ScaleAllBoundBoxes(Octree<T> oct, float factor)
+        private static void ScaleAllBoundBoxes(Octree<T> oct, double factor)
         {
             if (oct != null)
             {

@@ -21,10 +21,10 @@ namespace DrawEngine.Renderer.RenderObjects
     [Serializable]
     public class Sphere : Primitive, ITransformable3D
     {
-        private float radius;
-        private float radius2;
-        public Sphere() : this(20.0f, new Point3D()) {}
-        public Sphere(float radius, Point3D center)
+        private double radius;
+        private double radius2;
+        public Sphere() : this(20.0d, new Point3D()) {}
+        public Sphere(double radius, Point3D center)
         {
             this.radius = radius;
             this.radius2 = radius * radius;
@@ -34,13 +34,13 @@ namespace DrawEngine.Renderer.RenderObjects
         //public override bool IntersectPoint(out Intersection intersect, Ray ray) {
         //    intersect = new Intersection();
         //    Vector3D v = ray.Origin - center;
-        //    float b = -(v * ray.Direction);
-        //    float det = (b * b) - (v * v) + radius2;
+        //    double b = -(v * ray.Direction);
+        //    double det = (b * b) - (v * v) + radius2;
         //    bool hit = false;
         //    if (det > 0) {
-        //        det = (float)Math.Sqrt(det);
-        //        float t1 = b - det;
-        //        float t2 = b + det;
+        //        det = Math.Sqrt(det);
+        //        double t1 = b - det;
+        //        double t2 = b + det;
         //        if (t2 > 0.1) {
         //            if (t1 < 0.1) {
         //                intersect.TMin = t2;
@@ -85,7 +85,7 @@ namespace DrawEngine.Renderer.RenderObjects
         //    return hit;
         //}
         [RefreshProperties(RefreshProperties.All)]
-        public float Radius
+        public double Radius
         {
             get { return this.radius; }
             set
@@ -106,33 +106,33 @@ namespace DrawEngine.Renderer.RenderObjects
         }
 
         #region ITransformable3D Members
-        public void Rotate(float angle, Vector3D axis)
+        public void Rotate(double angle, Vector3D axis)
         {
             this.center.Rotate(angle, axis);
             this.RecalcBoundBox();
         }
-        public void RotateAxisX(float angle)
+        public void RotateAxisX(double angle)
         {
             this.center.RotateAxisX(angle);
             this.RecalcBoundBox();
         }
-        public void RotateAxisY(float angle)
+        public void RotateAxisY(double angle)
         {
             this.center.RotateAxisY(angle);
             this.RecalcBoundBox();
         }
-        public void RotateAxisZ(float angle)
+        public void RotateAxisZ(double angle)
         {
             this.center.RotateAxisZ(angle);
             this.RecalcBoundBox();
         }
-        public void Scale(float factor)
+        public void Scale(double factor)
         {
             this.radius = this.radius * factor;
             this.radius2 = this.radius * this.radius;
             this.RecalcBoundBox();
         }
-        public void Translate(float tx, float ty, float tz)
+        public void Translate(double tx, double ty, double tz)
         {
             this.center.Translate(tx, ty, tz);
             this.RecalcBoundBox();
@@ -160,24 +160,24 @@ namespace DrawEngine.Renderer.RenderObjects
             // D = Distance to pt on view line closest to sphere
             // v = vector from sphere center to the closest pt on view line
             // ASq = the distance from v to sphere center squared
-            float D = (ray.Direction * toCenter);
+            double D = (ray.Direction * toCenter);
             Vector3D v = ray.Direction * D - toCenter;
-            float ASq = v.Length;
+            double ASq = v.Length;
             ASq = ASq * ASq;
             // Ray-line completely misses sphere, or just grazes it.
             if(ASq >= this.radius2){
                 return false;
             }
-            float BSq = this.radius2 - ASq;
+            double BSq = this.radius2 - ASq;
             if(D > 0.0 || D * D > BSq){
                 // Return the point where view intersects with the outside of the sphere.
-                intersect.TMin = D - (float)Math.Sqrt(BSq);
-                intersect.TMax = D + (float)Math.Sqrt(BSq);
+                intersect.TMin = D - Math.Sqrt(BSq);
+                intersect.TMax = D + Math.Sqrt(BSq);
                 intersect.HitFromInSide = false;
             } else if((D > 0.0 || D * D < BSq)){
                 // return the point where view exits the sphere
-                intersect.TMin = D + (float)Math.Sqrt(BSq);
-                intersect.TMax = D - (float)Math.Sqrt(BSq);
+                intersect.TMin = D + Math.Sqrt(BSq);
+                intersect.TMax = D - Math.Sqrt(BSq);
                 intersect.HitFromInSide = true;
             } else{
                 return false;
@@ -199,8 +199,8 @@ namespace DrawEngine.Renderer.RenderObjects
                 if(uCoord < 0.0){
                     uCoord++;
                 }
-                intersect.CurrentTextureCoordinate.U = (float)uCoord;
-                intersect.CurrentTextureCoordinate.V = (float)vCoord;
+                intersect.CurrentTextureCoordinate.U = uCoord;
+                intersect.CurrentTextureCoordinate.V = vCoord;
                 //int w = this.material.Texture.Width;
                 //int h = this.material.Texture.Height;
                 //this.material.Color = this.material.Texture.GetPixel((int)(w * uCoord), (int)(h * vCoord));
@@ -220,8 +220,8 @@ namespace DrawEngine.Renderer.RenderObjects
         public override bool IsInside(Point3D point)
         {
             Vector3D hitToCenter = (point - this.center);
-            float distanceToCenter = hitToCenter.Length;
-            if(distanceToCenter > this.radius + 0.001f){
+            double distanceToCenter = hitToCenter.Length;
+            if(distanceToCenter > this.radius + 0.001d){
                 return false;
             }
             return true;

@@ -22,8 +22,8 @@ namespace DrawEngine.Renderer.Samplers
     {
         protected int samplesX;
         protected int samplesY;
-        protected float slopeX;
-        protected float slopeY;
+        protected double slopeX;
+        protected double slopeY;
         public Sampler() : this(1, 1) {}
         public Sampler(int samplesX, int samplesY)
         {
@@ -40,7 +40,7 @@ namespace DrawEngine.Renderer.Samplers
             set
             {
                 this.samplesX = value;
-                this.slopeX = 1f / this.samplesX;
+                this.slopeX = 1d / this.samplesX;
             }
         }
         public int SamplesY
@@ -49,9 +49,9 @@ namespace DrawEngine.Renderer.Samplers
             set
             {
                 this.samplesY = value;
-                this.slopeY = 1f / this.samplesY;
+                this.slopeY = 1d / this.samplesY;
             }
         }
-        public abstract IEnumerable<Point2D> GenerateSamples(float x, float y);
+        public abstract IEnumerable<Point2D> GenerateSamples(double x, double y);
     }
 }

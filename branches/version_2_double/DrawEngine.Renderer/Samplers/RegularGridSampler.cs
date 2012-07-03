@@ -21,10 +21,10 @@ namespace DrawEngine.Renderer.Samplers
     {
         public RegularGridSampler() : base() {}
         public RegularGridSampler(int samplesX, int sampleY) : base(samplesX, sampleY) {}
-        public override IEnumerable<Point2D> GenerateSamples(float x, float y)
+        public override IEnumerable<Point2D> GenerateSamples(double x, double y)
         {
             Point2D current_sample = new Point2D();
-            float dx, dy;
+            double dx, dy;
             dx = x;
             for(int sX = 0; sX < this.samplesX; sX++, dx += this.slopeX){
                 dy = y;
@@ -35,9 +35,9 @@ namespace DrawEngine.Renderer.Samplers
                 }
             }
             //Point2D current_sample = new Point2D();
-            //for (float x = 0; x < 1f; x += this.slopeX)
+            //for (double x = 0; x < 1d; x += this.slopeX)
             //{
-            //    for (float y = 0; y < 1f; y += this.slopeY)
+            //    for (double y = 0; y < 1d; y += this.slopeY)
             //    {
             //        current_sample.X = x;
             //        current_sample.Y = y;

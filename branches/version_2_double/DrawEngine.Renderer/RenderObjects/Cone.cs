@@ -22,21 +22,21 @@ namespace DrawEngine.Renderer.RenderObjects
     {
         private Point3D apex;
         //private Point3D pBase;
-        private float apexDotCenterAxis;
+        private double apexDotCenterAxis;
         private Vector3D axisA;
         private Vector3D axisB;
-        //private float halfHeight;
+        //private double halfHeight;
         private Vector3D baseNormal;
         private Vector3D centralAxis;
-        private float coefBasePlane;
-        private float height;
-        private float radiusA;
-        private float radiusB;
-        private float slopeA;
-        private float slopeB;
+        private double coefBasePlane;
+        private double height;
+        private double radiusA;
+        private double radiusB;
+        private double slopeA;
+        private double slopeB;
         public Cone() : this(Point3D.Zero, Vector3D.UnitY, 20, 20) {}
-        public Cone(Point3D center, Vector3D centralAxis, Vector3D radialAxis, float radiusA, float radiusB,
-                    float height)
+        public Cone(Point3D center, Vector3D centralAxis, Vector3D radialAxis, double radiusA, double radiusB,
+                    double height)
         {
             this.RadiusA = radiusA;
             this.RadiusB = radiusB;
@@ -46,7 +46,7 @@ namespace DrawEngine.Renderer.RenderObjects
             this.Height = height;
             this.RadialAxis = radialAxis;
         }
-        public Cone(Point3D center, Vector3D centralAxis, float radius, float height)
+        public Cone(Point3D center, Vector3D centralAxis, double radius, double height)
                 : this(center, centralAxis, Vector3D.UnitZ, radius, radius, height) {}
         public Point3D Apex
         {
@@ -54,7 +54,7 @@ namespace DrawEngine.Renderer.RenderObjects
             set
             {
                 this.apex = value;
-                this.center = this.apex - this.centralAxis * this.height * 0.5f;
+                this.center = this.apex - this.centralAxis * this.height * 0.5d;
                 this.apexDotCenterAxis = this.apex * this.centralAxis;
                 this.coefBasePlane = -(this.apexDotCenterAxis - this.height);
             }
@@ -65,7 +65,7 @@ namespace DrawEngine.Renderer.RenderObjects
             set
             {
                 base.center = value;
-                this.apex = this.center + this.centralAxis * this.height * 0.5f;
+                this.apex = this.center + this.centralAxis * this.height * 0.5d;
                 this.apexDotCenterAxis = this.apex * this.centralAxis;
                 this.coefBasePlane = -(this.apexDotCenterAxis - this.height);
             }
@@ -89,7 +89,7 @@ namespace DrawEngine.Renderer.RenderObjects
                 this.coefBasePlane = -((this.apexDotCenterAxis) - this.height);
             }
         }
-        public float RadiusA
+        public double RadiusA
         {
             get { return this.radiusA; }
             set
@@ -103,7 +103,7 @@ namespace DrawEngine.Renderer.RenderObjects
                 }
             }
         }
-        public float RadiusB
+        public double RadiusB
         {
             get { return this.radiusB; }
             set
@@ -125,7 +125,7 @@ namespace DrawEngine.Renderer.RenderObjects
                 this.axisA = value;
                 Vector3D.Orthogonalize(ref this.axisA, this.centralAxis);
                 //this.axisA -= (this.axisA * this.centerAxis) * this.centerAxis;
-                if(this.axisA.Length == 0.0f){
+                if(this.axisA.Length == 0.0d){
                     throw new Exception("O eixo radial não deve ter tamanho ZERO!");
                 }
                 //this.axisA.Normalize();
@@ -139,7 +139,7 @@ namespace DrawEngine.Renderer.RenderObjects
                 }
             }
         }
-        public float Height
+        public double Height
         {
             get { return this.height; }
             set
@@ -155,34 +155,34 @@ namespace DrawEngine.Renderer.RenderObjects
                         this.axisA /= (this.slopeA / 2);
                     }
                 }
-                this.apex = this.center + this.centralAxis * this.height * 0.5f;
+                this.apex = this.center + this.centralAxis * this.height * 0.5d;
                 this.apexDotCenterAxis = this.apex * this.centralAxis;
                 this.coefBasePlane = -(this.apexDotCenterAxis - this.height);
             }
         }
 
         #region ITransformable3D Members
-        public void Rotate(float angle, Vector3D axis)
+        public void Rotate(double angle, Vector3D axis)
         {
             throw new Exception("The method or operation is not implemented.");
         }
-        public void RotateAxisX(float angle)
+        public void RotateAxisX(double angle)
         {
             throw new Exception("The method or operation is not implemented.");
         }
-        public void RotateAxisY(float angle)
+        public void RotateAxisY(double angle)
         {
             throw new Exception("The method or operation is not implemented.");
         }
-        public void RotateAxisZ(float angle)
+        public void RotateAxisZ(double angle)
         {
             throw new Exception("The method or operation is not implemented.");
         }
-        public void Scale(float factor)
+        public void Scale(double factor)
         {
             throw new Exception("The method or operation is not implemented.");
         }
-        public void Translate(float tx, float ty, float tz)
+        public void Translate(double tx, double ty, double tz)
         {
             throw new Exception("The method or operation is not implemented.");
         }
@@ -195,25 +195,25 @@ namespace DrawEngine.Renderer.RenderObjects
         public override bool FindIntersection(Ray ray, out Intersection intersect)
         {
             intersect = new Intersection();
-            float maxFrontDist = float.NegativeInfinity;
-            float minBackDist = float.PositiveInfinity;
+            double maxFrontDist = double.NegativeInfinity;
+            double minBackDist = double.PositiveInfinity;
             HitSide frontType = HitSide.None, backType = HitSide.None; // 0, 1 = base, side
-            float viewPosdotCtr = ray.Origin * this.centralAxis;
-            float udotuCtr = ray.Direction * this.centralAxis;
-            if(viewPosdotCtr > (this.apexDotCenterAxis) && udotuCtr >= 0.0f){
+            double viewPosdotCtr = ray.Origin * this.centralAxis;
+            double udotuCtr = ray.Direction * this.centralAxis;
+            if(viewPosdotCtr > (this.apexDotCenterAxis) && udotuCtr >= 0.0d){
                 return false; // Above the cone's apex
             }
             // Start with the bounding base plane
-            float pdotnCap = this.baseNormal * ray.Origin;
-            float udotnCap = this.baseNormal * ray.Direction;
+            double pdotnCap = this.baseNormal * ray.Origin;
+            double udotnCap = this.baseNormal * ray.Direction;
             if(pdotnCap > this.coefBasePlane){
-                if(udotnCap >= 0.0f){
+                if(udotnCap >= 0.0d){
                     return false; // Above (=outside) base plane, pointing away
                 }
                 maxFrontDist = (this.coefBasePlane - pdotnCap) / udotnCap;
                 frontType = HitSide.BottomPlane;
             } else if(pdotnCap < this.coefBasePlane){
-                if(udotnCap > 0.0f){
+                if(udotnCap > 0.0d){
                     // Below (=inside) base plane, pointing towards the plane
                     minBackDist = (this.coefBasePlane - pdotnCap) / udotnCap;
                     backType = HitSide.BottomPlane;
@@ -221,31 +221,31 @@ namespace DrawEngine.Renderer.RenderObjects
             }
             // Now handle the cone's sides
             Vector3D v = ray.Origin - this.apex;
-            float pdotuCtr = v * this.centralAxis;
-            float pdotuA = v * this.axisA;
-            float pdotuB = v * this.axisB;
+            double pdotuCtr = v * this.centralAxis;
+            double pdotuA = v * this.axisA;
+            double pdotuB = v * this.axisB;
             // udotuCtr already defined above
-            float udotuA = ray.Direction * this.axisA;
-            float udotuB = ray.Direction * this.axisB;
-            float C = pdotuA * pdotuA + pdotuB * pdotuB - pdotuCtr * pdotuCtr;
-            float B = (pdotuA * udotuA + pdotuB * udotuB - pdotuCtr * udotuCtr);
+            double udotuA = ray.Direction * this.axisA;
+            double udotuB = ray.Direction * this.axisB;
+            double C = pdotuA * pdotuA + pdotuB * pdotuB - pdotuCtr * pdotuCtr;
+            double B = (pdotuA * udotuA + pdotuB * udotuB - pdotuCtr * udotuCtr);
             B += B;
-            float A = udotuA * udotuA + udotuB * udotuB - udotuCtr * udotuCtr;
-            float alpha1, alpha2; // The roots, in order
+            double A = udotuA * udotuA + udotuB * udotuB - udotuCtr * udotuCtr;
+            double alpha1, alpha2; // The roots, in order
             int numRoots = EquationSolver.SolveQuadric(A, B, C, out alpha1, out alpha2);
             if(numRoots == 0){
                 return false; // No intersection
             }
-            bool viewMoreVertical = (A < 0.0f);
+            bool viewMoreVertical = (A < 0.0d);
             if(viewMoreVertical){
                 // View line leaves and then enters the cone
-                if(alpha1 < minBackDist && pdotuCtr + alpha1 * udotuCtr <= 0.0f){
+                if(alpha1 < minBackDist && pdotuCtr + alpha1 * udotuCtr <= 0.0d){
                     if(alpha1 < maxFrontDist){
                         return false;
                     }
                     minBackDist = alpha1;
                     backType = HitSide.Cone;
-                } else if(numRoots == 2 && alpha2 > maxFrontDist && pdotuCtr + alpha2 * udotuCtr <= 0.0f){
+                } else if(numRoots == 2 && alpha2 > maxFrontDist && pdotuCtr + alpha2 * udotuCtr <= 0.0d){
                     if(alpha2 > minBackDist){
                         return false;
                     }
@@ -255,7 +255,7 @@ namespace DrawEngine.Renderer.RenderObjects
             } else{
                 // view line enters and then leaves
                 if(alpha1 > maxFrontDist){
-                    if(pdotuCtr + alpha1 * udotuCtr > 0.0f){
+                    if(pdotuCtr + alpha1 * udotuCtr > 0.0d){
                         return false; // Enters dual cone instead
                     }
                     if(alpha1 > minBackDist){
@@ -265,7 +265,7 @@ namespace DrawEngine.Renderer.RenderObjects
                     frontType = HitSide.Cone;
                 }
                 if(numRoots == 2 && alpha2 < minBackDist){
-                    if(pdotuCtr + alpha2 * udotuCtr > 0.0f){
+                    if(pdotuCtr + alpha2 * udotuCtr > 0.0d){
                         return false; // Is leaving dual cone instead
                     }
                     if(alpha2 < maxFrontDist){
@@ -276,9 +276,9 @@ namespace DrawEngine.Renderer.RenderObjects
                 }
             }
             // Put it all together:
-            float alpha;
+            double alpha;
             HitSide hitSurface = HitSide.None;
-            if(maxFrontDist > 0.0f){
+            if(maxFrontDist > 0.0d){
                 alpha = maxFrontDist;
                 hitSurface = frontType;
             } else{
@@ -294,9 +294,9 @@ namespace DrawEngine.Renderer.RenderObjects
             intersect.HitPrimitive = this;
             // Now set v equal to returned position relative to the apex
             v = intersect.HitPoint - this.apex;
-            float vdotuA = v * this.axisA;
-            float vdotuB = v * this.axisB;
-            float vdotuCtr = v * this.centralAxis;
+            double vdotuA = v * this.axisA;
+            double vdotuB = v * this.axisB;
+            double vdotuCtr = v * this.centralAxis;
             switch(hitSurface){
                 case HitSide.BottomPlane: // Base face
                     intersect.Normal = this.baseNormal;
@@ -304,8 +304,8 @@ namespace DrawEngine.Renderer.RenderObjects
                         // Calculate U-V values for texture coordinates
                         vdotuA /= vdotuCtr; // vdotuCtr is negative
                         vdotuB /= vdotuCtr;
-                        vdotuA = 0.5f * (1.0f - vdotuA);
-                        vdotuB = 0.5f * (1.0f - vdotuB);
+                        vdotuA = 0.5d * (1.0d - vdotuA);
+                        vdotuB = 0.5d * (1.0d - vdotuB);
                         //int widthTex = this.material.Texture.Width - 1;
                         //int heightTex = this.material.Texture.Height - 1;
                         //this.material.Color =
@@ -321,8 +321,8 @@ namespace DrawEngine.Renderer.RenderObjects
                     intersect.Normal.Normalize();
                     if(this.material != null && this.material.IsTexturized){
                         // Calculate u-v coordinates for texture mapping (in range[0,1]x[0,1])
-                        float uCoord = (float)(Math.Atan2(vdotuB, vdotuA) / (Math.PI + Math.PI) + 0.5);
-                        float vCoord = (vdotuCtr + this.height) / this.height;
+                        double uCoord = (Math.Atan2(vdotuB, vdotuA) / (Math.PI + Math.PI) + 0.5);
+                        double vCoord = (vdotuCtr + this.height) / this.height;
                         //int widthTex = this.material.Texture.Width - 1;
                         //int heightTex = this.material.Texture.Height - 1;
                         //this.material.Color =
@@ -337,10 +337,10 @@ namespace DrawEngine.Renderer.RenderObjects
         public override Vector3D NormalOnPoint(Point3D pointInPrimitive)
         {
             Vector3D v = pointInPrimitive - this.apex;
-            float vdotuA = v * this.axisA;
-            float vdotuB = v * this.axisB;
-            float vdotuCtr = v * this.centralAxis;
-            if(vdotuCtr < -this.height + 0.01f && vdotuCtr > -this.height - 0.01f){
+            double vdotuA = v * this.axisA;
+            double vdotuB = v * this.axisB;
+            double vdotuCtr = v * this.centralAxis;
+            if(vdotuCtr < -this.height + 0.01d && vdotuCtr > -this.height - 0.01d){
                 return this.baseNormal;
             } else{
                 Vector3D normal = vdotuA * this.axisA;

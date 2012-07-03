@@ -44,7 +44,7 @@ namespace DrawEngine.Renderer {
         private NameableCollection<Light> lights;
         private NameableCollection<Material> materials;
         private NameableCollection<Primitive> primitives;
-        private float refractIndex;
+        private double refractIndex;
         private RenderStrategy renderStrategy;
         private Sampler sampler;
         private int glossySamples;
@@ -77,7 +77,7 @@ namespace DrawEngine.Renderer {
         }
         #endregion
 
-        public Scene(RGBColor iamb, NameableCollection<Light> lights, Camera defaultCamera, float refractIndice) {
+        public Scene(RGBColor iamb, NameableCollection<Light> lights, Camera defaultCamera, double refractIndice) {
             this.IAmb = iamb;
             this.RefractIndex = refractIndice;
             if(lights != null){
@@ -101,7 +101,7 @@ namespace DrawEngine.Renderer {
             this.glossySamples = 8;
             //this.cameras.CollectionChanged += new NotifyCollectionChangedEventHandler<Camera>(cameras_CollectionChanged);
         }
-        public Scene() : this(RGBColor.White, new NameableCollection<Light>(), null, 1.0f) { }
+        public Scene() : this(RGBColor.White, new NameableCollection<Light>(), null, 1.0d) { }
         public Scene(Scene toCopy) {
             if(toCopy != null) {
                 this.defaultCamera = toCopy.defaultCamera;
@@ -274,10 +274,10 @@ namespace DrawEngine.Renderer {
                 this.accelerationStructure.AccelerationUnits = this.primitives;
             }
         }
-        [Category("Appereance"), DefaultValue(1.0f)]
-        public float RefractIndex {
+        [Category("Appereance"), DefaultValue(1.0d)]
+        public double RefractIndex {
             get { return this.refractIndex; }
-            set { this.refractIndex = value > 0.0f ? value : 1; }
+            set { this.refractIndex = value > 0.0d ? value : 1; }
         }
 
         #region IIntersectable Members

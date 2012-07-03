@@ -50,12 +50,12 @@ namespace DrawEngine.Renderer.Mathematics.Algebra.Design
                 this.Z.Value = (decimal)this.point.Z;
             }
         }
-        public float Increment
+        public double Increment
         {
-            get { return (float)this.X.Increment; }
+            get { return (double)this.X.Increment; }
             set
             {
-                if(value > 0.0f){
+                if(value > 0.0d){
                     this.X.Increment = this.Y.Increment = this.Z.Increment = (decimal)value;
                 }
             }
@@ -72,18 +72,18 @@ namespace DrawEngine.Renderer.Mathematics.Algebra.Design
         }
         private void X_ValueChanged(object sender, EventArgs e)
         {
-            this.vector.X = (float)this.X.Value;
-            this.point.X = (float)this.X.Value;
+            this.vector.X = (double)this.X.Value;
+            this.point.X = (double)this.X.Value;
         }
         private void Y_ValueChanged(object sender, EventArgs e)
         {
-            this.vector.Y = (float)this.Y.Value;
-            this.point.Y = (float)this.Y.Value;
+            this.vector.Y = (double)this.Y.Value;
+            this.point.Y = (double)this.Y.Value;
         }
         private void Z_ValueChanged(object sender, EventArgs e)
         {
-            this.vector.Z = (float)this.Z.Value;
-            this.point.Z = (float)this.Z.Value;
+            this.vector.Z = (double)this.Z.Value;
+            this.point.Z = (double)this.Z.Value;
         }
         private void UnitX_Click(object sender, EventArgs e)
         {

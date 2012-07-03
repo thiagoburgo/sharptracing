@@ -27,37 +27,37 @@ namespace DrawEngine.Renderer.Materials
     {
         private RGBColor diffuseColor;
         private bool isTexturized;
-        private float kAmb; /*Ambiental coefficient [0..1]*/
-        private float kDiff; /*Diffuse coefficient [0..1]*/
-        private float kSpec; /*Specular coefficient [0..1]*/
-        private float kTrans; /*Coeficiente de transmissao*/
+        private double kAmb; /*Ambiental coefficient [0..1]*/
+        private double kDiff; /*Diffuse coefficient [0..1]*/
+        private double kSpec; /*Specular coefficient [0..1]*/
+        private double kTrans; /*Coeficiente de transmissao*/
         private string name;
-        private float glossy; /*Glossy factor*/
-        private float refractIndex; /*Index of refraction*/
-        private float absorptivity;
-        private float shiness; //For phong
+        private double glossy; /*Glossy factor*/
+        private double refractIndex; /*Index of refraction*/
+        private double absorptivity;
+        private double shiness; //For phong
         private RGBColor specularColor;
         private Texture texture;
         protected Material()
         {
-            this.absorptivity = 0.3f;
-            this.glossy = 0.1f;
-            this.kDiff = 0.5f;
-            this.kSpec = 0.5f;
-            this.kTrans = 0.0f;
-            this.kAmb = 0.1f;
+            this.absorptivity = 0.3d;
+            this.glossy = 0.1d;
+            this.kDiff = 0.5d;
+            this.kSpec = 0.5d;
+            this.kTrans = 0.0d;
+            this.kAmb = 0.1d;
             this.diffuseColor = RGBColor.White;
             this.specularColor = RGBColor.White;
-            this.refractIndex = 1.51f;
+            this.refractIndex = 1.51d;
             this.shiness = 64;
             this.isTexturized = false;
         }
-        protected Material(float kdiff, float kspec, float kamb, float refractIndex, float ktrans, float glossy, float shiness,
+        protected Material(double kdiff, double kspec, double kamb, double refractIndex, double ktrans, double glossy, double shiness,
                            RGBColor color) : this(kdiff, kspec, kamb, refractIndex, ktrans, glossy, shiness, new Texture())
         {
             this.diffuseColor = color;
         }
-        protected Material(float kdiff, float kspec, float kamb, float refractIndex, float ktrans, float glossy, float shiness,
+        protected Material(double kdiff, double kspec, double kamb, double refractIndex, double ktrans, double glossy, double shiness,
                            Texture texture)
         {
             this.KDiff = kdiff;
@@ -68,7 +68,7 @@ namespace DrawEngine.Renderer.Materials
             this.specularColor = RGBColor.White;
             this.RefractIndex = refractIndex;
             this.Glossy = glossy;
-            this.Absorptivity = 0.3f;
+            this.Absorptivity = 0.3d;
             this.Shiness = shiness;
             if(!texture.IsLoaded){
                 this.isTexturized = false;
@@ -86,7 +86,7 @@ namespace DrawEngine.Renderer.Materials
         {
             get
             {
-                if(this.kTrans > 0.0f){
+                if(this.kTrans > 0.0d){
                     return true;
                 }
                 return false;
@@ -96,7 +96,7 @@ namespace DrawEngine.Renderer.Materials
         {
             get
             {
-                if(this.kSpec > 0.0f){
+                if(this.kSpec > 0.0d){
                     return true;
                 }
                 return false;
@@ -147,32 +147,32 @@ namespace DrawEngine.Renderer.Materials
         //        }
         //    }
         //}        
-        public float KDiff
+        public double KDiff
         {
             get { return this.kDiff; }
             set { this.kDiff = value; }
         }
-        public float KSpec
+        public double KSpec
         {
             get { return this.kSpec; }
             set { this.kSpec = value; }
         }
-        public float KAmb
+        public double KAmb
         {
             get { return this.kAmb; }
             set { this.kAmb = value; }
         }
-        public float KTrans
+        public double KTrans
         {
             get { return this.kTrans; }
             set { this.kTrans = value; }
         }
-        public float RefractIndex
+        public double RefractIndex
         {
             get { return this.refractIndex; }
             set { this.refractIndex = value; }
         }
-        public float Shiness
+        public double Shiness
         {
             get { return this.shiness; }
             set { this.shiness = value; }
@@ -219,12 +219,12 @@ namespace DrawEngine.Renderer.Materials
                 }
             }
         }
-        public float Glossy
+        public double Glossy
         {
             get { return this.glossy; }
             set { this.glossy = value; }
         }
-        public float Absorptivity
+        public double Absorptivity
         {
             get { return this.absorptivity; }
             set { this.absorptivity = value; }

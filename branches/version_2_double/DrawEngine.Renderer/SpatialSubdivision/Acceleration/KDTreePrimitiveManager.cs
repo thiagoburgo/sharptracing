@@ -62,7 +62,7 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
             Point3D mid = currentObj.BoundBox.Center;
             for(int i = 1; i < content.Count; i++){
                 currentObj = content[i];
-                mid = (i / (i + 1f)) * mid + (1f / (i + 1f)) * currentObj.BoundBox.Center;
+                mid = (i / (i + 1d)) * mid + (1d / (i + 1d)) * currentObj.BoundBox.Center;
             }
             return mid;
         }

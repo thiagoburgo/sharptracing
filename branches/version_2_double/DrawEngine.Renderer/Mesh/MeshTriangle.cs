@@ -34,29 +34,29 @@ namespace DrawEngine.Renderer.Mesh
             get { return Vector3D.Normal(this.Vertex1.Position, this.Vertex2.Position, this.Vertex3.Position); } 
         }
         #region ITransformable3D Members
-        public void Rotate(float angle, Vector3D axis)
+        public void Rotate(double angle, Vector3D axis)
         {
             throw new Exception("The method or operation is not implemented.");
         }
-        public void RotateAxisX(float angle)
+        public void RotateAxisX(double angle)
         {
             throw new Exception("The method or operation is not implemented.");
         }
-        public void RotateAxisY(float angle)
+        public void RotateAxisY(double angle)
         {
             throw new Exception("The method or operation is not implemented.");
         }
-        public void RotateAxisZ(float angle)
+        public void RotateAxisZ(double angle)
         {
             throw new Exception("The method or operation is not implemented.");
         }
-        public void Scale(float factor)
+        public void Scale(double factor)
         {
             this.Vertex1.Position.Scale(factor);
             this.Vertex2.Position.Scale(factor);
             this.Vertex3.Position.Scale(factor);
         }
-        public void Translate(float tx, float ty, float tz)
+        public void Translate(double tx, double ty, double tz)
         {
             this.Vertex1.Position.Translate(tx, ty, tz);
             this.Vertex2.Position.Translate(tx, ty, tz);
@@ -75,7 +75,7 @@ namespace DrawEngine.Renderer.Mesh
         {
             intersect = new Intersection();
             Vector3D vect0, vect1, nvect;
-            float det, inv_det;
+            double det, inv_det;
 
             vect0 = this.Vertex2.Position - this.Vertex1.Position;
             vect1 = this.Vertex3.Position - this.Vertex1.Position;
@@ -86,7 +86,7 @@ namespace DrawEngine.Renderer.Mesh
             det = -(ray.Direction * normalNonNormalized);
 #if TEST_CULL
             /* define TEST_CULL if culling is desired */
-            if (det < 0.000001f) return false;
+            if (det < 0.000001d) return false;
 
             /* calculate vector from ray origin to this.vertex1 */
             vect0 = this.Vertex1.Position - ray.Origin;
@@ -96,21 +96,21 @@ namespace DrawEngine.Renderer.Mesh
             /* calculate vector from ray origin to this.vertex2*/
             vect1 = this.Vertex2.Position - ray.Origin;
             /* calculate unnormalized v parameter and test bounds */
-            float v = -(vect1 * nvect);
+            double v = -(vect1 * nvect);
 
             if (v < 0.0 || v > det) return false;
 
             /* calculate vector from ray origin to this.vertex3*/
             vect1 = this.Vertex3.Position - ray.Origin;
             /* calculate unnormalized v parameter and test bounds */
-            float u = vect1 * nvect;
+            double u = vect1 * nvect;
 
             if (u < 0.0 || u + v > det) return false;
 
             /* calculate unormalized t parameter */
-            float t = -(vect0 * normalNonNormalized);
+            double t = -(vect0 * normalNonNormalized);
 
-            inv_det = 1.0f / det;
+            inv_det = 1.0d / det;
             /* calculate u v t, ray intersects triangle */
             u = u * inv_det;
             v = v * inv_det;
@@ -120,7 +120,7 @@ namespace DrawEngine.Renderer.Mesh
             /* the non-culling branch */
 
             /* if determinant is near zero, ray is parallel to the plane of triangle */
-            if (det > -0.000001f && det < 0.000001f) return false;
+            if (det > -0.000001d && det < 0.000001d) return false;
 
             /* calculate vector from ray origin to this.vertex1 */
             vect0 = this.Vertex1.Position - ray.Origin;
@@ -128,24 +128,24 @@ namespace DrawEngine.Renderer.Mesh
             /* normal vector used to calculate u and v parameters */
             nvect = ray.Direction ^ vect0;
 
-            inv_det = 1.0f / det;
+            inv_det = 1.0d / det;
             /* calculate vector from ray origin to this.vertex2*/
             vect1 = this.Vertex2.Position - ray.Origin;
 
             /* calculate v parameter and test bounds */
-            float v = -(vect1 * nvect) * inv_det;
+            double v = -(vect1 * nvect) * inv_det;
 
-            if (v < 0.0f || v > 1.0f) return false;
+            if (v < 0.0d || v > 1.0d) return false;
 
             /* calculate vector from ray origin to this.vertex3*/
             vect1 = this.Vertex3.Position - ray.Origin;
             /* calculate v parameter and test bounds */
-            float u = (vect1 * nvect) * inv_det;
+            double u = (vect1 * nvect) * inv_det;
 
-            if (u < 0.0f || u + v > 1.0f) return false;
+            if (u < 0.0d || u + v > 1.0d) return false;
 
             /* calculate t, ray intersects triangle */
-            float t = -(vect0 * normalNonNormalized) * inv_det;
+            double t = -(vect0 * normalNonNormalized) * inv_det;
 #endif
 
             //if (t < 100)
@@ -161,7 +161,7 @@ namespace DrawEngine.Renderer.Mesh
                 intersect.TMin = t;
                 intersect.Normal = Vector3D.Normal(this.Vertex1.Position, this.Vertex2.Position, this.Vertex3.Position);
                 intersect.HitPoint = ray.Origin + (t * ray.Direction);
-                this.CurrentBarycentricCoordinate = new BarycentricCoordinate(1.0f - (u + v), u, v);
+                this.CurrentBarycentricCoordinate = new BarycentricCoordinate(1.0d - (u + v), u, v);
                 intersect.HitPrimitive = this;
                 return true;
             }
@@ -184,7 +184,7 @@ namespace DrawEngine.Renderer.Mesh
         }
         public bool IsOverlap(BoundBox bb)
         {
-            float d, fex, fey, fez;
+            double d, fex, fey, fez;
             v0 = (this.Vertex1.Position - bb.Center);
             v1 = (this.Vertex2.Position - bb.Center);
             v2 = (this.Vertex3.Position - bb.Center);
@@ -266,14 +266,14 @@ namespace DrawEngine.Renderer.Mesh
 
         #region Fast triangle-box overlapping
         private static Vector3D e0, e1, e2;
-        private static float max;
-        private static float min;
-        private static float p0, p1, p2, rad;
+        private static double max;
+        private static double min;
+        private static double p0, p1, p2, rad;
         private static Vector3D v0, v1, v2;
         private static Vector3D vmax;
         private static Vector3D vmin;
 
-        private static void FindMinMax(float x0, float x1, float x2)
+        private static void FindMinMax(double x0, double x1, double x2)
         {
             min = max = x0;
             if (x1 < min)
@@ -293,9 +293,9 @@ namespace DrawEngine.Renderer.Mesh
                 max = x2;
             }
         }
-        private static bool PlaneBoxOverlap(Vector3D normal, Vector3D halfVector, float d)
+        private static bool PlaneBoxOverlap(Vector3D normal, Vector3D halfVector, double d)
         {
-            if (normal.X > 0.0f)
+            if (normal.X > 0.0d)
             {
                 vmin.X = -halfVector.X;
                 vmax.X = halfVector.X;
@@ -305,7 +305,7 @@ namespace DrawEngine.Renderer.Mesh
                 vmin.X = halfVector.X;
                 vmax.X = -halfVector.X;
             }
-            if (normal.Y > 0.0f)
+            if (normal.Y > 0.0d)
             {
                 vmin.Y = -halfVector.Y;
                 vmax.Y = halfVector.Y;
@@ -315,7 +315,7 @@ namespace DrawEngine.Renderer.Mesh
                 vmin.Y = halfVector.Y;
                 vmax.Y = -halfVector.Y;
             }
-            if (normal.Z > 0.0f)
+            if (normal.Z > 0.0d)
             {
                 vmin.Z = -halfVector.Z;
                 vmax.Z = halfVector.Z;
@@ -325,14 +325,14 @@ namespace DrawEngine.Renderer.Mesh
                 vmin.Z = halfVector.Z;
                 vmax.Z = -halfVector.Z;
             }
-            if ((normal * vmin) + d > 0.0f)
+            if ((normal * vmin) + d > 0.0d)
             {
                 return false;
             }
-            return ((normal * vmax) + d >= 0.0f);
+            return ((normal * vmax) + d >= 0.0d);
         }
         /*======================== X-tests ========================*/
-        private static bool AXISTEST_X01(float a, float b, float fa, float fb, Vector3D halfVector)
+        private static bool AXISTEST_X01(double a, double b, double fa, double fb, Vector3D halfVector)
         {
             p0 = a * v0.Y - b * v0.Z;
             p2 = a * v2.Y - b * v2.Z;
@@ -349,7 +349,7 @@ namespace DrawEngine.Renderer.Mesh
             rad = fa * halfVector.Y + fb * halfVector.Z;
             return !(min > rad || max < -rad);
         }
-        private static bool AXISTEST_X2(float a, float b, float fa, float fb, Vector3D halfVector)
+        private static bool AXISTEST_X2(double a, double b, double fa, double fb, Vector3D halfVector)
         {
             p0 = a * v0.Y - b * v0.Z;
             p1 = a * v1.Y - b * v1.Z;
@@ -367,7 +367,7 @@ namespace DrawEngine.Renderer.Mesh
             return !(min > rad || max < -rad);
         }
         /*======================== Y-tests ========================*/
-        private static bool AXISTEST_Y02(float a, float b, float fa, float fb, Vector3D halfVector)
+        private static bool AXISTEST_Y02(double a, double b, double fa, double fb, Vector3D halfVector)
         {
             p0 = -a * v0.X + b * v0.Z;
             p2 = -a * v2.X + b * v2.Z;
@@ -384,7 +384,7 @@ namespace DrawEngine.Renderer.Mesh
             rad = fa * halfVector.X + fb * halfVector.Z;
             return !(min > rad || max < -rad);
         }
-        private static bool AXISTEST_Y1(float a, float b, float fa, float fb, Vector3D halfVector)
+        private static bool AXISTEST_Y1(double a, double b, double fa, double fb, Vector3D halfVector)
         {
             p0 = -a * v0.X + b * v0.Z;
             p1 = -a * v1.X + b * v1.Z;
@@ -402,7 +402,7 @@ namespace DrawEngine.Renderer.Mesh
             return !(min > rad || max < -rad);
         }
         /*======================== Z-tests ========================*/
-        private static bool AXISTEST_Z12(float a, float b, float fa, float fb, Vector3D halfVector)
+        private static bool AXISTEST_Z12(double a, double b, double fa, double fb, Vector3D halfVector)
         {
             p1 = a * v1.X - b * v1.Y;
             p2 = a * v2.X - b * v2.Y;
@@ -419,7 +419,7 @@ namespace DrawEngine.Renderer.Mesh
             rad = fa * halfVector.X + fb * halfVector.Y;
             return !(min > rad || max < -rad);
         }
-        private static bool AXISTEST_Z0(float a, float b, float fa, float fb, Vector3D halfVector)
+        private static bool AXISTEST_Z0(double a, double b, double fa, double fb, Vector3D halfVector)
         {
             p0 = a * v0.X - b * v0.Y;
             p1 = a * v1.X - b * v1.Y;
