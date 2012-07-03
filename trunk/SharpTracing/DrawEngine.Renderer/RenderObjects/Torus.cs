@@ -35,7 +35,6 @@ namespace DrawEngine.Renderer.RenderObjects
             this.MinorRadius = minorRadius;
             this.MajorRadius = majorRadius;
             this.RecalculateBoundBox();
-            Debug.Listeners.Add(new TextWriterTraceListener("C:\\temp\\debug.txt"));
         }
         public Torus(Point3D center, float minorRadius, float majorRadius)
             : this(center, Vector3D.UnitY, minorRadius, majorRadius) { }
@@ -196,10 +195,10 @@ namespace DrawEngine.Renderer.RenderObjects
             float[] roots = { 0f, 0f, 0f, 0f };
             int numRoots = EquationSolver.SolveQuartic(A, B, C, D, E, out roots[0], out roots[1], out roots[2],
                                                        out roots[3]);
-            if (numRoots > 0)
-            {
-                Debug.WriteLine(ray.Direction.ToString());
-            }
+            //if (numRoots > 0)
+            //{
+            //    Debug.WriteLine(ray.Direction.ToString());
+            //}
             //if (numRoots > 0)
             //Debug.Write(String.Format("A={0},B={1},C={2},D={3},E={4} - ", A, B, C, D, E));
             //for (int i = 0; i < numRoots; i++)
