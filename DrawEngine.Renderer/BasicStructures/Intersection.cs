@@ -8,15 +8,15 @@ namespace DrawEngine.Renderer.BasicStructures
 {
     [Serializable, StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct Intersection
-    {
-        public bool HitFromInSide;
+    {   
         public Point3D HitPoint;
-        public IPrimitive HitPrimitive;
         public Vector3D Normal;
-        public UVCoordinate CurrentTextureCoordinate;
         public float TMax;
         public float TMin;
-        public static readonly Intersection Zero = new Intersection();
+        public bool HitFromInSide;
+        public UVCoordinate CurrentTextureCoordinate;
+        public IPrimitive HitPrimitive;
+        public static readonly Intersection Zero;
         public Intersection(IPrimitive hitPrimitive, Point3D hitPoint, Vector3D normal, float tMin, float tMax,
                             bool hitFromInSide)
         {
@@ -30,7 +30,7 @@ namespace DrawEngine.Renderer.BasicStructures
         }
         public override string ToString()
         {
-            return "[HP: " + this.HitPoint.ToString() + " TMin: " + this.TMin + "]";
+            return "[HP: " + this.HitPoint + " TMin: " + this.TMin + "]";
         }
     }
 }

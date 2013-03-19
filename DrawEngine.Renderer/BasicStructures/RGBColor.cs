@@ -23,6 +23,195 @@ namespace DrawEngine.Renderer.BasicStructures
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct RGBColor : IEquatable<RGBColor>
     {
+        public float R;
+        public float G;
+        public float B;
+        public RGBColor(float r, float g, float b)
+        {
+            this.R = r;
+            this.G = g;
+            this.B = b;
+        }
+
+        public float Luminance
+        {
+            get
+            {
+                return (0.2989f * R) + (0.5866f * G) + (0.1145f * B);
+            }
+        }
+        public float Max
+        {
+            get
+            {
+                float max = this.R;
+                if (max < this.G)
+                {
+                    max = this.G;
+                }
+                if (max < this.B)
+                {
+                    max = this.B;
+                }
+                return max;
+            }
+        }
+        //public override string ToString() {
+        //    return "(R=" + r + ", G=" + g + ", B=" + b + ")";
+        //    //return ((Color) this).ToString();
+        //}
+        //public static implicit operator RGBColor(Color color)
+        //{
+        //    return new RGBColor(color.R, color.G, color.B);
+        //}
+        //public static implicit operator Color(RGBColor color)
+        //{
+        //    color.Clamp();
+        //    return Color.FromArgb((int)(color.r * 255f), (int)(color.g * 255f), (int)(color.b * 255f));
+        //}
+        public float Average
+        {
+            get { return ((this.R + this.G + this.B) / 3f); }
+        }
+        public float Sum
+        {
+            get { return (this.R + this.G + this.B); }
+        }
+        public RGBColor Normalized
+        {
+            get
+            {
+                RGBColor temp = new RGBColor(this.R, this.G, this.B);
+                temp.Normalize();
+                return temp;
+            }
+        }
+
+        #region IEquatable<RGBColor> Members
+        public bool Equals(RGBColor color)
+        {
+            return ((this.R == color.R) && (this.G == color.G) && (this.B == color.B));
+        }
+        #endregion
+
+        public void Clamp()
+        {
+            if (this.R > 1.0f)
+            {
+                this.R = 1.0f;
+            }
+            else if (this.R < 0.0f)
+            {
+                this.R = 0.0f;
+            }
+            if (this.G > 1.0f)
+            {
+                this.G = 1.0f;
+            }
+            else if (this.G < 0.0f)
+            {
+                this.G = 0.0f;
+            }
+            if (this.B > 1.0f)
+            {
+                this.B = 1.0f;
+            }
+            else if (this.B < 0.0f)
+            {
+                this.B = 0.0f;
+            }
+        }
+        public void Normalize()
+        {
+            if (this.R > 0)
+            {
+                this.R *= 1 / 255f;
+            }
+            if (this.G > 0)
+            {
+                this.G *= 1 / 255f;
+            }
+            if (this.B > 0)
+            {
+                this.B *= 1 / 255f;
+            }
+        }
+        public Color ToColor()
+        {
+            RGBColor color = this;
+            color.Clamp();
+            return Color.FromArgb((int)(color.R * 255), (int)(color.G * 255), (int)(color.B * 255));
+        }
+        public static RGBColor FromColor(Color color)
+        {
+            RGBColor rgb = new RGBColor(color.R, color.G, color.B);
+            rgb.Normalize();
+            return rgb;
+        }
+        public static bool operator ==(RGBColor rgb1, RGBColor rgb2)
+        {
+            return (rgb1.R == rgb2.R) && (rgb1.G == rgb2.G) && (rgb1.B == rgb2.B);
+        }
+        public static bool operator !=(RGBColor rgb1, RGBColor rgb2)
+        {
+            return ((rgb1.R != rgb2.R) && (rgb1.G != rgb2.G) && (rgb1.B != rgb2.B));
+        }
+        public static RGBColor operator +(RGBColor rgb1, RGBColor rgb2)
+        {
+            //RGBColor retorno = new RGBColor(rgb1.red + rgb2.red, rgb1.green + rgb2.green, rgb1.blue + rgb2.blue);
+            rgb1.R += rgb2.R;
+            rgb1.G += rgb2.G;
+            rgb1.B += rgb2.B;
+            return rgb1;
+        }
+        public static RGBColor operator -(RGBColor rgb1, RGBColor rgb2)
+        {
+            //RGBColor retorno = new RGBColor(rgb1.red - rgb2.red, rgb1.green - rgb2.green, rgb1.blue - rgb2.blue);
+            rgb1.R -= rgb2.R;
+            rgb1.G -= rgb2.G;
+            rgb1.B -= rgb2.B;
+            return rgb1;
+        }
+        public static RGBColor operator *(float escalar, RGBColor rgb)
+        {
+            //RGBColor retorno = new RGBColor(escalar * rgb.red, escalar * rgb.green, escalar * rgb.blue);
+            //return retorno;
+            rgb.R *= escalar;
+            rgb.G *= escalar;
+            rgb.B *= escalar;
+            return rgb;
+        }
+        public static RGBColor operator *(RGBColor rgb, float escalar)
+        {
+            //RGBColor retorno = new RGBColor(escalar * rgb.red, escalar * rgb.green, escalar * rgb.blue);
+            //return retorno;
+            rgb.R *= escalar;
+            rgb.G *= escalar;
+            rgb.B *= escalar;
+            return rgb;
+        }
+        public static RGBColor operator *(RGBColor rgb, RGBColor rgb1)
+        {
+            //RGBColor retorno = new RGBColor(rgb1.red * rgb.red, rgb1.green * rgb.green, rgb1.blue * rgb.blue);
+            //return retorno;
+            rgb1.R *= rgb.R;
+            rgb1.G *= rgb.G;
+            rgb1.B *= rgb.B;
+            return rgb1;
+        }
+        public static RGBColor operator /(RGBColor rgb, float scalar)
+        {
+            //RGBColor retorno = new RGBColor(rgb.red * (1f / scalar), rgb.green * (1f / scalar), rgb.blue * (1f / scalar));
+            //return retorno;
+            rgb.R *= (1f / scalar);
+            rgb.G *= (1f / scalar);
+            rgb.B *= (1f / scalar);
+            return rgb;
+        }
+        public override string ToString()
+        {
+            return this.ToColor().ToString();
+        }
         #region Predefined Colors
         public static RGBColor AliceBlue
         {
@@ -585,194 +774,5 @@ namespace DrawEngine.Renderer.BasicStructures
             get { return FromColor(Color.YellowGreen); }
         }
         #endregion
-        public float B;
-        public float G;
-        public float R;
-        public RGBColor(float r, float g, float b)
-        {
-            this.R = r;
-            this.G = g;
-            this.B = b;
-        }
-
-        public float Luminance
-        {
-            get
-            {
-                return (0.2989f * R) + (0.5866f * G) + (0.1145f * B);
-            }
-        }
-        public float Max
-        {
-            get
-            {
-                float max = this.R;
-                if (max < this.G)
-                {
-                    max = this.G;
-                }
-                if (max < this.B)
-                {
-                    max = this.B;
-                }
-                return max;
-            }
-        }
-        //public override string ToString() {
-        //    return "(R=" + r + ", G=" + g + ", B=" + b + ")";
-        //    //return ((Color) this).ToString();
-        //}
-        //public static implicit operator RGBColor(Color color)
-        //{
-        //    return new RGBColor(color.R, color.G, color.B);
-        //}
-        //public static implicit operator Color(RGBColor color)
-        //{
-        //    color.Clamp();
-        //    return Color.FromArgb((int)(color.r * 255f), (int)(color.g * 255f), (int)(color.b * 255f));
-        //}
-        public float Average
-        {
-            get { return ((this.R + this.G + this.B) / 3f); }
-        }
-        public float Sum
-        {
-            get { return (this.R + this.G + this.B); }
-        }
-        public RGBColor Normalized
-        {
-            get
-            {
-                RGBColor temp = new RGBColor(this.R, this.G, this.B);
-                temp.Normalize();
-                return temp;
-            }
-        }
-
-        #region IEquatable<RGBColor> Members
-        public bool Equals(RGBColor color)
-        {
-            return ((this.R == color.R) && (this.G == color.G) && (this.B == color.B));
-        }
-        #endregion
-
-        public void Clamp()
-        {
-            if (this.R > 1.0f)
-            {
-                this.R = 1.0f;
-            }
-            else if (this.R < 0.0f)
-            {
-                this.R = 0.0f;
-            }
-            if (this.G > 1.0f)
-            {
-                this.G = 1.0f;
-            }
-            else if (this.G < 0.0f)
-            {
-                this.G = 0.0f;
-            }
-            if (this.B > 1.0f)
-            {
-                this.B = 1.0f;
-            }
-            else if (this.B < 0.0f)
-            {
-                this.B = 0.0f;
-            }
-        }
-        public void Normalize()
-        {
-            if (this.R > 0)
-            {
-                this.R *= 1 / 255f;
-            }
-            if (this.G > 0)
-            {
-                this.G *= 1 / 255f;
-            }
-            if (this.B > 0)
-            {
-                this.B *= 1 / 255f;
-            }
-        }
-        public Color ToColor()
-        {
-            RGBColor color = this;
-            color.Clamp();
-            return Color.FromArgb((int)(color.R * 255), (int)(color.G * 255), (int)(color.B * 255));
-        }
-        public static RGBColor FromColor(Color color)
-        {
-            RGBColor rgb = new RGBColor(color.R, color.G, color.B);
-            rgb.Normalize();
-            return rgb;
-        }
-        public static bool operator ==(RGBColor rgb1, RGBColor rgb2)
-        {
-            return (rgb1.R == rgb2.R) && (rgb1.G == rgb2.G) && (rgb1.B == rgb2.B);
-        }
-        public static bool operator !=(RGBColor rgb1, RGBColor rgb2)
-        {
-            return ((rgb1.R != rgb2.R) && (rgb1.G != rgb2.G) && (rgb1.B != rgb2.B));
-        }
-        public static RGBColor operator +(RGBColor rgb1, RGBColor rgb2)
-        {
-            //RGBColor retorno = new RGBColor(rgb1.red + rgb2.red, rgb1.green + rgb2.green, rgb1.blue + rgb2.blue);
-            rgb1.R += rgb2.R;
-            rgb1.G += rgb2.G;
-            rgb1.B += rgb2.B;
-            return rgb1;
-        }
-        public static RGBColor operator -(RGBColor rgb1, RGBColor rgb2)
-        {
-            //RGBColor retorno = new RGBColor(rgb1.red - rgb2.red, rgb1.green - rgb2.green, rgb1.blue - rgb2.blue);
-            rgb1.R -= rgb2.R;
-            rgb1.G -= rgb2.G;
-            rgb1.B -= rgb2.B;
-            return rgb1;
-        }
-        public static RGBColor operator *(float escalar, RGBColor rgb)
-        {
-            //RGBColor retorno = new RGBColor(escalar * rgb.red, escalar * rgb.green, escalar * rgb.blue);
-            //return retorno;
-            rgb.R *= escalar;
-            rgb.G *= escalar;
-            rgb.B *= escalar;
-            return rgb;
-        }
-        public static RGBColor operator *(RGBColor rgb, float escalar)
-        {
-            //RGBColor retorno = new RGBColor(escalar * rgb.red, escalar * rgb.green, escalar * rgb.blue);
-            //return retorno;
-            rgb.R *= escalar;
-            rgb.G *= escalar;
-            rgb.B *= escalar;
-            return rgb;
-        }
-        public static RGBColor operator *(RGBColor rgb, RGBColor rgb1)
-        {
-            //RGBColor retorno = new RGBColor(rgb1.red * rgb.red, rgb1.green * rgb.green, rgb1.blue * rgb.blue);
-            //return retorno;
-            rgb1.R *= rgb.R;
-            rgb1.G *= rgb.G;
-            rgb1.B *= rgb.B;
-            return rgb1;
-        }
-        public static RGBColor operator /(RGBColor rgb, float scalar)
-        {
-            //RGBColor retorno = new RGBColor(rgb.red * (1f / scalar), rgb.green * (1f / scalar), rgb.blue * (1f / scalar));
-            //return retorno;
-            rgb.R *= (1f / scalar);
-            rgb.G *= (1f / scalar);
-            rgb.B *= (1f / scalar);
-            return rgb;
-        }
-        public override string ToString()
-        {
-            return this.ToColor().ToString();
-        }
     }
 }

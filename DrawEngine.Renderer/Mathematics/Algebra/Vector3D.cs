@@ -23,15 +23,16 @@ namespace DrawEngine.Renderer.Mathematics.Algebra
     [Editor(typeof(VectorOrPointEditor), typeof(UITypeEditor)), TypeConverter(typeof(VectorOrPointTypeConverter))]
     [Serializable, StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct Vector3D : ITransformable3D, IEquatable<Vector3D> {
+        public float X, Y, Z;
         public static readonly Vector3D UnitX = new Vector3D(1, 0, 0);
         public static readonly Vector3D UnitY = new Vector3D(0, 1, 0);
         public static readonly Vector3D UnitZ = new Vector3D(0, 0, 1);
         public static readonly Vector3D Zero = new Vector3D(0, 0, 0);
-        public float X, Y, Z;
         public Vector3D(float x, float y, float z) {
             this.X = x;
             this.Y = y;
             this.Z = z;
+            
         }
         public float Length {
             get {

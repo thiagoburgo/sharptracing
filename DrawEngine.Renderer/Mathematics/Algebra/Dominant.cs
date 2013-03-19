@@ -2,7 +2,7 @@ using System.Runtime.InteropServices;
 using System;
 namespace DrawEngine.Renderer.Algebra
 {
-    public enum Component
+    public enum Component : byte 
     {
         X,
         Y,

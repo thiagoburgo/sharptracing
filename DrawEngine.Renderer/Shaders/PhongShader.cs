@@ -25,7 +25,7 @@ namespace DrawEngine.Renderer.Shaders {
         private float lightFactor;
         private Vector3D N;
         private float NL;
-        private float NV;
+        //private float NV;
         private Vector3D R;
         private float RV;
         private Vector3D V;
@@ -117,7 +117,7 @@ namespace DrawEngine.Renderer.Shaders {
             //    this.N = intersection.Normal;
             //}
 
-            this.NV = this.N * this.V;
+            //this.NV = this.N * this.V;
             foreach(Light light in this.Scene.Lights) {
                 this.L = (light.Position - intersection.HitPoint);
                 float shadowFactor = this.ShadowFactor(intersection, this.L, light);

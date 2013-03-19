@@ -25,10 +25,10 @@ namespace DrawEngine.Renderer.Mathematics.Algebra {
     [Editor(typeof(VectorOrPointEditor), typeof(UITypeEditor)), TypeConverter(typeof(VectorOrPointTypeConverter))]
     [Serializable, StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct Point3D : ITransformable3D, IEquatable<Point3D> {
-        public static readonly Point3D Zero;
         public float X;
         public float Y;
-        public float Z;
+        public float Z; 
+        public static readonly Point3D Zero;
         /// <summary>
         /// Constructor
         /// </summary>

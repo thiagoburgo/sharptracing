@@ -55,7 +55,6 @@ namespace DrawEngine.Renderer.Tracers
             #region Progressive Render from http://www.cc.gatech.edu/~phlosoft/photon/
             float resX = this.scene.DefaultCamera.ResX; //g.VisibleClipBounds.Width; 
             float resY = this.scene.DefaultCamera.ResY; //g.VisibleClipBounds.Height;
-            float x, y;
             int iterations = 0;
             int pCol = 0, pRow = 0, pIteration = 1, pMax = 2;
             SolidBrush brush = new SolidBrush(Color.Black);
@@ -71,9 +70,9 @@ namespace DrawEngine.Renderer.Tracers
                         pMax <<= 1; //Equals: pMax = (int)Math.Pow(2, pIteration);
                     }
                 }
-                bool pNeedsDrawing = (pIteration == 1 || (pRow % 2 != 0) || (!(pRow % 2 != 0) && (pCol % 2 != 0)));
-                x = pCol * (resX / pMax);
-                y = pRow * (resY / pMax);
+                bool pNeedsDrawing = (pIteration == 1 || (pRow % 2 != 0) || (pRow % 2 == 0 && (pCol % 2 != 0)));
+                float x = pCol * (resX / pMax);
+                float y = pRow * (resY / pMax);
                 pCol++;
                 if(pNeedsDrawing) {
                     iterations++;
@@ -94,13 +93,14 @@ namespace DrawEngine.Renderer.Tracers
                         finalColor = this.Trace(ray, 0);
                     }
                     // pseudo photo exposure
-                    //finalColor.R = (float)(1.0 - Math.Exp(-1.5f*finalColor.R));
+                    //finalColor.R = (float)(1.0 - Math.Exp(-1.5f * finalColor.R));
                     //finalColor.G = (float)(1.0 - Math.Exp(-1.5f * finalColor.G));
                     //finalColor.B = (float)(1.0 - Math.Exp(-1.5f * finalColor.B));
 
                     //finalColor.R = srgbEncode(finalColor.R);
                     //finalColor.G = srgbEncode(finalColor.G);
                     //finalColor.B = srgbEncode(finalColor.B);
+
                     brush.Color = finalColor.ToColor();
                     g.FillRectangle(brush, x, y, (resX / pMax), (resY / pMax));
                 }
@@ -133,14 +133,17 @@ namespace DrawEngine.Renderer.Tracers
             #endregion
         }
 
-        //float srgbEncode(float c) {
-        //    if(c <= 0.0031308f) {
-        //        return 12.92f * c;
-        //    }
-        //    else {
-        //        return 1.055f * (float)(Math.Pow(c, 0.4166667) - 0.055); // Inverse gamma 2.4
-        //    }
-        //}
+        float srgbEncode(float c)
+        {
+            if (c <= 0.0031308f)
+            {
+                return 12.92f * c;
+            }
+            else
+            {
+                return 1.055f * (float)(Math.Pow(c, 0.4166667) - 0.055); // Inverse gamma 2.4
+            }
+        }
         protected abstract RGBColor Trace(Ray ray, int depth);
         protected static RGBColor AverageColors(params RGBColor[] colors)
         {

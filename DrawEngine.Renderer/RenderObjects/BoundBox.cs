@@ -12,6 +12,7 @@
  */
 using System;
 using System.ComponentModel;
+using System.Runtime.InteropServices;
 using DrawEngine.Renderer.Algebra;
 using DrawEngine.Renderer.BasicStructures;
 using DrawEngine.Renderer.Mathematics.Algebra;
@@ -19,6 +20,7 @@ using DrawEngine.Renderer.Mathematics.Algebra;
 namespace DrawEngine.Renderer.RenderObjects
 {
     [TypeConverter(typeof(ExpandableObjectConverter)), ReadOnly(true)]
+    [Serializable, StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct BoundBox : ITransformable3D
     {
         private Point3D center;

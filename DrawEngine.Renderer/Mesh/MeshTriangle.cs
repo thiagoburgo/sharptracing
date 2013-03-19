@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using DrawEngine.Renderer.Algebra;
 using DrawEngine.Renderer.BasicStructures;
@@ -11,14 +12,16 @@ using DrawEngine.Renderer.Materials;
 
 namespace DrawEngine.Renderer.Mesh
 {
+    [Serializable, StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct MeshTriangle : ITransformable3D, IPrimitive
     {
         public MeshVertex Vertex1;
         public MeshVertex Vertex2;
         public MeshVertex Vertex3;
+        public BarycentricCoordinate CurrentBarycentricCoordinate;
         private Material material;
         private bool visible;
-        public BarycentricCoordinate CurrentBarycentricCoordinate;
+
 
         public MeshTriangle(MeshVertex vertex1, MeshVertex vertex2, MeshVertex vertex3)
         {
@@ -30,8 +33,9 @@ namespace DrawEngine.Renderer.Mesh
             this.material = null;
         }
 
-        public Vector3D Normal { 
-            get { return Vector3D.Normal(this.Vertex1.Position, this.Vertex2.Position, this.Vertex3.Position); } 
+        public Vector3D Normal
+        {
+            get { return Vector3D.Normal(this.Vertex1.Position, this.Vertex2.Position, this.Vertex3.Position); }
         }
         #region ITransformable3D Members
         public void Rotate(float angle, Vector3D axis)
@@ -450,6 +454,6 @@ namespace DrawEngine.Renderer.Mesh
 
         #endregion
 
-      
+
     }
 }
