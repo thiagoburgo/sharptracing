@@ -1,0 +1,164 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+//http://www.cc.gatech.edu/~phlosoft/photon/
+//http://graphics.ucsd.edu/courses/cse168_s06/ucsd/photonmap.cc
+namespace DrawEngine.Renderer.PhotonMapping
+{
+    public class PhotonMap
+    {
+        // ----- Photon Mapping -----
+        int nrPhotons = 1000;             //Number of Photons Emitted
+        int nrBounces = 3;                //Number of Times Each Photon Bounces
+        bool lightPhotons = true;      //Enable Photon Lighting?
+        float sqRadius = 0.7;             //Photon Integration Area (Squared for Efficiency)
+        float exposure = 50.0;            //Number of Photons Integrated at Brightest Pixel
+        int[][] numPhotons = { { 0, 0 }, { 0, 0, 0, 0, 0 } };              //Photon Count for Each Scene Object
+        float[][][][][] photons = new float[2][5][5000][3][3]; //Allocated Memory for Per-Object Photon Info
+
+        //---------------------------------------------------------------------------------------
+        //Photon Mapping ------------------------------------------------------------------------
+        //---------------------------------------------------------------------------------------
+
+        public float[] gatherPhotons(float[] p, int type, int id)
+        {
+            float[] energy = { 0.0, 0.0, 0.0 };
+            float[] N = surfaceNormal(type, id, p, gOrigin);                   //Surface Normal at Current Point
+            for (int i = 0; i < numPhotons[type][id]; i++)
+            {                    //Photons Which Hit Current Object
+                if (gatedSqDist3(p, photons[type][id][i][0], sqRadius))
+                {           //Is Photon Close to Point?
+                    float weight = max(0.0, -dot3(N, photons[type][id][i][1]));   //Single Photon Diffuse Lighting
+                    weight *= (1.0 - sqrt(gSqDist)) / exposure;                    //Weight by Photon-Point Distance
+                    energy = add3(energy, mul3c(photons[type][id][i][2], weight)); //Add Photon's Energy to Total
+                }
+            }
+            return energy;
+        }
+
+        void emitPhotons()
+        {
+            randomSeed(0);                               //Ensure Same Photons Each Time
+            for (int t = 0; t < nrTypes; t++)            //Initialize Photon Count to Zero for Each Object
+                for (int i = 0; i < nrObjects[t]; i++)
+                    numPhotons[t][i] = 0;
+
+            for (int i = 0; i < (view3D ? nrPhotons * 3.0 : nrPhotons); i++)
+            { //Draw 3x Photons For Usability
+                int bounces = 1;
+                float[] rgb = { 1.0, 1.0, 1.0 };               //Initial Photon Color is White
+                float[] ray = normalize3(rand3(1.0));    //Randomize Direction of Photon Emission
+                float[] prevPoint = Light;                 //Emit From Point Light Source
+
+                //Spread Out Light Source, But Don't Allow Photons Outside Room/Inside Sphere
+                while (prevPoint[1] >= Light[1]) { prevPoint = add3(Light, mul3c(normalize3(rand3(1.0)), 0.75)); }
+                if (abs(prevPoint[0]) > 1.5 || abs(prevPoint[1]) > 1.2 ||
+                    gatedSqDist3(prevPoint, spheres[0], spheres[0][3] * spheres[0][3])) bounces = nrBounces + 1;
+
+                raytrace(ray, prevPoint);                          //Trace the Photon's Path
+
+                while (gIntersect && bounces <= nrBounces)
+                {        //Intersection With New Object
+                    gPoint = add3(mul3c(ray, gDist), prevPoint);   //3D Point of Intersection
+                    rgb = mul3c(getColor(rgb, gType, gIndex), 1.0 / sqrt(bounces));
+                    storePhoton(gType, gIndex, gPoint, ray, rgb);  //Store Photon Info 
+                    drawPhoton(rgb, gPoint);                       //Draw Photon
+                    shadowPhoton(ray);                             //Shadow Photon
+                    ray = reflect(ray, prevPoint);                  //Bounce the Photon
+                    raytrace(ray, gPoint);                         //Trace It to Next Location
+                    prevPoint = gPoint;
+                    bounces++;
+                }
+            }
+        }
+
+        void storePhoton(int type, int id, float[] location, float[] direction, float[] energy)
+        {
+            photons[type][id][numPhotons[type][id]][0] = location;  //Location
+            photons[type][id][numPhotons[type][id]][1] = direction; //Direction
+            photons[type][id][numPhotons[type][id]][2] = energy;    //Attenuated Energy (Color)
+            numPhotons[type][id]++;
+        }
+
+        void shadowPhoton(float[] ray)
+        {                               //Shadow Photons
+            float[] shadow = { -0.25, -0.25, -0.25 };
+            float[] tPoint = gPoint;
+            int tType = gType, tIndex = gIndex;                         //Save State
+            float[] bumpedPoint = add3(gPoint, mul3c(ray, 0.00001));      //Start Just Beyond Last Intersection
+            raytrace(ray, bumpedPoint);                                 //Trace to Next Intersection (In Shadow)
+            float[] shadowPoint = add3(mul3c(ray, gDist), bumpedPoint); //3D Point
+            storePhoton(gType, gIndex, shadowPoint, ray, shadow);
+            gPoint = tPoint; gType = tType; gIndex = tIndex;            //Restore State
+        }
+
+        float[] filterColor(float[] rgbIn, float r, float g, float b)
+        { //e.g. White Light Hits Red Wall
+            float[] rgbOut = { r, g, b };
+            for (int c = 0; c < 3; c++) rgbOut[c] = min(rgbOut[c], rgbIn[c]); //Absorb Some Wavelengths (R,G,B)
+            return rgbOut;
+        }
+
+        float[] getColor(float[] rgbIn, int type, int index)
+        { //Specifies Material Color of Each Object
+            if (type == 1 && index == 0) { return filterColor(rgbIn, 0.0, 1.0, 0.0); }
+            else if (type == 1 && index == 2) { return filterColor(rgbIn, 1.0, 0.0, 0.0); }
+            else { return filterColor(rgbIn, 1.0, 1.0, 1.0); }
+        }
+
+        //---------------------------------------------------------------------------------------
+        //Vector Operations ---------------------------------------------------------------------
+        //---------------------------------------------------------------------------------------
+
+        float[] normalize3(float[] v)
+        {        //Normalize 3-Vector
+            float L = sqrt(dot3(v, v));
+            return mul3c(v, 1.0 / L);
+        }
+
+        float[] sub3(float[] a, float[] b)
+        {   //Subtract 3-Vectors
+            float[] result = { a[0] - b[0], a[1] - b[1], a[2] - b[2] };
+            return result;
+        }
+
+        float[] add3(float[] a, float[] b)
+        {   //Add 3-Vectors
+            float[] result = { a[0] + b[0], a[1] + b[1], a[2] + b[2] };
+            return result;
+        }
+
+        float[] mul3c(float[] a, float c)
+        {    //Multiply 3-Vector with Scalar
+            float[] result = { c * a[0], c * a[1], c * a[2] };
+            return result;
+        }
+
+        float dot3(float[] a, float[] b)
+        {     //Dot Product 3-Vectors
+            return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+        }
+
+        float[] rand3(float s)
+        {               //Random 3-Vector
+            float[] rand = { random(-s, s), random(-s, s), random(-s, s) };
+            return rand;
+        }
+
+        bool gatedSqDist3(float[] a, float[] b, float sqradius)
+        { //Gated Squared Distance
+            float c = a[0] - b[0];          //Efficient When Determining if Thousands of Points
+            float d = c * c;                  //Are Within a Radius of a Point (and Most Are Not!)
+            if (d > sqradius) return false; //Gate 1 - If this dimension alone is larger than
+            c = a[1] - b[1];                //         the search radius, no need to continue
+            d += c * c;
+            if (d > sqradius) return false; //Gate 2
+            c = a[2] - b[2];
+            d += c * c;
+            if (d > sqradius) return false; //Gate 3
+            gSqDist = d; return true; //Store Squared Distance Itself in Global State
+        }
+
+    }
+}

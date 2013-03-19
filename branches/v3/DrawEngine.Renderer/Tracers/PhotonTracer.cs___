@@ -1,0 +1,376 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using DrawEngine.Renderer.PhotonMapping;
+using DrawEngine.Renderer.Lights;
+using DrawEngine.Renderer.BasicStructures;
+using DrawEngine.Renderer.Algebra;
+using DrawEngine.Renderer.Materials;
+using DrawEngine.Renderer.Shaders;
+using DrawEngine.Renderer.SpatialSubdivision.KDTree;
+using System.Drawing;
+
+namespace DrawEngine.Renderer
+{
+    public class PhotonTracer : RayCasting
+    {
+        public KDTree<Photon> photonMap = new KDTree<Photon>(3);
+
+        public PhotonTracer()
+            : base()
+        {
+
+        }
+        public PhotonTracer(Scene scene)
+            : base(scene)
+        {
+
+        }
+        public override void Render(Graphics g)
+        {
+            this.photonMap = new KDTree<Photon>(3);
+            foreach (Light light in this.scene.Lights)
+            {
+                if (light is PointLight)
+                {
+                    PointPhotonSource pSource = new PointPhotonSource((PointLight)light, 250, 150000);
+                    while (pSource.GenerateNextPhoton())
+                    {
+                        Photon p = pSource.CurrentPhoton;
+                        this.Trace(p, 0);
+                    }
+                }
+            }
+            #region Rendering
+            //float resX = this.scene.DefaultCamera.ResX; //g.VisibleClipBounds.Width; 
+            //float resY = this.scene.DefaultCamera.ResY; //g.VisibleClipBounds.Height;
+            //float x, y;
+            //int iterations = 0;
+            //RayTracer tracer = new RayTracer(this.scene);
+            //int pCol = 0, pRow = 0, pIteration = 1, pMax = 2;
+            //SolidBrush brush = new SolidBrush(Color.Black);
+            //float resTotal = resX * resY;
+            //while (iterations < resTotal)
+            //{
+            //    //Render Pixels Out of Order With Increasing Resolution: 2x2, 4x4, 16x16... 512x512
+            //    if (pCol >= pMax)
+            //    {
+            //        pRow++; pCol = 0;
+            //        if (pRow >= pMax)
+            //        {
+            //            pIteration++;
+            //            pRow = 0;
+            //            pMax = (int)Math.Pow(2, pIteration);
+            //        }
+            //    }
+            //    bool pNeedsDrawing = (pIteration == 1 || (pRow % 2 != 0) || (!(pRow % 2 != 0) && (pCol % 2 != 0)));
+
+            //    x = pCol * (resX / pMax);
+            //    y = pRow * (resY / pMax);
+            //    pCol++;
+            //    if (pNeedsDrawing)
+            //    {
+            //        iterations++;
+            //        Ray ray = this.scene.DefaultCamera.CreateRayFromScreen(x, y);
+            //        ray.PrevRefractIndex = this.scene.RefractIndex;
+
+            //        Intersection intersection;
+            //        if (this.FindNearestIntersection(ray, out intersection))
+            //        {
+            //            brush.Color = ((IrradianceEstimate(intersection, 250))).ToColor();
+            //            g.FillRectangle(brush, x, y, (resX / pMax), (resY / pMax));
+            //        }
+            //    }
+            //}
+            #endregion
+        }
+
+
+        private RGBColor IrradianceEstimate(Intersection intersect, int nPhotons)
+        {
+            Photon[] photons = this.photonMap.NearestNeighbors(intersect.HitPoint, nPhotons);
+            RGBColor flux = RGBColor.Black;
+            foreach (Photon p in photons)
+            {
+                if (p.Direction * intersect.Normal < 0.0f)
+                {
+                    flux += p.Power;
+                }
+            }
+            double radius2 = (photons[photons.Length - 1].Position - intersect.HitPoint).Length2;
+            //float tmp = (float)((1.0f / Math.PI) / radius2);	// estimate of density
+
+            flux *= 1.0f / (float)(2 * Math.PI * radius2);
+            return flux;
+        }
+
+
+        private RGBColor filterColor(RGBColor rgbIn, RGBColor materialColor)
+        {
+
+            RGBColor rgbOut = materialColor;
+            //for (int c = 0; c < 3; c++) 
+            //Absorb Some Wavelengths (R,G,B)
+            rgbOut.R = Math.Min(rgbOut.R, rgbIn.R);
+            rgbOut.G = Math.Min(rgbOut.G, rgbIn.G);
+            rgbOut.B = Math.Min(rgbOut.B, rgbIn.B);
+            return rgbOut;
+        }
+
+
+
+
+        #region Trace Modificado
+        private void Trace(Photon p, int depth)
+        {
+            Intersection intersection;
+            if (this.scene.FindIntersection(p, out intersection))
+            {
+                if (depth < 5)
+                {
+                    Material material = intersection.HitPrimitive.Material;
+
+                    RGBColor powerXdiffuse = p.Power * material.DiffuseColor * material.KDiff;
+                    float maxPower = Math.Max(p.Power.R, Math.Max(p.Power.G, p.Power.B));
+                    float probDiffReflection = powerXdiffuse.Sum / maxPower;//Math.Max(powerXdiffuse.R, Math.Max(powerXdiffuse.G, powerXdiffuse.B)) / maxPower;
+                    //probDiffReflection = probDiffReflection > 1f ? 1f : probDiffReflection; // clamp
+
+                    RGBColor powerXspecular = p.Power * material.DiffuseColor * material.KSpec;
+                    float probSpecReflection = powerXspecular.Sum / maxPower;//Math.Max(powerXspecular.R, Math.Max(powerXspecular.G, powerXspecular.B)) / maxPower;
+
+                    // Obtain a random number in the [0,1] range
+                    float RandomValue = (float)new Random().NextDouble();
+
+                    // If this photon is to be diffusely reflected
+                    if (RandomValue <= probDiffReflection)
+                    {
+                        // Generate a diffuse reflection vector
+                        Vector3D DiffuseDirection = ReflectedDiffuse(intersection.Normal).Normalized;
+
+                        // Compute the diffuse power
+                        RGBColor DiffusePower = (powerXdiffuse) / probDiffReflection;
+
+
+                        p.Position = intersection.HitPoint;
+                        p.Power = DiffusePower;
+                        p.Direction = DiffuseDirection;
+                        //this.photonMap.Insert(p.Position, p);
+                        // Trace the diffuse photon
+                        Trace(p, depth + 1);
+
+                        //ver se tem que modificar o photon
+                        //this.photonMap.Insert(intersection.HitPoint, p);
+                    }
+                    // If this photon is to be specularly reflected
+                    else if (RandomValue <= probDiffReflection + probSpecReflection)
+                    {
+                        // Calculate the reflected direction
+                        Vector3D ReflectedDirection = Reflected(intersection.Normal, p.Direction).Normalized;
+
+                        // Compute the specular power
+                        RGBColor SpecularPower = (powerXspecular) / probSpecReflection;
+
+
+                        p.Position = intersection.HitPoint;
+                        p.Power = SpecularPower;
+                        p.Direction = ReflectedDirection;
+                        //this.photonMap.Insert(p.Position, p);
+
+                        // Trace the reflected photon
+                        Trace(p, depth + 1);
+                    }
+                    // If this photon is to be transmitted
+
+                    //else if (RandomValue <= probDiffReflection + probSpecReflection + probTransmit)
+                    //{
+                    //    float eta = intersection.HitFromInSide
+                    //                    ? material.RefractIndex * 1 / this.scene.RefractIndex
+                    //                    : this.scene.RefractIndex * 1 / material.RefractIndex;
+                    //    // Calculate the refracted direction
+                    //    Vector3D RefractedDirection;
+                    //    if (Refracted(intersection.Normal, p.Direction, out RefractedDirection, eta))
+                    //    { //No total internal reflection
+
+                    //        // Compute the transmitted power
+                    //        RGBColor TransmitPower = p.Power / probTransmit;
+
+
+                    //        p.Position = intersection.HitPoint;
+                    //        p.Power = TransmitPower;
+                    //        p.Direction = RefractedDirection.Normalized;
+                    //        //this.photonMap.Insert(p.Position, p);
+
+                    //        // Trace the refracted ray to get the refracted color
+                    //        Trace(p, depth + 1);
+                    //    }
+                    //}
+                    // This photon will be absorbed
+                    else
+                    {
+                        // Add a photon at this point
+                        //m_PhotonMap.AddPhoton(Intersect, Ray.GetDirection(), Power);
+                        //if (depth > 1)
+                        {
+                            p.Position = intersection.HitPoint;
+                            //p.Power = material.Color;
+                            //builder.Append(p.Power.Average).Append(", ");
+                            this.photonMap.Insert(p.Position, p);
+                        }
+
+                    }
+
+                }
+            }
+        }
+        #endregion
+        StringBuilder builder = new StringBuilder();
+
+        #region Trace Original
+        //private void Trace(Photon p, int depth)
+        //{
+        //    //Ray ray = p;
+        //    Intersection intersection;
+        //    if (this.FindNearestIntersection(p, out intersection))
+        //    {
+        //        if (depth < 5)
+        //        {
+        //            Material material = intersection.HitPrimitive.Material;
+        //            //RGBColor rgb = this.rayTracer.Trace((Ray)p, 0);
+        //            //RGBColor rgb = filterColor(p.Power, material.Color);
+        //            float ColorAverage = (material.Color + p.Power).Average;
+
+        //            // Compute the diffuse reflection probability
+        //            float ProbDiffuse = material.KDiff * ColorAverage;
+
+        //            // Compute the specular reflection probability
+        //            float ProbSpecular = material.KSpec * ColorAverage;
+
+        //            // Compute the transmission probability
+        //            float ProbTransmit = material.KTrans * ColorAverage;
+
+        //            // Obtain a random number in the [0,1] range
+        //            float RandomValue = (float)new Random().NextDouble();
+
+        //            // If this photon is to be diffusely reflected
+        //            if (RandomValue <= ProbDiffuse)
+        //            {
+        //                // Generate a diffuse reflection vector
+        //                Vector3D DiffuseDirection = ReflectedDiffuse(intersection.Normal).Normalized;
+
+        //                // Compute the diffuse power
+        //                RGBColor DiffusePower = (material.Color * p.Power) / ProbDiffuse;
+
+
+        //                p.Position = intersection.HitPoint;
+        //                p.Power = DiffusePower;
+        //                p.Direction = DiffuseDirection;
+        //                //this.photonMap.Insert(p.Position, p);
+        //                // Trace the diffuse photon
+        //                Trace(p, depth + 1);
+
+        //                //ver se tem que modificar o photon
+        //                //this.photonMap.Insert(intersection.HitPoint, p);
+        //            }
+
+        //            // If this photon is to be specularly reflected
+        //            else if (RandomValue <= ProbDiffuse + ProbSpecular)
+        //            {
+        //                // Calculate the reflected direction
+        //                Vector3D ReflectedDirection = Reflected(intersection.Normal, p.Direction).Normalized;
+
+        //                // Compute the specular power
+        //                RGBColor SpecularPower = (material.Color * p.Power) / ProbSpecular;
+
+
+        //                p.Position = intersection.HitPoint;
+        //                p.Power = SpecularPower;
+        //                p.Direction = ReflectedDirection;
+        //                //this.photonMap.Insert(p.Position, p);
+
+        //                // Trace the reflected photon
+        //                Trace(p, depth + 1);
+        //            }
+
+        //            // If this photon is to be transmitted
+        //            else if (RandomValue <= ProbDiffuse + ProbSpecular + ProbTransmit)
+        //            {
+        //                float eta = intersection.HitFromInSide
+        //                                ? material.RefractIndex * 1 / this.scene.RefractIndex
+        //                                : this.scene.RefractIndex * 1 / material.RefractIndex;
+        //                // Calculate the refracted direction
+        //                Vector3D RefractedDirection;
+        //                if (Refracted(intersection.Normal, p.Direction, out RefractedDirection, eta))
+        //                { //No total internal reflection
+
+        //                    // Compute the transmitted power
+        //                    RGBColor TransmitPower = (p.Power * material.Color) / ProbTransmit;
+
+
+        //                    p.Position = intersection.HitPoint;
+        //                    p.Power = TransmitPower;
+        //                    p.Direction = RefractedDirection.Normalized;
+        //                    //this.photonMap.Insert(p.Position, p);
+
+        //                    // Trace the refracted ray to get the refracted color
+        //                    Trace(p, depth + 1);
+        //                }
+        //            }
+
+        //            // This photon will be absorbed
+        //            else
+        //            {
+        //                // Add a photon at this point
+        //                //m_PhotonMap.AddPhoton(Intersect, Ray.GetDirection(), Power);
+
+        //                p.Position = intersection.HitPoint;
+        //                this.photonMap.Insert(intersection.HitPoint, p);
+        //            }
+
+
+        //        }
+        //    }
+        //} 
+        #endregion
+
+
+        private static Vector3D ReflectedDiffuse(Vector3D N)
+        {
+            //OrthoNormalBasis onb = OrthoNormalBasis.MakeFromW(N);
+            //Random rnd = new Random();
+            //double u = 2 * Math.PI * rnd.NextDouble();// avgD;
+            //double v = rnd.NextDouble();//state.getRandom(0, 1, 1);
+            //float s = (float)Math.Sqrt(v);
+            //float s1 = (float)Math.Sqrt(1.0f - v);
+            //Vector3D w = new Vector3D((float)Math.Cos(u) * s, (float)Math.Sin(u) * s, s1);
+            //w = onb.Transform(w * (float)rnd.NextDouble());
+            ////w.Normalize();
+            //return w;
+
+            double x, y, z;
+            Vector3D dir = Vector3D.Zero;
+            Random rdn = new Random();
+            /* reject any direction that is opposite to the surface normal */
+            do
+            {
+                /* determine new direction by rejection sampling */
+
+                do
+                {
+                    x = (-1 + 2 * rdn.NextDouble());
+                    y = (-1 + 2 * rdn.NextDouble());
+                    z = (-1 + 2 * rdn.NextDouble());
+                } while (x * x + y * y + z * z > 1);
+                //x = 2 * (x - 0.5);
+                //y = 2 * (y - 0.5);
+                //z = 2 * (z - 0.5);
+                dir.X = (float)x;
+                dir.Y = (float)y;
+                dir.Z = (float)z;
+                //TODO Melhorar isso! Ver se só invertendo a DIR resolve
+            } while (dir * N > 0);
+            return dir;
+        }
+
+    }
+}

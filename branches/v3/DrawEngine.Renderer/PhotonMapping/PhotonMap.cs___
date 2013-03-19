@@ -1,0 +1,21 @@
+using DrawEngine.Renderer.SpatialSubdivision.KDTree;
+
+namespace DrawEngine.Renderer.PhotonMapping {
+    public class PhotonMap {
+        private KDTree<Photon> globalPhotons;
+
+        public PhotonMap() {
+            this.globalPhotons = new KDTree<Photon>(3);
+        }
+
+        ~PhotonMap() {
+            this.globalPhotons = null;
+        }
+
+        public void AddToPhotonList(Photon p) {
+            this.globalPhotons.Insert(p.Position, p);
+        }
+
+             
+    }
+}
