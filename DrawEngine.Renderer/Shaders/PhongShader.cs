@@ -10,13 +10,13 @@
  * Feel free to copy, modify and  give fixes 
  * suggestions. Keep the credits!
  */
- using System;
+
+using System;
 using DrawEngine.Renderer.BasicStructures;
 using DrawEngine.Renderer.Filters;
 using DrawEngine.Renderer.Lights;
 using DrawEngine.Renderer.Materials;
 using DrawEngine.Renderer.Mathematics.Algebra;
-using DrawEngine.Renderer.Algebra;
 
 namespace DrawEngine.Renderer.Shaders {
     [Serializable]
@@ -29,8 +29,9 @@ namespace DrawEngine.Renderer.Shaders {
         private Vector3D R;
         private float RV;
         private Vector3D V;
-        public PhongShader() : base() { }
-        public PhongShader(Scene scene) : base(scene) { }
+        public PhongShader() : base() {}
+        public PhongShader(Scene scene) : base(scene) {}
+
         public static Vector3D BumpNormal(Texture bumpTexture, Intersection intersection) {
             const float scale = 1;
             UVCoordinate uv = intersection.CurrentTextureCoordinate;
@@ -39,21 +40,21 @@ namespace DrawEngine.Renderer.Shaders {
             float b0 = bumpTexture.GetPixel(uv).Luminance;
             float bx = bumpTexture.GetPixel(uv.U + dx, uv.V).Luminance;
             float by = bumpTexture.GetPixel(uv.U, uv.V + dy).Luminance;
-            
-            
+
+
             return (intersection.Normal + new Vector3D(scale * (bx - b0) / dx, scale * (by - b0) / dy, 1)).Normalized;
 
-           
+
             //RGBColor color = bumpTexture.GetPixel(uv);
             //Vector3D tangent1, tangent2;
             //Vector3D.Orthonormalize(intersection.Normal, out tangent1, out tangent2);
-
         }
+
         /* Noise helper functions. */
         // added types 3,4,5,6 including stripes2, stripes3 functions(cos stripes)
-        double F(double x, double y, double z, int type) {
+        private double F(double x, double y, double z, int type) {
             double w = this.Scene.DefaultCamera.ResX;
-            switch(type) {
+            switch (type) {
                 case 1:
                     return .03 * PerlinNoiseFilter.Noise(x, y, z, 15);
                 case 2:
@@ -72,21 +73,21 @@ namespace DrawEngine.Renderer.Shaders {
                     //    PerlinNoiseFilter.Noise(x, (float)Math.Cos(y * Math.PI), z, 10) *
                     //    PerlinNoiseFilter.Noise(x, y, (float)Math.Cos(z * Math.PI), 10);
                     return .03 * Math.Cos(PerlinNoiseFilter.Noise(x, y, z));
-                //return .01 * PerlinNoiseFilter.Stripes(x + 2 * PerlinNoiseFilter.Turbulence(x, y, z, w, 1), 1.6);
-                //return 0.05 * PerlinNoiseFilter.Stripes3(x - PerlinNoiseFilter.Noise(x, y, z, 1), z - PerlinNoiseFilter.Turbulence(x, y, z, w, 1));
+                    //return .01 * PerlinNoiseFilter.Stripes(x + 2 * PerlinNoiseFilter.Turbulence(x, y, z, w, 1), 1.6);
+                    //return 0.05 * PerlinNoiseFilter.Stripes3(x - PerlinNoiseFilter.Noise(x, y, z, 1), z - PerlinNoiseFilter.Turbulence(x, y, z, w, 1));
                 case 6:
-                    return -.10
-                           *
+                    return -.10 *
                            PerlinNoiseFilter.Turbulence(
-                                   x - PerlinNoiseFilter.Stripes(PerlinNoiseFilter.Noise(x, y, z, 5), 5),
-                                   y - PerlinNoiseFilter.Stripes(PerlinNoiseFilter.Noise(x, y, z, 5), 5),
-                                   z - PerlinNoiseFilter.Stripes(PerlinNoiseFilter.Noise(x, y, z, 5), 5), w, 10);
+                               x - PerlinNoiseFilter.Stripes(PerlinNoiseFilter.Noise(x, y, z, 5), 5),
+                               y - PerlinNoiseFilter.Stripes(PerlinNoiseFilter.Noise(x, y, z, 5), 5),
+                               z - PerlinNoiseFilter.Stripes(PerlinNoiseFilter.Noise(x, y, z, 5), 5), w, 10);
                 case 7:
                     return .04 * PerlinNoiseFilter.Stripes3(x + 2 * PerlinNoiseFilter.Turbulence(x, y, z, w, 1), 1.6);
                 default:
                     return -.10 * PerlinNoiseFilter.Turbulence(x, y, z, w, 1);
             }
         }
+
         public override RGBColor Shade(Ray ray, Intersection intersection) {
             Material material = intersection.HitPrimitive.Material;
             RGBColor color = this.Scene.IAmb * material.KAmb; //Contribuicao ambiental                                  
@@ -108,8 +109,8 @@ namespace DrawEngine.Renderer.Shaders {
             //    intersection.Normal = n;
             //} 
             this.N = intersection.Normal;
-            
-            
+
+
             //if(material.IsTexturized){
             //    this.N = BumpNormal(intersection.HitPrimitive.Material.Texture, intersection);
             //    intersection.Normal = this.N;
@@ -118,39 +119,35 @@ namespace DrawEngine.Renderer.Shaders {
             //}
 
             //this.NV = this.N * this.V;
-            foreach(Light light in this.Scene.Lights) {
+            foreach (Light light in this.Scene.Lights) {
                 this.L = (light.Position - intersection.HitPoint);
                 float shadowFactor = this.ShadowFactor(intersection, this.L, light);
-                if(shadowFactor > 0f) {
+                if (shadowFactor > 0f) {
                     this.L.Normalize();
                     this.lightFactor = light.GetColorFactor(this.L);
-                    if(this.lightFactor > 0.0f) {
+                    if (this.lightFactor > 0.0f) {
                         this.NL = this.N * this.L;
-                        if(material.KDiff > 0.0f) {
-                            if(this.NL > 0) {
+                        if (material.KDiff > 0.0f) {
+                            if (this.NL > 0) {
                                 //Diffuse Term
-                                if(material.IsTexturized) {
-                                    color += (material.KDiff
-                                              *
-                                              material.Texture.GetPixel(
-                                                      intersection.CurrentTextureCoordinate) * light.Color
-                                              * this.NL) * this.lightFactor * shadowFactor;
-                                }
-                                else {
-                                    color += (material.KDiff * material.DiffuseColor * light.Color * this.NL)
-                                             * this.lightFactor * shadowFactor;
+                                if (material.IsTexturized) {
+                                    color += (material.KDiff *
+                                              material.Texture.GetPixel(intersection.CurrentTextureCoordinate) *
+                                              light.Color * this.NL) * this.lightFactor * shadowFactor;
+                                } else {
+                                    color += (material.KDiff * material.DiffuseColor * light.Color * this.NL) *
+                                             this.lightFactor * shadowFactor;
                                 }
                             }
                         }
-                        if(material.IsReflective) {
+                        if (material.IsReflective) {
                             this.R = (2 * this.NL * this.N) - this.L;
                             this.R.Normalize();
                             this.RV = this.R * this.V;
-                            if(this.RV > 0) {
+                            if (this.RV > 0) {
                                 //Specular Term
-                                color += (material.KSpec * material.SpecularColor * light.Color
-                                          * (float)Math.Pow(this.RV, material.Shiness)) * this.lightFactor
-                                         * shadowFactor;
+                                color += (material.KSpec * material.SpecularColor * light.Color *
+                                          (float) Math.Pow(this.RV, material.Shiness)) * this.lightFactor * shadowFactor;
                             }
                         }
                         //color *= lightFactor * shadowFactor;

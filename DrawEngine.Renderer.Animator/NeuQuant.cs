@@ -1,4 +1,5 @@
 #region .NET Disclaimer/Info
+
 //===============================================================================
 //
 // gOODiDEA, uland.com
@@ -11,9 +12,11 @@
 // $History:		$  
 //  
 //===============================================================================
+
 #endregion
 
 #region Java
+
 /* NeuQuant Neural-Net Quantization Algorithm
  * ------------------------------------------
  *
@@ -34,26 +37,25 @@
  * that this copyright notice remain intact.
  */
 // Ported to Java 12/00 K Weiner
+
 #endregion
 
 using System;
 
-namespace DrawEngine.Renderer.Animator
-{
-    public class NeuQuant
-    {
+namespace DrawEngine.Renderer.Animator {
+    public class NeuQuant {
         protected static readonly int alphabiasshift = 10; /* alpha starts at 1.0 */
-        protected static readonly int alpharadbias = (((int)1) << alpharadbshift);
+        protected static readonly int alpharadbias = (((int) 1) << alpharadbshift);
         protected static readonly int alpharadbshift = (alphabiasshift + radbiasshift);
         protected static readonly int beta = (intbias >> betashift); /* beta = 1/1024 */
         protected static readonly int betagamma = (intbias << (gammashift - betashift));
         protected static readonly int betashift = 10;
-        protected static readonly int gamma = (((int)1) << gammashift);
+        protected static readonly int gamma = (((int) 1) << gammashift);
         protected static readonly int gammashift = 10; /* gamma = 1024 */
-        protected static readonly int initalpha = (((int)1) << alphabiasshift);
+        protected static readonly int initalpha = (((int) 1) << alphabiasshift);
         protected static readonly int initrad = (netsize >> 3); /* for 256 cols, radius starts */
         protected static readonly int initradius = (initrad * radiusbias); /* and decreases by a */
-        protected static readonly int intbias = (((int)1) << intbiasshift);
+        protected static readonly int intbias = (((int) 1) << intbiasshift);
         protected static readonly int intbiasshift = 16; /* bias for fractions */
         protected static readonly int maxnetpos = (netsize - 1);
         protected static readonly int minpicturebytes = (3 * prime4);
@@ -66,9 +68,9 @@ namespace DrawEngine.Renderer.Animator
         protected static readonly int prime2 = 491;
         protected static readonly int prime3 = 487;
         protected static readonly int prime4 = 503;
-        protected static readonly int radbias = (((int)1) << radbiasshift);
+        protected static readonly int radbias = (((int) 1) << radbiasshift);
         protected static readonly int radbiasshift = 8;
-        protected static readonly int radiusbias = (((int)1) << radiusbiasshift);
+        protected static readonly int radiusbias = (((int) 1) << radiusbiasshift);
         protected static readonly int radiusbiasshift = 6; /* at 32.0 biased by 6 bits */
         protected static readonly int radiusdec = 30; /* factor of 1/30 each cycle */
         /* defs for decreasing alpha factor */
@@ -88,15 +90,15 @@ namespace DrawEngine.Renderer.Animator
         /* Initialise network in range (0,0,0) to (255,255,255) and set parameters
 		   ----------------------------------------------------------------------- */
         public NeuQuant(byte[] thepic, int len) : this(thepic, len, 10) {}
-        public NeuQuant(byte[] thepic, int len, int sample)
-        {
+
+        public NeuQuant(byte[] thepic, int len, int sample) {
             int i;
             int[] p;
             this.thepicture = thepic;
             this.lengthcount = len;
             this.samplefac = sample;
             this.network = new int[netsize][];
-            for(i = 0; i < netsize; i++){
+            for (i = 0; i < netsize; i++) {
                 this.network[i] = new int[4];
                 p = this.network[i];
                 p[0] = p[1] = p[2] = (i << (netbiasshift + 8)) / netsize;
@@ -104,40 +106,41 @@ namespace DrawEngine.Renderer.Animator
                 this.bias[i] = 0;
             }
         }
-        public byte[] ColorMap()
-        {
+
+        public byte[] ColorMap() {
             byte[] map = new byte[3 * netsize];
             int[] index = new int[netsize];
-            for(int i = 0; i < netsize; i++){
+            for (int i = 0; i < netsize; i++) {
                 index[this.network[i][3]] = i;
             }
             int k = 0;
-            for(int i = 0; i < netsize; i++){
+            for (int i = 0; i < netsize; i++) {
                 int j = index[i];
-                map[k++] = (byte)(this.network[j][0]);
-                map[k++] = (byte)(this.network[j][1]);
-                map[k++] = (byte)(this.network[j][2]);
+                map[k++] = (byte) (this.network[j][0]);
+                map[k++] = (byte) (this.network[j][1]);
+                map[k++] = (byte) (this.network[j][2]);
             }
             return map;
         }
+
         /* Insertion sort of network and building of netindex[0..255] (to do after unbias)
 		   ------------------------------------------------------------------------------- */
-        public void Inxbuild()
-        {
+
+        public void Inxbuild() {
             int i, j, smallpos, smallval;
             int[] p;
             int[] q;
             int previouscol, startpos;
             previouscol = 0;
             startpos = 0;
-            for(i = 0; i < netsize; i++){
+            for (i = 0; i < netsize; i++) {
                 p = this.network[i];
                 smallpos = i;
                 smallval = p[1]; /* index on g */
                 /* find smallest in i..netsize-1 */
-                for(j = i + 1; j < netsize; j++){
+                for (j = i + 1; j < netsize; j++) {
                     q = this.network[j];
-                    if(q[1] < smallval){
+                    if (q[1] < smallval) {
                         /* index on g */
                         smallpos = j;
                         smallval = q[1]; /* index on g */
@@ -145,7 +148,7 @@ namespace DrawEngine.Renderer.Animator
                 }
                 q = this.network[smallpos];
                 /* swap p (i) and q (smallpos) entries */
-                if(i != smallpos){
+                if (i != smallpos) {
                     j = q[0];
                     q[0] = p[0];
                     p[0] = j;
@@ -160,9 +163,9 @@ namespace DrawEngine.Renderer.Animator
                     p[3] = j;
                 }
                 /* smallval entry is now in position i */
-                if(smallval != previouscol){
+                if (smallval != previouscol) {
                     this.netindex[previouscol] = (startpos + i) >> 1;
-                    for(j = previouscol + 1; j < smallval; j++){
+                    for (j = previouscol + 1; j < smallval; j++) {
                         this.netindex[j] = i;
                     }
                     previouscol = smallval;
@@ -170,19 +173,20 @@ namespace DrawEngine.Renderer.Animator
                 }
             }
             this.netindex[previouscol] = (startpos + maxnetpos) >> 1;
-            for(j = previouscol + 1; j < 256; j++){
+            for (j = previouscol + 1; j < 256; j++) {
                 this.netindex[j] = maxnetpos; /* really 256 */
             }
         }
+
         /* Main Learning Loop
 		   ------------------ */
-        public void Learn()
-        {
+
+        public void Learn() {
             int i, j, b, g, r;
             int radius, rad, alpha, step, delta, samplepixels;
             byte[] p;
             int pix, lim;
-            if(this.lengthcount < minpicturebytes){
+            if (this.lengthcount < minpicturebytes) {
                 this.samplefac = 1;
             }
             this.alphadec = 30 + ((this.samplefac - 1) / 3);
@@ -194,64 +198,65 @@ namespace DrawEngine.Renderer.Animator
             alpha = initalpha;
             radius = initradius;
             rad = radius >> radiusbiasshift;
-            if(rad <= 1){
+            if (rad <= 1) {
                 rad = 0;
             }
-            for(i = 0; i < rad; i++){
+            for (i = 0; i < rad; i++) {
                 this.radpower[i] = alpha * (((rad * rad - i * i) * radbias) / (rad * rad));
             }
             //fprintf(stderr,"beginning 1D learning: initial radius=%d\n", rad);
-            if(this.lengthcount < minpicturebytes){
+            if (this.lengthcount < minpicturebytes) {
                 step = 3;
-            } else if((this.lengthcount % prime1) != 0){
+            } else if ((this.lengthcount % prime1) != 0) {
                 step = 3 * prime1;
-            } else{
-                if((this.lengthcount % prime2) != 0){
+            } else {
+                if ((this.lengthcount % prime2) != 0) {
                     step = 3 * prime2;
-                } else{
-                    if((this.lengthcount % prime3) != 0){
+                } else {
+                    if ((this.lengthcount % prime3) != 0) {
                         step = 3 * prime3;
-                    } else{
+                    } else {
                         step = 3 * prime4;
                     }
                 }
             }
             i = 0;
-            while(i < samplepixels){
+            while (i < samplepixels) {
                 b = (p[pix + 0] & 0xff) << netbiasshift;
                 g = (p[pix + 1] & 0xff) << netbiasshift;
                 r = (p[pix + 2] & 0xff) << netbiasshift;
                 j = this.Contest(b, g, r);
                 this.Altersingle(alpha, j, b, g, r);
-                if(rad != 0){
+                if (rad != 0) {
                     this.Alterneigh(rad, j, b, g, r); /* alter neighbours */
                 }
                 pix += step;
-                if(pix >= lim){
+                if (pix >= lim) {
                     pix -= this.lengthcount;
                 }
                 i++;
-                if(delta == 0){
+                if (delta == 0) {
                     delta = 1;
                 }
-                if(i % delta == 0){
+                if (i % delta == 0) {
                     alpha -= alpha / this.alphadec;
                     radius -= radius / radiusdec;
                     rad = radius >> radiusbiasshift;
-                    if(rad <= 1){
+                    if (rad <= 1) {
                         rad = 0;
                     }
-                    for(j = 0; j < rad; j++){
+                    for (j = 0; j < rad; j++) {
                         this.radpower[j] = alpha * (((rad * rad - j * j) * radbias) / (rad * rad));
                     }
                 }
             }
             //fprintf(stderr,"finished 1D learning: readonly alpha=%f !\n",((float)alpha)/initalpha);
         }
+
         /* Search for BGR values 0..255 (after net is unbiased) and return colour index
 		   ---------------------------------------------------------------------------- */
-        public int Map(int b, int g, int r)
-        {
+
+        public int Map(int b, int g, int r) {
             int i, j, dist, a, bestd;
             int[] p;
             int best;
@@ -259,57 +264,57 @@ namespace DrawEngine.Renderer.Animator
             best = -1;
             i = this.netindex[g]; /* index on g */
             j = i - 1; /* start at netindex[g] and work outwards */
-            while((i < netsize) || (j >= 0)){
-                if(i < netsize){
+            while ((i < netsize) || (j >= 0)) {
+                if (i < netsize) {
                     p = this.network[i];
                     dist = p[1] - g; /* inx key */
-                    if(dist >= bestd){
+                    if (dist >= bestd) {
                         i = netsize; /* stop iter */
-                    } else{
+                    } else {
                         i++;
-                        if(dist < 0){
+                        if (dist < 0) {
                             dist = -dist;
                         }
                         a = p[0] - b;
-                        if(a < 0){
+                        if (a < 0) {
                             a = -a;
                         }
                         dist += a;
-                        if(dist < bestd){
+                        if (dist < bestd) {
                             a = p[2] - r;
-                            if(a < 0){
+                            if (a < 0) {
                                 a = -a;
                             }
                             dist += a;
-                            if(dist < bestd){
+                            if (dist < bestd) {
                                 bestd = dist;
                                 best = p[3];
                             }
                         }
                     }
                 }
-                if(j >= 0){
+                if (j >= 0) {
                     p = this.network[j];
                     dist = g - p[1]; /* inx key - reverse dif */
-                    if(dist >= bestd){
+                    if (dist >= bestd) {
                         j = -1; /* stop iter */
-                    } else{
+                    } else {
                         j--;
-                        if(dist < 0){
+                        if (dist < 0) {
                             dist = -dist;
                         }
                         a = p[0] - b;
-                        if(a < 0){
+                        if (a < 0) {
                             a = -a;
                         }
                         dist += a;
-                        if(dist < bestd){
+                        if (dist < bestd) {
                             a = p[2] - r;
-                            if(a < 0){
+                            if (a < 0) {
                                 a = -a;
                             }
                             dist += a;
-                            if(dist < bestd){
+                            if (dist < bestd) {
                                 bestd = dist;
                                 best = p[3];
                             }
@@ -319,75 +324,79 @@ namespace DrawEngine.Renderer.Animator
             }
             return (best);
         }
-        public byte[] Process()
-        {
+
+        public byte[] Process() {
             this.Learn();
             this.Unbiasnet();
             this.Inxbuild();
             return this.ColorMap();
         }
+
         /* Unbias network to give byte values 0..255 and record position i to prepare for sort
 		   ----------------------------------------------------------------------------------- */
-        public void Unbiasnet()
-        {
-            for(int i = 0; i < netsize; i++){
+
+        public void Unbiasnet() {
+            for (int i = 0; i < netsize; i++) {
                 this.network[i][0] >>= netbiasshift;
                 this.network[i][1] >>= netbiasshift;
                 this.network[i][2] >>= netbiasshift;
                 this.network[i][3] = i; /* record colour no */
             }
         }
+
         /* Move adjacent neurons by precomputed alpha*(1-((i-j)^2/[r]^2)) in radpower[|i-j|]
 		   --------------------------------------------------------------------------------- */
-        protected void Alterneigh(int rad, int i, int b, int g, int r)
-        {
+
+        protected void Alterneigh(int rad, int i, int b, int g, int r) {
             int j, k, lo, hi, a, m;
             int[] p;
             lo = i - rad;
-            if(lo < -1){
+            if (lo < -1) {
                 lo = -1;
             }
             hi = i + rad;
-            if(hi > netsize){
+            if (hi > netsize) {
                 hi = netsize;
             }
             j = i + 1;
             k = i - 1;
             m = 1;
-            while((j < hi) || (k > lo)){
+            while ((j < hi) || (k > lo)) {
                 a = this.radpower[m++];
-                if(j < hi){
+                if (j < hi) {
                     p = this.network[j++];
-                    try{
+                    try {
                         p[0] -= (a * (p[0] - b)) / alpharadbias;
                         p[1] -= (a * (p[1] - g)) / alpharadbias;
                         p[2] -= (a * (p[2] - r)) / alpharadbias;
-                    } catch(Exception e){} // prevents 1.3 miscompilation
+                    } catch (Exception e) {} // prevents 1.3 miscompilation
                 }
-                if(k > lo){
+                if (k > lo) {
                     p = this.network[k--];
-                    try{
+                    try {
                         p[0] -= (a * (p[0] - b)) / alpharadbias;
                         p[1] -= (a * (p[1] - g)) / alpharadbias;
                         p[2] -= (a * (p[2] - r)) / alpharadbias;
-                    } catch(Exception e){}
+                    } catch (Exception e) {}
                 }
             }
         }
+
         /* Move neuron i towards biased (b,g,r) by factor alpha
 		   ---------------------------------------------------- */
-        protected void Altersingle(int alpha, int i, int b, int g, int r)
-        {
+
+        protected void Altersingle(int alpha, int i, int b, int g, int r) {
             /* alter hit neuron */
             int[] n = this.network[i];
             n[0] -= (alpha * (n[0] - b)) / initalpha;
             n[1] -= (alpha * (n[1] - g)) / initalpha;
             n[2] -= (alpha * (n[2] - r)) / initalpha;
         }
+
         /* Search for biased BGR values
 		   ---------------------------- */
-        protected int Contest(int b, int g, int r)
-        {
+
+        protected int Contest(int b, int g, int r) {
             /* finds closest neuron (min dist) and updates freq */
             /* finds best neuron (min dist-bias) and returns position */
             /* for frequently chosen neurons, freq[i] is high and bias[i] is negative */
@@ -395,32 +404,32 @@ namespace DrawEngine.Renderer.Animator
             int i, dist, a, biasdist, betafreq;
             int bestpos, bestbiaspos, bestd, bestbiasd;
             int[] n;
-            bestd = ~(((int)1) << 31);
+            bestd = ~(((int) 1) << 31);
             bestbiasd = bestd;
             bestpos = -1;
             bestbiaspos = bestpos;
-            for(i = 0; i < netsize; i++){
+            for (i = 0; i < netsize; i++) {
                 n = this.network[i];
                 dist = n[0] - b;
-                if(dist < 0){
+                if (dist < 0) {
                     dist = -dist;
                 }
                 a = n[1] - g;
-                if(a < 0){
+                if (a < 0) {
                     a = -a;
                 }
                 dist += a;
                 a = n[2] - r;
-                if(a < 0){
+                if (a < 0) {
                     a = -a;
                 }
                 dist += a;
-                if(dist < bestd){
+                if (dist < bestd) {
                     bestd = dist;
                     bestpos = i;
                 }
                 biasdist = dist - ((this.bias[i]) >> (intbiasshift - netbiasshift));
-                if(biasdist < bestbiasd){
+                if (biasdist < bestbiasd) {
                     bestbiasd = biasdist;
                     bestbiaspos = i;
                 }

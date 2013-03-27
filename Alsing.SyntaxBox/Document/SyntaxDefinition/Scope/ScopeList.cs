@@ -11,15 +11,12 @@
 using System.Collections.Generic;
 using T = Alsing.SourceCode.Scope;
 
-namespace Alsing.SourceCode
-{
+namespace Alsing.SourceCode {
     /// <summary>
     /// 
     /// </summary>
-    public sealed class ScopeList : List<Scope>
-    {
-        public ScopeList(SpanDefinition parent)
-        {
+    public sealed class ScopeList : List<Scope> {
+        public ScopeList(SpanDefinition parent) {
             Parent = parent;
         }
 

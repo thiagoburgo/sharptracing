@@ -10,14 +10,12 @@
 
 using System;
 
-namespace Alsing.SourceCode
-{
+namespace Alsing.SourceCode {
     /// <summary>
     /// Class representing a point in a text.
     /// where x is the column and y is the row.
     /// </summary>
-    public class TextPoint
-    {
+    public class TextPoint {
         private int x;
         private int y;
 
@@ -31,8 +29,7 @@ namespace Alsing.SourceCode
         /// </summary>
         /// <param name="X"></param>
         /// <param name="Y"></param>
-        public TextPoint(int X, int Y)
-        {
+        public TextPoint(int X, int Y) {
             this.X = X;
             this.Y = Y;
         }
@@ -40,11 +37,9 @@ namespace Alsing.SourceCode
         /// <summary>
         /// 
         /// </summary>
-        public int X
-        {
+        public int X {
             get { return x; }
-            set
-            {
+            set {
                 x = value;
                 OnChange();
             }
@@ -53,11 +48,9 @@ namespace Alsing.SourceCode
         /// <summary>
         /// 
         /// </summary>
-        public int Y
-        {
+        public int Y {
             get { return y; }
-            set
-            {
+            set {
                 y = value;
                 OnChange();
             }
@@ -68,10 +61,10 @@ namespace Alsing.SourceCode
         /// </summary>
         public event EventHandler Change = null;
 
-        private void OnChange()
-        {
-            if (Change != null)
+        private void OnChange() {
+            if (Change != null) {
                 Change(this, new EventArgs());
+            }
         }
     }
 }

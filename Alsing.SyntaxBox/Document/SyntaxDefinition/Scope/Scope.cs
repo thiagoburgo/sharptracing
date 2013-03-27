@@ -8,13 +8,11 @@
 // *
 // *
 
-namespace Alsing.SourceCode
-{
+namespace Alsing.SourceCode {
     /// <summary>
     /// The Scope class defines what patterns starts and ends a spanDefinition
     /// </summary>
-    public sealed class Scope
-    {
+    public sealed class Scope {
         /// <summary>
         /// Gets or Sets if the scope patterns is case sensitive
         /// </summary>

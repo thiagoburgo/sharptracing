@@ -10,7 +10,8 @@
  * Feel free to copy, modify and  give fixes 
  * suggestions. Keep the credits!
  */
- using System;
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Design;
@@ -18,26 +19,24 @@ using System.Linq;
 using System.Reflection;
 using DrawEngine.Renderer.RenderObjects;
 
-namespace DrawEngine.Renderer.Collections.Design
-{
-    public class CustomCollectionEditor : CollectionEditor
-    {
+namespace DrawEngine.Renderer.Collections.Design {
+    public class CustomCollectionEditor : CollectionEditor {
         public CustomCollectionEditor(Type type) : base(type) {}
-        protected override Type[] CreateNewItemTypes()
-        {
+
+        protected override Type[] CreateNewItemTypes() {
             Type type = base.CreateNewItemTypes()[0];
             //Assembly[] assembliesLoaded = AppDomain.CurrentDomain.GetAssemblies();
             List<Type> listType = new List<Type>();
-            if(!type.IsAbstract){
+            if (!type.IsAbstract) {
                 listType.Add(type);
             }
             //foreach(Assembly loaded in assembliesLoaded) {
             Assembly loaded = Assembly.GetAssembly(type);
-            foreach(Type typeTemp in loaded.GetExportedTypes().OrderBy(t => t.Name)){
+            foreach (Type typeTemp in loaded.GetExportedTypes().OrderBy(t => t.Name)) {
                 ConstructorInfo[] infos = typeTemp.GetConstructors(BindingFlags.Public | BindingFlags.Instance);
                 ConstructorInfo info = infos.FirstOrDefault(x => x.GetParameters().Length == 0);
-                if(!typeTemp.IsAbstract && info != null){
-                    if(typeTemp.IsSubclassOf(type)){
+                if (!typeTemp.IsAbstract && info != null) {
+                    if (typeTemp.IsSubclassOf(type)) {
                         listType.Add(typeTemp);
                     }
                 }
@@ -45,17 +44,17 @@ namespace DrawEngine.Renderer.Collections.Design
             //}
             return listType.ToArray();
         }
-        public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
-        {
+
+        public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value) {
             INotify notify = value as INotify;
-            if(notify != null && notify.NotificationsEnabled){
+            if (notify != null && notify.NotificationsEnabled) {
                 notify.NotificationsEnabled = false;
             }
             object val = base.EditValue(context, provider, value);
-            if(context.Instance is IPreprocess){
-                ((IPreprocess)context.Instance).Preprocess();
+            if (context.Instance is IPreprocess) {
+                ((IPreprocess) context.Instance).Preprocess();
             }
-            if(notify != null){
+            if (notify != null) {
                 notify.NotificationsEnabled = true;
             }
             return val;

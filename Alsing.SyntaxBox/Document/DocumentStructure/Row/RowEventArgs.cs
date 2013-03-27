@@ -1,12 +1,10 @@
 ﻿using System;
 
-namespace Alsing.SourceCode
-{
+namespace Alsing.SourceCode {
     /// <summary>
     /// 
     /// </summary>
-    public class RowEventArgs : EventArgs
-    {
+    public class RowEventArgs : EventArgs {
         /// <summary>
         /// 
         /// </summary>
@@ -16,8 +14,7 @@ namespace Alsing.SourceCode
         /// 
         /// </summary>
         /// <param name="row"></param>
-        public RowEventArgs(Row row)
-        {
+        public RowEventArgs(Row row) {
             Row = row;
         }
     }

@@ -10,45 +10,59 @@
  * Feel free to copy, modify and  give fixes 
  * suggestions. Keep the credits!
  */
- using System;
 
-namespace DrawEngine.Renderer.Mathematics.Algebra
-{
-    public class OrthoNormalBasis
-    {
-        private Vector3D u, v, w;
-        public void FlipU()
+using System;
+
+namespace DrawEngine.Renderer.Mathematics.Algebra {
+    public class OrthoNormalBasis {
+        private Vector3D u;
+        private Vector3D v;
+        private Vector3D w;
+
+        public Vector3D U
         {
+            get { return this.u; }
+        }
+        public Vector3D V
+        {
+            get { return this.v; }
+        }
+        public Vector3D W
+        {
+            get { return this.w; }
+        }
+
+        public void FlipU() {
             this.u.Flip();
         }
-        public void FlipV()
-        {
+
+        public void FlipV() {
             this.v.Flip();
         }
-        public void FlipW()
-        {
+
+        public void FlipW() {
             this.w.Flip();
         }
-        public void SwapUV()
-        {
+
+        public void SwapUV() {
             Vector3D t = this.u;
             this.u = this.v;
             this.v = t;
         }
-        public void SwapVW()
-        {
+
+        public void SwapVW() {
             Vector3D t = this.v;
             this.v = this.w;
             this.w = t;
         }
-        public void SwapWU()
-        {
+
+        public void SwapWU() {
             Vector3D t = this.w;
             this.w = this.u;
             this.u = t;
         }
-        public Vector3D Transform(Vector3D a)
-        {
+
+        public Vector3D Transform(Vector3D a) {
             float x = (a.X * this.u.X) + (a.Y * this.v.X) + (a.Z * this.w.X);
             float y = (a.X * this.u.Y) + (a.Y * this.v.Y) + (a.Z * this.w.Y);
             float z = (a.X * this.u.Z) + (a.Y * this.v.Z) + (a.Z * this.w.Z);
@@ -57,8 +71,8 @@ namespace DrawEngine.Renderer.Mathematics.Algebra
             a.Z = z;
             return a;
         }
-        public Vector3D UnTransform(Vector3D a)
-        {
+
+        public Vector3D UnTransform(Vector3D a) {
             float x = (a * this.u);
             float y = (a * this.v);
             float z = (a * this.w);
@@ -67,32 +81,32 @@ namespace DrawEngine.Renderer.Mathematics.Algebra
             a.Z = z;
             return a;
         }
-        public float UnTransformX(Vector3D a)
-        {
+
+        public float UnTransformX(Vector3D a) {
             return (a * this.u);
         }
-        public float UnTransformY(Vector3D a)
-        {
+
+        public float UnTransformY(Vector3D a) {
             return (a * this.v);
         }
-        public float UnTransformZ(Vector3D a)
-        {
+
+        public float UnTransformZ(Vector3D a) {
             return (a * this.w);
         }
-        public static OrthoNormalBasis MakeFromW(Vector3D w)
-        {
+
+        public static OrthoNormalBasis MakeFromW(Vector3D w) {
             OrthoNormalBasis onb = new OrthoNormalBasis();
             w.Normalize();
             onb.w = w;
-            if((Math.Abs(onb.w.X) < Math.Abs(onb.w.Y)) && (Math.Abs(onb.w.X) < Math.Abs(onb.w.Z))){
+            if ((Math.Abs(onb.w.X) < Math.Abs(onb.w.Y)) && (Math.Abs(onb.w.X) < Math.Abs(onb.w.Z))) {
                 onb.v.X = 0;
                 onb.v.Y = onb.w.Z;
                 onb.v.Z = -onb.w.Y;
-            } else if(Math.Abs(onb.w.Y) < Math.Abs(onb.w.Z)){
+            } else if (Math.Abs(onb.w.Y) < Math.Abs(onb.w.Z)) {
                 onb.v.X = onb.w.Z;
                 onb.v.Y = 0;
                 onb.v.Z = -onb.w.X;
-            } else{
+            } else {
                 onb.v.X = onb.w.Y;
                 onb.v.Y = -onb.w.X;
                 onb.v.Z = 0;
@@ -101,8 +115,8 @@ namespace DrawEngine.Renderer.Mathematics.Algebra
             onb.u = onb.v ^ onb.w;
             return onb;
         }
-        public static OrthoNormalBasis MakeFromWV(Vector3D w, Vector3D v)
-        {
+
+        public static OrthoNormalBasis MakeFromWV(Vector3D w, Vector3D v) {
             OrthoNormalBasis onb = new OrthoNormalBasis();
             w.Normalize();
             onb.w = w;

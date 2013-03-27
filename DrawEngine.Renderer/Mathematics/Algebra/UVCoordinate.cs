@@ -10,27 +10,26 @@
  * Feel free to copy, modify and  give fixes 
  * suggestions. Keep the credits!
  */
- using System;
+
+using System;
 using System.Runtime.InteropServices;
 
-namespace DrawEngine.Renderer.Algebra
-{
+namespace DrawEngine.Renderer.Mathematics.Algebra {
     [Serializable, StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct UVCoordinate
-    {
+    public struct UVCoordinate {
         public float U;
         public float V;
         public static readonly UVCoordinate Zero = new UVCoordinate();
-        public UVCoordinate(float u, float v)
-        {
+
+        public UVCoordinate(float u, float v) {
             this.U = u;
             this.V = v;
-            if(!this.IsValid){
+            if (!this.IsValid) {
                 throw new ArgumentException("Invalid coordinates!");
             }
         }
-        public bool IsValid
-        {
+
+        public bool IsValid {
             get { return !(this.U < 0.0f || this.U > 1.0f || this.V < 0.0f || this.V > 1.0f || (this.U + this.V) > 1.0f); }
         }
     }

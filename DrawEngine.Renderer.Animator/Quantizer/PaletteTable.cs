@@ -6,24 +6,23 @@
 // Portions Copyright (C) Microsoft Corporation. All Rights Reserved.
 // See src/setup/License.rtf for complete licensing and attribution information.
 /////////////////////////////////////////////////////////////////////////////////
+
 using System.Drawing;
 
-namespace DrawEngine.Renderer.Animator.Quantizer
-{
-    public sealed class PaletteTable
-    {
-        private Color[] palette;
-        public PaletteTable(Color[] palette)
-        {
-            this.palette = (Color[])palette.Clone();
+namespace DrawEngine.Renderer.Animator.Quantizer {
+    public sealed class PaletteTable {
+        private readonly Color[] palette;
+
+        public PaletteTable(Color[] palette) {
+            this.palette = (Color[]) palette.Clone();
         }
-        public Color this[int index]
-        {
+
+        public Color this[int index] {
             get { return this.palette[index]; }
             set { this.palette[index] = value; }
         }
-        private int GetDistanceSquared(Color a, Color b)
-        {
+
+        private int GetDistanceSquared(Color a, Color b) {
             int dsq = 0; // delta squared
             int v;
             v = a.B - b.B;
@@ -34,13 +33,13 @@ namespace DrawEngine.Renderer.Animator.Quantizer
             dsq += v * v;
             return dsq;
         }
-        public int FindClosestPaletteIndex(Color pixel)
-        {
+
+        public int FindClosestPaletteIndex(Color pixel) {
             int dsqBest = int.MaxValue;
             int ret = 0;
-            for(int i = 0; i < this.palette.Length; ++i){
+            for (int i = 0; i < this.palette.Length; ++i) {
                 int dsq = this.GetDistanceSquared(this.palette[i], pixel);
-                if(dsq < dsqBest){
+                if (dsq < dsqBest) {
                     dsqBest = dsq;
                     ret = i;
                 }

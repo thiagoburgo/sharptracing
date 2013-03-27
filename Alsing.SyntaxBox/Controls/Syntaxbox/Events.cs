@@ -13,8 +13,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Alsing.SourceCode;
 
-namespace Alsing.Windows.Forms.SyntaxBox
-{
+namespace Alsing.Windows.Forms.SyntaxBox {
     public delegate void RowPaintHandler(object sender, RowPaintEventArgs e);
 
     public delegate void RowMouseHandler(object sender, RowMouseEventArgs e);
@@ -26,8 +25,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
     /// <summary>
     /// Event arg for Copy/Cut actions.
     /// </summary>
-    public class CopyEventArgs
-    {
+    public class CopyEventArgs {
         /// <summary>
         /// The text copied to the clipboard.
         /// </summary>
@@ -37,8 +35,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
     /// <summary>
     /// Event args passed to word mouse events of the syntaxbox
     /// </summary>
-    public class WordMouseEventArgs : EventArgs
-    {
+    public class WordMouseEventArgs : EventArgs {
         /// <summary>
         /// The mouse buttons that was pressed when the event fired
         /// </summary>
@@ -63,8 +60,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
     /// <summary>
     /// Event args for mouse actions on the syntaxbox
     /// </summary>
-    public class RowMouseEventArgs : EventArgs
-    {
+    public class RowMouseEventArgs : EventArgs {
         /// <summary>
         /// The area of the row where the event was fired
         /// </summary>
@@ -95,20 +91,22 @@ namespace Alsing.Windows.Forms.SyntaxBox
     /// <summary>
     /// Describes in what area a mouse event occured on a row
     /// </summary>
-    public enum RowArea
-    {
+    public enum RowArea {
         /// <summary>
         /// Represents the gutter margin
         /// </summary>
         GutterArea,
+
         /// <summary>
         /// Represents the LineNumber section
         /// </summary>
         LineNumberArea,
+
         /// <summary>
         /// Represents the area where the folding symbols are shown
         /// </summary>
         FoldingArea,
+
         /// <summary>
         /// Represents the actual text part of a row
         /// </summary>
@@ -118,8 +116,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
     /// <summary>
     /// Event args passed to owner draw events of the syntaxbox
     /// </summary>
-    public class RowPaintEventArgs : EventArgs
-    {
+    public class RowPaintEventArgs : EventArgs {
         /// <summary>
         /// the bounds of the row
         /// </summary>

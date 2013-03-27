@@ -8,40 +8,37 @@
 // *
 // *
 
-namespace Alsing.Text
-{
-    public struct MatchResult
-    {
+namespace Alsing.Text {
+    public struct MatchResult {
         public bool Found;
         public int Index;
         public int Length;
         public object[] Tags;
         public string Text;
 
-        public static MatchResult NoMatch
-        {
-            get
-            {
+        public static MatchResult NoMatch {
+            get {
                 var result = new MatchResult {Found = false};
                 return result;
             }
         }
 
-        public override string ToString()
-        {
-            if (Found == false)
+        public override string ToString() {
+            if (Found == false) {
                 return "no match"; // do not localize
+            }
 
-            if (Tags != null)
+            if (Tags != null) {
                 return Tags + "  " + Index + "  " + Length;
+            }
 
             return "MatchResult";
         }
 
-        public string GetText()
-        {
-            if (Text != null)
+        public string GetText() {
+            if (Text != null) {
                 return Text.Substring(Index, Length);
+            }
 
             return "";
         }

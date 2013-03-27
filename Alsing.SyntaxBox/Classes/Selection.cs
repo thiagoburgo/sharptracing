@@ -11,27 +11,24 @@
 using System;
 using Alsing.SourceCode;
 
-namespace Alsing.Windows.Forms.SyntaxBox
-{
+namespace Alsing.Windows.Forms.SyntaxBox {
     /// <summary>
     /// Selection class used by the SyntaxBoxControl
     /// </summary>
-    public class Selection
-    {
+    public class Selection {
         /// <summary>
         /// Event fired when the selection has changed.
         /// </summary>
         public event EventHandler Change = null;
 
-        private void PositionChange(object s, EventArgs e)
-        {
+        private void PositionChange(object s, EventArgs e) {
             OnChange();
         }
 
-        private void OnChange()
-        {
-            if (Change != null)
+        private void OnChange() {
+            if (Change != null) {
                 Change(this, null);
+            }
         }
 
         #region Instance constructors
@@ -40,8 +37,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// Selection Constructor.
         /// </summary>
         /// <param name="control">Control that will use this selection</param>
-        public Selection(EditViewControl control)
-        {
+        public Selection(EditViewControl control) {
             Control = control;
             Bounds = new TextRange();
         }
@@ -53,23 +49,18 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// <summary>
         /// Gets the text of the active selection
         /// </summary>
-        public String Text
-        {
-            get
-            {
-                if (!IsValid)
-                {
+        public String Text {
+            get {
+                if (!IsValid) {
                     return "";
-                }
-                else
-                {
+                } else {
                     return Control.Document.GetRange(LogicalBounds);
                 }
             }
-            set
-            {
-                if (Text == value)
+            set {
+                if (Text == value) {
                     return;
+                }
 
                 //selection text bug fix 
                 //
@@ -87,9 +78,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
                 DeleteSelection();
                 Control.Document.InsertText(value, oCaretPos.X, oCaretPos.Y);
                 SelLength = value.Length;
-                if (nCaretX != oCaretPos.X || nCaretY != oCaretPos.Y)
-
-                {
+                if (nCaretX != oCaretPos.X || nCaretY != oCaretPos.Y) {
                     Control.Caret.Position = new TextPoint(Bounds.LastColumn, Bounds.LastRow);
                 }
 
@@ -102,21 +91,14 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// Returns the normalized positions of the selection.
         /// Swapping start and end values if the selection is reversed.
         /// </summary>
-        public TextRange LogicalBounds
-        {
-            get
-            {
+        public TextRange LogicalBounds {
+            get {
                 var r = new TextRange();
-                if (Bounds.FirstRow < Bounds.LastRow)
-                {
+                if (Bounds.FirstRow < Bounds.LastRow) {
                     return Bounds;
-                }
-                else if (Bounds.FirstRow == Bounds.LastRow && Bounds.FirstColumn < Bounds.LastColumn)
-                {
+                } else if (Bounds.FirstRow == Bounds.LastRow && Bounds.FirstColumn < Bounds.LastColumn) {
                     return Bounds;
-                }
-                else
-                {
+                } else {
                     r.FirstColumn = Bounds.LastColumn;
                     r.FirstRow = Bounds.LastRow;
                     r.LastColumn = Bounds.FirstColumn;
@@ -129,10 +111,8 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// <summary>
         /// Returns true if the selection contains One or more chars
         /// </summary>
-        public bool IsValid
-        {
-            get
-            {
+        public bool IsValid {
+            get {
                 return (LogicalBounds.FirstColumn != LogicalBounds.LastColumn ||
                         LogicalBounds.FirstRow != LogicalBounds.LastRow);
             }
@@ -141,10 +121,8 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// <summary>
         /// gets or sets the length of the selection in chars
         /// </summary>
-        public int SelLength
-        {
-            get
-            {
+        public int SelLength {
+            get {
                 var p1 = new TextPoint(Bounds.FirstColumn, Bounds.FirstRow);
                 var p2 = new TextPoint(Bounds.LastColumn, Bounds.LastRow);
                 int i1 = Control.Document.PointToIntPos(p1);
@@ -157,15 +135,12 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// <summary>
         /// Gets or Sets the Selection end as an index in the document text.
         /// </summary>
-        public int SelEnd
-        {
-            get
-            {
+        public int SelEnd {
+            get {
                 var p = new TextPoint(Bounds.LastColumn, Bounds.LastRow);
                 return Control.Document.PointToIntPos(p);
             }
-            set
-            {
+            set {
                 TextPoint p = Control.Document.IntPosToPoint(value);
                 Bounds.LastColumn = p.X;
                 Bounds.LastRow = p.Y;
@@ -176,15 +151,12 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// <summary>
         /// Gets or Sets the Selection start as an index in the document text.
         /// </summary>
-        public int SelStart
-        {
-            get
-            {
+        public int SelStart {
+            get {
                 var p = new TextPoint(Bounds.FirstColumn, Bounds.FirstRow);
                 return Control.Document.PointToIntPos(p);
             }
-            set
-            {
+            set {
                 TextPoint p = Control.Document.IntPosToPoint(value);
                 Bounds.FirstColumn = p.X;
                 Bounds.FirstRow = p.Y;
@@ -194,15 +166,12 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// <summary>
         /// Gets or Sets the logical Selection start as an index in the document text.
         /// </summary>
-        public int LogicalSelStart
-        {
-            get
-            {
+        public int LogicalSelStart {
+            get {
                 var p = new TextPoint(LogicalBounds.FirstColumn, LogicalBounds.FirstRow);
                 return Control.Document.PointToIntPos(p);
             }
-            set
-            {
+            set {
                 TextPoint p = Control.Document.IntPosToPoint(value);
                 Bounds.FirstColumn = p.X;
                 Bounds.FirstRow = p.Y;
@@ -216,15 +185,14 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// <summary>
         /// Indent the active selection one step.
         /// </summary>
-        public void Indent()
-        {
-            if (!IsValid)
+        public void Indent() {
+            if (!IsValid) {
                 return;
+            }
 
             Row xtr = null;
             var ActionGroup = new UndoBlockCollection();
-            for (int i = LogicalBounds.FirstRow; i <= LogicalBounds.LastRow; i++)
-            {
+            for (int i = LogicalBounds.FirstRow; i <= LogicalBounds.LastRow; i++) {
                 xtr = Control.Document[i];
                 xtr.Text = "\t" + xtr.Text;
                 var b = new UndoBlock();
@@ -234,8 +202,9 @@ namespace Alsing.Windows.Forms.SyntaxBox
                 b.Position.Y = i;
                 ActionGroup.Add(b);
             }
-            if (ActionGroup.Count > 0)
+            if (ActionGroup.Count > 0) {
                 Control.Document.AddToUndoList(ActionGroup);
+            }
             Bounds = LogicalBounds;
             Bounds.FirstColumn = 0;
             Bounds.LastColumn = xtr.Text.Length;
@@ -246,15 +215,14 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// <summary>
         /// Outdent the active selection one step
         /// </summary>
-        public void Outdent()
-        {
-            if (!IsValid)
+        public void Outdent() {
+            if (!IsValid) {
                 return;
+            }
 
             Row xtr = null;
             var ActionGroup = new UndoBlockCollection();
-            for (int i = LogicalBounds.FirstRow; i <= LogicalBounds.LastRow; i++)
-            {
+            for (int i = LogicalBounds.FirstRow; i <= LogicalBounds.LastRow; i++) {
                 xtr = Control.Document[i];
                 var b = new UndoBlock();
                 b.Action = UndoAction.DeleteRange;
@@ -262,20 +230,19 @@ namespace Alsing.Windows.Forms.SyntaxBox
                 b.Position.Y = i;
                 ActionGroup.Add(b);
                 string s = xtr.Text;
-                if (s.StartsWith("\t"))
-                {
+                if (s.StartsWith("\t")) {
                     b.Text = s.Substring(0, 1);
                     s = s.Substring(1);
                 }
-                if (s.StartsWith("    "))
-                {
+                if (s.StartsWith("    ")) {
                     b.Text = s.Substring(0, 4);
                     s = s.Substring(4);
                 }
                 xtr.Text = s;
             }
-            if (ActionGroup.Count > 0)
+            if (ActionGroup.Count > 0) {
                 Control.Document.AddToUndoList(ActionGroup);
+            }
             Bounds = LogicalBounds;
             Bounds.FirstColumn = 0;
             Bounds.LastColumn = xtr.Text.Length;
@@ -284,15 +251,14 @@ namespace Alsing.Windows.Forms.SyntaxBox
         }
 
 
-        public void Indent(string Pattern)
-        {
-            if (!IsValid)
+        public void Indent(string Pattern) {
+            if (!IsValid) {
                 return;
+            }
 
             Row xtr = null;
             var ActionGroup = new UndoBlockCollection();
-            for (int i = LogicalBounds.FirstRow; i <= LogicalBounds.LastRow; i++)
-            {
+            for (int i = LogicalBounds.FirstRow; i <= LogicalBounds.LastRow; i++) {
                 xtr = Control.Document[i];
                 xtr.Text = Pattern + xtr.Text;
                 var b = new UndoBlock();
@@ -302,8 +268,9 @@ namespace Alsing.Windows.Forms.SyntaxBox
                 b.Position.Y = i;
                 ActionGroup.Add(b);
             }
-            if (ActionGroup.Count > 0)
+            if (ActionGroup.Count > 0) {
                 Control.Document.AddToUndoList(ActionGroup);
+            }
             Bounds = LogicalBounds;
             Bounds.FirstColumn = 0;
             Bounds.LastColumn = xtr.Text.Length;
@@ -314,15 +281,14 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// <summary>
         /// Outdent the active selection one step
         /// </summary>
-        public void Outdent(string Pattern)
-        {
-            if (!IsValid)
+        public void Outdent(string Pattern) {
+            if (!IsValid) {
                 return;
+            }
 
             Row xtr = null;
             var ActionGroup = new UndoBlockCollection();
-            for (int i = LogicalBounds.FirstRow; i <= LogicalBounds.LastRow; i++)
-            {
+            for (int i = LogicalBounds.FirstRow; i <= LogicalBounds.LastRow; i++) {
                 xtr = Control.Document[i];
                 var b = new UndoBlock();
                 b.Action = UndoAction.DeleteRange;
@@ -330,15 +296,15 @@ namespace Alsing.Windows.Forms.SyntaxBox
                 b.Position.Y = i;
                 ActionGroup.Add(b);
                 string s = xtr.Text;
-                if (s.StartsWith(Pattern))
-                {
+                if (s.StartsWith(Pattern)) {
                     b.Text = s.Substring(0, Pattern.Length);
                     s = s.Substring(Pattern.Length);
                 }
                 xtr.Text = s;
             }
-            if (ActionGroup.Count > 0)
+            if (ActionGroup.Count > 0) {
                 Control.Document.AddToUndoList(ActionGroup);
+            }
             Bounds = LogicalBounds;
             Bounds.FirstColumn = 0;
             Bounds.LastColumn = xtr.Text.Length;
@@ -350,8 +316,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// Delete the active selection.
         /// <seealso cref="ClearSelection"/>
         /// </summary>
-        public void DeleteSelection()
-        {
+        public void DeleteSelection() {
             TextRange r = LogicalBounds;
 
             int x = r.FirstColumn;
@@ -367,8 +332,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// Clear the active selection
         /// <seealso cref="DeleteSelection"/>
         /// </summary>
-        public void ClearSelection()
-        {
+        public void ClearSelection() {
             Bounds.FirstColumn = Control.Caret.Position.X;
             Bounds.FirstRow = Control.Caret.Position.Y;
             Bounds.LastColumn = Control.Caret.Position.X;
@@ -378,8 +342,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// <summary>
         /// Make a selection from the current selection start to the position of the caret
         /// </summary>
-        public void MakeSelection()
-        {
+        public void MakeSelection() {
             Bounds.LastColumn = Control.Caret.Position.X;
             Bounds.LastRow = Control.Caret.Position.Y;
         }
@@ -387,8 +350,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// <summary>
         /// Select all text.
         /// </summary>
-        public void SelectAll()
-        {
+        public void SelectAll() {
             Bounds.FirstColumn = 0;
             Bounds.FirstRow = 0;
             Bounds.LastColumn = Control.Document[Control.Document.Count - 1].Text.Length;
@@ -408,13 +370,10 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// 
         private TextRange _Bounds;
 
-        public TextRange Bounds
-        {
+        public TextRange Bounds {
             get { return _Bounds; }
-            set
-            {
-                if (_Bounds != null)
-                {
+            set {
+                if (_Bounds != null) {
                     _Bounds.Change -= Bounds_Change;
                 }
 
@@ -424,8 +383,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
             }
         }
 
-        private void Bounds_Change(object s, EventArgs e)
-        {
+        private void Bounds_Change(object s, EventArgs e) {
             OnChange();
         }
 

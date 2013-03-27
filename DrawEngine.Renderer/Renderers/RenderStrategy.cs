@@ -10,32 +10,32 @@
  * Feel free to copy, modify and  give fixes 
  * suggestions. Keep the credits!
  */
- using System;
+
+using System;
 using System.Collections.Generic;
 using DrawEngine.Renderer.BasicStructures;
+using DrawEngine.Renderer.Mathematics.Algebra;
+using DrawEngine.Renderer.Tracers;
 
-namespace DrawEngine.Renderer.Renderers
-{
+namespace DrawEngine.Renderer.Renderers {
+    public struct PixelInfo {
+        public RGBColor Color;
+        public float Width;
+        public float Heigth;
+        public float X;
+        public float Y;
+
+        public PixelInfo(RGBColor color, float x, float y, float width, float heigth)
+        {
+            this.Color = color;
+            this.X = x;
+            this.Y = y;
+            this.Width = width;
+            this.Heigth = heigth;
+        }
+    }
     [Serializable]
-    public abstract class RenderStrategy
-    {
-        private Scene scene;
-        public RenderStrategy(Scene scene)
-        {
-            this.Scene = scene;
-        }
-        public Scene Scene
-        {
-            get { return this.scene; }
-            set
-            {
-                if(value != null){
-                    this.scene = value;
-                } else{
-                    throw new ArgumentNullException("Scene");
-                }
-            }
-        }
-        public abstract IEnumerable<Ray> GenerateRays();
+    public abstract class RenderStrategy {
+        public abstract void Render(Action<PixelInfo> executeForeachXy, RayCasting caster);
     }
 }

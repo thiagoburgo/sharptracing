@@ -8,34 +8,26 @@
 // *
 // *
 
-namespace Alsing.Text.PatternMatchers
-{
+namespace Alsing.Text.PatternMatchers {
     /// <summary>
     /// Pattern matcher that matches binary tokens
     /// </summary>
-    public class BinPatternMatcher : PatternMatcherBase
-    {
+    public class BinPatternMatcher : PatternMatcherBase {
         public static readonly BinPatternMatcher Default = new BinPatternMatcher();
         //perform the match
 
         //patterns that trigger this matcher
-        public override string[] DefaultPrefixes
-        {
+        public override string[] DefaultPrefixes {
             get { return new[] {"0", "1"}; }
         }
 
-        public override int Match(string textToMatch, int matchAtIndex)
-        {
+        public override int Match(string textToMatch, int matchAtIndex) {
             int currentIndex = matchAtIndex;
-            do
-            {
+            do {
                 char currentChar = textToMatch[currentIndex];
-                if (currentChar == '0' || currentChar == '1')
-                {
+                if (currentChar == '0' || currentChar == '1') {
                     //current char is hexchar
-                }
-                else
-                {
+                } else {
                     break;
                 }
                 currentIndex++;

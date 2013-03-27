@@ -14,16 +14,14 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using Alsing.SyntaxBox.Properties;
-using ScrollEventArgs=Alsing.Windows.Forms.IntelliMouse.ScrollEventArgs;
-using ScrollEventHandler=Alsing.Windows.Forms.IntelliMouse.ScrollEventHandler;
+using ScrollEventArgs = Alsing.Windows.Forms.IntelliMouse.ScrollEventArgs;
+using ScrollEventHandler = Alsing.Windows.Forms.IntelliMouse.ScrollEventHandler;
 
-namespace Alsing.Windows.Forms.CoreLib
-{
+namespace Alsing.Windows.Forms.CoreLib {
     /// <summary>
     /// Summary description for IntelliMouseControl.
     /// </summary>
-    public class IntelliMouseControl : Control
-    {
+    public class IntelliMouseControl : Control {
         protected const int WM_CAPTURECHANGED = 0x0215;
         protected const int WM_LBUTTONDOWN = 0x0201;
         protected const int WM_MBUTTONDOWN = 0x0207;
@@ -43,12 +41,11 @@ namespace Alsing.Windows.Forms.CoreLib
         protected Point ActivationPoint = new Point(0, 0);
         protected Point CurrentDelta = new Point(0, 0);
 
-        protected Control CurrentParent
-        {
-            get
-            {
-                if (_CurrentParent != null)
+        protected Control CurrentParent {
+            get {
+                if (_CurrentParent != null) {
                     return (Control) _CurrentParent.Target;
+                }
                 return null;
             }
             set { _CurrentParent = new WeakReference(value); }
@@ -72,11 +69,9 @@ namespace Alsing.Windows.Forms.CoreLib
         protected Timer tmrFeedback;
 
 
-        public Bitmap Image
-        {
+        public Bitmap Image {
             get { return _Image; }
-            set
-            {
+            set {
                 _Image = value;
                 IsDirty = true;
             }
@@ -88,11 +83,9 @@ namespace Alsing.Windows.Forms.CoreLib
 
         protected Color _TransparencyKey = Color.FromArgb(255, 0, 255);
 
-        public Color TransparencyKey
-        {
+        public Color TransparencyKey {
             get { return _TransparencyKey; }
-            set
-            {
+            set {
                 _TransparencyKey = value;
                 IsDirty = true;
             }
@@ -102,20 +95,18 @@ namespace Alsing.Windows.Forms.CoreLib
 
         #region CONSTRUCTOR
 
-        public IntelliMouseControl()
-        {
+        public IntelliMouseControl() {
             InitializeComponent();
-//			SetStyle(ControlStyles.Selectable,false);			
-//			this.Image = (Bitmap)this.picImage.Image;
-//			this.Visible =false;
+            //			SetStyle(ControlStyles.Selectable,false);			
+            //			this.Image = (Bitmap)this.picImage.Image;
+            //			this.Visible =false;
         }
 
         #endregion
 
         #region DISPOSE
 
-        protected override void Dispose(bool disposing)
-        {
+        protected override void Dispose(bool disposing) {
 #if DEBUG
             try
             {
@@ -123,10 +114,8 @@ namespace Alsing.Windows.Forms.CoreLib
             }
             catch {}
 #endif
-            if (disposing)
-            {
-                if (components != null)
-                {
+            if (disposing) {
+                if (components != null) {
                     components.Dispose();
                 }
             }
@@ -137,8 +126,7 @@ namespace Alsing.Windows.Forms.CoreLib
 
         #region FINALIZE
 
-        ~IntelliMouseControl()
-        {
+        ~IntelliMouseControl() {
 #if DEBUG
             try
             {
@@ -156,8 +144,7 @@ namespace Alsing.Windows.Forms.CoreLib
         /// Required method for Designer support - do not modify 
         /// the contents of this method with the code editor.
         /// </summary>
-        protected void InitializeComponent()
-        {
+        protected void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
             var resources = new System.Resources.ResourceManager(typeof (IntelliMouseControl));
             this.tmrFeedback = new Timer();
@@ -193,19 +180,18 @@ namespace Alsing.Windows.Forms.CoreLib
 
         #endregion
 
-        protected void CreateRegion()
-        {
+        protected void CreateRegion() {
             regionHandler1.ApplyRegion(this, Image, TransparencyKey);
             IsDirty = false;
         }
 
-        public void Activate(int x, int y)
-        {
-            if (IsDirty)
+        public void Activate(int x, int y) {
+            if (IsDirty) {
                 CreateRegion();
+            }
 
             Size = new Size(Image.Width, Image.Height);
-            Location = new Point(x - Image.Width/2, y - Image.Height/2);
+            Location = new Point(x - Image.Width / 2, y - Image.Height / 2);
             ActivationPoint.X = x;
             ActivationPoint.Y = y;
             BringToFront();
@@ -220,74 +206,57 @@ namespace Alsing.Windows.Forms.CoreLib
             Active = true;
         }
 
-        protected void SetCursor(int x, int y)
-        {
+        protected void SetCursor(int x, int y) {
             int dY = y;
             int dX = x;
 
             CurrentDelta.X = dX;
             CurrentDelta.Y = dY;
 
-            if (dY > 16)
-            {
+            if (dY > 16) {
                 var ms = new MemoryStream(Resources.MoveDown);
                 Cursor = new Cursor(ms);
                 CurrentDelta.Y -= 16;
-            }
-            else if (dY < -16)
-            {
+            } else if (dY < -16) {
                 var ms = new MemoryStream(Resources.MoveUp);
                 Cursor = new Cursor(ms);
                 CurrentDelta.Y += 16;
-            }
-            else
-            {
+            } else {
                 var ms = new MemoryStream(Resources.MoveUpDown);
                 Cursor = new Cursor(ms);
                 CurrentDelta = new Point(0, 0);
             }
         }
 
-        protected override void OnMouseDown(MouseEventArgs e)
-        {
+        protected override void OnMouseDown(MouseEventArgs e) {
             base.OnMouseDown(e);
-            if (Active)
-            {
-                if (e.Button != MouseButtons.None && (e.Button != MouseButtons.Middle && e.X != 0 && e.Y != 0))
-                {
+            if (Active) {
+                if (e.Button != MouseButtons.None && (e.Button != MouseButtons.Middle && e.X != 0 && e.Y != 0)) {
                     Deactivate();
                     var p = new Point(e.X + Left, e.Y + Top);
-                    NativeMethods.SendMessage(Parent.Handle, WM_LBUTTONDOWN, 0, p.Y*0x10000 + p.X);
+                    NativeMethods.SendMessage(Parent.Handle, WM_LBUTTONDOWN, 0, p.Y * 0x10000 + p.X);
                 }
             }
         }
 
-        protected override void OnMouseMove(MouseEventArgs e)
-        {
-            if (Active)
-            {
-                if (e.Button != MouseButtons.Middle && e.Button != MouseButtons.None)
-                {
+        protected override void OnMouseMove(MouseEventArgs e) {
+            if (Active) {
+                if (e.Button != MouseButtons.Middle && e.Button != MouseButtons.None) {
                     Deactivate();
-                }
-                else
-                {
+                } else {
                     int x = e.X;
                     int y = e.Y;
-                    x -= Image.Width/2;
-                    y -= Image.Height/2;
+                    x -= Image.Width / 2;
+                    y -= Image.Height / 2;
                     SetCursor(x, y);
                     NativeMethods.SendMessage(Handle, WM_MBUTTONDOWN, 0, 0);
                 }
-            }
-            else
-            {
+            } else {
                 base.OnMouseMove(e);
             }
         }
 
-        protected void Deactivate()
-        {
+        protected void Deactivate() {
             NativeMethods.SendMessage(Handle, WM_MBUTTONUP, 0, 0);
             Active = false;
             tmrFeedback.Enabled = false;
@@ -296,77 +265,65 @@ namespace Alsing.Windows.Forms.CoreLib
             Parent.Focus();
         }
 
-        protected override void OnResize(EventArgs e)
-        {
+        protected override void OnResize(EventArgs e) {
             Size = Image != null ? new Size(Image.Width, Image.Height) : new Size(32, 32);
         }
 
-        protected void Parent_MouseDown(object s, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Middle)
-            {
+        protected void Parent_MouseDown(object s, MouseEventArgs e) {
+            if (e.Button == MouseButtons.Middle) {
                 Activate(e.X, e.Y);
             }
         }
 
-        protected void tmrFeedback_Tick(object sender, EventArgs e)
-        {
+        protected void tmrFeedback_Tick(object sender, EventArgs e) {
             var a = new ScrollEventArgs {DeltaX = CurrentDelta.X, DeltaY = CurrentDelta.Y};
             onScroll(a);
         }
 
-        protected virtual void onBeginScroll(EventArgs e)
-        {
-            if (BeginScroll != null)
+        protected virtual void onBeginScroll(EventArgs e) {
+            if (BeginScroll != null) {
                 BeginScroll(this, e);
+            }
         }
 
-        protected virtual void onEndScroll(EventArgs e)
-        {
-            if (EndScroll != null)
+        protected virtual void onEndScroll(EventArgs e) {
+            if (EndScroll != null) {
                 EndScroll(this, e);
+            }
         }
 
-        protected virtual void onScroll(ScrollEventArgs e)
-        {
-            if (Scroll != null)
+        protected virtual void onScroll(ScrollEventArgs e) {
+            if (Scroll != null) {
                 Scroll(this, e);
+            }
         }
 
-        protected void IntelliMouseControl_ParentChanged(object sender, EventArgs e)
-        {
-            if (CurrentParent != null)
-            {
+        protected void IntelliMouseControl_ParentChanged(object sender, EventArgs e) {
+            if (CurrentParent != null) {
                 CurrentParent.MouseDown -= Parent_MouseDown;
             }
-            if (Parent != null)
-            {
+            if (Parent != null) {
                 Parent.MouseDown += Parent_MouseDown;
                 Deactivate();
             }
         }
 
-        protected override void OnKeyDown(KeyEventArgs e)
-        {
+        protected override void OnKeyDown(KeyEventArgs e) {
             Deactivate();
         }
 
-        protected override void OnLeave(EventArgs e)
-        {
+        protected override void OnLeave(EventArgs e) {
             base.OnLeave(e);
             Deactivate();
         }
 
-        protected override void OnLostFocus(EventArgs e)
-        {
+        protected override void OnLostFocus(EventArgs e) {
             base.OnLostFocus(e);
             Deactivate();
         }
 
-        protected override void WndProc(ref Message m)
-        {
-            if (m.Msg == WM_MOUSELEAVE)
-            {
+        protected override void WndProc(ref Message m) {
+            if (m.Msg == WM_MOUSELEAVE) {
                 base.WndProc(ref m);
                 Deactivate();
                 return;

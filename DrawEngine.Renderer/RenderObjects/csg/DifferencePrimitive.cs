@@ -10,53 +10,50 @@
  * Feel free to copy, modify and  give fixes 
  * suggestions. Keep the credits!
  */
- using System;
+
+using System;
 using DrawEngine.Renderer.BasicStructures;
 using DrawEngine.Renderer.Mathematics.Algebra;
 
-namespace DrawEngine.Renderer.RenderObjects.CSG
-{
+namespace DrawEngine.Renderer.RenderObjects.CSG {
     [Serializable]
-    public class DifferencePrimitive : Primitive, IConstrutive
-    {
+    public class DifferencePrimitive : Primitive, IConstrutive {
         private Primitive basePrimitive;
         private Primitive operPrimitive;
-        public DifferencePrimitive(Primitive priBase, Primitive priDiff)
-        {
+
+        public DifferencePrimitive(Primitive priBase, Primitive priDiff) {
             this.BasePrimitive = priBase;
             this.OperandPrimitive = priDiff;
             this.Name = "[" + priBase.Name + "] - [" + priDiff.Name + "]";
         }
 
         #region IConstrutive Members
-        public Primitive BasePrimitive
-        {
+
+        public Primitive BasePrimitive {
             get { return this.basePrimitive; }
-            set
-            {
-                if(value != null){
+            set {
+                if (value != null) {
                     this.basePrimitive = value;
-                } else{
+                } else {
                     throw new ArgumentNullException();
                 }
             }
         }
-        public Primitive OperandPrimitive
-        {
+
+        public Primitive OperandPrimitive {
             get { return this.operPrimitive; }
-            set
-            {
-                if(value != null){
+            set {
+                if (value != null) {
                     this.operPrimitive = value;
-                } else{
+                } else {
                     throw new ArgumentNullException();
                 }
             }
         }
+
         #endregion
 
-        public override bool FindIntersection(Ray ray, out Intersection intersect)
-        {
+        public override bool FindIntersection(Ray ray, out Intersection intersect) {
             //Intersection intersectTmp;
             //if (this.basePrimitive.IntersectPoint(out intersect, ray)) {
             //    if (this.operPrimitive.IntersectPoint(out intersectTmp, ray) && intersectTmp.TMin < intersect.TMin) {
@@ -68,17 +65,17 @@ namespace DrawEngine.Renderer.RenderObjects.CSG
             //    }
             //}
             //return false;
-            if(this.basePrimitive.FindIntersection(ray, out intersect)){
+            if (this.basePrimitive.FindIntersection(ray, out intersect)) {
                 Intersection intersectTmp;
-                if(this.operPrimitive.FindIntersection(ray, out intersectTmp) && intersectTmp.TMin < intersect.TMin){
+                if (this.operPrimitive.FindIntersection(ray, out intersectTmp) && intersectTmp.TMin < intersect.TMin) {
                     intersectTmp.HitPoint = ray.Origin + ray.Direction * intersectTmp.TMax;
-                    if(this.basePrimitive.IsInside(intersectTmp.HitPoint)){
+                    if (this.basePrimitive.IsInside(intersectTmp.HitPoint)) {
                         intersectTmp.Normal = this.operPrimitive.NormalOnPoint(intersectTmp.HitPoint);
                         intersectTmp.Normal.Flip();
                         //intersectTmp.TMin = intersectTmp.TMax;
                         intersect = intersectTmp;
                         return true;
-                    } else{
+                    } else {
                         //intersect.HitPoint = ray.Origin + ray.Direction * intersect.TMax;
                         //intersect.Normal = this.basePrimitive.NormalOnPoint(intersect.HitPoint);
                     }
@@ -87,16 +84,16 @@ namespace DrawEngine.Renderer.RenderObjects.CSG
             }
             return false;
         }
-        public override bool IsInside(Point3D point)
-        {
+
+        public override bool IsInside(Point3D point) {
             return this.basePrimitive.IsInside(point) && !this.operPrimitive.IsInside(point);
         }
-        public override Vector3D NormalOnPoint(Point3D pointInPrimitive)
-        {
+
+        public override Vector3D NormalOnPoint(Point3D pointInPrimitive) {
             throw new NotImplementedException("Metodo nao implementado!");
         }
-        public override bool IsOverlap(BoundBox boundBox)
-        {
+
+        public override bool IsOverlap(BoundBox boundBox) {
             throw new NotImplementedException();
         }
     }

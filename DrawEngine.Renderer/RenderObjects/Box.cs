@@ -10,18 +10,15 @@
  * Feel free to copy, modify and  give fixes 
  * suggestions. Keep the credits!
  */
- using System;
+
+using System;
 using System.ComponentModel;
-using DrawEngine.Renderer.Algebra;
 using DrawEngine.Renderer.BasicStructures;
 using DrawEngine.Renderer.Mathematics.Algebra;
-using Component = DrawEngine.Renderer.Algebra.Component;
 
-namespace DrawEngine.Renderer.RenderObjects
-{
+namespace DrawEngine.Renderer.RenderObjects {
     [Serializable]
-    public class Box : Primitive, ITransformable3D
-    {
+    public class Box : Primitive, ITransformable3D {
         private float bottomCoefABC;
         private float bottomCoefABD;
         private float bottomCoefACD;
@@ -36,9 +33,9 @@ namespace DrawEngine.Renderer.RenderObjects
         private Point3D vB, vC, vD;
         private Point3D vHigh;
         private Point3D vLow;
-        public Box() : this(Point3D.Zero, 20, 20, 20) { }
-        public Box(Point3D center, float lengthX, float lengthY, float lengthZ)
-        {
+        public Box() : this(Point3D.Zero, 20, 20, 20) {}
+
+        public Box(Point3D center, float lengthX, float lengthY, float lengthZ) {
             this.center = center;
             this.lengthX = lengthX;
             this.halfLenX = this.lengthX * 0.5f;
@@ -48,142 +45,121 @@ namespace DrawEngine.Renderer.RenderObjects
             this.halfLenZ = this.lengthZ * 0.5f;
             this.CalculateBounds();
         }
+
         [RefreshProperties(RefreshProperties.All)]
-        public float LengthX
-        {
+        public float LengthX {
             get { return this.lengthX; }
-            set
-            {
-                if (value > 0.0f)
-                {
+            set {
+                if (value > 0.0f) {
                     this.lengthX = value;
                     this.halfLenX = value * 0.5f;
                     this.vLow.X = this.center.X - this.halfLenX;
                     this.vHigh.X = this.center.X + this.halfLenX;
                     this.CalculateBounds();
-                }
-                else
-                {
+                } else {
                     throw new ArgumentException("A dimensão em X (LengthX) tem que ser maior de Zero (lengthX > 0)!");
                 }
             }
         }
+
         [RefreshProperties(RefreshProperties.All)]
-        public Point3D Center
-        {
+        public Point3D Center {
             get { return base.center; }
-            set
-            {
+            set {
                 base.center = value;
                 this.CalculateBounds();
             }
         }
+
         [RefreshProperties(RefreshProperties.All)]
-        public float LengthY
-        {
+        public float LengthY {
             get { return this.lengthY; }
-            set
-            {
-                if (value > 0.0f)
-                {
+            set {
+                if (value > 0.0f) {
                     this.lengthY = value;
                     this.halfLenY = value * 0.5f;
                     this.vLow.Y = this.center.Y - this.halfLenY;
                     this.vHigh.Y = this.center.Y + this.halfLenY;
                     this.CalculateBounds();
-                }
-                else
-                {
+                } else {
                     throw new ArgumentException("A dimensão em Y (LengthY) tem que ser maior de Zero (lengthY > 0)!");
                 }
             }
         }
+
         [RefreshProperties(RefreshProperties.All)]
-        public float LengthZ
-        {
+        public float LengthZ {
             get { return this.lengthZ; }
-            set
-            {
-                if (value > 0.0f)
-                {
+            set {
+                if (value > 0.0f) {
                     this.lengthZ = value;
                     this.halfLenZ = value * 0.5f;
                     this.vLow.Z = this.center.Z - this.halfLenZ;
                     this.vHigh.Z = this.center.Z + this.halfLenZ;
                     this.CalculateBounds();
-                }
-                else
-                {
+                } else {
                     throw new ArgumentException("A dimensão em Z (LengthZ) tem que ser maior de Zero (lengthZ > 0)!");
                 }
             }
         }
-        public Point3D this[int index]
-        {
-            get
-            {
-                if (index % 2 == 0)
-                {
+
+        public Point3D this[int index] {
+            get {
+                if (index % 2 == 0) {
                     return this.vLow;
-                }
-                else
-                {
+                } else {
                     return this.vHigh;
                 }
             }
-            set
-            {
-                if (index % 2 == 0)
-                {
+            set {
+                if (index % 2 == 0) {
                     this.vLow = value;
-                }
-                else
-                {
+                } else {
                     this.vHigh = value;
                 }
             }
         }
 
         #region ITransformable3D Members
-        public void Rotate(float angle, Vector3D axis)
-        {
+
+        public void Rotate(float angle, Vector3D axis) {
             this.vHigh.Rotate(angle, axis);
             this.vLow.Rotate(angle, axis);
             //throw new Exception("The method or operation is not implemented.");
         }
-        public void RotateAxisX(float angle)
-        {
+
+        public void RotateAxisX(float angle) {
             throw new Exception("The method or operation is not implemented.");
         }
-        public void RotateAxisY(float angle)
-        {
+
+        public void RotateAxisY(float angle) {
             throw new Exception("The method or operation is not implemented.");
         }
-        public void RotateAxisZ(float angle)
-        {
+
+        public void RotateAxisZ(float angle) {
             throw new Exception("The method or operation is not implemented.");
         }
-        public void Scale(float factor)
-        {
+
+        public void Scale(float factor) {
             this.LengthX = this.lengthX * factor;
             this.LengthY = this.lengthY * factor;
             this.LengthZ = this.lengthZ * factor;
             //this.vLow.Scale(factor);
             //this.vHigh.Scale(factor);
         }
-        public void Translate(float tx, float ty, float tz)
-        {
+
+        public void Translate(float tx, float ty, float tz) {
             this.center.Translate(tx, ty, tz);
             this.Center = this.center;
         }
-        public void Translate(Vector3D translateVector)
-        {
+
+        public void Translate(Vector3D translateVector) {
             this.Translate(translateVector.X, translateVector.Y, translateVector.Z);
         }
+
         #endregion
 
-        private void CalculateBounds()
-        {
+        private void CalculateBounds() {
             this.vLow.X = this.center.X - this.halfLenX;
             this.vLow.Y = this.center.Y - this.halfLenY;
             this.vLow.Z = this.center.Z - this.halfLenZ;
@@ -208,8 +184,7 @@ namespace DrawEngine.Renderer.RenderObjects
             this.normalABC.Normalize();
             this.topCoefABC = this.normalABC * this.vD; // Front face coef.
             this.bottomCoefABC = this.normalABC * this.vLow; // Back face coef.
-            if (this.topCoefABC < this.bottomCoefABC)
-            {
+            if (this.topCoefABC < this.bottomCoefABC) {
                 float temp = this.topCoefABC;
                 this.topCoefABC = this.bottomCoefABC;
                 this.bottomCoefABC = temp;
@@ -217,8 +192,7 @@ namespace DrawEngine.Renderer.RenderObjects
             this.normalABD.Normalize();
             this.topCoefABD = this.normalABD * this.vC; // Front face coef.
             this.bottomCoefABD = this.normalABD * this.vLow; // Back face coef.
-            if (this.topCoefABD < this.bottomCoefABD)
-            {
+            if (this.topCoefABD < this.bottomCoefABD) {
                 float temp = this.topCoefABD;
                 this.topCoefABD = this.bottomCoefABD;
                 this.bottomCoefABD = temp;
@@ -226,8 +200,7 @@ namespace DrawEngine.Renderer.RenderObjects
             this.normalACD.Normalize();
             this.topCoefACD = this.normalACD * this.vB; // Front face coef.
             this.bottomCoefACD = this.normalACD * this.vLow; // Back face coef.
-            if (this.topCoefACD < this.bottomCoefACD)
-            {
+            if (this.topCoefACD < this.bottomCoefACD) {
                 float temp = this.topCoefACD;
                 this.topCoefACD = this.bottomCoefACD;
                 this.bottomCoefACD = temp;
@@ -239,32 +212,37 @@ namespace DrawEngine.Renderer.RenderObjects
             this.boundBox = new BoundBox(this.vLow, this.vHigh);
             this.center = this.boundBox.Center;
         }
-        private enum Sides { None, Left, Right, Top, Bottom, Front, Back }
 
-        public override bool FindIntersection(Ray ray, out Intersection intersection)
-        {   
+        private enum Sides {
+            None,
+            Left,
+            Right,
+            Top,
+            Bottom,
+            Front,
+            Back
+        }
+
+        public override bool FindIntersection(Ray ray, out Intersection intersection) {
             intersection = new Intersection();
             float tNear = float.NegativeInfinity, tFar = float.PositiveInfinity, t1, t2;
             float oX = ray.Origin.X, oY = ray.Origin.Y, oZ = ray.Origin.Z;
-            float inv_dX = ray.Inv_Direction.X, inv_dY = ray.Inv_Direction.Y, inv_dZ = ray.Inv_Direction.Z;
+            float inv_dX = ray.InvertedDirection.X, inv_dY = ray.InvertedDirection.Y, inv_dZ = ray.InvertedDirection.Z;
             float temp;
             //Sides hitSide = Sides.None;
             //bool x = false, y = false, z = false;
+
             #region X
 
-            if (ray.Direction.X == 0)
-            {
-                if ((oX < this.vLow.X || oX > this.vHigh.X))
-                {
+            if (ray.Direction.X.NearZero()) {
+                if ((oX < this.vLow.X || oX > this.vHigh.X)) {
                     return false;
                 }
-            }
-            else
-            {
+            } else {
                 t1 = (this.vLow.X - oX) * inv_dX;
                 t2 = (this.vHigh.X - oX) * inv_dX;
 
-                if (t1 > t2){
+                if (t1 > t2) {
                     temp = t1;
                     t1 = t2;
                     t2 = temp;
@@ -273,35 +251,30 @@ namespace DrawEngine.Renderer.RenderObjects
                 //} else{
                 //    hitSide = Sides.Left;    
                 //}
-                if (t1 > tNear)
-                {
+                if (t1 > tNear) {
                     tNear = t1;
                 }
-                if (t2 < tFar)
-                {
+                if (t2 < tFar) {
                     tFar = t2;
                 }
-                if (tNear > tFar || tFar < 0.1f)
-                {
+                if (tNear > tFar || tFar < 0.1f) {
                     return false;
                 }
             }
+
             #endregion
 
             #region Y
-            if (ray.Direction.Y == 0)
-            {
-                if ((oY < this.vLow.Y || oY > this.vHigh.Y))
-                {
+
+            if (ray.Direction.Y.NearZero()) {
+                if ((oY < this.vLow.Y || oY > this.vHigh.Y)) {
                     return false;
                 }
-            }
-            else
-            {
+            } else {
                 t1 = (this.vLow.Y - oY) * inv_dY;
                 t2 = (this.vHigh.Y - oY) * inv_dY;
 
-                if (t1 > t2){
+                if (t1 > t2) {
                     temp = t1;
                     t1 = t2;
                     t2 = temp;
@@ -310,36 +283,31 @@ namespace DrawEngine.Renderer.RenderObjects
                 //} else{
                 //    hitSide = Sides.Bottom;    
                 //}
-                if (t1 > tNear)
-                {
+                if (t1 > tNear) {
                     tNear = t1;
-                   //y = true;
+                    //y = true;
                 }
-                if (t2 < tFar)
-                {
+                if (t2 < tFar) {
                     tFar = t2;
                 }
-                if (tNear > tFar || tFar < 0.1f)
-                {
+                if (tNear > tFar || tFar < 0.1f) {
                     return false;
                 }
             }
+
             #endregion
 
             #region Z
-            if (ray.Direction.Z == 0)
-            {
-                if ((oZ < this.vLow.Z || oZ > this.vHigh.Z))
-                {
+
+            if (ray.Direction.Z.NearZero()) {
+                if ((oZ < this.vLow.Z || oZ > this.vHigh.Z)) {
                     return false;
                 }
-            }
-            else
-            {
+            } else {
                 t1 = (this.vLow.Z - oZ) * inv_dZ;
                 t2 = (this.vHigh.Z - oZ) * inv_dZ;
 
-                if (t1 > t2){
+                if (t1 > t2) {
                     temp = t1;
                     t1 = t2;
                     t2 = temp;
@@ -348,19 +316,17 @@ namespace DrawEngine.Renderer.RenderObjects
                 //} else{
                 //    hitSide = Sides.Front;    
                 //}
-                if (t1 > tNear)
-                {
+                if (t1 > tNear) {
                     tNear = t1;
                 }
-                if (t2 < tFar)
-                {
+                if (t2 < tFar) {
                     tFar = t2;
                 }
-                if (tNear > tFar || tFar < 0.1f)
-                {
+                if (tNear > tFar || tFar < 0.1f) {
                     return false;
                 }
             }
+
             #endregion
 
             intersection.TMin = tNear;
@@ -403,35 +369,26 @@ namespace DrawEngine.Renderer.RenderObjects
             //        intersection.Normal.Z = 1.0f;
             //        break;
             //}
-           
+
             #region Calculo da Normal
+
             Sides hitSide = Sides.None;
-            if(MathUtil.NearZero(intersection.HitPoint.X - this.vLow.X, 0.01)){
+            if (MathUtil.NearZero(intersection.HitPoint.X - this.vLow.X, 0.01)) {
                 intersection.Normal.X = -1;
                 hitSide = Sides.Left;
-            }
-            else if (MathUtil.NearZero(intersection.HitPoint.X - this.vHigh.X, 0.01))
-            {
+            } else if (MathUtil.NearZero(intersection.HitPoint.X - this.vHigh.X, 0.01)) {
                 intersection.Normal.X = 1;
                 hitSide = Sides.Right;
-            }
-            else if (MathUtil.NearZero(intersection.HitPoint.Y - this.vLow.Y, 0.01))
-            {
+            } else if (MathUtil.NearZero(intersection.HitPoint.Y - this.vLow.Y, 0.01)) {
                 intersection.Normal.Y = -1;
                 hitSide = Sides.Bottom;
-            }
-            else if (MathUtil.NearZero(intersection.HitPoint.Y - this.vHigh.Y, 0.01))
-            {
+            } else if (MathUtil.NearZero(intersection.HitPoint.Y - this.vHigh.Y, 0.01)) {
                 intersection.Normal.Y = 1;
                 hitSide = Sides.Top;
-            }
-            else if (MathUtil.NearZero(intersection.HitPoint.Z - this.vLow.Z, 0.01))
-            {
+            } else if (MathUtil.NearZero(intersection.HitPoint.Z - this.vLow.Z, 0.01)) {
                 intersection.Normal.Z = -1;
                 hitSide = Sides.Back;
-            }
-            else if (MathUtil.NearZero(intersection.HitPoint.Z - this.vHigh.Z, 0.01))
-            {
+            } else if (MathUtil.NearZero(intersection.HitPoint.Z - this.vHigh.Z, 0.01)) {
                 intersection.Normal.Z = 1;
                 hitSide = Sides.Front;
             }
@@ -463,6 +420,7 @@ namespace DrawEngine.Renderer.RenderObjects
             //{
             //    intersection.Normal.Y = 1;
             //}
+
             #endregion
 
             //Vector3D normal = Vector3D.Zero;
@@ -491,17 +449,14 @@ namespace DrawEngine.Renderer.RenderObjects
             //    Console.WriteLine("------");
             //}
 
-            if (this.material != null && this.material.IsTexturized)
-            {
+            if (this.material != null && this.material.IsTexturized) {
                 float u = 0, v = 0;
-                switch (hitSide)
-                {
+                switch (hitSide) {
                     case Sides.Left:
                     case Sides.Right:
                         u = (this.topCoefABC - (intersection.HitPoint * this.normalABC)) * this.inv_TopBottomABC;
                         v = ((intersection.HitPoint * this.normalABD) - this.bottomCoefABD) * this.inv_TopBottomABD;
-                        if (intersection.Normal.X == 1)
-                        {
+                        if (intersection.Normal.X.IsEqual(1.0)) {
                             u = 1 - u;
                         }
                         break;
@@ -509,8 +464,7 @@ namespace DrawEngine.Renderer.RenderObjects
                     case Sides.Bottom:
                         u = ((intersection.HitPoint * this.normalACD) - this.bottomCoefACD) * this.inv_TopBottomACD;
                         v = (this.topCoefABC - (intersection.HitPoint * this.normalABC)) * this.inv_TopBottomABC;
-                        if (intersection.Normal.Y == -1)
-                        {
+                        if (intersection.Normal.Y.IsEqual(-1.0)) {
                             u = 1 - u;
                         }
                         break;
@@ -518,8 +472,7 @@ namespace DrawEngine.Renderer.RenderObjects
                     case Sides.Back:
                         u = ((intersection.HitPoint * this.normalACD) - this.bottomCoefACD) * this.inv_TopBottomACD;
                         v = ((intersection.HitPoint * this.normalABD) - this.bottomCoefABD) * this.inv_TopBottomABD;
-                        if (intersection.Normal.Z == 1)
-                        {
+                        if (intersection.Normal.Z.IsEqual(1.0)) {
                             u = 1 - u;
                         }
                         break;
@@ -532,6 +485,7 @@ namespace DrawEngine.Renderer.RenderObjects
             }
             return true;
         }
+
         //public override bool IntersectPoint(out Intersection intersection, Ray ray) {
         //    intersection = new Intersection();
         //    float tNear = float.NegativeInfinity, tFar = float.PositiveInfinity, t1, t2;
@@ -669,43 +623,31 @@ namespace DrawEngine.Renderer.RenderObjects
         //    //}
         //    return true;
         //}
-        public override Vector3D NormalOnPoint(Point3D pointInPrimitive)
-        {
+        public override Vector3D NormalOnPoint(Point3D pointInPrimitive) {
             Vector3D normal = new Vector3D();
-            if ((pointInPrimitive.Z > this.vLow.Z - 0.0001f && pointInPrimitive.Z < this.vLow.Z + 0.0001f))
-            {
+            if ((pointInPrimitive.Z > this.vLow.Z - 0.0001f && pointInPrimitive.Z < this.vLow.Z + 0.0001f)) {
                 normal.Z = -1;
-            }
-            else if ((pointInPrimitive.Z > this.vHigh.Z - 0.0001f && pointInPrimitive.Z < this.vHigh.Z + 0.0001f))
-            {
+            } else if ((pointInPrimitive.Z > this.vHigh.Z - 0.0001f && pointInPrimitive.Z < this.vHigh.Z + 0.0001f)) {
                 normal.Z = 1;
-            }
-            else if ((pointInPrimitive.X > this.vLow.X - 0.0001f && pointInPrimitive.X < this.vLow.X + 0.0001f))
-            {
+            } else if ((pointInPrimitive.X > this.vLow.X - 0.0001f && pointInPrimitive.X < this.vLow.X + 0.0001f)) {
                 normal.X = -1;
-            }
-            else if ((pointInPrimitive.X > this.vHigh.X - 0.0001f && pointInPrimitive.X < this.vHigh.X + 0.0001f))
-            {
+            } else if ((pointInPrimitive.X > this.vHigh.X - 0.0001f && pointInPrimitive.X < this.vHigh.X + 0.0001f)) {
                 normal.X = 1;
-            }
-            else if ((pointInPrimitive.Y > this.vLow.Y - 0.0001f && pointInPrimitive.Y < this.vLow.Y + 0.0001f))
-            {
+            } else if ((pointInPrimitive.Y > this.vLow.Y - 0.0001f && pointInPrimitive.Y < this.vLow.Y + 0.0001f)) {
                 normal.Y = -1;
-            }
-            else if ((pointInPrimitive.Y > this.vHigh.Y - 0.0001f && pointInPrimitive.Y < this.vHigh.Y + 0.0001f))
-            {
+            } else if ((pointInPrimitive.Y > this.vHigh.Y - 0.0001f && pointInPrimitive.Y < this.vHigh.Y + 0.0001f)) {
                 normal.Y = 1;
             }
             return normal;
         }
-        public override bool IsInside(Point3D point)
-        {
-            return ((point.X >= this.vLow.X - 0.001f && point.X <= this.vHigh.X + 0.001f)
-                    && (point.Y >= this.vLow.Y - 0.001f && point.Y <= this.vHigh.Y + 0.001f)
-                    && (point.Z >= this.vLow.Z - 0.001f && point.Z <= this.vHigh.Z + 0.001f));
+
+        public override bool IsInside(Point3D point) {
+            return ((point.X >= this.vLow.X - 0.001f && point.X <= this.vHigh.X + 0.001f) &&
+                    (point.Y >= this.vLow.Y - 0.001f && point.Y <= this.vHigh.Y + 0.001f) &&
+                    (point.Z >= this.vLow.Z - 0.001f && point.Z <= this.vHigh.Z + 0.001f));
         }
-        public override bool IsOverlap(BoundBox boundBox)
-        {
+
+        public override bool IsOverlap(BoundBox boundBox) {
             throw new NotImplementedException();
         }
     }

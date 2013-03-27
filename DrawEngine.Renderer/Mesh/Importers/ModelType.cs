@@ -1,7 +1,5 @@
-namespace DrawEngine.Renderer.Importers
-{
-    public enum ModelType
-    {
+namespace DrawEngine.Renderer.Importers {
+    public enum ModelType {
         Ply,
         Byu,
         Obj,

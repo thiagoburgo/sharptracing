@@ -10,48 +10,46 @@
  * Feel free to copy, modify and  give fixes 
  * suggestions. Keep the credits!
  */
- using System;
+
+using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
-using DrawEngine.Renderer.Algebra;
+using DrawEngine.Renderer.Mathematics.Algebra;
 
-namespace DrawEngine.Renderer.Samplers
-{
-    [XmlInclude(typeof(RegularGridSampler)), Serializable]
-    public abstract class Sampler
-    {
+namespace DrawEngine.Renderer.Samplers {
+    [XmlInclude(typeof (RegularGridSampler)), Serializable]
+    public abstract class Sampler {
         protected int samplesX;
         protected int samplesY;
         protected float slopeX;
         protected float slopeY;
         public Sampler() : this(1, 1) {}
-        public Sampler(int samplesX, int samplesY)
-        {
+
+        public Sampler(int samplesX, int samplesY) {
             this.SamplesX = samplesX;
             this.SamplesY = samplesY;
         }
-        public int SamplesPerPixel
-        {
+
+        public int SamplesPerPixel {
             get { return this.samplesX * this.samplesY; }
         }
-        public int SamplesX
-        {
+
+        public int SamplesX {
             get { return this.samplesX; }
-            set
-            {
+            set {
                 this.samplesX = value;
                 this.slopeX = 1f / this.samplesX;
             }
         }
-        public int SamplesY
-        {
+
+        public int SamplesY {
             get { return this.samplesY; }
-            set
-            {
+            set {
                 this.samplesY = value;
                 this.slopeY = 1f / this.samplesY;
             }
         }
+
         public abstract IEnumerable<Point2D> GenerateSamples(float x, float y);
     }
 }

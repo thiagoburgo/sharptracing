@@ -10,29 +10,24 @@
 
 using System;
 
-namespace Alsing.Drawing.GDI
-{
+namespace Alsing.Drawing.GDI {
     /// <summary>
     /// Summary description for GDIObject.
     /// </summary>
-    public abstract class GDIObject : IDisposable
-    {
+    public abstract class GDIObject : IDisposable {
         protected bool IsCreated;
 
-        protected virtual void Destroy()
-        {
+        protected virtual void Destroy() {
             IsCreated = false;
         }
 
-        protected void Create()
-        {
+        protected void Create() {
             IsCreated = true;
         }
 
         #region Implementation of IDisposable
 
-        public void Dispose()
-        {
+        public void Dispose() {
             Destroy();
         }
 

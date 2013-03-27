@@ -10,9 +10,8 @@
  * Feel free to copy, modify and  give fixes 
  * suggestions. Keep the credits!
  */
- using System;
+
 using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Forms;
 using DrawEngine.Renderer;
@@ -20,7 +19,6 @@ using DrawEngine.Renderer.Collections;
 using DrawEngine.Renderer.Lights;
 using DrawEngine.Renderer.Materials;
 using DrawEngine.Renderer.RenderObjects;
-using System.Linq;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace DrawEngine.SharpTracingUI {
@@ -30,23 +28,23 @@ namespace DrawEngine.SharpTracingUI {
             this.InitializeComponent();
         }
 
-        void Scenes_CollectionChanged(object sender, NotifyCollectionChangedEventArgs<Scene> e) {
+        private void Scenes_CollectionChanged(object sender, NotifyCollectionChangedEventArgs<Scene> e) {
             NameableCollection<Scene> scenes = sender as NameableCollection<Scene>;
-            if(scenes != null){
-                foreach(Scene scene in scenes){
+            if (scenes != null) {
+                foreach (Scene scene in scenes) {
                     scene.OnNameChanged -= this.nameable_OnNameChanged;
 
                     scene.Lights.CollectionChanged -= this.Nameable_CollectionChanged;
                     scene.Primitives.CollectionChanged -= this.Nameable_CollectionChanged;
                     scene.Materials.CollectionChanged -= this.Nameable_CollectionChanged;
 
-                    foreach(INameable nameable in scene.Lights) {
+                    foreach (INameable nameable in scene.Lights) {
                         nameable.OnNameChanged -= this.nameable_OnNameChanged;
                     }
-                    foreach(INameable nameable in scene.Primitives) {
+                    foreach (INameable nameable in scene.Primitives) {
                         nameable.OnNameChanged -= this.nameable_OnNameChanged;
                     }
-                    foreach(INameable nameable in scene.Materials) {
+                    foreach (INameable nameable in scene.Materials) {
                         nameable.OnNameChanged -= this.nameable_OnNameChanged;
                     }
                     //********************************************
@@ -55,19 +53,20 @@ namespace DrawEngine.SharpTracingUI {
                     scene.Lights.CollectionChanged += this.Nameable_CollectionChanged;
                     scene.Primitives.CollectionChanged += this.Nameable_CollectionChanged;
                     scene.Materials.CollectionChanged += this.Nameable_CollectionChanged;
-                    foreach(INameable nameable in scene.Lights){
+                    foreach (INameable nameable in scene.Lights) {
                         nameable.OnNameChanged += this.nameable_OnNameChanged;
                     }
-                    foreach(INameable nameable in scene.Primitives){
+                    foreach (INameable nameable in scene.Primitives) {
                         nameable.OnNameChanged += this.nameable_OnNameChanged;
                     }
-                    foreach(INameable nameable in scene.Materials){
+                    foreach (INameable nameable in scene.Materials) {
                         nameable.OnNameChanged += this.nameable_OnNameChanged;
                     }
                 }
             }
 
             #region MyRegion
+
             //foreach(Scene scene in e.NewItems) {
             //    switch(e.Action) {
             //        case NotifyCollectionChangedAction.Add:
@@ -108,19 +107,24 @@ namespace DrawEngine.SharpTracingUI {
             //            break;
             //    }
             //} 
+
             #endregion
+
             this.Refresh();
         }
-        void Nameable_CollectionChanged<T>(object sender, NotifyCollectionChangedEventArgs<T> e) {
+
+        private void Nameable_CollectionChanged<T>(object sender, NotifyCollectionChangedEventArgs<T> e) {
             this.Refresh();
         }
-        void nameable_OnNameChanged(INameable sender, string oldName) {
+
+        private void nameable_OnNameChanged(INameable sender, string oldName) {
             this.Refresh();
         }
+
         public NameableCollection<Scene> Scenes {
             get { return UnifiedScenesRepository.Scenes; }
         }
-       
+
         //public TreeViewScenes(NameableCollection<Scene> scenes)
         //{
         //    UnifiedScenesRepository.Scenes = scenes;
@@ -128,17 +132,17 @@ namespace DrawEngine.SharpTracingUI {
         //    this.Refresh();
         //}
         protected override void OnNodeMouseClick(TreeNodeMouseClickEventArgs e) {
-            if(e.Node.Level == 0) {
+            if (e.Node.Level == 0) {
                 e.Node.ContextMenuStrip = this.contextMenuStripScene;
-            }
-            else {
+            } else {
                 e.Node.ContextMenuStrip = this.contextMenuPrimitive;
             }
             base.OnNodeMouseClick(e);
         }
+
         public override void Refresh() {
             this.Nodes.Clear();
-            if(UnifiedScenesRepository.Scenes == null) {
+            if (UnifiedScenesRepository.Scenes == null) {
                 return;
             }
             TreeNode scenesNode = new TreeNode("Scenes(" + UnifiedScenesRepository.Scenes.Count + ")", 1, 1);
@@ -146,18 +150,18 @@ namespace DrawEngine.SharpTracingUI {
             scenesNode.Tag = UnifiedScenesRepository.Scenes;
             scenesNode.Expand();
             this.Nodes.Add(scenesNode);
-            foreach(Scene newScene in UnifiedScenesRepository.Scenes) {
+            foreach (Scene newScene in UnifiedScenesRepository.Scenes) {
                 TreeNode newSceneNode = new TreeNode(newScene.Name, 0, 0);
                 newSceneNode.Name = newScene.Name;
                 newSceneNode.Tag = newScene;
                 scenesNode.Nodes.Add(newSceneNode);
-                if(newScene.Primitives != null) {
+                if (newScene.Primitives != null) {
                     TreeNode primitivesNode = new TreeNode("Primitives(" + newScene.Primitives.Count + ")", 1, 1);
                     primitivesNode.Name = "Primitives";
                     primitivesNode.Tag = newScene.Primitives;
                     primitivesNode.Expand();
                     newSceneNode.Nodes.Add(primitivesNode);
-                    foreach(Primitive newPrimitive in newScene.Primitives) {
+                    foreach (Primitive newPrimitive in newScene.Primitives) {
                         TreeNode newPrimitiveNode = new TreeNode(newPrimitive.Name, 0, 0);
                         newPrimitiveNode.Name = newPrimitive.Name;
                         newPrimitiveNode.Tag = newPrimitive;
@@ -165,13 +169,13 @@ namespace DrawEngine.SharpTracingUI {
                         primitivesNode.Nodes.Add(newPrimitiveNode);
                     }
                 }
-                if(newScene.Lights != null) {
+                if (newScene.Lights != null) {
                     TreeNode lightsNode = new TreeNode("Lights(" + newScene.Lights.Count + ")", 1, 1);
                     lightsNode.Name = "Lights";
                     lightsNode.Tag = newScene.Lights;
                     lightsNode.Expand();
                     newSceneNode.Nodes.Add(lightsNode);
-                    foreach(Light newLight in newScene.Lights) {
+                    foreach (Light newLight in newScene.Lights) {
                         TreeNode newLightNode = new TreeNode(newLight.Name, 0, 0);
                         newLightNode.Name = newLight.Name;
                         newLightNode.Tag = newLight;
@@ -179,13 +183,13 @@ namespace DrawEngine.SharpTracingUI {
                         lightsNode.Nodes.Add(newLightNode);
                     }
                 }
-                if(newScene.Materials != null) {
+                if (newScene.Materials != null) {
                     TreeNode materialsNode = new TreeNode("Materials(" + newScene.Materials.Count + ")", 1, 1);
                     materialsNode.Name = "Materials";
                     materialsNode.Tag = newScene.Materials;
                     materialsNode.Expand();
                     newSceneNode.Nodes.Add(materialsNode);
-                    foreach(Material newMaterial in newScene.Materials) {
+                    foreach (Material newMaterial in newScene.Materials) {
                         TreeNode newMaterialNode = new TreeNode(newMaterial.Name, 0, 0);
                         newMaterialNode.Name = newMaterial.Name;
                         newMaterialNode.Tag = newMaterial;
@@ -197,6 +201,7 @@ namespace DrawEngine.SharpTracingUI {
             base.Refresh();
             this.ExpandAll();
         }
+
         public void AddScene(Scene scene) {
             UnifiedScenesRepository.Scenes.Add(scene);
             this.Refresh();
@@ -209,13 +214,14 @@ namespace DrawEngine.SharpTracingUI {
             //scene.OnNameChanged += new Scene.NameChange(scene_OnNameChanged);
             //scene.OnPrimitiveAdded += new Scene.PrimitiveAdd(scene_OnPrimitiveAdded);
         }
+
         private static Scene GetSceneFromNode(TreeNode node) {
-            if(node != null) {
-                if((node.Tag as Scene) != null) {
+            if (node != null) {
+                if ((node.Tag as Scene) != null) {
                     return (node.Tag as Scene);
                 }
-                while(node.Parent != null) {
-                    if((node.Parent.Tag as Scene) != null) {
+                while (node.Parent != null) {
+                    if ((node.Parent.Tag as Scene) != null) {
                         return (node.Parent.Tag as Scene);
                     }
                     node = node.Parent;
@@ -223,24 +229,26 @@ namespace DrawEngine.SharpTracingUI {
             }
             return null;
         }
+
         private void TreeViewScenes_AfterSelect(object sender, TreeViewEventArgs e) {
             Scene scn = GetSceneFromNode(e.Node);
-            if(scn != null) {
+            if (scn != null) {
                 UnifiedScenesRepository.CurrentEditingScene = scn;
-                Form mainForm = (Form)FromHandle(Process.GetCurrentProcess().MainWindowHandle);
-                foreach(IDockContent doc in ((MainForm)mainForm).DockPanel.Documents) {
-                    if(doc is DocumentWindow
-                       && (doc as DocumentWindow).TabText == UnifiedScenesRepository.CurrentEditingScene.Name) {
+                Form mainForm = (Form) FromHandle(Process.GetCurrentProcess().MainWindowHandle);
+                foreach (IDockContent doc in ((MainForm) mainForm).DockPanel.Documents) {
+                    if (doc is DocumentWindow &&
+                        (doc as DocumentWindow).TabText == UnifiedScenesRepository.CurrentEditingScene.Name) {
                         (doc as DocumentWindow).Activate();
                     }
                 }
             }
-            if(!(e.Node.Tag is IEnumerable)) {
+            if (!(e.Node.Tag is IEnumerable)) {
                 PropertyWindow.Instance.PropertyGrid.SelectedObject = e.Node.Tag;
             }
         }
+
         private void contextMenuPrimitive_ItemClicked(object sender, ToolStripItemClickedEventArgs e) {
-            if(this.SelectedNode != null && this.SelectedNode.Tag != null) {
+            if (this.SelectedNode != null && this.SelectedNode.Tag != null) {
                 this.SelectedNode.Tag = null;
                 UnifiedScenesRepository.CurrentEditingScene.Primitives.Remove(this.SelectedNode.Tag as Primitive);
                 this.Refresh();

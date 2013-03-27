@@ -3,6 +3,7 @@ using System.Drawing;
 using System.IO;
 
 #region .NET Disclaimer/Info
+
 //===============================================================================
 //
 // gOODiDEA, uland.com
@@ -15,9 +16,11 @@ using System.IO;
 // $History:		$  
 //  
 //===============================================================================
+
 #endregion
 
 #region Java
+
 /**
  * Class AnimatedGifEncoder - Encodes a GIF file consisting of one or
  * more frames.
@@ -39,12 +42,11 @@ using System.IO;
  * @version 1.03 November 2003
  *
  */
+
 #endregion
 
-namespace DrawEngine.Renderer.Animator
-{
-    public class AnimatedGifEncoder
-    {
+namespace DrawEngine.Renderer.Animator {
+    public class AnimatedGifEncoder {
         protected bool closeStream = false; // close stream when finished
         protected int colorDepth; // number of bit planes
         protected byte[] colorTab; // RGB palette
@@ -72,11 +74,12 @@ namespace DrawEngine.Renderer.Animator
 		 *
 		 * @param ms int delay time in milliseconds
 		 */
-        public float Delay
-        {
+
+        public float Delay {
             get { return this.delay; }
-            set { this.delay = (int)Math.Round(value / 10.0f); }
+            set { this.delay = (int) Math.Round(value / 10.0f); }
         }
+
         /**
 		 * Sets the GIF frame disposal code for the last added frame
 		 * and any subsequent frames.  Default is 0 if no transparent
@@ -92,15 +95,15 @@ namespace DrawEngine.Renderer.Animator
 		 * @param iter int number of iterations.
 		 * @return
 		 */
-        public int RepeatTimes
-        {
-            set
-            {
-                if(value >= 0){
+
+        public int RepeatTimes {
+            set {
+                if (value >= 0) {
                     this.repeat = value;
                 }
             }
         }
+
         /**
 		 * Sets the transparent color for the last added frame
 		 * and any subsequent frames.
@@ -112,11 +115,12 @@ namespace DrawEngine.Renderer.Animator
 		 *
 		 * @param c Color to be treated as transparent on display.
 		 */
-        public Color TransparentColor
-        {
+
+        public Color TransparentColor {
             get { return this.transparent; }
             set { this.transparent = value; }
         }
+
         /**
 		 * Adds next GIF frame.  The frame is not written immediately, but is
 		 * actually deferred until the next frame is received so that timing
@@ -133,15 +137,15 @@ namespace DrawEngine.Renderer.Animator
 		 *
 		 * @param fps float frame rate (frames per second)
 		 */
-        public float FrameRate
-        {
-            set
-            {
-                if(value != 0f){
-                    this.delay = (int)Math.Round(1000f / value);
+
+        public float FrameRate {
+            set {
+                if (value != 0f) {
+                    this.delay = (int) Math.Round(1000f / value);
                 }
             }
         }
+
         /**
 		 * Sets quality of color quantization (conversion of images
 		 * to the maximum 256 colors allowed by the GIF specification).
@@ -153,76 +157,76 @@ namespace DrawEngine.Renderer.Animator
 		 * @param quality int greater than 0.
 		 * @return
 		 */
-        public int Quality
-        {
+
+        public int Quality {
             get { return this.sample; }
-            set
-            {
-                if(value < 1){
+            set {
+                if (value < 1) {
                     value = 1;
                 }
                 this.sample = value;
             }
         }
-        public void SetDispose(int code)
-        {
-            if(code >= 0){
+
+        public void SetDispose(int code) {
+            if (code >= 0) {
                 this.dispose = code;
             }
         }
-        public bool AddFrame(Image im)
-        {
-            if((im == null) || !this.started){
+
+        public bool AddFrame(Image im) {
+            if ((im == null) || !this.started) {
                 return false;
             }
             bool ok = true;
-            try{
-                if(!this.sizeSet){
+            try {
+                if (!this.sizeSet) {
                     // use first frame's size
                     this.SetSize(im.Width, im.Height);
                 }
                 this.image = im;
                 this.GetImagePixels(); // convert to correct format if necessary
                 this.AnalyzePixels(); // build color table & map pixels
-                if(this.firstFrame){
+                if (this.firstFrame) {
                     this.WriteLSD(); // logical screen descriptior
                     this.WritePalette(); // global color table
-                    if(this.repeat >= 0){
+                    if (this.repeat >= 0) {
                         // use NS app extension to indicate reps
                         this.WriteNetscapeExt();
                     }
                 }
                 this.WriteGraphicCtrlExt(); // write graphic control extension
                 this.WriteImageDesc(); // image descriptor
-                if(!this.firstFrame){
+                if (!this.firstFrame) {
                     this.WritePalette(); // local color table
                 }
                 this.WritePixels(); // encode and write pixel data
                 this.firstFrame = false;
-            } catch(IOException e){
+            } catch (IOException e) {
                 ok = false;
             }
             return ok;
         }
+
         /**
 		 * Flushes any pending data and closes output file.
 		 * If writing to an OutputStream, the stream is not
 		 * closed.
 		 */
-        public bool Finish()
-        {
-            if(!this.started){
+
+        public bool Finish() {
+            if (!this.started) {
                 return false;
             }
             bool ok = true;
             this.started = false;
-            try{
+            try {
                 this.fs.WriteByte(0x3b); // gif trailer
                 this.fs.Flush();
-                if(this.closeStream){
+                if (this.closeStream) {
                     this.fs.Close();
                 }
-            } catch(IOException e){
+            } catch (IOException e) {
                 ok = false;
             }
             // reset for subsequent use
@@ -236,6 +240,7 @@ namespace DrawEngine.Renderer.Animator
             this.firstFrame = true;
             return ok;
         }
+
         /**
 		 * Sets the GIF frame size.  The default size is the
 		 * size of the first frame added if this method is
@@ -244,21 +249,22 @@ namespace DrawEngine.Renderer.Animator
 		 * @param w int frame width.
 		 * @param h int frame width.
 		 */
-        public void SetSize(int w, int h)
-        {
-            if(this.started && !this.firstFrame){
+
+        public void SetSize(int w, int h) {
+            if (this.started && !this.firstFrame) {
                 return;
             }
             this.width = w;
             this.height = h;
-            if(this.width < 1){
+            if (this.width < 1) {
                 this.width = 320;
             }
-            if(this.height < 1){
+            if (this.height < 1) {
                 this.height = 240;
             }
             this.sizeSet = true;
         }
+
         /**
 		 * Initiates GIF file creation on the given stream.  The stream
 		 * is not closed automatically.
@@ -266,45 +272,47 @@ namespace DrawEngine.Renderer.Animator
 		 * @param os OutputStream on which GIF images are written.
 		 * @return false if initial write failed.
 		 */
-        public bool Start(FileStream os)
-        {
-            if(os == null){
+
+        public bool Start(FileStream os) {
+            if (os == null) {
                 return false;
             }
             bool ok = true;
             this.closeStream = false;
             this.fs = os;
-            try{
+            try {
                 this.WriteString("GIF89a"); // header
-            } catch(IOException e){
+            } catch (IOException e) {
                 ok = false;
             }
             return this.started = ok;
         }
+
         /**
 		 * Initiates writing of a GIF file with the specified name.
 		 *
 		 * @param file String containing output file name.
 		 * @return false if open or initial write failed.
 		 */
-        public bool Start(String file)
-        {
+
+        public bool Start(String file) {
             bool ok = true;
-            try{
+            try {
                 //			bw = new BinaryWriter( new FileStream( file, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None ) );
                 this.fs = new FileStream(file, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
                 ok = this.Start(this.fs);
                 this.closeStream = true;
-            } catch(IOException e){
+            } catch (IOException e) {
                 ok = false;
             }
             return this.started = ok;
         }
+
         /**
 		 * Analyzes image colors and creates color map.
 		 */
-        protected void AnalyzePixels()
-        {
+
+        protected void AnalyzePixels() {
             int len = this.pixels.Length;
             int nPix = len / 3;
             this.indexedPixels = new byte[nPix];
@@ -321,26 +329,27 @@ namespace DrawEngine.Renderer.Animator
             //			}
             // map image pixels to new palette
             int k = 0;
-            for(int i = 0; i < nPix; i++){
+            for (int i = 0; i < nPix; i++) {
                 int index = nq.Map(this.pixels[k++] & 0xff, this.pixels[k++] & 0xff, this.pixels[k++] & 0xff);
                 this.usedEntry[index] = true;
-                this.indexedPixels[i] = (byte)index;
+                this.indexedPixels[i] = (byte) index;
             }
             this.pixels = null;
             this.colorDepth = 8;
             this.palSize = 7;
             // get closest match to transparent color if specified
-            if(this.transparent != Color.Empty){
+            if (this.transparent != Color.Empty) {
                 this.transIndex = this.FindClosest(this.transparent);
             }
         }
+
         /**
 		 * Returns index of palette color closest to c
 		 *
 		 */
-        protected int FindClosest(Color c)
-        {
-            if(this.colorTab == null){
+
+        protected int FindClosest(Color c) {
+            if (this.colorTab == null) {
                 return -1;
             }
             int r = c.R;
@@ -349,13 +358,13 @@ namespace DrawEngine.Renderer.Animator
             int minpos = 0;
             int dmin = 256 * 256 * 256;
             int len = this.colorTab.Length;
-            for(int i = 0; i < len;){
+            for (int i = 0; i < len;) {
                 int dr = r - (this.colorTab[i++] & 0xff);
                 int dg = g - (this.colorTab[i++] & 0xff);
                 int db = b - (this.colorTab[i] & 0xff);
                 int d = dr * dr + dg * dg + db * db;
                 int index = i / 3;
-                if(this.usedEntry[index] && (d < dmin)){
+                if (this.usedEntry[index] && (d < dmin)) {
                     dmin = d;
                     minpos = index;
                 }
@@ -363,15 +372,16 @@ namespace DrawEngine.Renderer.Animator
             }
             return minpos;
         }
+
         /**
 		 * Extracts image pixels into byte array "pixels"
 		 */
-        protected void GetImagePixels()
-        {
+
+        protected void GetImagePixels() {
             int w = this.image.Width;
             int h = this.image.Height;
             //		int type = image.GetType().;
-            if((w != this.width) || (h != this.height)){
+            if ((w != this.width) || (h != this.height)) {
                 // create new image with right size/format
                 Image temp = new Bitmap(this.width, this.height);
                 Graphics g = Graphics.FromImage(temp);
@@ -386,8 +396,8 @@ namespace DrawEngine.Renderer.Animator
             this.pixels = new Byte[3 * this.image.Width * this.image.Height];
             int count = 0;
             Bitmap tempBitmap = new Bitmap(this.image);
-            for(int th = 0; th < this.image.Height; th++){
-                for(int tw = 0; tw < this.image.Width; tw++){
+            for (int th = 0; th < this.image.Height; th++) {
+                for (int tw = 0; tw < this.image.Width; tw++) {
                     Color color = tempBitmap.GetPixel(tw, th);
                     this.pixels[count] = color.R;
                     count++;
@@ -399,23 +409,24 @@ namespace DrawEngine.Renderer.Animator
             }
             //		pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
         }
+
         /**
 		 * Writes Graphic Control Extension
 		 */
-        protected void WriteGraphicCtrlExt()
-        {
+
+        protected void WriteGraphicCtrlExt() {
             this.fs.WriteByte(0x21); // extension introducer
             this.fs.WriteByte(0xf9); // GCE label
             this.fs.WriteByte(4); // data block size
             int transp, disp;
-            if(this.transparent == Color.Empty){
+            if (this.transparent == Color.Empty) {
                 transp = 0;
                 disp = 0; // dispose = no action
-            } else{
+            } else {
                 transp = 1;
                 disp = 2; // force clear if using transparent color
             }
-            if(this.dispose >= 0){
+            if (this.dispose >= 0) {
                 disp = this.dispose & 7; // user override
             }
             disp <<= 2;
@@ -428,21 +439,22 @@ namespace DrawEngine.Renderer.Animator
             this.fs.WriteByte(Convert.ToByte(this.transIndex)); // transparent color index
             this.fs.WriteByte(0); // block terminator
         }
+
         /**
 		 * Writes Image Descriptor
 		 */
-        protected void WriteImageDesc()
-        {
+
+        protected void WriteImageDesc() {
             this.fs.WriteByte(0x2c); // image separator
             this.WriteShort(0); // image position x,y = 0,0
             this.WriteShort(0);
             this.WriteShort(this.width); // image size
             this.WriteShort(this.height);
             // packed fields
-            if(this.firstFrame){
+            if (this.firstFrame) {
                 // no LCT  - GCT is used for first (or only) frame
                 this.fs.WriteByte(0);
-            } else{
+            } else {
                 // specify normal LCT
                 this.fs.WriteByte(Convert.ToByte(0x80 | // 1 local color table  1=yes
                                                  0 | // 2 interlace - 0=no
@@ -451,11 +463,12 @@ namespace DrawEngine.Renderer.Animator
                                                  this.palSize)); // 6-8 size of color table
             }
         }
+
         /**
 		 * Writes Logical Screen Descriptor
 		 */
-        protected void WriteLSD()
-        {
+
+        protected void WriteLSD() {
             // logical screen size
             this.WriteShort(this.width);
             this.WriteShort(this.height);
@@ -467,12 +480,13 @@ namespace DrawEngine.Renderer.Animator
             this.fs.WriteByte(0); // background color index
             this.fs.WriteByte(0); // pixel aspect ratio - assume 1:1
         }
+
         /**
 		 * Writes Netscape application extension to define
 		 * repeat count.
 		 */
-        protected void WriteNetscapeExt()
-        {
+
+        protected void WriteNetscapeExt() {
             this.fs.WriteByte(0x21); // extension introducer
             this.fs.WriteByte(0xff); // app extension label
             this.fs.WriteByte(11); // block size
@@ -482,41 +496,45 @@ namespace DrawEngine.Renderer.Animator
             this.WriteShort(this.repeat); // loop count (extra iterations, 0=repeat forever)
             this.fs.WriteByte(0); // block terminator
         }
+
         /**
 		 * Writes color table
 		 */
-        protected void WritePalette()
-        {
+
+        protected void WritePalette() {
             this.fs.Write(this.colorTab, 0, this.colorTab.Length);
             int n = (3 * 256) - this.colorTab.Length;
-            for(int i = 0; i < n; i++){
+            for (int i = 0; i < n; i++) {
                 this.fs.WriteByte(0);
             }
         }
+
         /**
 		 * Encodes and writes pixel data
 		 */
-        protected void WritePixels()
-        {
+
+        protected void WritePixels() {
             LZWEncoder encoder = new LZWEncoder(this.width, this.height, this.indexedPixels, this.colorDepth);
             encoder.Encode(this.fs);
         }
+
         /**
 		 *    Write 16-bit value to output stream, LSB first
 		 */
-        protected void WriteShort(int value)
-        {
+
+        protected void WriteShort(int value) {
             this.fs.WriteByte(Convert.ToByte(value & 0xff));
             this.fs.WriteByte(Convert.ToByte((value >> 8) & 0xff));
         }
+
         /**
 		 * Writes string to output stream
 		 */
-        protected void WriteString(String s)
-        {
+
+        protected void WriteString(String s) {
             char[] chars = s.ToCharArray();
-            for(int i = 0; i < chars.Length; i++){
-                this.fs.WriteByte((byte)chars[i]);
+            for (int i = 0; i < chars.Length; i++) {
+                this.fs.WriteByte((byte) chars[i]);
             }
         }
     }

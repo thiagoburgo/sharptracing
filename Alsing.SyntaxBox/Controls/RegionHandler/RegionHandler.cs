@@ -12,19 +12,16 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Alsing.Windows.Forms.CoreLib
-{
+namespace Alsing.Windows.Forms.CoreLib {
     [ToolboxItem(true)]
-    public class RegionHandler : Component
-    {
+    public class RegionHandler : Component {
         private Container components;
 
         #region PUBLIC PROPERTY TRANSPARENCYKEY
 
         private Color _TransparencyKey = Color.FromArgb(255, 0, 255);
 
-        public Color TransparencyKey
-        {
+        public Color TransparencyKey {
             get { return _TransparencyKey; }
             set { _TransparencyKey = value; }
         }
@@ -43,14 +40,12 @@ namespace Alsing.Windows.Forms.CoreLib
 
         #endregion
 
-        public RegionHandler(IContainer container)
-        {
+        public RegionHandler(IContainer container) {
             container.Add(this);
             InitializeComponent();
         }
 
-        public RegionHandler()
-        {
+        public RegionHandler() {
             InitializeComponent();
         }
 
@@ -60,15 +55,13 @@ namespace Alsing.Windows.Forms.CoreLib
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
-        private void InitializeComponent()
-        {
+        private void InitializeComponent() {
             components = new System.ComponentModel.Container();
         }
 
         #endregion
 
-        public void ApplyRegion(Control Target, Bitmap MaskImage, Color TransparencyKey)
-        {
+        public void ApplyRegion(Control Target, Bitmap MaskImage, Color TransparencyKey) {
             Control = Target;
             this.MaskImage = MaskImage;
             this.TransparencyKey = TransparencyKey;
@@ -76,18 +69,16 @@ namespace Alsing.Windows.Forms.CoreLib
         }
 
 
-        public void ApplyRegion()
-        {
+        public void ApplyRegion() {
             var r = new Region(new Rectangle(0, 0, MaskImage.Width, MaskImage.Height));
 
-            for (int y = 0; y < MaskImage.Height; y++)
-                for (int x = 0; x < MaskImage.Width; x++)
-                {
-                    if (MaskImage.GetPixel(x, y) == TransparencyKey)
-                    {
+            for (int y = 0; y < MaskImage.Height; y++) {
+                for (int x = 0; x < MaskImage.Width; x++) {
+                    if (MaskImage.GetPixel(x, y) == TransparencyKey) {
                         r.Exclude(new Rectangle(x, y, 1, 1));
                     }
                 }
+            }
 
             Control.Region = r;
             Control.BackgroundImage = MaskImage;

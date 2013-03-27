@@ -1,7 +1,5 @@
-﻿namespace Alsing.SourceCode.SyntaxDocumentParsers
-{
-    public class ScanResultSegment
-    {
+﻿namespace Alsing.SourceCode.SyntaxDocumentParsers {
+    public class ScanResultSegment {
         public bool HasContent;
         public bool IsEndSegment;
         public Pattern Pattern;

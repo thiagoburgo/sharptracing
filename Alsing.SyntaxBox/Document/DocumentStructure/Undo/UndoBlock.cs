@@ -8,18 +8,17 @@
 // *
 // *
 
-namespace Alsing.SourceCode
-{
+namespace Alsing.SourceCode {
     //what kind of undoaction is it?
     /// <summary>
     /// 
     /// </summary>
-    public enum UndoAction
-    {
+    public enum UndoAction {
         /// <summary>
         /// 
         /// </summary>
         InsertRange = 1,
+
         /// <summary>
         /// 
         /// </summary>
@@ -30,8 +29,7 @@ namespace Alsing.SourceCode
     /// <summary>
     /// 
     /// </summary>
-    public sealed class UndoBlock
-    {
+    public sealed class UndoBlock {
         /// <summary>
         /// 
         /// </summary>

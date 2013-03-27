@@ -1,5 +1,4 @@
-namespace DrawEngine.Renderer.BasicStructures.Design
-{
+namespace DrawEngine.Renderer.BasicStructures.Design {
     //public class TextureEditor : BitmapEditor
     //{
     //    public override void PaintValue(PaintValueEventArgs e)

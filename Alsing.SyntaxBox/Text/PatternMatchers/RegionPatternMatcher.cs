@@ -8,31 +8,25 @@
 // *
 // *
 
-namespace Alsing.Text.PatternMatchers
-{
-    public class RangePatternMatcher : PatternMatcherBase
-    {
-        public RangePatternMatcher(char quote)
-        {
+namespace Alsing.Text.PatternMatchers {
+    public class RangePatternMatcher : PatternMatcherBase {
+        public RangePatternMatcher(char quote) {
             StartChar = quote;
             EndChar = quote;
         }
 
-        public RangePatternMatcher(char start, char end)
-        {
+        public RangePatternMatcher(char start, char end) {
             StartChar = start;
             EndChar = end;
         }
 
-        public RangePatternMatcher(char start, char end, char escape)
-        {
+        public RangePatternMatcher(char start, char end, char escape) {
             StartChar = start;
             EndChar = end;
             EscapeChar = escape;
         }
 
-        public override string[] DefaultPrefixes
-        {
+        public override string[] DefaultPrefixes {
             get { return new[] {StartChar.ToString()}; }
         }
 
@@ -40,21 +34,18 @@ namespace Alsing.Text.PatternMatchers
         public char EndChar { get; set; }
         public char EscapeChar { get; set; }
 
-        public override int Match(string textToMatch, int matchAtIndex)
-        {
+        public override int Match(string textToMatch, int matchAtIndex) {
             int length = 0;
             int textLength = textToMatch.Length;
 
-            while (matchAtIndex + length != textLength)
-            {
+            while (matchAtIndex + length != textLength) {
                 if (textToMatch[matchAtIndex + length] == EndChar &&
-                    (matchAtIndex + length < textLength - 1 && textToMatch[matchAtIndex + length + 1] == EndChar))
-                {
+                    (matchAtIndex + length < textLength - 1 && textToMatch[matchAtIndex + length + 1] == EndChar)) {
                     length++;
-                }
-                else if (textToMatch[matchAtIndex + length] == EndChar &&
-                         (matchAtIndex + length == textLength - 1 || textToMatch[matchAtIndex + length + 1] != EndChar))
+                } else if (textToMatch[matchAtIndex + length] == EndChar &&
+                           (matchAtIndex + length == textLength - 1 || textToMatch[matchAtIndex + length + 1] != EndChar)) {
                     return length + 1;
+                }
 
                 length++;
             }

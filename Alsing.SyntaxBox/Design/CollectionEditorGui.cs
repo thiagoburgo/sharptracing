@@ -15,14 +15,12 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
 
-namespace Alsing.Design
-{
+namespace Alsing.Design {
     /// <summary>
     /// Summary description for CollectionEditorGui.
     /// </summary>
     [ToolboxItem(false)]
-    public class CollectionEditorGui : UserControl
-    {
+    public class CollectionEditorGui : UserControl {
         public Button btnAdd;
         public Button btnCancel;
         public Button btnDown;
@@ -45,8 +43,7 @@ namespace Alsing.Design
         public Panel pnlMembers;
         public PropertyGrid pygProperties;
 
-        public CollectionEditorGui()
-        {
+        public CollectionEditorGui() {
             // This call is required by the Windows.Forms Form Designer.
             InitializeComponent();
 
@@ -56,30 +53,22 @@ namespace Alsing.Design
         /// <summary> 
         /// Clean up any resources being used.
         /// </summary>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (components != null)
-                {
+        protected override void Dispose(bool disposing) {
+            if (disposing) {
+                if (components != null) {
                     components.Dispose();
                 }
             }
             base.Dispose(disposing);
         }
 
-        public void Bind()
-        {
+        public void Bind() {
             var e = EditValue as ICollection;
-            if (e == null)
-            {
+            if (e == null) {
                 MessageBox.Show("EditValue is null");
-            }
-            else
-            {
+            } else {
                 lstMembers.Items.Clear();
-                foreach (object o in e)
-                {
+                foreach (object o in e) {
                     lstMembers.Items.Add(o);
                 }
 
@@ -88,18 +77,18 @@ namespace Alsing.Design
             }
         }
 
-        private void lstMembers_DrawItem(object sender, DrawItemEventArgs e)
-        {
-            try
-            {
-                if (e.Index == -1)
+        private void lstMembers_DrawItem(object sender, DrawItemEventArgs e) {
+            try {
+                if (e.Index == -1) {
                     return;
+                }
 
                 int c = lstMembers.Items.Count;
                 SizeF s = e.Graphics.MeasureString(c.ToString(), lstMembers.Font);
                 var maxwidth = (int) s.Width;
-                if (maxwidth < 16 + 2)
+                if (maxwidth < 16 + 2) {
                     maxwidth = 16 + 2;
+                }
 
                 var r = new Rectangle(0, e.Bounds.Top, maxwidth, lstMembers.ItemHeight);
                 bool SupportPaint = Editor.GetPaintValueSupported();
@@ -116,90 +105,74 @@ namespace Alsing.Design
 
                 bool Selected = ((int) e.State & (int) DrawItemState.Selected) != 0;
 
-                using (SolidBrush bg = GetBgBrush(Selected))
-                using (SolidBrush fg = GetFgBrush(Selected))
-                {
-                    e.Graphics.FillRectangle(bg, rcItem);
-                    if (Selected && e.Index != -1)
-                    {
-                        if (((int) e.State & (int) DrawItemState.Focus) != 0)
-                        {
-                            ControlPaint.DrawFocusRectangle(e.Graphics, rcItem);
+                using (SolidBrush bg = GetBgBrush(Selected)) {
+                    using (SolidBrush fg = GetFgBrush(Selected)) {
+                        e.Graphics.FillRectangle(bg, rcItem);
+                        if (Selected && e.Index != -1) {
+                            if (((int) e.State & (int) DrawItemState.Focus) != 0) {
+                                ControlPaint.DrawFocusRectangle(e.Graphics, rcItem);
+                            }
+                        }
+
+                        if (e.Index >= 0) {
+                            object o = lstMembers.Items[e.Index];
+                            string name = GetDisplayText(o);
+                            e.Graphics.DrawString(name, lstMembers.Font, fg, rcItem);
                         }
                     }
-
-                    if (e.Index >= 0)
-                    {
-                        object o = lstMembers.Items[e.Index];
-                        string name = GetDisplayText(o);
-                        e.Graphics.DrawString(name, lstMembers.Font, fg, rcItem);
-                    }
                 }
-            }
-            catch {}
+            } catch {}
         }
 
-        private SolidBrush GetFgBrush(bool Selected)
-        {
+        private SolidBrush GetFgBrush(bool Selected) {
             SolidBrush fg = Selected ? new SolidBrush(SystemColors.HighlightText) : new SolidBrush(lstMembers.ForeColor);
             return fg;
         }
 
-        private SolidBrush GetBgBrush(bool Selected)
-        {
+        private SolidBrush GetBgBrush(bool Selected) {
             SolidBrush bg = Selected ? new SolidBrush(SystemColors.Highlight) : new SolidBrush(lstMembers.BackColor);
             return bg;
         }
 
-        private void lstMembers_SelectedIndexChanged(object sender, EventArgs e)
-        {
+        private void lstMembers_SelectedIndexChanged(object sender, EventArgs e) {
             EnableRemove();
             SelectObject();
         }
 
-        private void SelectObject()
-        {
+        private void SelectObject() {
             pygProperties.SelectedObject = lstMembers.SelectedIndex >= 0 ? lstMembers.SelectedItem : null;
         }
 
-        private void EnableRemove()
-        {
+        private void EnableRemove() {
             btnRemove.Enabled = lstMembers.SelectedIndices.Count > 0;
         }
 
 
-        private static string GetDisplayText(object Item)
-        {
+        private static string GetDisplayText(object Item) {
             string ObjectName = null;
 
-            if (Item == null)
-            {
+            if (Item == null) {
                 return string.Empty;
             }
             PropertyDescriptor descriptor1 = TypeDescriptor.GetProperties(Item)["Name"];
-            if (descriptor1 != null)
-            {
+            if (descriptor1 != null) {
                 ObjectName = ((string) descriptor1.GetValue(Item));
-                if (!string.IsNullOrEmpty(ObjectName))
-                {
+                if (!string.IsNullOrEmpty(ObjectName)) {
                     return ObjectName;
                 }
             }
 
-            if (string.IsNullOrEmpty(ObjectName))
-            {
+            if (string.IsNullOrEmpty(ObjectName)) {
                 ObjectName = Item.GetType().Name;
             }
             return ObjectName;
         }
 
-        public void AddObject(object o)
-        {
+        public void AddObject(object o) {
             Editor.AddObject(o);
         }
 
-        public void RemoveObject(object o)
-        {
+        public void RemoveObject(object o) {
             Editor.RemoveObject(o);
         }
 
@@ -213,8 +186,7 @@ namespace Alsing.Design
         /// Required method for Designer support - do not modify 
         /// the contents of this method with the code editor.
         /// </summary>
-        private void InitializeComponent()
-        {
+        private void InitializeComponent() {
             var resources = new System.Resources.ResourceManager(typeof (CollectionEditorGui));
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
@@ -313,11 +285,10 @@ namespace Alsing.Design
             // 
             // pnlMembers
             // 
-            this.pnlMembers.Controls.AddRange(new System.Windows.Forms.Control[]
-                                              {
-                                                  this.btnRemove, this.lstMembers, this.lblMembers, this.btnDown,
-                                                  this.btnUp, this.btnDropdown, this.btnAdd
-                                              });
+            this.pnlMembers.Controls.AddRange(new System.Windows.Forms.Control[] {
+                                                                                     this.btnRemove, this.lstMembers, this.lblMembers, this.btnDown,
+                                                                                     this.btnUp, this.btnDropdown, this.btnAdd
+                                                                                 });
             this.pnlMembers.Dock = System.Windows.Forms.DockStyle.Left;
             this.pnlMembers.Name = "pnlMembers";
             this.pnlMembers.Size = new System.Drawing.Size(240, 296);

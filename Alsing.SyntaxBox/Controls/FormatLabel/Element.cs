@@ -10,10 +10,8 @@
 
 using System.Drawing;
 
-namespace Alsing.Windows.Forms.FormatLabel
-{
-    public enum TextEffect
-    {
+namespace Alsing.Windows.Forms.FormatLabel {
+    public enum TextEffect {
         None = 0,
         Outline,
         ShadowRB,
@@ -22,8 +20,7 @@ namespace Alsing.Windows.Forms.FormatLabel
         ShadowLT,
     }
 
-    public class Element
-    {
+    public class Element {
         protected string _Tag = "";
         protected string _TagName = "";
         public Color BackColor = Color.Black;
@@ -37,25 +34,19 @@ namespace Alsing.Windows.Forms.FormatLabel
         public string Text = "";
         public Word[] words;
 
-        public string TagName
-        {
+        public string TagName {
             get { return _TagName; }
         }
 
 
-        public string Tag
-        {
+        public string Tag {
             get { return _Tag; }
-            set
-            {
+            set {
                 _Tag = value.ToLowerInvariant();
                 _Tag = _Tag.Replace("\t", " ");
-                if (_Tag.IndexOf(" ") >= 0)
-                {
+                if (_Tag.IndexOf(" ") >= 0) {
                     _TagName = _Tag.Substring(0, _Tag.IndexOf(" "));
-                }
-                else
-                {
+                } else {
                     _TagName = _Tag;
                 }
             }

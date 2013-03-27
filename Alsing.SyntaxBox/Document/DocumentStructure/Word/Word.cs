@@ -10,21 +10,21 @@
 
 using System.Drawing;
 
-namespace Alsing.SourceCode
-{
+namespace Alsing.SourceCode {
     /// <summary>
     /// Word types
     /// </summary>
-    public enum WordType
-    {
+    public enum WordType {
         /// <summary>
         /// The word is a normal word/text
         /// </summary>
         Word = 0,
+
         /// <summary>
         /// The word is a space char
         /// </summary>
         Space = 1,
+
         /// <summary>
         /// The word is a tab char
         /// </summary>
@@ -34,8 +34,7 @@ namespace Alsing.SourceCode
     /// <summary>
     /// The word object class represents a word in a Row object
     /// </summary>
-    public sealed class Word
-    {
+    public sealed class Word {
         #region General Declarations
 
         /// <summary>
@@ -88,23 +87,20 @@ namespace Alsing.SourceCode
         /// <summary>
         /// Gets the index of the word in the parent row
         /// </summary>
-        public int Index
-        {
+        public int Index {
             get { return Row.IndexOf(this); }
         }
 
         /// <summary>
         /// Returns the column where the word starts on the containing row.
         /// </summary>
-        public int Column
-        {
-            get
-            {
+        public int Column {
+            get {
                 int x = 0;
-                foreach (Word w in Row)
-                {
-                    if (w == this)
+                foreach (Word w in Row) {
+                    if (w == this) {
                         return x;
+                    }
                     x += w.Text.Length;
                 }
                 return - 1;

@@ -11,47 +11,36 @@
 using System;
 using Alsing.Text.PatternMatchers;
 
-namespace Alsing.Text
-{
-    public partial class TokenTree
-    {
-        public void AddPattern(IPatternMatcher matcher, bool caseSensitive, bool needSeparators, object[] tags)
-        {
-            if (matcher == null)
+namespace Alsing.Text {
+    public partial class TokenTree {
+        public void AddPattern(IPatternMatcher matcher, bool caseSensitive, bool needSeparators, object[] tags) {
+            if (matcher == null) {
                 throw new ArgumentNullException("matcher");
+            }
 
             AddPattern(null, matcher, caseSensitive, needSeparators, tags);
         }
 
         public void AddPattern(string prefix, IPatternMatcher matcher, bool caseSensitive, bool needSeparators,
-                               object[] tags)
-        {
-            if (string.IsNullOrEmpty(prefix))
-            {
+                               object[] tags) {
+            if (string.IsNullOrEmpty(prefix)) {
                 AddPatternWithoutPrefix(matcher, caseSensitive, needSeparators, tags);
-            }
-            else if (caseSensitive)
-            {
+            } else if (caseSensitive) {
                 AddPatternWithCaseSensitivePrefix(prefix, matcher, needSeparators, tags);
-            }
-            else
-            {
+            } else {
                 AddPatternWithCaseInsensitivePrefix(prefix, matcher, needSeparators, tags);
             }
         }
 
 
-        public void AddToken(string text, bool caseSensitive, bool needSeparators, object[] tags)
-        {
-            if (string.IsNullOrEmpty(text))
+        public void AddToken(string text, bool caseSensitive, bool needSeparators, object[] tags) {
+            if (string.IsNullOrEmpty(text)) {
                 throw new ArgumentNullException(text);
-
-            if (caseSensitive)
-            {
-                AddCaseSensitiveToken(text, needSeparators, tags);
             }
-            else
-            {
+
+            if (caseSensitive) {
+                AddCaseSensitiveToken(text, needSeparators, tags);
+            } else {
                 AddCaseInsensitiveToken(text, needSeparators, tags);
             }
         }

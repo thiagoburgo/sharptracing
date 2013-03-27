@@ -12,20 +12,18 @@ using System;
 using System.Collections;
 using System.ComponentModel;
 
-namespace Alsing.Design
-{
-    public class FilteredTypeConverter : TypeConverter
-    {
+namespace Alsing.Design {
+    public class FilteredTypeConverter : TypeConverter {
         protected virtual void FilterProperties(IDictionary Properties, object value) {}
 
         public override PropertyDescriptorCollection GetProperties(ITypeDescriptorContext context, object value,
-                                                                   Attribute[] attributes)
-        {
+                                                                   Attribute[] attributes) {
             PropertyDescriptorCollection propps = propps = TypeDescriptor.GetProperties(value, attributes, false);
 
             var arr = new Hashtable();
-            foreach (PropertyDescriptor pd in propps)
+            foreach (PropertyDescriptor pd in propps) {
                 arr[pd.Name] = pd;
+            }
 
             FilterProperties(arr, value);
 
@@ -37,8 +35,7 @@ namespace Alsing.Design
             return new PropertyDescriptorCollection(arr2);
         }
 
-        public override bool GetPropertiesSupported(ITypeDescriptorContext context)
-        {
+        public override bool GetPropertiesSupported(ITypeDescriptorContext context) {
             return true;
         }
     }
