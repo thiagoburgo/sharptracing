@@ -10,25 +10,26 @@
 
 using Alsing.Drawing.GDI;
 
-namespace Alsing.Windows.Forms.SyntaxBox
-{
+namespace Alsing.Windows.Forms.SyntaxBox {
     /// <summary>
     /// Indent styles used by the control
     /// </summary>
-    public enum IndentStyle
-    {
+    public enum IndentStyle {
         /// <summary>
         /// Caret is always confined to the first column when a new line is inserted
         /// </summary>
         None = 0,
+
         /// <summary>
         /// New lines inherit the same indention as the previous row.
         /// </summary>
         LastRow = 1,
+
         /// <summary>
         /// New lines get their indention from the scoping level.
         /// </summary>
         Scope = 2,
+
         /// <summary>
         /// New lines get thir indention from the scoping level or from the previous row
         /// depending on which is most indented.
@@ -37,21 +38,21 @@ namespace Alsing.Windows.Forms.SyntaxBox
     }
 }
 
-namespace Alsing.Windows.Forms.SyntaxBox
-{
+namespace Alsing.Windows.Forms.SyntaxBox {
     /// <summary>
     /// Text actions that can be performed by the SyntaxBoxControl
     /// </summary>
-    public enum EditAction
-    {
+    public enum EditAction {
         /// <summary>
         /// The control is not performing any action
         /// </summary>
         None = 0,
+
         /// <summary>
         /// The control is in Drag Drop mode
         /// </summary>
         DragText = 1,
+
         /// <summary>
         /// The control is selecting text
         /// </summary>
@@ -59,14 +60,12 @@ namespace Alsing.Windows.Forms.SyntaxBox
     }
 }
 
-namespace Alsing.Windows.Forms.SyntaxBox.Painter
-{
+namespace Alsing.Windows.Forms.SyntaxBox.Painter {
     /// <summary>
     /// View point struct used by the SyntaxBoxControl.
     /// The struct contains information about various rendering parameters that the IPainter needs.
     /// </summary>
-    public struct ViewPoint
-    {
+    public struct ViewPoint {
         /// <summary>
         /// The action that the SyntaxBoxControl is currently performing
         /// </summary>
@@ -140,8 +139,7 @@ namespace Alsing.Windows.Forms.SyntaxBox.Painter
     /// <summary>
     /// Struct used by the NativePainter class.
     /// </summary>
-    public struct RenderItems
-    {
+    public struct RenderItems {
         /// <summary>
         /// For internal use only
         /// </summary>

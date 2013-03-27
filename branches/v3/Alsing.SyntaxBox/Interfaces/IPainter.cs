@@ -12,13 +12,11 @@ using System;
 using System.Drawing;
 using Alsing.SourceCode;
 
-namespace Alsing.Windows.Forms.SyntaxBox.Painter
-{
+namespace Alsing.Windows.Forms.SyntaxBox.Painter {
     /// <summary>
     /// 
     /// </summary>
-    public interface IPainter : IDisposable
-    {
+    public interface IPainter : IDisposable {
         /// <summary>
         ///  Measures the length of a specific row in pixels
         /// </summary>

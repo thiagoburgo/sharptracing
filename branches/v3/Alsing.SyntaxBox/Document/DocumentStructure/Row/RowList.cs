@@ -10,8 +10,7 @@
 
 using System.Collections.Generic;
 
-namespace Alsing.SourceCode
-{
+namespace Alsing.SourceCode {
     /// <summary>
     /// Row collection class.
     /// </summary>

@@ -10,12 +10,11 @@
  * Feel free to copy, modify and  give fixes 
  * suggestions. Keep the credits!
  */
- using System;
 
-namespace DrawEngine.Renderer.SpatialSubdivision.KDTree
-{
-    public class KDException : Exception
-    {
+using System;
+
+namespace DrawEngine.Renderer.SpatialSubdivision.KDTree {
+    public class KDException : Exception {
         public KDException(String message) : base(message) {}
     }
 }

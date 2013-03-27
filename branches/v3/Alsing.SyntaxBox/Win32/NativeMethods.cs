@@ -13,10 +13,8 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace Alsing.Windows
-{
-    public static class NativeMethods
-    {
+namespace Alsing.Windows {
+    public static class NativeMethods {
         public const int GWL_STYLE = -16;
         public const int WS_CHILD = 0x40000000;
 
@@ -340,8 +338,7 @@ namespace Alsing.Windows
         [DllImport("user32", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
         public static extern UInt16 GetAsyncKeyState(int vKey);
 
-        public static bool IsKeyPressed(Keys k)
-        {
+        public static bool IsKeyPressed(Keys k) {
             int s = GetAsyncKeyState((int) k);
             s = (s & 0x8000) >> 15;
             return (s == 1);
@@ -350,8 +347,7 @@ namespace Alsing.Windows
 
         //---------------------------------------
         //helper , return DC of a control
-        public static IntPtr ControlDC(Control control)
-        {
+        public static IntPtr ControlDC(Control control) {
             return GetDC(control.Handle);
         }
 
@@ -359,13 +355,11 @@ namespace Alsing.Windows
 
         //---------------------------------------
         //helper , convert from and to colors from int values
-        public static int ColorToInt(Color color)
-        {
+        public static int ColorToInt(Color color) {
             return (color.B << 16 | color.G << 8 | color.R);
         }
 
-        public static Color IntToColor(int color)
-        {
+        public static Color IntToColor(int color) {
             int b = (color >> 16) & 0xFF;
             int g = (color >> 8) & 0xFF;
             int r = (color) & 0xFF;

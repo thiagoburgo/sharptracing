@@ -8,13 +8,11 @@
 // *
 // *
 
-namespace Alsing.SourceCode
-{
+namespace Alsing.SourceCode {
     /// <summary>
     /// 
     /// </summary>
-    public class Span
-    {
+    public class Span {
         /// <summary>
         /// The depth of this span in the span hirarchy
         /// </summary>
@@ -65,8 +63,7 @@ namespace Alsing.SourceCode
         /// 
         /// </summary>
         /// <param name="startrow"></param>
-        public Span(Row startrow)
-        {
+        public Span(Row startrow) {
             StartRow = startrow;
         }
 

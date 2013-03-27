@@ -10,31 +10,30 @@
  * Feel free to copy, modify and  give fixes 
  * suggestions. Keep the credits!
  */
- using System;
+
+using System;
 using System.Windows.Forms;
 using DrawEngine.Renderer.Collections.Design;
 
-namespace DrawEngine.Renderer.Materials.Design
-{
-    public partial class MaterialTreeViewEditorControl : UserControl
-    {
+namespace DrawEngine.Renderer.Materials.Design {
+    public partial class MaterialTreeViewEditorControl : UserControl {
         private string selectedName;
-        public MaterialTreeViewEditorControl()
-        {
+
+        public MaterialTreeViewEditorControl() {
             this.InitializeComponent();
             this.Refresh();
             this.treeViewMaterials.ExpandAll();
         }
-        public Material SelectedMaterial
-        {
-            get
-            {
-                if(UnifiedScenesRepository.CurrentEditingScene.Materials.ContainsName(this.selectedName)){
+
+        public Material SelectedMaterial {
+            get {
+                if (UnifiedScenesRepository.CurrentEditingScene.Materials.ContainsName(this.selectedName)) {
                     return UnifiedScenesRepository.CurrentEditingScene.Materials[this.selectedName];
                 }
                 return null;
             }
         }
+
         //public void AddMaterial(AbstractMaterial material) {
         //    UnifiedScenesRepository.CurrentEditingScene.Materials.Add(material);
         //    TreeNode node = new TreeNode(material.Name);
@@ -51,10 +50,9 @@ namespace DrawEngine.Renderer.Materials.Design
         //    }
         //    this.treeViewMaterials.ExpandAll();
         //}
-        public override void Refresh()
-        {
+        public override void Refresh() {
             this.treeViewMaterials.Nodes["materials"].Nodes.Clear();
-            foreach(Material material in UnifiedScenesRepository.CurrentEditingScene.Materials){
+            foreach (Material material in UnifiedScenesRepository.CurrentEditingScene.Materials) {
                 TreeNode node = new TreeNode(material.Name);
                 node.Name = material.Name;
                 node.Tag = material;
@@ -63,38 +61,38 @@ namespace DrawEngine.Renderer.Materials.Design
             this.treeViewMaterials.ExpandAll();
             base.Refresh();
         }
+
         //public void RemoveMaterial(AbstractMaterial material) {
         //    TreeNode node = new TreeNode(material.ToString());
         //    this.treeViewMaterials.Nodes["materials"].Nodes.Remove(node);
         //}	
-        private void treeViewMaterials_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
-        {
+        private void treeViewMaterials_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e) {
             SendKeys.Send("{Enter}");
             this.selectedName = e.Node.Name;
         }
-        private void linkLblNewMaterial_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
+
+        private void linkLblNewMaterial_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
             //GenericCollectionForm<AbstractMaterial> form = new GenericCollectionForm<AbstractMaterial>();
             //form.Objects = Treevi
-            ObjectChooseType choose = new ObjectChooseType(typeof(Material));
-            if(choose.ShowDialog() == DialogResult.OK){
+            ObjectChooseType choose = new ObjectChooseType(typeof (Material));
+            if (choose.ShowDialog() == DialogResult.OK) {
                 Material material = Activator.CreateInstance(choose.SelectedType, true) as Material;
-                if(material != null){
+                if (material != null) {
                     UnifiedScenesRepository.CurrentEditingScene.Materials.Add(material);
                 }
             }
             this.Refresh();
         }
-        protected override void OnPaint(PaintEventArgs e)
-        {
+
+        protected override void OnPaint(PaintEventArgs e) {
             base.OnPaint(e);
         }
-        private void treeViewMaterials_VisibleChanged(object sender, EventArgs e)
-        {
+
+        private void treeViewMaterials_VisibleChanged(object sender, EventArgs e) {
             this.Refresh();
         }
-        private void treeViewMaterials_AfterSelect(object sender, TreeViewEventArgs e)
-        {
+
+        private void treeViewMaterials_AfterSelect(object sender, TreeViewEventArgs e) {
             this.selectedName = e.Node.Name;
         }
     }

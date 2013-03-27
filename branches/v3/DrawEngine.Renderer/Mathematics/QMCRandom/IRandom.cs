@@ -1,15 +1,14 @@
-﻿namespace DrawEngine.Renderer.Mathematics.QMCRandom
-{
+﻿namespace DrawEngine.Renderer.Mathematics.QMCRandom {
     /// <summary>
     /// Interface for the Random Number Generators used bu the GACOM
     /// </summary>
-    public interface IRandom
-    {
+    public interface IRandom {
         /// <summary>
         /// Reinitialize generator
         /// </summary>
         /// <param name="seed">seed</param>
         void ResetGenerator(int seed);
+
         /// <summary>
         /// Return next double
         /// </summary>

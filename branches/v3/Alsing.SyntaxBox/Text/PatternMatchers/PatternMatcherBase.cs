@@ -8,22 +8,18 @@
 // *
 // *
 
-namespace Alsing.Text.PatternMatchers
-{
+namespace Alsing.Text.PatternMatchers {
     /// <summary>
     /// Base implementation for pattern matchers
     /// </summary>
-    public abstract class PatternMatcherBase : IPatternMatcher
-    {
+    public abstract class PatternMatcherBase : IPatternMatcher {
         #region IPatternMatcher Members
 
-        public virtual int Match(string textToMatch, int matchAtIndex)
-        {
+        public virtual int Match(string textToMatch, int matchAtIndex) {
             return 0;
         }
 
-        public virtual string[] DefaultPrefixes
-        {
+        public virtual string[] DefaultPrefixes {
             get { return null; }
         }
 

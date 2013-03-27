@@ -6,14 +6,14 @@ using System.Reflection;
 // die mit einer Assembly verknüpft sind.
 //
 
-[assembly:AssemblyTitle("")]
-[assembly:AssemblyDescription("")]
-[assembly:AssemblyConfiguration("")]
-[assembly:AssemblyCompany("")]
-[assembly:AssemblyProduct("")]
-[assembly:AssemblyCopyright("")]
-[assembly:AssemblyTrademark("")]
-[assembly:AssemblyCulture("")]
+[assembly: AssemblyTitle("")]
+[assembly: AssemblyDescription("")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("")]
+[assembly: AssemblyCopyright("")]
+[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCulture("")]
 //
 // Versionsinformationen für eine Assembly bestehen aus folgenden vier Werten:
 //
@@ -25,7 +25,7 @@ using System.Reflection;
 // Sie können alle Werte oder die standardmäßige Revision und Buildnummer 
 // mit '*' angeben:
 
-[assembly:AssemblyVersion("1.0.*")]
+[assembly: AssemblyVersion("1.0.*")]
 //
 // Um die Assembly zu signieren, müssen Sie einen Schlüssel angeben. Weitere Informationen 
 // über die Assemblysignierung finden Sie in der Microsoft .NET Framework-Dokumentation.
@@ -52,6 +52,6 @@ using System.Reflection;
 //       Microsoft .NET Framework-Dokumentation.
 //
 
-[assembly:AssemblyDelaySign(false)]
-[assembly:AssemblyKeyFile("")]
-[assembly:AssemblyKeyName("")]
+[assembly: AssemblyDelaySign(false)]
+[assembly: AssemblyKeyFile("")]
+[assembly: AssemblyKeyName("")]

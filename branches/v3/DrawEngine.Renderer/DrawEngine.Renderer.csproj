@@ -16,7 +16,7 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <StartupObject>
     </StartupObject>
     <PublishUrl>publish\</PublishUrl>
@@ -46,6 +46,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <PlatformTarget>x86</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -60,6 +61,7 @@
     </CodeAnalysisRules>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -76,6 +78,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <CodeAnalysisRuleSet>Migrated rules for DrawEngine.Renderer.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -93,6 +96,7 @@
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
     <CodeAnalysisRuleSet>Migrated rules for DrawEngine.Renderer.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <PlatformTarget>x64</PlatformTarget>
@@ -100,12 +104,14 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Optimize>true</Optimize>
     <DefineConstants>DEBUG</DefineConstants>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <PlatformTarget>x64</PlatformTarget>
     <OutputPath>bin\x64\Release\</OutputPath>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Optimize>true</Optimize>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -116,11 +122,6 @@
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Drawing.Design" />
-    <Reference Include="System.Runtime.Serialization">
-      <RequiredTargetFramework>3.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
-    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -176,6 +177,39 @@
     </Compile>
     <None Include="Migrated rules for DrawEngine.Renderer.ruleset" />
     <None Include="PhotonMapping\PhotonMap.cs__" />
+    <Compile Include="Mesh\Importers\AbstractLoaderModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mesh\Importers\DataReader3DS.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mesh\Importers\Loader3DSModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mesh\Importers\LoaderByuModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mesh\Importers\LoaderObjModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mesh\Importers\LoaderOffModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mesh\Importers\LoaderPlyModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mesh\Importers\ModelType.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mesh\Importers\PointerToVertex.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mesh\MeshTriangle.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mesh\MeshVertex.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -186,16 +220,13 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Renderers\ProgressiveRenderStrategy.cs" />
     <Compile Include="RenderObjects\Design\LoadingModelDialog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="RenderObjects\Design\LoadingModelDialog.Designer.cs">
       <DependentUpon>LoadingModelDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Mesh\Design\MeshModelFileEditor.cs" />
-    <None Include="RenderObjects\Esfera.cs_">
-      <SubType>Code</SubType>
-    </None>
     <Compile Include="RenderObjects\Quadric.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -211,7 +242,6 @@
     <Compile Include="Shaders\PhongShader.cs" />
     <Compile Include="Cameras\SphericalCamera.cs" />
     <Compile Include="Cameras\ThinLensCamera.cs" />
-    <Compile Include="Mesh\Importers\PointerToVertex.cs" />
     <Compile Include="Lights\PointLight.cs" />
     <Compile Include="Materials\PhongMaterial.cs" />
     <None Include="PhotonMapping\PhotonSource.cs__" />
@@ -301,10 +331,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Mesh\Design\LoadingMeshModelDialog.resx">
-      <DependentUpon>LoadingMeshModelDialog.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="RenderObjects\EnvironmentMaps\Design\CubeMapEditorForm.resx">
       <DependentUpon>CubeMapEditorForm.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -340,42 +366,11 @@
     <Compile Include="Mathematics\QMCRandom\QMCSobolRandom.cs" />
     <None Include="app.config" />
     <None Include="PhotonMapping\PhotonMap.cs_____" />
-    <Compile Include="Mesh\Importers\AbstractLoaderModel.cs" />
-    <Compile Include="Mesh\Importers\AbstractMeshImporter.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Mesh\Importers\DataReader3DS.cs" />
-    <Compile Include="Mesh\Importers\Loader3DSModel.cs" />
-    <Compile Include="Mesh\Importers\LoaderByuModel.cs" />
-    <Compile Include="Mesh\Importers\LoaderObjModel.cs" />
-    <Compile Include="Mesh\Importers\LoaderOffModel.cs" />
-    <Compile Include="Mesh\Importers\LoaderPlyModel.cs" />
-    <Compile Include="Mesh\Importers\ModelType.cs" />
-    <Compile Include="Mesh\Importers\PlyMeshImporter.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Mesh\MeshModel.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Mesh\MeshModelLoader.cs" />
-    <Compile Include="Mesh\MeshOptimizer.cs" />
-    <Compile Include="Mesh\MeshTriangle.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Mesh\MeshVertex.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="PhotonMapping\NearestPhotons.cs" />
     <Compile Include="PhotonMapping\Photon.cs" />
     <Compile Include="PhotonMapping\PhotonMap.cs" />
     <None Include="PhotonMapping\PhotonShooter.cs_" />
     <Compile Include="RenderObjects\CornellBox.cs" />
-    <Compile Include="Mesh\Design\LoadingMeshModelDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Mesh\Design\LoadingMeshModelDialog.Designer.cs">
-      <DependentUpon>LoadingMeshModelDialog.cs</DependentUpon>
-    </Compile>
     <Compile Include="RenderObjects\Design\ModelFileEditor.cs" />
     <Compile Include="RenderObjects\EnvironmentMaps\Design\SphereMapEditor.cs" />
     <Compile Include="RenderObjects\EnvironmentMaps\Design\SphereMapEditorForm.cs">

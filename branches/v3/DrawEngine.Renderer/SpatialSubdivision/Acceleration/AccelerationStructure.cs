@@ -1,20 +1,17 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
+using System.Collections.Generic;
 
-namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
-{
-    public abstract class AccelerationStructure<T> : IDisposable
-    {
+namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration {
+    public abstract class AccelerationStructure<T> : IDisposable {
         protected IList<T> accelerationUnits;
-        public AccelerationStructure(IList<T> accelerationUnits)
-        {
+
+        public AccelerationStructure(IList<T> accelerationUnits) {
             this.AccelerationUnits = accelerationUnits;
         }
-        public IList<T> AccelerationUnits
-        {
+
+        public IList<T> AccelerationUnits {
             get { return this.accelerationUnits; }
-            set
-            {
+            set {
                 //if (value != null)
                 //{
                 this.accelerationUnits = value;
@@ -25,12 +22,12 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
                 //}
             }
         }
+
         public abstract void Optimize();
 
         #region IDisposable Members
 
-        public void Dispose()
-        {
+        public virtual void Dispose() {
             this.accelerationUnits = null;
             GC.Collect();
             GC.WaitForPendingFinalizers();

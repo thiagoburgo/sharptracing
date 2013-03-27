@@ -8,17 +8,14 @@
 // *
 // *
 
-namespace Alsing.Text.PatternMatchers
-{
-    public class PatternMatchReference
-    {
+namespace Alsing.Text.PatternMatchers {
+    public class PatternMatchReference {
         public IPatternMatcher Matcher;
         public bool NeedSeparators;
         public PatternMatchReference NextSibling;
         public object[] Tags;
 
-        public PatternMatchReference(IPatternMatcher matcher)
-        {
+        public PatternMatchReference(IPatternMatcher matcher) {
             Matcher = matcher;
         }
     }

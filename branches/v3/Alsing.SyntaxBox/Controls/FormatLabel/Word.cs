@@ -10,10 +10,8 @@
 
 using System.Drawing;
 
-namespace Alsing.Windows.Forms.FormatLabel
-{
-    public class Word
-    {
+namespace Alsing.Windows.Forms.FormatLabel {
+    public class Word {
         public Element Element;
         public int Height;
         public Image Image;

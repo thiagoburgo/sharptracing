@@ -8,14 +8,12 @@
 // *
 // *
 
-namespace Alsing.SourceCode.SyntaxDocumentParsers
-{
+namespace Alsing.SourceCode.SyntaxDocumentParsers {
     /// <summary>
     /// Parser interface.
     /// Implement this interface if you want to create your own parser.
     /// </summary>
-    public interface IParser
-    {
+    public interface IParser {
         /// <summary>
         /// Gets or Sets the Document object for this parser
         /// </summary>

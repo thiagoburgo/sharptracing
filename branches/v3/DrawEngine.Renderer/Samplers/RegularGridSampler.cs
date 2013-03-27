@@ -10,25 +10,24 @@
  * Feel free to copy, modify and  give fixes 
  * suggestions. Keep the credits!
  */
- using System;
-using System.Collections.Generic;
-using DrawEngine.Renderer.Algebra;
 
-namespace DrawEngine.Renderer.Samplers
-{
+using System;
+using System.Collections.Generic;
+using DrawEngine.Renderer.Mathematics.Algebra;
+
+namespace DrawEngine.Renderer.Samplers {
     [Serializable]
-    public class RegularGridSampler : Sampler
-    {
+    public class RegularGridSampler : Sampler {
         public RegularGridSampler() : base() {}
         public RegularGridSampler(int samplesX, int sampleY) : base(samplesX, sampleY) {}
-        public override IEnumerable<Point2D> GenerateSamples(float x, float y)
-        {
+
+        public override IEnumerable<Point2D> GenerateSamples(float x, float y) {
             Point2D current_sample = new Point2D();
             float dx, dy;
             dx = x;
-            for(int sX = 0; sX < this.samplesX; sX++, dx += this.slopeX){
+            for (int sX = 0; sX < this.samplesX; sX++, dx += this.slopeX) {
                 dy = y;
-                for(int sY = 0; sY < this.samplesY; sY++, dy += this.slopeY){
+                for (int sY = 0; sY < this.samplesY; sY++, dy += this.slopeY) {
                     current_sample.X = dx;
                     current_sample.Y = dy;
                     yield return current_sample;

@@ -13,13 +13,11 @@ using System.Collections;
 using System.Drawing;
 using System.Xml;
 
-namespace Alsing.SourceCode
-{
+namespace Alsing.SourceCode {
     /// <summary>
     /// 
     /// </summary>
-    public class SyntaxDefinitionLoader
-    {
+    public class SyntaxDefinitionLoader {
         private Hashtable spanDefinitionLookup = new Hashtable();
         private Hashtable styleLookup = new Hashtable();
         private SyntaxDefinition syntaxDefinition = new SyntaxDefinition();
@@ -30,8 +28,7 @@ namespace Alsing.SourceCode
         /// </summary>
         /// <param name="File">File name</param>
         /// <returns>SyntaxDefinition object</returns>
-        public SyntaxDefinition Load(string File)
-        {
+        public SyntaxDefinition Load(string File) {
             styleLookup = new Hashtable();
             spanDefinitionLookup = new Hashtable();
             syntaxDefinition = new SyntaxDefinition();
@@ -49,8 +46,7 @@ namespace Alsing.SourceCode
         /// <param name="File"></param>
         /// <param name="Separators"></param>
         /// <returns></returns>
-        public SyntaxDefinition Load(string File, string Separators)
-        {
+        public SyntaxDefinition Load(string File, string Separators) {
             styleLookup = new Hashtable();
             spanDefinitionLookup = new Hashtable();
             syntaxDefinition = new SyntaxDefinition {Separators = Separators};
@@ -59,8 +55,7 @@ namespace Alsing.SourceCode
             xmlDocument.Load(File);
             ReadLanguageDefinition(xmlDocument);
 
-            if (syntaxDefinition.mainSpanDefinition == null)
-            {
+            if (syntaxDefinition.mainSpanDefinition == null) {
                 throw new Exception("no main block found in syntax");
             }
 
@@ -72,8 +67,7 @@ namespace Alsing.SourceCode
         /// </summary>
         /// <param name="XML"></param>
         /// <returns></returns>
-        public SyntaxDefinition LoadXML(string XML)
-        {
+        public SyntaxDefinition LoadXML(string XML) {
             styleLookup = new Hashtable();
             spanDefinitionLookup = new Hashtable();
             syntaxDefinition = new SyntaxDefinition();
@@ -82,8 +76,7 @@ namespace Alsing.SourceCode
             xmlDocument.LoadXml(XML);
             ReadLanguageDefinition(xmlDocument);
 
-            if (syntaxDefinition.mainSpanDefinition == null)
-            {
+            if (syntaxDefinition.mainSpanDefinition == null) {
                 throw new Exception("no main block found in syntax");
             }
 
@@ -91,60 +84,57 @@ namespace Alsing.SourceCode
             return syntaxDefinition;
         }
 
-        private void ReadLanguageDefinition(XmlNode xml)
-        {
+        private void ReadLanguageDefinition(XmlNode xml) {
             ParseLanguage(xml["Language"]);
         }
 
-        private void ParseLanguage(XmlNode node)
-        {
+        private void ParseLanguage(XmlNode node) {
             //get syntax name and startblock
             string Name = "";
             string StartBlock = "";
 
-            foreach (XmlAttribute att in node.Attributes)
-            {
-                if (att.Name.ToLowerInvariant() == "name")
+            foreach (XmlAttribute att in node.Attributes) {
+                if (att.Name.ToLowerInvariant() == "name") {
                     Name = att.Value;
+                }
 
-                if (att.Name.ToLowerInvariant() == "startblock")
+                if (att.Name.ToLowerInvariant() == "startblock") {
                     StartBlock = att.Value;
+                }
             }
 
             syntaxDefinition.Name = Name;
             syntaxDefinition.mainSpanDefinition = GetBlock(StartBlock);
 
-            foreach (XmlNode n in node.ChildNodes)
-            {
-                if (n.NodeType == XmlNodeType.Element)
-                {
-                    if (n.Name.ToLowerInvariant() == "filetypes")
+            foreach (XmlNode n in node.ChildNodes) {
+                if (n.NodeType == XmlNodeType.Element) {
+                    if (n.Name.ToLowerInvariant() == "filetypes") {
                         ParseFileTypes(n);
-                    if (n.Name.ToLowerInvariant() == "block")
+                    }
+                    if (n.Name.ToLowerInvariant() == "block") {
                         ParseBlock(n);
-                    if (n.Name.ToLowerInvariant() == "style")
+                    }
+                    if (n.Name.ToLowerInvariant() == "style") {
                         ParseStyle(n);
+                    }
                 }
             }
         }
 
-        private void ParseFileTypes(XmlNode node)
-        {
-            foreach (XmlNode n in node.ChildNodes)
-            {
-                if (n.NodeType == XmlNodeType.Element)
-                {
-                    if (n.Name.ToLowerInvariant() == "filetype")
-                    {
+        private void ParseFileTypes(XmlNode node) {
+            foreach (XmlNode n in node.ChildNodes) {
+                if (n.NodeType == XmlNodeType.Element) {
+                    if (n.Name.ToLowerInvariant() == "filetype") {
                         //add filetype
                         string Extension = "";
                         string Name = "";
-                        foreach (XmlAttribute a in n.Attributes)
-                        {
-                            if (a.Name.ToLowerInvariant() == "name")
+                        foreach (XmlAttribute a in n.Attributes) {
+                            if (a.Name.ToLowerInvariant() == "name") {
                                 Name = a.Value;
-                            if (a.Name.ToLowerInvariant() == "extension")
+                            }
+                            if (a.Name.ToLowerInvariant() == "extension") {
                                 Extension = a.Value;
+                            }
                         }
                         var ft = new FileType {Extension = Extension, Name = Name};
                         syntaxDefinition.FileTypes.Add(ft);
@@ -153,24 +143,25 @@ namespace Alsing.SourceCode
             }
         }
 
-        private void ParseBlock(XmlNode node)
-        {
+        private void ParseBlock(XmlNode node) {
             string Name = "", Style = "";
             bool IsMultiline = false;
             bool TerminateChildren = false;
             Color BackColor = Color.Transparent;
-            foreach (XmlAttribute att in node.Attributes)
-            {
-                if (att.Name.ToLowerInvariant() == "name")
+            foreach (XmlAttribute att in node.Attributes) {
+                if (att.Name.ToLowerInvariant() == "name") {
                     Name = att.Value;
-                if (att.Name.ToLowerInvariant() == "style")
+                }
+                if (att.Name.ToLowerInvariant() == "style") {
                     Style = att.Value;
-                if (att.Name.ToLowerInvariant() == "ismultiline")
+                }
+                if (att.Name.ToLowerInvariant() == "ismultiline") {
                     IsMultiline = bool.Parse(att.Value);
-                if (att.Name.ToLowerInvariant() == "terminatechildren")
+                }
+                if (att.Name.ToLowerInvariant() == "terminatechildren") {
                     TerminateChildren = bool.Parse(att.Value);
-                if (att.Name.ToLowerInvariant() == "backcolor")
-                {
+                }
+                if (att.Name.ToLowerInvariant() == "backcolor") {
                     BackColor = Color.FromName(att.Value);
                     //Transparent =false;
                 }
@@ -185,12 +176,9 @@ namespace Alsing.SourceCode
             bl.TerminateChildren = TerminateChildren;
 
 
-            foreach (XmlNode n in node.ChildNodes)
-            {
-                if (n.NodeType == XmlNodeType.Element)
-                {
-                    if (n.Name.ToLowerInvariant() == "scope")
-                    {
+            foreach (XmlNode n in node.ChildNodes) {
+                if (n.NodeType == XmlNodeType.Element) {
+                    if (n.Name.ToLowerInvariant() == "scope") {
                         //bool IsComplex=false;
                         //bool IsSeparator=false;
                         string Start = "";
@@ -209,10 +197,8 @@ namespace Alsing.SourceCode
 
                         bool expanded = true;
 
-                        foreach (XmlAttribute att in n.Attributes)
-                        {
-                            switch (att.Name.ToLowerInvariant())
-                            {
+                        foreach (XmlAttribute att in n.Attributes) {
+                            switch (att.Name.ToLowerInvariant()) {
                                 case "start":
                                     Start = att.Value;
                                     break;
@@ -257,45 +243,41 @@ namespace Alsing.SourceCode
                                     break;
                             }
                         }
-                        if (Start != "")
-                        {
+                        if (Start != "") {
                             //bl.StartPattern =new Pattern (Pattern,IsComplex,false,IsSeparator);
                             //bl.StartPatterns.Add (new Pattern (Pattern,IsComplex,IsSeparator,true));
                             bool blnStartIsComplex = bool.Parse(StartIsComplex);
                             bool blnEndIsComplex = bool.Parse(EndIsComplex);
                             bool blnCauseIndent = bool.Parse(CauseIndent);
 
-                            var scope = new Scope
-                                        {
-                                            Style = GetStyle(style),
-                                            ExpansionText = text,
-                                            DefaultExpanded = expanded,
-                                            CauseIndent = blnCauseIndent
-                                        };
+                            var scope = new Scope {
+                                                      Style = GetStyle(style),
+                                                      ExpansionText = text,
+                                                      DefaultExpanded = expanded,
+                                                      CauseIndent = blnCauseIndent
+                                                  };
 
                             var StartP = new Pattern(Start, blnStartIsComplex, false, bool.Parse(StartIsKeyword));
                             Pattern endPattern = EscapeChar != ""
                                                      ? new Pattern(End, false, bool.Parse(EndIsKeyword), EscapeChar)
                                                      : new Pattern(End, blnEndIsComplex, false, bool.Parse(EndIsKeyword));
 
-                            if (EndIsSeparator != "")
+                            if (EndIsSeparator != "") {
                                 endPattern.IsSeparator = bool.Parse(EndIsSeparator);
+                            }
 
                             scope.Start = StartP;
                             scope.EndPatterns.Add(endPattern);
                             bl.ScopePatterns.Add(scope);
-                            if (spawnStart != "")
-                            {
+                            if (spawnStart != "") {
                                 scope.spawnSpanOnStart = GetBlock(spawnStart);
                             }
-                            if (spawnEnd != "")
-                            {
+                            if (spawnEnd != "") {
                                 scope.spawnSpanOnEnd = GetBlock(spawnEnd);
                             }
                         }
                     }
-                    if (n.Name.ToLowerInvariant() == "bracket")
-                    {
+                    if (n.Name.ToLowerInvariant() == "bracket") {
                         //bool IsComplex=false;
                         //bool IsSeparator=false;
                         string Start = "";
@@ -309,10 +291,8 @@ namespace Alsing.SourceCode
                         string EndIsKeyword = "false";
                         string IsMultiLineB = "true";
 
-                        foreach (XmlAttribute att in n.Attributes)
-                        {
-                            switch (att.Name.ToLowerInvariant())
-                            {
+                        foreach (XmlAttribute att in n.Attributes) {
+                            switch (att.Name.ToLowerInvariant()) {
                                 case "start":
                                     Start = att.Value;
                                     break;
@@ -323,9 +303,11 @@ namespace Alsing.SourceCode
                                     style = att.Value;
                                     break;
                                 case "endisseparator":
-                                    if (att.Name.ToLowerInvariant() == "startisseparator")
-                                        if (att.Name.ToLowerInvariant() == "startiskeyword")
+                                    if (att.Name.ToLowerInvariant() == "startisseparator") {
+                                        if (att.Name.ToLowerInvariant() == "startiskeyword") {
                                             StartIsKeyword = att.Value;
+                                        }
+                                    }
                                     break;
                                 case "startiscomplex":
                                     StartIsComplex = att.Value;
@@ -341,8 +323,7 @@ namespace Alsing.SourceCode
                                     break;
                             }
                         }
-                        if (Start != "")
-                        {
+                        if (Start != "") {
                             var pl = new PatternList {Style = GetStyle(style)};
 
                             bool blnStartIsComplex = bool.Parse(StartIsComplex);
@@ -365,17 +346,13 @@ namespace Alsing.SourceCode
                     }
                 }
 
-                if (n.Name.ToLowerInvariant() == "keywords")
-                    foreach (XmlNode cn in n.ChildNodes)
-                    {
-                        if (cn.Name.ToLowerInvariant() == "patterngroup")
-                        {
+                if (n.Name.ToLowerInvariant() == "keywords") {
+                    foreach (XmlNode cn in n.ChildNodes) {
+                        if (cn.Name.ToLowerInvariant() == "patterngroup") {
                             var pl = new PatternList();
                             bl.KeywordsList.Add(pl);
-                            foreach (XmlAttribute att in cn.Attributes)
-                            {
-                                switch (att.Name.ToLowerInvariant())
-                                {
+                            foreach (XmlAttribute att in cn.Attributes) {
+                                switch (att.Name.ToLowerInvariant()) {
                                     case "style":
                                         pl.Style = GetStyle(att.Value);
                                         break;
@@ -390,20 +367,15 @@ namespace Alsing.SourceCode
                                         break;
                                 }
                             }
-                            foreach (XmlNode pt in cn.ChildNodes)
-                            {
-                                if (pt.Name.ToLowerInvariant() == "pattern")
-                                {
+                            foreach (XmlNode pt in cn.ChildNodes) {
+                                if (pt.Name.ToLowerInvariant() == "pattern") {
                                     bool IsComplex = false;
                                     bool IsSeparator = false;
                                     string Category = null;
                                     string Pattern = "";
-                                    if (pt.Attributes != null)
-                                    {
-                                        foreach (XmlAttribute att in pt.Attributes)
-                                        {
-                                            switch (att.Name.ToLowerInvariant())
-                                            {
+                                    if (pt.Attributes != null) {
+                                        foreach (XmlAttribute att in pt.Attributes) {
+                                            switch (att.Name.ToLowerInvariant()) {
                                                 case "text":
                                                     Pattern = att.Value;
                                                     break;
@@ -419,43 +391,40 @@ namespace Alsing.SourceCode
                                             }
                                         }
                                     }
-                                    if (Pattern != "")
-                                    {
-                                        var pat = new Pattern(Pattern, IsComplex, IsSeparator, true)
-                                                  {Category = Category};
+                                    if (Pattern != "") {
+                                        var pat = new Pattern(Pattern, IsComplex, IsSeparator, true) {
+                                                                                                         Category =
+                                                                                                             Category
+                                                                                                     };
                                         pl.Add(pat);
                                     }
-                                }
-                                else if (pt.Name.ToLowerInvariant() == "patterns")
-                                {
+                                } else if (pt.Name.ToLowerInvariant() == "patterns") {
                                     string Patterns = pt.ChildNodes[0].Value;
                                     Patterns = Patterns.Replace("\t", " ");
-                                    while (Patterns.IndexOf("  ") >= 0)
+                                    while (Patterns.IndexOf("  ") >= 0) {
                                         Patterns = Patterns.Replace("  ", " ");
+                                    }
 
 
-                                    foreach (string Pattern in Patterns.Split())
-                                    {
-                                        if (Pattern != "")
+                                    foreach (string Pattern in Patterns.Split()) {
+                                        if (Pattern != "") {
                                             pl.Add(new Pattern(Pattern, false, false, true));
+                                        }
                                     }
                                 }
                             }
                         }
                     }
+                }
                 //if (n.Name == "Operators")
                 //	ParseStyle(n);
-                if (n.Name.ToLowerInvariant() == "operators")
-                    foreach (XmlNode cn in n.ChildNodes)
-                    {
-                        if (cn.Name.ToLowerInvariant() == "patterngroup")
-                        {
+                if (n.Name.ToLowerInvariant() == "operators") {
+                    foreach (XmlNode cn in n.ChildNodes) {
+                        if (cn.Name.ToLowerInvariant() == "patterngroup") {
                             var pl = new PatternList();
                             bl.OperatorsList.Add(pl);
-                            foreach (XmlAttribute att in cn.Attributes)
-                            {
-                                switch (att.Name.ToLowerInvariant())
-                                {
+                            foreach (XmlAttribute att in cn.Attributes) {
+                                switch (att.Name.ToLowerInvariant()) {
                                     case "style":
                                         pl.Style = GetStyle(att.Value);
                                         break;
@@ -471,20 +440,15 @@ namespace Alsing.SourceCode
                                 }
                             }
 
-                            foreach (XmlNode pt in cn.ChildNodes)
-                            {
-                                if (pt.Name.ToLowerInvariant() == "pattern")
-                                {
+                            foreach (XmlNode pt in cn.ChildNodes) {
+                                if (pt.Name.ToLowerInvariant() == "pattern") {
                                     bool IsComplex = false;
                                     bool IsSeparator = false;
                                     string Pattern = "";
                                     string Category = null;
-                                    if (pt.Attributes != null)
-                                    {
-                                        foreach (XmlAttribute att in pt.Attributes)
-                                        {
-                                            switch (att.Name.ToLowerInvariant())
-                                            {
+                                    if (pt.Attributes != null) {
+                                        foreach (XmlAttribute att in pt.Attributes) {
+                                            switch (att.Name.ToLowerInvariant()) {
                                                 case "text":
                                                     Pattern = att.Value;
                                                     break;
@@ -500,39 +464,39 @@ namespace Alsing.SourceCode
                                             }
                                         }
                                     }
-                                    if (Pattern != "")
-                                    {
-                                        var pat = new Pattern(Pattern, IsComplex, IsSeparator, false)
-                                                  {Category = Category};
+                                    if (Pattern != "") {
+                                        var pat = new Pattern(Pattern, IsComplex, IsSeparator, false) {
+                                                                                                          Category =
+                                                                                                              Category
+                                                                                                      };
                                         pl.Add(pat);
                                     }
-                                }
-                                else if (pt.Name.ToLowerInvariant() == "patterns")
-                                {
+                                } else if (pt.Name.ToLowerInvariant() == "patterns") {
                                     string Patterns = pt.ChildNodes[0].Value;
                                     Patterns = Patterns.Replace("\t", " ");
-                                    while (Patterns.IndexOf("  ") >= 0)
+                                    while (Patterns.IndexOf("  ") >= 0) {
                                         Patterns = Patterns.Replace("  ", " ");
+                                    }
 
-                                    foreach (string Pattern in Patterns.Split())
-                                    {
-                                        if (Pattern != "")
+                                    foreach (string Pattern in Patterns.Split()) {
+                                        if (Pattern != "") {
                                             pl.Add(new Pattern(Pattern, false, false, false));
+                                        }
                                     }
                                 }
                             }
                         }
                     }
+                }
 
-                if (n.Name.ToLowerInvariant() == "childblocks")
-                {
-                    foreach (XmlNode cn in n.ChildNodes)
-                    {
-                        if (cn.Name.ToLowerInvariant() == "child")
-                        {
-                            foreach (XmlAttribute att in cn.Attributes)
-                                if (att.Name.ToLowerInvariant() == "name")
+                if (n.Name.ToLowerInvariant() == "childblocks") {
+                    foreach (XmlNode cn in n.ChildNodes) {
+                        if (cn.Name.ToLowerInvariant() == "child") {
+                            foreach (XmlAttribute att in cn.Attributes) {
+                                if (att.Name.ToLowerInvariant() == "name") {
                                     bl.childSpanDefinitions.Add(GetBlock(att.Value));
+                                }
+                            }
                         }
                     }
                 }
@@ -541,10 +505,8 @@ namespace Alsing.SourceCode
 
 
         //done
-        private TextStyle GetStyle(string Name)
-        {
-            if (styleLookup[Name] == null)
-            {
+        private TextStyle GetStyle(string Name) {
+            if (styleLookup[Name] == null) {
                 var s = new TextStyle();
                 styleLookup.Add(Name, s);
             }
@@ -553,10 +515,8 @@ namespace Alsing.SourceCode
         }
 
         //done
-        private SpanDefinition GetBlock(string Name)
-        {
-            if (spanDefinitionLookup[Name] == null)
-            {
+        private SpanDefinition GetBlock(string Name) {
+            if (spanDefinitionLookup[Name] == null) {
                 var b = new SpanDefinition(syntaxDefinition);
                 spanDefinitionLookup.Add(Name, b);
             }
@@ -565,17 +525,14 @@ namespace Alsing.SourceCode
         }
 
         //done
-        private void ParseStyle(XmlNode node)
-        {
+        private void ParseStyle(XmlNode node) {
             string Name = "";
             string ForeColor = "", BackColor = "";
             bool Bold = false, Italic = false, Underline = false;
 
 
-            foreach (XmlAttribute att in node.Attributes)
-            {
-                switch (att.Name.ToLowerInvariant())
-                {
+            foreach (XmlAttribute att in node.Attributes) {
+                switch (att.Name.ToLowerInvariant()) {
                     case "name":
                         Name = att.Value;
                         break;
@@ -599,8 +556,7 @@ namespace Alsing.SourceCode
 
             TextStyle st = GetStyle(Name);
 
-            if (BackColor != "")
-            {
+            if (BackColor != "") {
                 st.BackColor = Color.FromName(BackColor);
             }
 

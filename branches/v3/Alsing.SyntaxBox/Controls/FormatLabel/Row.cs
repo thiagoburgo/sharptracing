@@ -10,10 +10,8 @@
 
 using System.Collections.Generic;
 
-namespace Alsing.Windows.Forms.FormatLabel
-{
-    public class Row
-    {
+namespace Alsing.Windows.Forms.FormatLabel {
+    public class Row {
         public int BottomPadd;
         public int Height;
         public bool RenderSeparator;

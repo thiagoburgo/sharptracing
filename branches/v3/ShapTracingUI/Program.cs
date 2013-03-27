@@ -10,19 +10,17 @@
  * Feel free to copy, modify and  give fixes 
  * suggestions. Keep the credits!
  */
- using System;
+
+using System;
 using System.Windows.Forms;
 
-namespace DrawEngine.SharpTracingUI
-{
-    internal static class Program
-    {
+namespace DrawEngine.SharpTracingUI {
+    internal static class Program {
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        private static void Main()
-        {
+        private static void Main() {
             Application.EnableVisualStyles();
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
             Application.SetCompatibleTextRenderingDefault(false);
@@ -32,7 +30,5 @@ namespace DrawEngine.SharpTracingUI
             //    new DrawEngine.SharpTracing.Plugin.ScriptingTemplate();
             //template.Run();
         }
-
-        
     }
 }

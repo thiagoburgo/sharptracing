@@ -25,14 +25,12 @@ using Alsing.Windows.Forms.SyntaxBox;
 
 #endregion
 
-namespace Alsing.Windows.Forms
-{
+namespace Alsing.Windows.Forms {
     /// <summary>
     /// Syntaxbox control that can be used as a pure text editor or as a code editor when a syntaxfile is used.
     /// </summary>
     [Designer(typeof (SyntaxBoxDesigner), typeof (IDesigner))]
-    public class SyntaxBoxControl : SplitViewParentControl
-    {
+    public class SyntaxBoxControl : SplitViewParentControl {
         protected internal bool DisableAutoList;
         protected internal bool DisableFindForm;
         protected internal bool DisableInfoTip;
@@ -171,11 +169,9 @@ namespace Alsing.Windows.Forms
 
         [Category("Appearance"), Description("Determines if a ¶ should be displayed at the end of a line")]
         [DefaultValue(false)]
-        public bool ShowEOLMarker
-        {
+        public bool ShowEOLMarker {
             get { return _ShowEOLMarker; }
-            set
-            {
+            set {
                 _ShowEOLMarker = value;
                 Redraw();
             }
@@ -189,11 +185,9 @@ namespace Alsing.Windows.Forms
 
         [Category("Appearance"), Description("The color of the EOL marker")]
         [DefaultValue(typeof (Color), "Red")]
-        public Color EOLMarkerColor
-        {
+        public Color EOLMarkerColor {
             get { return _EOLMarkerColor; }
-            set
-            {
+            set {
                 _EOLMarkerColor = value;
                 Redraw();
             }
@@ -206,8 +200,7 @@ namespace Alsing.Windows.Forms
         private bool _AutoListAutoSelect = true;
 
         [DefaultValue(true)]
-        public bool AutoListAutoSelect
-        {
+        public bool AutoListAutoSelect {
             get { return _AutoListAutoSelect; }
             set { _AutoListAutoSelect = value; }
         }
@@ -226,11 +219,9 @@ namespace Alsing.Windows.Forms
 
         [Category("Appearance - Scopes"), Description("The color of the active scope")]
         [DefaultValue(typeof (Color), "Transparent")]
-        public Color ScopeBackColor
-        {
+        public Color ScopeBackColor {
             get { return _ScopeBackColor; }
-            set
-            {
+            set {
                 _ScopeBackColor = value;
                 Redraw();
             }
@@ -238,11 +229,9 @@ namespace Alsing.Windows.Forms
 
         [Category("Appearance - Scopes"), Description("The color of the scope indicator")]
         [DefaultValue(typeof (Color), "Transparent")]
-        public Color ScopeIndicatorColor
-        {
+        public Color ScopeIndicatorColor {
             get { return _ScopeIndicatorColor; }
-            set
-            {
+            set {
                 _ScopeIndicatorColor = value;
                 Redraw();
             }
@@ -253,13 +242,12 @@ namespace Alsing.Windows.Forms
         /// </summary>
         [Category("Behavior")]
         [Browsable(false)]
-        public TextPoint AutoListPosition
-        {
+        public TextPoint AutoListPosition {
             get { return ((EditViewControl) _ActiveView).AutoListPosition; }
-            set
-            {
-                if ((_ActiveView) == null)
+            set {
+                if ((_ActiveView) == null) {
                     return;
+                }
 
                 ((EditViewControl) _ActiveView).AutoListPosition = value;
             }
@@ -270,13 +258,12 @@ namespace Alsing.Windows.Forms
         /// </summary>
         [Category("Behavior")]
         [Browsable(false)]
-        public TextPoint InfoTipPosition
-        {
+        public TextPoint InfoTipPosition {
             get { return ((EditViewControl) _ActiveView).InfoTipPosition; }
-            set
-            {
-                if ((_ActiveView) == null)
+            set {
+                if ((_ActiveView) == null) {
                     return;
+                }
 
                 ((EditViewControl) _ActiveView).InfoTipPosition = value;
             }
@@ -287,15 +274,11 @@ namespace Alsing.Windows.Forms
         /// Determines if the revision marks should be visible.
         /// </summary>
         [Category("Appearance - Revision Marks")]
-        [Description(
-            "Determines if the revision marks should be visible")
-        ]
+        [Description("Determines if the revision marks should be visible")]
         [DefaultValue(true)]
-        public bool ShowRevisionMarks
-        {
+        public bool ShowRevisionMarks {
             get { return _ShowRevisionMarks; }
-            set
-            {
+            set {
                 _ShowRevisionMarks = value;
                 Redraw();
             }
@@ -322,13 +305,12 @@ namespace Alsing.Windows.Forms
         /// </summary>
         [Category("Appearance - Infotip"), Description("The currently active selection in the infotip")]
         [Browsable(false)]
-        public int InfoTipSelectedIndex
-        {
+        public int InfoTipSelectedIndex {
             get { return ((EditViewControl) _ActiveView).InfoTip.SelectedIndex; }
-            set
-            {
-                if ((_ActiveView) == null || ((EditViewControl) _ActiveView).InfoTip == null)
+            set {
+                if ((_ActiveView) == null || ((EditViewControl) _ActiveView).InfoTip == null) {
                     return;
+                }
 
                 ((EditViewControl) _ActiveView).InfoTip.SelectedIndex = value;
             }
@@ -339,13 +321,12 @@ namespace Alsing.Windows.Forms
         /// </summary>
         [Category("Appearance - InfoTip"), Description("An image to show in the infotip")]
         [DefaultValue(null)]
-        public Image InfoTipImage
-        {
+        public Image InfoTipImage {
             get { return ((EditViewControl) _ActiveView).InfoTip.Image; }
-            set
-            {
-                if ((_ActiveView) == null || ((EditViewControl) _ActiveView).InfoTip == null)
+            set {
+                if ((_ActiveView) == null || ((EditViewControl) _ActiveView).InfoTip == null) {
                     return;
+                }
 
 
                 ((EditViewControl) _ActiveView).InfoTip.Image = value;
@@ -357,13 +338,12 @@ namespace Alsing.Windows.Forms
         /// </summary>
         [Category("Appearance"), Description("Get or Sets the number of choices that could be made in the infotip")]
         [Browsable(false)]
-        public int InfoTipCount
-        {
+        public int InfoTipCount {
             get { return ((EditViewControl) _ActiveView).InfoTip.Count; }
-            set
-            {
-                if ((_ActiveView) == null || ((EditViewControl) _ActiveView).InfoTip == null)
+            set {
+                if ((_ActiveView) == null || ((EditViewControl) _ActiveView).InfoTip == null) {
                     return;
+                }
 
                 ((EditViewControl) _ActiveView).InfoTip.Count = value;
                 ((EditViewControl) _ActiveView).InfoTip.Init();
@@ -392,13 +372,12 @@ namespace Alsing.Windows.Forms
         /// </example>	
         [Category("Appearance - InfoTip"), Description("The infotip text")]
         [DefaultValue("")]
-        public string InfoTipText
-        {
+        public string InfoTipText {
             get { return ((EditViewControl) _ActiveView).InfoTip.Data; }
-            set
-            {
-                if ((_ActiveView) == null || ((EditViewControl) _ActiveView).InfoTip == null)
+            set {
+                if ((_ActiveView) == null || ((EditViewControl) _ActiveView).InfoTip == null) {
                     return;
+                }
 
                 ((EditViewControl) _ActiveView).InfoTip.Data = value;
             }
@@ -408,12 +387,9 @@ namespace Alsing.Windows.Forms
         /// Gets the Selection object from the active view.
         /// </summary>
         [Browsable(false)]
-        public Selection Selection
-        {
-            get
-            {
-                if ((_ActiveView) != null)
-                {
+        public Selection Selection {
+            get {
+                if ((_ActiveView) != null) {
                     return ((EditViewControl) _ActiveView).Selection;
                 }
                 return null;
@@ -426,8 +402,7 @@ namespace Alsing.Windows.Forms
         /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public KeyboardActionList KeyboardActions
-        {
+        public KeyboardActionList KeyboardActions {
             get { return _KeyboardActions; }
             set { _KeyboardActions = value; }
         }
@@ -437,13 +412,12 @@ namespace Alsing.Windows.Forms
         /// </summary>
         [Category("Appearance"), Description("Gets or Sets if the AutoList is visible in the active view.")]
         [Browsable(false)]
-        public bool AutoListVisible
-        {
+        public bool AutoListVisible {
             get { return (_ActiveView) != null && ((EditViewControl) _ActiveView).AutoListVisible; }
-            set
-            {
-                if ((_ActiveView) != null)
+            set {
+                if ((_ActiveView) != null) {
                     ((EditViewControl) _ActiveView).AutoListVisible = value;
+                }
             }
         }
 
@@ -452,13 +426,12 @@ namespace Alsing.Windows.Forms
         /// </summary>
         [Category("Appearance"), Description("Gets or Sets if the InfoTip is visible in the active view.")]
         [Browsable(false)]
-        public bool InfoTipVisible
-        {
+        public bool InfoTipVisible {
             get { return (_ActiveView) != null && ((EditViewControl) _ActiveView).InfoTipVisible; }
-            set
-            {
-                if ((_ActiveView) != null)
+            set {
+                if ((_ActiveView) != null) {
                     ((EditViewControl) _ActiveView).InfoTipVisible = value;
+                }
             }
         }
 
@@ -466,8 +439,7 @@ namespace Alsing.Windows.Forms
         /// Gets if the control can perform a Copy action.
         /// </summary>
         [Browsable(false)]
-        public bool CanCopy
-        {
+        public bool CanCopy {
             get { return ((EditViewControl) _ActiveView).CanCopy; }
         }
 
@@ -476,8 +448,7 @@ namespace Alsing.Windows.Forms
         /// (if the clipboard contains a valid text).
         /// </summary>
         [Browsable(false)]
-        public bool CanPaste
-        {
+        public bool CanPaste {
             get { return ((EditViewControl) _ActiveView).CanPaste; }
         }
 
@@ -486,8 +457,7 @@ namespace Alsing.Windows.Forms
         /// Gets if the control can perform a ReDo action.
         /// </summary>
         [Browsable(false)]
-        public bool CanRedo
-        {
+        public bool CanRedo {
             get { return ((EditViewControl) _ActiveView).CanRedo; }
         }
 
@@ -495,8 +465,7 @@ namespace Alsing.Windows.Forms
         /// Gets if the control can perform an Undo action.
         /// </summary>
         [Browsable(false)]
-        public bool CanUndo
-        {
+        public bool CanUndo {
             get { return ((EditViewControl) _ActiveView).CanUndo; }
         }
 
@@ -508,11 +477,9 @@ namespace Alsing.Windows.Forms
         /// Image Index 1 is used to display the Bookmark icon.
         /// </remarks>		
         [Category("Appearance - Gutter Margin"), Description("Gets or Sets the imagelist to use in the gutter margin.")]
-        public ImageList GutterIcons
-        {
+        public ImageList GutterIcons {
             get { return _GutterIcons; }
-            set
-            {
+            set {
                 _GutterIcons = value;
                 Redraw();
             }
@@ -523,18 +490,16 @@ namespace Alsing.Windows.Forms
         /// </summary>
         [Category("Appearance"), Description("Gets or Sets the imagelist to use in the autolist.")]
         [DefaultValue(null)]
-        public ImageList AutoListIcons
-        {
+        public ImageList AutoListIcons {
             get { return _AutoListIcons; }
-            set
-            {
+            set {
                 _AutoListIcons = value;
 
 
-                foreach (EditViewControl ev in Views)
-                {
-                    if (ev != null && ev.AutoList != null)
+                foreach (EditViewControl ev in Views) {
+                    if (ev != null && ev.AutoList != null) {
                         ev.AutoList.Images = value;
+                    }
                 }
                 Redraw();
             }
@@ -547,11 +512,9 @@ namespace Alsing.Windows.Forms
         [Category("Appearance - Tabs")]
         [Description("Gets or Sets the color to use when rendering Tab guides.")]
         [DefaultValue(typeof (Color), "Control")]
-        public Color TabGuideColor
-        {
+        public Color TabGuideColor {
             get { return _TabGuideColor; }
-            set
-            {
+            set {
                 _TabGuideColor = value;
                 Redraw();
             }
@@ -566,11 +529,9 @@ namespace Alsing.Windows.Forms
         [Category("Appearance - Bracket Match")]
         [Description("Gets or Sets the color of the bracket match borders.")]
         [DefaultValue(typeof (Color), "DarkBlue")]
-        public Color BracketBorderColor
-        {
+        public Color BracketBorderColor {
             get { return _BracketBorderColor; }
-            set
-            {
+            set {
                 _BracketBorderColor = value;
                 Redraw();
             }
@@ -582,11 +543,9 @@ namespace Alsing.Windows.Forms
         [Category("Appearance - Tabs")]
         [Description("Gets or Sets if the control should render Tab guides.")]
         [DefaultValue(false)]
-        public bool ShowTabGuides
-        {
+        public bool ShowTabGuides {
             get { return _ShowTabGuides; }
-            set
-            {
+            set {
                 _ShowTabGuides = value;
                 Redraw();
             }
@@ -598,11 +557,9 @@ namespace Alsing.Windows.Forms
         [Category("Appearance")]
         [Description("Gets or Sets the color to use when rendering whitespace characters.")]
         [DefaultValue(typeof (Color), "Control")]
-        public Color WhitespaceColor
-        {
+        public Color WhitespaceColor {
             get { return _WhitespaceColor; }
-            set
-            {
+            set {
                 _WhitespaceColor = value;
                 Redraw();
             }
@@ -614,11 +571,9 @@ namespace Alsing.Windows.Forms
         [Category("Appearance")]
         [Description("Gets or Sets the color of the code Outlining (both folding lines and collapsed blocks).")]
         [DefaultValue(typeof (Color), "ControlDark")]
-        public Color OutlineColor
-        {
+        public Color OutlineColor {
             get { return _OutlineColor; }
-            set
-            {
+            set {
                 _OutlineColor = value;
                 InitGraphics();
                 Redraw();
@@ -640,13 +595,10 @@ namespace Alsing.Windows.Forms
         [Category("Behavior")]
         [Description("Gets or Sets the speed of the vertical scroll when SmoothScroll is activated")]
         [DefaultValue(2)]
-        public int SmoothScrollSpeed
-        {
+        public int SmoothScrollSpeed {
             get { return _SmoothScrollSpeed; }
-            set
-            {
-                if (value <= 0)
-                {
+            set {
+                if (value <= 0) {
                     throw (new Exception("Scroll speed may not be less than 1"));
                 }
 
@@ -660,8 +612,7 @@ namespace Alsing.Windows.Forms
         [Category("Behavior")]
         [Description("Gets or Sets if the control can display breakpoints or not.")]
         [DefaultValue(true)]
-        public bool AllowBreakPoints
-        {
+        public bool AllowBreakPoints {
             get { return _AllowBreakPoints; }
             set { _AllowBreakPoints = value; }
         }
@@ -670,16 +621,11 @@ namespace Alsing.Windows.Forms
         /// Gets or Sets the RevisionMarkBeforeSave Color to use for modified rows.
         /// </summary>
         [Category("Appearance - Revision Marks")]
-        [Description(
-            "The color to use for revision mark when line is modified")
-        ]
+        [Description("The color to use for revision mark when line is modified")]
         [DefaultValue(typeof (Color), "Gold")]
-        public Color
-            RevisionMarkBeforeSave
-        {
+        public Color RevisionMarkBeforeSave {
             get { return _RevisionMarkBeforeSave; }
-            set
-            {
+            set {
                 _RevisionMarkBeforeSave = value;
                 Redraw();
             }
@@ -689,16 +635,11 @@ namespace Alsing.Windows.Forms
         /// Gets or Sets the RevisionMarkAfterSave Color to use for saved rows.
         /// </summary>
         [Category("Appearance - Revision Marks")]
-        [Description(
-            "The color to use for revision mark when line is saved")
-        ]
+        [Description("The color to use for revision mark when line is saved")]
         [DefaultValue(typeof (Color), "LimeGreen")]
-        public Color
-            RevisionMarkAfterSave
-        {
+        public Color RevisionMarkAfterSave {
             get { return _RevisionMarkAfterSave; }
-            set
-            {
+            set {
                 _RevisionMarkAfterSave = value;
                 Redraw();
             }
@@ -712,11 +653,9 @@ namespace Alsing.Windows.Forms
             "Gets or Sets if the control should perform a full parse of the document when content is drag dropped or pasted into the control"
             )]
         [DefaultValue(false)]
-        public bool ParseOnPaste
-        {
+        public bool ParseOnPaste {
             get { return _ParseOnPaste; }
-            set
-            {
+            set {
                 _ParseOnPaste = value;
                 Redraw();
             }
@@ -729,11 +668,9 @@ namespace Alsing.Windows.Forms
         [Category("Appearance - Font")]
         [Description("The size of the font")]
         [DefaultValue(10f)]
-        public float FontSize
-        {
+        public float FontSize {
             get { return _FontSize; }
-            set
-            {
+            set {
                 _FontSize = value;
                 InitGraphics();
                 Redraw();
@@ -746,8 +683,7 @@ namespace Alsing.Windows.Forms
         [Category("Behavior")]
         [Description("Determines how the the control indents a new line")]
         [DefaultValue(IndentStyle.LastRow)]
-        public IndentStyle Indent
-        {
+        public IndentStyle Indent {
             get { return _Indent; }
             set { _Indent = value; }
         }
@@ -757,8 +693,7 @@ namespace Alsing.Windows.Forms
         /// </summary>
         [Category("Content")]
         [Description("The SyntaxDocument that is attatched to the contro")]
-        public SyntaxDocument Document
-        {
+        public SyntaxDocument Document {
             get { return _Document; }
             set { AttachDocument(value); }
         }
@@ -769,8 +704,7 @@ namespace Alsing.Windows.Forms
         [Category("Behavior")]
         [Description("The delay before the tooltip is displayed over a collapsed block")]
         [DefaultValue(240)]
-        public int TooltipDelay
-        {
+        public int TooltipDelay {
             get { return _TooltipDelay; }
             set { _TooltipDelay = value; }
         }
@@ -783,8 +717,7 @@ namespace Alsing.Windows.Forms
         [Category("Behavior")]
         [Description("The delay before the tooltip is displayed over a collapsed block")]
         [DefaultValue(true)]
-        public bool CollapsedBlockTooltipsEnabled
-        {
+        public bool CollapsedBlockTooltipsEnabled {
             get { return _CollapsedBlockTooltipsEnabled; }
             set { _CollapsedBlockTooltipsEnabled = value; }
         }
@@ -807,18 +740,18 @@ namespace Alsing.Windows.Forms
         [Description("The name of the font that is used to render the control")]
         [Editor(typeof (FontList), typeof (UITypeEditor))]
         [DefaultValue("Courier New")]
-        public string FontName
-        {
+        public string FontName {
             get { return _FontName; }
-            set
-            {
-                if (Views == null)
+            set {
+                if (Views == null) {
                     return;
+                }
 
                 _FontName = value;
                 InitGraphics();
-                foreach (EditViewControl evc in Views)
+                foreach (EditViewControl evc in Views) {
                     evc.CalcMaxCharWidth();
+                }
 
                 Redraw();
             }
@@ -832,11 +765,9 @@ namespace Alsing.Windows.Forms
         [Category("Appearance - Bracket Match")]
         [Description("Determines if the control should highlight scope patterns")]
         [DefaultValue(true)]
-        public bool BracketMatching
-        {
+        public bool BracketMatching {
             get { return _BracketMatching; }
-            set
-            {
+            set {
                 _BracketMatching = value;
                 Redraw();
             }
@@ -849,11 +780,9 @@ namespace Alsing.Windows.Forms
         [Category("Behavior")]
         [Description("Determines if virtual Whitespace is active")]
         [DefaultValue(false)]
-        public bool VirtualWhitespace
-        {
+        public bool VirtualWhitespace {
             get { return _VirtualWhitespace; }
-            set
-            {
+            set {
                 _VirtualWhitespace = value;
                 Redraw();
             }
@@ -867,11 +796,9 @@ namespace Alsing.Windows.Forms
         [Category("Appearance")]
         [Description("The separator color")]
         [DefaultValue(typeof (Color), "Control")]
-        public Color SeparatorColor
-        {
+        public Color SeparatorColor {
             get { return _SeparatorColor; }
-            set
-            {
+            set {
                 _SeparatorColor = value;
                 Redraw();
             }
@@ -886,11 +813,9 @@ namespace Alsing.Windows.Forms
         [Category("Appearance - Bracket Match")]
         [Description("The foreground color to use when BracketMatching is activated")]
         [DefaultValue(typeof (Color), "Black")]
-        public Color BracketForeColor
-        {
+        public Color BracketForeColor {
             get { return _BracketForeColor; }
-            set
-            {
+            set {
                 _BracketForeColor = value;
                 Redraw();
             }
@@ -904,11 +829,9 @@ namespace Alsing.Windows.Forms
         [Category("Appearance - Bracket Match")]
         [Description("The background color to use when BracketMatching is activated")]
         [DefaultValue(typeof (Color), "LightSteelBlue")]
-        public Color BracketBackColor
-        {
+        public Color BracketBackColor {
             get { return _BracketBackColor; }
-            set
-            {
+            set {
                 _BracketBackColor = value;
                 Redraw();
             }
@@ -921,11 +844,9 @@ namespace Alsing.Windows.Forms
         [Category("Appearance - Selection")]
         [Description("The inactive selection background color.")]
         [DefaultValue(typeof (Color), "ControlDark")]
-        public Color InactiveSelectionBackColor
-        {
+        public Color InactiveSelectionBackColor {
             get { return _InactiveSelectionBackColor; }
-            set
-            {
+            set {
                 _InactiveSelectionBackColor = value;
                 Redraw();
             }
@@ -937,11 +858,9 @@ namespace Alsing.Windows.Forms
         [Category("Appearance - Selection")]
         [Description("The inactive selection foreground color.")]
         [DefaultValue(typeof (Color), "ControlLight")]
-        public Color InactiveSelectionForeColor
-        {
+        public Color InactiveSelectionForeColor {
             get { return _InactiveSelectionForeColor; }
-            set
-            {
+            set {
                 _InactiveSelectionForeColor = value;
                 Redraw();
             }
@@ -953,11 +872,9 @@ namespace Alsing.Windows.Forms
         [Category("Appearance - Selection")]
         [Description("The selection background color.")]
         [DefaultValue(typeof (Color), "Highlight")]
-        public Color SelectionBackColor
-        {
+        public Color SelectionBackColor {
             get { return _SelectionBackColor; }
-            set
-            {
+            set {
                 _SelectionBackColor = value;
                 Redraw();
             }
@@ -969,11 +886,9 @@ namespace Alsing.Windows.Forms
         [Category("Appearance - Selection")]
         [Description("The selection foreground color.")]
         [DefaultValue(typeof (Color), "HighlightText")]
-        public Color SelectionForeColor
-        {
+        public Color SelectionForeColor {
             get { return _SelectionForeColor; }
-            set
-            {
+            set {
                 _SelectionForeColor = value;
                 Redraw();
             }
@@ -986,11 +901,9 @@ namespace Alsing.Windows.Forms
         [Category("Appearance - Gutter Margin")]
         [Description("The border color of the gutter margin")]
         [DefaultValue(typeof (Color), "ControlDark")]
-        public Color GutterMarginBorderColor
-        {
+        public Color GutterMarginBorderColor {
             get { return _GutterMarginBorderColor; }
-            set
-            {
+            set {
                 _GutterMarginBorderColor = value;
                 InitGraphics();
                 Redraw();
@@ -1005,11 +918,9 @@ namespace Alsing.Windows.Forms
         [Category("Appearance - Line Numbers")]
         [Description("The border color of the line number margin")]
         [DefaultValue(typeof (Color), "Teal")]
-        public Color LineNumberBorderColor
-        {
+        public Color LineNumberBorderColor {
             get { return _LineNumberBorderColor; }
-            set
-            {
+            set {
                 _LineNumberBorderColor = value;
                 InitGraphics();
                 Redraw();
@@ -1024,11 +935,9 @@ namespace Alsing.Windows.Forms
         [Category("Appearance - BreakPoints")]
         [Description("The foreground color of a Breakpoint")]
         [DefaultValue(typeof (Color), "White")]
-        public Color BreakPointForeColor
-        {
+        public Color BreakPointForeColor {
             get { return _BreakPointForeColor; }
-            set
-            {
+            set {
                 _BreakPointForeColor = value;
                 Redraw();
             }
@@ -1041,11 +950,9 @@ namespace Alsing.Windows.Forms
         [Category("Appearance - BreakPoints")]
         [Description("The background color to use when BracketMatching is activated")]
         [DefaultValue(typeof (Color), "DarkRed")]
-        public Color BreakPointBackColor
-        {
+        public Color BreakPointBackColor {
             get { return _BreakPointBackColor; }
-            set
-            {
+            set {
                 _BreakPointBackColor = value;
                 Redraw();
             }
@@ -1059,11 +966,9 @@ namespace Alsing.Windows.Forms
         [Category("Appearance - Line Numbers")]
         [Description("The foreground color of line numbers")]
         [DefaultValue(typeof (Color), "Teal")]
-        public Color LineNumberForeColor
-        {
+        public Color LineNumberForeColor {
             get { return _LineNumberForeColor; }
-            set
-            {
+            set {
                 _LineNumberForeColor = value;
                 InitGraphics();
                 Redraw();
@@ -1078,11 +983,9 @@ namespace Alsing.Windows.Forms
         [Category("Appearance - Line Numbers")]
         [Description("The background color of line numbers")]
         [DefaultValue(typeof (Color), "Window")]
-        public Color LineNumberBackColor
-        {
+        public Color LineNumberBackColor {
             get { return _LineNumberBackColor; }
-            set
-            {
+            set {
                 _LineNumberBackColor = value;
                 InitGraphics();
                 Redraw();
@@ -1096,11 +999,9 @@ namespace Alsing.Windows.Forms
         [Category("Appearance - Gutter Margin")]
         [Description("The color of the gutter margin")]
         [DefaultValue(typeof (Color), "Control")]
-        public Color GutterMarginColor
-        {
+        public Color GutterMarginColor {
             get { return _GutterMarginColor; }
-            set
-            {
+            set {
                 _GutterMarginColor = value;
                 InitGraphics();
                 Redraw();
@@ -1113,11 +1014,9 @@ namespace Alsing.Windows.Forms
         [Category("Appearance")]
         [Description("The background color of the client area")]
         [DefaultValue(typeof (Color), "Window")]
-        public new Color BackColor
-        {
+        public new Color BackColor {
             get { return _BackColor; }
-            set
-            {
+            set {
                 _BackColor = value;
                 InitGraphics();
                 Redraw();
@@ -1131,11 +1030,9 @@ namespace Alsing.Windows.Forms
         [Category("Appearance - Active Line")]
         [Description("The background color of the active line")]
         [DefaultValue(typeof (Color), "LightYellow")]
-        public Color HighLightedLineColor
-        {
+        public Color HighLightedLineColor {
             get { return _HighLightedLineColor; }
-            set
-            {
+            set {
                 _HighLightedLineColor = value;
                 InitGraphics();
                 Redraw();
@@ -1148,11 +1045,9 @@ namespace Alsing.Windows.Forms
         [Category("Appearance - Active Line")]
         [Description("Determines if the active line should be highlighted")]
         [DefaultValue(false)]
-        public bool HighLightActiveLine
-        {
+        public bool HighLightActiveLine {
             get { return _HighLightActiveLine; }
-            set
-            {
+            set {
                 _HighLightActiveLine = value;
                 Redraw();
             }
@@ -1164,11 +1059,9 @@ namespace Alsing.Windows.Forms
         [Category("Appearance")]
         [Description("Determines if Whitespace should be rendered as symbols")]
         [DefaultValue(false)]
-        public bool ShowWhitespace
-        {
+        public bool ShowWhitespace {
             get { return _ShowWhitespace; }
-            set
-            {
+            set {
                 _ShowWhitespace = value;
                 Redraw();
             }
@@ -1180,11 +1073,9 @@ namespace Alsing.Windows.Forms
         [Category("Appearance - Line Numbers")]
         [Description("Determines if the line number margin should be visible")]
         [DefaultValue(true)]
-        public bool ShowLineNumbers
-        {
+        public bool ShowLineNumbers {
             get { return _ShowLineNumbers; }
-            set
-            {
+            set {
                 _ShowLineNumbers = value;
                 Redraw();
             }
@@ -1196,11 +1087,9 @@ namespace Alsing.Windows.Forms
         [Category("Appearance - Gutter Margin")]
         [Description("Determines if the gutter margin should be visible")]
         [DefaultValue(true)]
-        public bool ShowGutterMargin
-        {
+        public bool ShowGutterMargin {
             get { return _ShowGutterMargin; }
-            set
-            {
+            set {
                 _ShowGutterMargin = value;
                 Redraw();
             }
@@ -1212,11 +1101,9 @@ namespace Alsing.Windows.Forms
         [Category("Appearance - Gutter Margin")]
         [Description("Determines the width of the gutter margin in pixels")]
         [DefaultValue(19)]
-        public int GutterMarginWidth
-        {
+        public int GutterMarginWidth {
             get { return _GutterMarginWidth; }
-            set
-            {
+            set {
                 _GutterMarginWidth = value;
                 Redraw();
             }
@@ -1237,11 +1124,9 @@ namespace Alsing.Windows.Forms
         [Category("Appearance - Tabs")]
         [Description("Determines the size of a TAB in number of SPACE chars")]
         [DefaultValue(4)]
-        public int TabSize
-        {
+        public int TabSize {
             get { return _TabSize; }
-            set
-            {
+            set {
                 _TabSize = value;
                 Redraw();
             }
@@ -1253,11 +1138,9 @@ namespace Alsing.Windows.Forms
 
         [Category("Appearance - Scopes"), Description("Determines if the scope indicator should be shown")]
         [DefaultValue(true)]
-        public bool ShowScopeIndicator
-        {
+        public bool ShowScopeIndicator {
             get { return _ShowScopeIndicator; }
-            set
-            {
+            set {
                 _ShowScopeIndicator = value;
                 Redraw();
             }
@@ -1271,22 +1154,18 @@ namespace Alsing.Windows.Forms
         /// <summary>
         /// Converts all tabs to spaces the size of .TabSize in the Document.
         /// </summary>
-        public void ConvertTabsToSpaces()
-        {
-            if (_Document != null)
-            {
+        public void ConvertTabsToSpaces() {
+            if (_Document != null) {
                 _Document.StartUndoCapture();
                 var spaces = new string(' ', _TabSize);
                 // Iterate all rows and convert tabs to spaces.
-                for (int count = 0; count < _Document.Count; count++)
-                {
+                for (int count = 0; count < _Document.Count; count++) {
                     Row row = _Document[count];
 
                     string rowText = row.Text;
                     string newText = rowText.Replace("\t", spaces);
                     // If this has made a change to the row, update it.
-                    if (newText != rowText)
-                    {
+                    if (newText != rowText) {
                         _Document.DeleteRange(new TextRange(0, count, rowText.Length, count));
                         _Document.InsertText(newText, 0, count, true);
                     }
@@ -1301,22 +1180,18 @@ namespace Alsing.Windows.Forms
         /// <summary>
         /// Converts all spaces the size of .TabSize in the Document to tabs.
         /// </summary>
-        public void ConvertSpacesToTabs()
-        {
-            if (_Document != null)
-            {
+        public void ConvertSpacesToTabs() {
+            if (_Document != null) {
                 _Document.StartUndoCapture();
                 var spaces = new string(' ', _TabSize);
                 // Iterate all rows and convert tabs to spaces.
-                for (int count = 0; count < _Document.Count; count++)
-                {
+                for (int count = 0; count < _Document.Count; count++) {
                     Row row = _Document[count];
 
                     string rowText = row.Text;
                     string newText = rowText.Replace(spaces, "\t");
                     // If this has made a change to the row, update it.
-                    if (newText != rowText)
-                    {
+                    if (newText != rowText) {
                         _Document.DeleteRange(new TextRange(0, count, rowText.Length - 1, count));
                         _Document.InsertText(newText, 0, count, true);
                     }
@@ -1335,20 +1210,16 @@ namespace Alsing.Windows.Forms
         /// Gets the Caret object from the active view.
         /// </summary>
         [Browsable(false)]
-        public Caret Caret
-        {
-            get
-            {
-                if ((_ActiveView) != null)
-                {
+        public Caret Caret {
+            get {
+                if ((_ActiveView) != null) {
                     return ((EditViewControl) _ActiveView).Caret;
                 }
                 return null;
             }
         }
 
-        public void ScrollIntoView(int RowIndex)
-        {
+        public void ScrollIntoView(int RowIndex) {
             ((EditViewControl) _ActiveView).ScrollIntoView(RowIndex);
         }
 
@@ -1369,24 +1240,21 @@ namespace Alsing.Windows.Forms
         /// MySyntaxBox.AutoListEndLoad();
         /// </code>
         /// </example>
-        public void AutoListBeginLoad()
-        {
+        public void AutoListBeginLoad() {
             ((EditViewControl) _ActiveView).AutoListBeginLoad();
         }
 
         /// <summary>
         /// Resumes painting and autosizes the Autolist.			
         /// </summary>		
-        public void AutoListEndLoad()
-        {
+        public void AutoListEndLoad() {
             ((EditViewControl) _ActiveView).AutoListEndLoad();
         }
 
         /// <summary>
         /// Clears the content in the autolist.
         /// </summary>
-        public void AutoListClear()
-        {
+        public void AutoListClear() {
             ((EditViewControl) _ActiveView).AutoList.Clear();
         }
 
@@ -1406,8 +1274,7 @@ namespace Alsing.Windows.Forms
         /// </example>
         /// <param name="text">The text to display in the autolist</param>
         /// <param name="ImageIndex">The image index in the AutoListIcons</param>
-        public void AutoListAdd(string text, int ImageIndex)
-        {
+        public void AutoListAdd(string text, int ImageIndex) {
             ((EditViewControl) _ActiveView).AutoList.Add(text, ImageIndex);
         }
 
@@ -1417,8 +1284,7 @@ namespace Alsing.Windows.Forms
         /// <param name="text">The text to display in the autolist</param>
         /// <param name="InsertText">The text to insert in the code</param>
         /// <param name="ImageIndex">The image index in the AutoListIcons</param>
-        public void AutoListAdd(string text, string InsertText, int ImageIndex)
-        {
+        public void AutoListAdd(string text, string InsertText, int ImageIndex) {
             ((EditViewControl) _ActiveView).AutoList.Add(text, InsertText, ImageIndex);
         }
 
@@ -1429,8 +1295,7 @@ namespace Alsing.Windows.Forms
         /// <param name="InsertText">The text to insert in the code</param>
         /// <param name="ToolTip"></param>
         /// <param name="ImageIndex">The image index in the AutoListIcons</param>
-        public void AutoListAdd(string text, string InsertText, string ToolTip, int ImageIndex)
-        {
+        public void AutoListAdd(string text, string InsertText, string ToolTip, int ImageIndex) {
             ((EditViewControl) _ActiveView).AutoList.Add(text, InsertText, ToolTip, ImageIndex);
         }
 
@@ -1440,40 +1305,35 @@ namespace Alsing.Windows.Forms
         /// <param name="x">Pixel x position</param>
         /// <param name="y">Pixel y position</param>
         /// <returns>The row and column at the given pixel coordinate.</returns>
-        public TextPoint CharFromPixel(int x, int y)
-        {
+        public TextPoint CharFromPixel(int x, int y) {
             return ((EditViewControl) _ActiveView).CharFromPixel(x, y);
         }
 
         /// <summary>
         /// Clears the selection in the active view.
         /// </summary>
-        public void ClearSelection()
-        {
+        public void ClearSelection() {
             ((EditViewControl) _ActiveView).ClearSelection();
         }
 
         /// <summary>
         /// Executes a Copy action on the selection in the active view.
         /// </summary>
-        public void Copy()
-        {
+        public void Copy() {
             ((EditViewControl) _ActiveView).Copy();
         }
 
         /// <summary>
         /// Executes a Cut action on the selection in the active view.
         /// </summary>
-        public void Cut()
-        {
+        public void Cut() {
             ((EditViewControl) _ActiveView).Cut();
         }
 
         /// <summary>
         /// Executes a Delete action on the selection in the active view.
         /// </summary>
-        public void Delete()
-        {
+        public void Delete() {
             ((EditViewControl) _ActiveView).Delete();
         }
 
@@ -1481,24 +1341,21 @@ namespace Alsing.Windows.Forms
         /// Moves the caret of the active view to a specific row.
         /// </summary>
         /// <param name="RowIndex">the row to jump to</param>
-        public void GotoLine(int RowIndex)
-        {
+        public void GotoLine(int RowIndex) {
             ((EditViewControl) _ActiveView).GotoLine(RowIndex);
         }
 
         /// <summary>
         /// Moves the caret of the active view to the next bookmark.
         /// </summary>
-        public void GotoNextBookmark()
-        {
+        public void GotoNextBookmark() {
             ((EditViewControl) _ActiveView).GotoNextBookmark();
         }
 
         /// <summary>
         /// Moves the caret of the active view to the previous bookmark.
         /// </summary>
-        public void GotoPreviousBookmark()
-        {
+        public void GotoPreviousBookmark() {
             ((EditViewControl) _ActiveView).GotoPreviousBookmark();
         }
 
@@ -1510,32 +1367,28 @@ namespace Alsing.Windows.Forms
         /// <param name="x">Pixel x position.</param>
         /// <param name="y">Pixel y position</param>
         /// <returns>true if the position is inside the selection.</returns>
-        public bool IsOverSelection(int x, int y)
-        {
+        public bool IsOverSelection(int x, int y) {
             return ((EditViewControl) _ActiveView).IsOverSelection(x, y);
         }
 
         /// <summary>
         /// Execute a Paste action if possible.
         /// </summary>
-        public void Paste()
-        {
+        public void Paste() {
             ((EditViewControl) _ActiveView).Paste();
         }
 
         /// <summary>
         /// Execute a ReDo action if possible.
         /// </summary>
-        public void Redo()
-        {
+        public void Redo() {
             ((EditViewControl) _ActiveView).Redo();
         }
 
         /// <summary>
         /// Makes the caret in the active view visible on screen.
         /// </summary>
-        public void ScrollIntoView()
-        {
+        public void ScrollIntoView() {
             ((EditViewControl) _ActiveView).ScrollIntoView();
         }
 
@@ -1543,16 +1396,14 @@ namespace Alsing.Windows.Forms
         /// Scrolls the active view to a specific position.
         /// </summary>
         /// <param name="Pos"></param>
-        public void ScrollIntoView(TextPoint Pos)
-        {
+        public void ScrollIntoView(TextPoint Pos) {
             ((EditViewControl) _ActiveView).ScrollIntoView(Pos);
         }
 
         /// <summary>
         /// Select all the text in the active view.
         /// </summary>
-        public void SelectAll()
-        {
+        public void SelectAll() {
             ((EditViewControl) _ActiveView).SelectAll();
         }
 
@@ -1563,16 +1414,14 @@ namespace Alsing.Windows.Forms
         /// <param name="MatchCase">Match case , true/false</param>
         /// <param name="WholeWords">Match whole words only , true/false</param>
         /// <param name="UseRegEx">To be implemented</param>
-        public void FindNext(string Pattern, bool MatchCase, bool WholeWords, bool UseRegEx)
-        {
+        public void FindNext(string Pattern, bool MatchCase, bool WholeWords, bool UseRegEx) {
             ((EditViewControl) _ActiveView).SelectNext(Pattern, MatchCase, WholeWords, UseRegEx);
         }
 
         /// <summary>
         /// Finds the next occurance of the pattern in the find/replace dialog
         /// </summary>
-        public void FindNext()
-        {
+        public void FindNext() {
             ((EditViewControl) _ActiveView).FindNext();
         }
 
@@ -1585,32 +1434,28 @@ namespace Alsing.Windows.Forms
         /// MySyntaxBox.ShowGotoLine();
         /// </code>
         /// </example>
-        public void ShowGotoLine()
-        {
+        public void ShowGotoLine() {
             ((EditViewControl) _ActiveView).ShowGotoLine();
         }
 
         /// <summary>
         /// Not yet implemented
         /// </summary>
-        public void ShowSettings()
-        {
+        public void ShowSettings() {
             ((EditViewControl) _ActiveView).ShowSettings();
         }
 
         /// <summary>
         /// Toggles a bookmark on the active row of the active view.
         /// </summary>
-        public void ToggleBookmark()
-        {
+        public void ToggleBookmark() {
             ((EditViewControl) _ActiveView).ToggleBookmark();
         }
 
         /// <summary>
         /// Executes an undo action if possible.
         /// </summary>
-        public void Undo()
-        {
+        public void Undo() {
             ((EditViewControl) _ActiveView).Undo();
         }
 
@@ -1624,8 +1469,7 @@ namespace Alsing.Windows.Forms
         /// MySyntaxBox.ShowFind();
         /// </code>
         /// </example>
-        public void ShowFind()
-        {
+        public void ShowFind() {
             ((EditViewControl) _ActiveView).ShowFind();
         }
 
@@ -1638,8 +1482,7 @@ namespace Alsing.Windows.Forms
         /// MySyntaxBox.ShowReplace();
         /// </code>
         /// </example>
-        public void ShowReplace()
-        {
+        public void ShowReplace() {
             ((EditViewControl) _ActiveView).ShowReplace();
         }
 
@@ -1647,8 +1490,7 @@ namespace Alsing.Windows.Forms
 
         [Browsable(false)]
         [Obsolete("Use .FontName and .FontSize", true)]
-        public override Font Font
-        {
+        public override Font Font {
             get { return base.Font; }
             set { base.Font = value; }
         }
@@ -1670,8 +1512,7 @@ namespace Alsing.Windows.Forms
 
         [Browsable(false)]
         [Obsolete("Apply a syntax instead", true)]
-        public override Color ForeColor
-        {
+        public override Color ForeColor {
             get { return base.ForeColor; }
             set { base.ForeColor = value; }
         }
@@ -1680,20 +1521,18 @@ namespace Alsing.Windows.Forms
         /// The currently highlighted text in the autolist.
         /// </summary>
         [Browsable(false)]
-        public string AutoListSelectedText
-        {
+        public string AutoListSelectedText {
             get { return ((EditViewControl) _ActiveView).AutoList.SelectedText; }
-            set
-            {
-                if ((_ActiveView) == null || ((EditViewControl) _ActiveView).AutoList == null)
+            set {
+                if ((_ActiveView) == null || ((EditViewControl) _ActiveView).AutoList == null) {
                     return;
+                }
 
                 ((EditViewControl) _ActiveView).AutoList.SelectItem(value);
             }
         }
 
-        public void Save(string filename)
-        {
+        public void Save(string filename) {
             string text = Document.Text;
 
             var swr = new StreamWriter(filename);
@@ -1705,10 +1544,10 @@ namespace Alsing.Windows.Forms
             swr.Close();
         }
 
-        public void Open(string filename)
-        {
-            if (Document == null)
+        public void Open(string filename) {
+            if (Document == null) {
                 throw new NullReferenceException("CodeEditorControl.Document");
+            }
 
             var swr = new StreamReader(filename);
 
@@ -1717,24 +1556,22 @@ namespace Alsing.Windows.Forms
             swr.Close();
         }
 
-        public void AttachDocument(SyntaxDocument document)
-        {
+        public void AttachDocument(SyntaxDocument document) {
             //_Document=document;
 
-            if (_Document != null)
-            {
+            if (_Document != null) {
                 _Document.ParsingCompleted -= OnParsingCompleted;
                 _Document.Parsing -= OnParse;
                 _Document.Change -= OnChange;
             }
 
-            if (document == null)
+            if (document == null) {
                 document = new SyntaxDocument();
+            }
 
             _Document = document;
 
-            if (_Document != null)
-            {
+            if (_Document != null) {
                 _Document.ParsingCompleted += OnParsingCompleted;
                 _Document.Parsing += OnParse;
                 _Document.Change += OnChange;
@@ -1743,62 +1580,51 @@ namespace Alsing.Windows.Forms
             Redraw();
         }
 
-        protected virtual void OnParse(object Sender, EventArgs e)
-        {
-            foreach (EditViewControl ev in Views)
-            {
+        protected virtual void OnParse(object Sender, EventArgs e) {
+            foreach (EditViewControl ev in Views) {
                 ev.OnParse();
             }
         }
 
-        protected virtual void OnParsingCompleted(object Sender, EventArgs e)
-        {
-            foreach (EditViewControl ev in Views)
-            {
+        protected virtual void OnParsingCompleted(object Sender, EventArgs e) {
+            foreach (EditViewControl ev in Views) {
                 ev.Invalidate();
             }
         }
 
-        protected virtual void OnChange(object Sender, EventArgs e)
-        {
-            if (Views == null)
+        protected virtual void OnChange(object Sender, EventArgs e) {
+            if (Views == null) {
                 return;
+            }
 
 
-            foreach (EditViewControl ev in Views)
-            {
+            foreach (EditViewControl ev in Views) {
                 ev.OnChange();
             }
             OnTextChanged(EventArgs.Empty);
         }
 
-        public void RemoveCurrentRow()
-        {
+        public void RemoveCurrentRow() {
             ((EditViewControl) _ActiveView).RemoveCurrentRow();
         }
 
-        public void CutClear()
-        {
+        public void CutClear() {
             ((EditViewControl) _ActiveView).CutClear();
         }
 
 
-        public void AutoListInsertSelectedText()
-        {
+        public void AutoListInsertSelectedText() {
             ((EditViewControl) _ActiveView).InsertAutolistText();
         }
 
 
-        protected override SplitViewChildControl GetNewView()
-        {
+        protected override SplitViewChildControl GetNewView() {
             return new EditViewControl(this);
         }
 
-        protected override void OnImeModeChanged(EventArgs e)
-        {
+        protected override void OnImeModeChanged(EventArgs e) {
             base.OnImeModeChanged(e);
-            foreach (EditViewControl ev in Views)
-            {
+            foreach (EditViewControl ev in Views) {
                 ev.ImeMode = ImeMode;
             }
         }
@@ -1808,10 +1634,8 @@ namespace Alsing.Windows.Forms
         /// <summary>
         /// Default constructor for the SyntaxBoxControl
         /// </summary>
-        public SyntaxBoxControl()
-        {
-            try
-            {
+        public SyntaxBoxControl() {
+            try {
                 Document = new SyntaxDocument();
 
 
@@ -1852,9 +1676,7 @@ namespace Alsing.Windows.Forms
                 KeyboardActions.Add(new KeyboardAction(Keys.Tab, true, false, false, false, Selection.Outdent));
 
                 AutoListIcons = _AutoListIcons;
-            }
-            catch
-            {
+            } catch {
                 //	Console.WriteLine (x.StackTrace);
             }
         }
@@ -1863,225 +1685,198 @@ namespace Alsing.Windows.Forms
 
         #region EventHandlers
 
-        protected virtual void OnClipboardUpdated(CopyEventArgs e)
-        {
-            if (ClipboardUpdated != null)
+        protected virtual void OnClipboardUpdated(CopyEventArgs e) {
+            if (ClipboardUpdated != null) {
                 ClipboardUpdated(this, e);
+            }
         }
 
-        protected virtual void OnRowMouseDown(RowMouseEventArgs e)
-        {
-            if (RowMouseDown != null)
+        protected virtual void OnRowMouseDown(RowMouseEventArgs e) {
+            if (RowMouseDown != null) {
                 RowMouseDown(this, e);
+            }
         }
 
-        protected virtual void OnRowMouseMove(RowMouseEventArgs e)
-        {
-            if (RowMouseMove != null)
+        protected virtual void OnRowMouseMove(RowMouseEventArgs e) {
+            if (RowMouseMove != null) {
                 RowMouseMove(this, e);
+            }
         }
 
-        protected virtual void OnRowMouseUp(RowMouseEventArgs e)
-        {
-            if (RowMouseUp != null)
+        protected virtual void OnRowMouseUp(RowMouseEventArgs e) {
+            if (RowMouseUp != null) {
                 RowMouseUp(this, e);
+            }
         }
 
-        protected virtual void OnRowClick(RowMouseEventArgs e)
-        {
-            if (RowClick != null)
+        protected virtual void OnRowClick(RowMouseEventArgs e) {
+            if (RowClick != null) {
                 RowClick(this, e);
+            }
         }
 
-        protected virtual void OnRowDoubleClick(RowMouseEventArgs e)
-        {
-            if (RowDoubleClick != null)
+        protected virtual void OnRowDoubleClick(RowMouseEventArgs e) {
+            if (RowDoubleClick != null) {
                 RowDoubleClick(this, e);
+            }
         }
 
 
-        private void ParseTimer_Tick(object sender, EventArgs e)
-        {
+        private void ParseTimer_Tick(object sender, EventArgs e) {
             Document.ParseSome();
         }
 
-        protected virtual void OnInfoTipSelectedIndexChanged()
-        {
-            if (InfoTipSelectedIndexChanged != null)
+        protected virtual void OnInfoTipSelectedIndexChanged() {
+            if (InfoTipSelectedIndexChanged != null) {
                 InfoTipSelectedIndexChanged(null, null);
+            }
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="e"></param>
-        protected override void OnEnter(EventArgs e)
-        {
+        protected override void OnEnter(EventArgs e) {
             base.OnEnter(e);
-            if ((_ActiveView) != null)
-            {
+            if ((_ActiveView) != null) {
                 (_ActiveView).Focus();
             }
         }
 
 
-        private void View_RowClick(object sender, RowMouseEventArgs e)
-        {
+        private void View_RowClick(object sender, RowMouseEventArgs e) {
             OnRowClick(e);
         }
 
-        private void View_RowDoubleClick(object sender, RowMouseEventArgs e)
-        {
+        private void View_RowDoubleClick(object sender, RowMouseEventArgs e) {
             OnRowDoubleClick(e);
         }
 
-        private void View_RowMouseDown(object sender, RowMouseEventArgs e)
-        {
+        private void View_RowMouseDown(object sender, RowMouseEventArgs e) {
             OnRowMouseDown(e);
         }
 
-        private void View_RowMouseMove(object sender, RowMouseEventArgs e)
-        {
+        private void View_RowMouseMove(object sender, RowMouseEventArgs e) {
             OnRowMouseMove(e);
         }
 
-        private void View_RowMouseUp(object sender, RowMouseEventArgs e)
-        {
+        private void View_RowMouseUp(object sender, RowMouseEventArgs e) {
             OnRowMouseUp(e);
         }
 
-        private void View_ClipboardUpdated(object sender, CopyEventArgs e)
-        {
+        private void View_ClipboardUpdated(object sender, CopyEventArgs e) {
             OnClipboardUpdated(e);
         }
 
 
-        public void OnRenderRow(RowPaintEventArgs e)
-        {
-            if (RenderRow != null)
+        public void OnRenderRow(RowPaintEventArgs e) {
+            if (RenderRow != null) {
                 RenderRow(this, e);
+            }
         }
 
-        public void OnWordMouseHover(ref WordMouseEventArgs e)
-        {
-            if (WordMouseHover != null)
+        public void OnWordMouseHover(ref WordMouseEventArgs e) {
+            if (WordMouseHover != null) {
                 WordMouseHover(this, ref e);
+            }
         }
 
-        public void OnWordMouseDown(ref WordMouseEventArgs e)
-        {
-            if (WordMouseDown != null)
+        public void OnWordMouseDown(ref WordMouseEventArgs e) {
+            if (WordMouseDown != null) {
                 WordMouseDown(this, ref e);
+            }
         }
 
-        protected virtual void OnCaretChange(object sender)
-        {
-            if (CaretChange != null)
+        protected virtual void OnCaretChange(object sender) {
+            if (CaretChange != null) {
                 CaretChange(this, null);
+            }
         }
 
-        protected virtual void OnSelectionChange(object sender)
-        {
-            if (SelectionChange != null)
+        protected virtual void OnSelectionChange(object sender) {
+            if (SelectionChange != null) {
                 SelectionChange(this, null);
+            }
         }
 
-        private void View_CaretChanged(object s, EventArgs e)
-        {
+        private void View_CaretChanged(object s, EventArgs e) {
             OnCaretChange(s);
         }
 
-        private void View_SelectionChanged(object s, EventArgs e)
-        {
+        private void View_SelectionChanged(object s, EventArgs e) {
             OnSelectionChange(s);
         }
 
-        private void View_DoubleClick(object sender, EventArgs e)
-        {
+        private void View_DoubleClick(object sender, EventArgs e) {
             OnDoubleClick(e);
         }
 
-        private void View_MouseUp(object sender, MouseEventArgs e)
-        {
+        private void View_MouseUp(object sender, MouseEventArgs e) {
             var ev = (EditViewControl) sender;
             var ea = new MouseEventArgs(e.Button, e.Clicks, e.X + ev.Location.X + ev.BorderWidth,
                                         e.Y + ev.Location.Y + ev.BorderWidth, e.Delta);
             OnMouseUp(ea);
         }
 
-        private void View_MouseMove(object sender, MouseEventArgs e)
-        {
+        private void View_MouseMove(object sender, MouseEventArgs e) {
             var ev = (EditViewControl) sender;
             var ea = new MouseEventArgs(e.Button, e.Clicks, e.X + ev.Location.X + ev.BorderWidth,
                                         e.Y + ev.Location.Y + ev.BorderWidth, e.Delta);
             OnMouseMove(ea);
         }
 
-        private void View_MouseLeave(object sender, EventArgs e)
-        {
+        private void View_MouseLeave(object sender, EventArgs e) {
             OnMouseLeave(e);
         }
 
-        private void View_MouseHover(object sender, EventArgs e)
-        {
+        private void View_MouseHover(object sender, EventArgs e) {
             OnMouseHover(e);
         }
 
-        private void View_MouseEnter(object sender, EventArgs e)
-        {
+        private void View_MouseEnter(object sender, EventArgs e) {
             OnMouseEnter(e);
         }
 
-        private void View_MouseDown(object sender, MouseEventArgs e)
-        {
+        private void View_MouseDown(object sender, MouseEventArgs e) {
             var ev = (EditViewControl) sender;
             var ea = new MouseEventArgs(e.Button, e.Clicks, e.X + ev.Location.X + ev.BorderWidth,
                                         e.Y + ev.Location.Y + ev.BorderWidth, e.Delta);
             OnMouseDown(ea);
         }
 
-        private void View_KeyUp(object sender, KeyEventArgs e)
-        {
+        private void View_KeyUp(object sender, KeyEventArgs e) {
             OnKeyUp(e);
         }
 
-        private void View_KeyPress(object sender, KeyPressEventArgs e)
-        {
+        private void View_KeyPress(object sender, KeyPressEventArgs e) {
             OnKeyPress(e);
         }
 
-        private void View_KeyDown(object sender, KeyEventArgs e)
-        {
+        private void View_KeyDown(object sender, KeyEventArgs e) {
             OnKeyDown(e);
         }
 
-        private void View_Click(object sender, EventArgs e)
-        {
+        private void View_Click(object sender, EventArgs e) {
             OnClick(e);
         }
 
-        private void View_DragOver(object sender, DragEventArgs e)
-        {
+        private void View_DragOver(object sender, DragEventArgs e) {
             OnDragOver(e);
         }
 
-        private void View_DragLeave(object sender, EventArgs e)
-        {
+        private void View_DragLeave(object sender, EventArgs e) {
             OnDragLeave(e);
         }
 
-        private void View_DragEnter(object sender, DragEventArgs e)
-        {
+        private void View_DragEnter(object sender, DragEventArgs e) {
             OnDragEnter(e);
         }
 
-        private void View_DragDrop(object sender, DragEventArgs e)
-        {
+        private void View_DragDrop(object sender, DragEventArgs e) {
             OnDragDrop(e);
         }
 
-        private void View_InfoTipSelectedIndexChanged(object sender, EventArgs e)
-        {
+        private void View_InfoTipSelectedIndexChanged(object sender, EventArgs e) {
             OnInfoTipSelectedIndexChanged();
         }
 
@@ -2092,12 +1887,11 @@ namespace Alsing.Windows.Forms
         /// <summary>
         /// </summary>
         /// <param name="disposing"></param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (components != null)
+        protected override void Dispose(bool disposing) {
+            if (disposing) {
+                if (components != null) {
                     components.Dispose();
+                }
             }
             base.Dispose(disposing);
         }
@@ -2106,8 +1900,7 @@ namespace Alsing.Windows.Forms
 
         #region Private/Protected/Internal methods
 
-        private void InitializeComponent()
-        {
+        private void InitializeComponent() {
             components = new Container();
             var resources = new ResourceManager(typeof (SyntaxBoxControl));
             _GutterIcons = new ImageList(components);
@@ -2136,45 +1929,40 @@ namespace Alsing.Windows.Forms
         }
 
 
-        protected override void OnLoad(EventArgs e)
-        {
+        protected override void OnLoad(EventArgs e) {
             Refresh();
         }
 
-        private void Redraw()
-        {
-            if (Views == null)
+        private void Redraw() {
+            if (Views == null) {
                 return;
+            }
 
-            foreach (EditViewControl ev in Views)
-            {
-                if (ev != null)
-                {
+            foreach (EditViewControl ev in Views) {
+                if (ev != null) {
                     ev.Refresh();
                 }
             }
         }
 
-        private void InitGraphics()
-        {
-            if (Views == null || Parent == null)
+        private void InitGraphics() {
+            if (Views == null || Parent == null) {
                 return;
+            }
 
-            foreach (EditViewControl ev in Views)
-            {
+            foreach (EditViewControl ev in Views) {
                 ev.InitGraphics();
             }
         }
 
 
-        protected override void CreateViews()
-        {
+        protected override void CreateViews() {
             base.CreateViews();
 
-            foreach (EditViewControl ev in Views)
-            {
-                if (DoOnce && ev == LowerRight)
+            foreach (EditViewControl ev in Views) {
+                if (DoOnce && ev == LowerRight) {
                     continue;
+                }
 
                 //attatch events to views
                 ev.Enter += View_Enter;
@@ -2199,8 +1987,7 @@ namespace Alsing.Windows.Forms
                 ev.DragLeave += View_DragLeave;
                 ev.DragEnter += View_DragEnter;
 
-                if (ev.InfoTip != null)
-                {
+                if (ev.InfoTip != null) {
                     ev.InfoTip.Data = "";
                     ev.InfoTip.SelectedIndexChanged += View_InfoTipSelectedIndexChanged;
                 }

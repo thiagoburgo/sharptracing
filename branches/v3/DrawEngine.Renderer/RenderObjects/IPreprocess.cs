@@ -1,7 +1,5 @@
-namespace DrawEngine.Renderer.RenderObjects
-{
-    public interface IPreprocess
-    {
+namespace DrawEngine.Renderer.RenderObjects {
+    public interface IPreprocess {
         void Preprocess();
     }
 }

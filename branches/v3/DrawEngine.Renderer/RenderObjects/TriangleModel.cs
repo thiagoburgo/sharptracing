@@ -10,36 +10,33 @@
  * Feel free to copy, modify and  give fixes 
  * suggestions. Keep the credits!
  */
- using System;
-using System.Collections.Generic;
+
+using System;
 using System.ComponentModel;
 using System.Drawing.Design;
-using System.IO;
 using System.Xml.Serialization;
-using DrawEngine.Renderer.Algebra;
 using DrawEngine.Renderer.BasicStructures;
 using DrawEngine.Renderer.Importers;
 using DrawEngine.Renderer.Mathematics.Algebra;
 using DrawEngine.Renderer.RenderObjects.Design;
 using DrawEngine.Renderer.SpatialSubdivision.Acceleration;
 
-namespace DrawEngine.Renderer.RenderObjects
-{
-    public enum ShadeType
-    {
+namespace DrawEngine.Renderer.RenderObjects {
+    public enum ShadeType {
         Phong,
         Flat
     }
 
     [Serializable]
-    public class TriangleModel : Primitive, IDisposable, ITransformable3D
-    {
+    public class TriangleModel : Primitive, IDisposable, ITransformable3D {
         #region Delegates
+
         public delegate void ElementLoadEventHandler(int percentageOfTotal, ElementMesh element);
 
         public delegate void EndBuildEventHandler(TimeSpan timeToBuild);
 
         public delegate void InitBuildEventHandler();
+
         #endregion
 
         private AbstractLoaderModel loader;
@@ -48,39 +45,36 @@ namespace DrawEngine.Renderer.RenderObjects
         private ShadeType shadeType;
         private Triangle[] triangles;
         public TriangleModel() : this("") {}
-        public TriangleModel(string path)
-        {
+
+        public TriangleModel(string path) {
             this.Path = path;
-            this.Name = System.IO.Path.GetFileNameWithoutExtension(this.Name) ;
+            this.Name = System.IO.Path.GetFileNameWithoutExtension(this.Name);
         }
-        public int TriangleCount
-        {
-            get
-            {
-                if(this.triangles != null){
+
+        public int TriangleCount {
+            get {
+                if (this.triangles != null) {
                     return this.triangles.Length;
                 }
                 return 0;
             }
         }
+
         //Muito lento
         [XmlIgnore, Browsable(false)]
-        public Triangle[] Triangles
-        {
+        public Triangle[] Triangles {
             get { return this.triangles; }
-            internal set
-            {
-                if(value != null){
+            internal set {
+                if (value != null) {
                     this.triangles = value;
                 }
             }
         }
-        [Editor(typeof(ModelFileEditor), typeof(UITypeEditor)), RefreshProperties(RefreshProperties.All)]
-        public string Path
-        {
+
+        [Editor(typeof (ModelFileEditor), typeof (UITypeEditor)), RefreshProperties(RefreshProperties.All)]
+        public string Path {
             get { return this.path; }
-            set
-            {
+            set {
                 //if (File.Exists(value))
                 //{
                 this.path = value;
@@ -92,14 +86,15 @@ namespace DrawEngine.Renderer.RenderObjects
                 //}
             }
         }
+
         [DefaultValue(ShadeType.Phong)]
-        public ShadeType ShadeType
-        {
+        public ShadeType ShadeType {
             get { return this.shadeType; }
             set { this.shadeType = value; }
         }
 
         #region
+
         //public override bool IntersectPoint(out Intersection intersect, Ray ray) {
         //    intersect = new Intersection();
         //    if (!this.boundBox.Intersect(ray)) {
@@ -156,76 +151,79 @@ namespace DrawEngine.Renderer.RenderObjects
         //        this.normalsPerVertex[i].Normalize();
         //    }
         //}
+
         #endregion
 
         #region IDisposable Members
-        public void Dispose()
-        {
-            if(this.loader != null){
+
+        public void Dispose() {
+            if (this.loader != null) {
                 this.loader.Dispose();
             }
-           
+
             this.triangles = null;
             this.manager = null;
             this.loader = null;
             GC.Collect();
             GC.WaitForPendingFinalizers();
         }
+
         #endregion
 
         #region ITransformable3D Members
-        public void Rotate(float angle, Vector3D axis)
-        {
+
+        public void Rotate(float angle, Vector3D axis) {
             throw new Exception("The method or operation is not implemented.");
         }
-        public void RotateAxisX(float angle)
-        {
+
+        public void RotateAxisX(float angle) {
             throw new Exception("The method or operation is not implemented.");
         }
-        public void RotateAxisY(float angle)
-        {
+
+        public void RotateAxisY(float angle) {
             throw new Exception("The method or operation is not implemented.");
         }
-        public void RotateAxisZ(float angle)
-        {
+
+        public void RotateAxisZ(float angle) {
             throw new Exception("The method or operation is not implemented.");
         }
-        public void Scale(float factor)
-        {
-            foreach(Triangle tri in this.triangles){
+
+        public void Scale(float factor) {
+            foreach (Triangle tri in this.triangles) {
                 tri.Scale(factor);
             }
             this.boundBox.Scale(factor);
             //this.manager.Scale(factor);
         }
-        public void Translate(float tx, float ty, float tz)
-        {
+
+        public void Translate(float tx, float ty, float tz) {
             //foreach (Triangle tri in triangles)
             //{
             //    tri.Translate(tx, ty, tz);
             //}
             //this.boundBox.Translate(tx, ty, tz);
-            ((ITransformable3D)this.manager).Translate(tx, ty, tz);
+            ((ITransformable3D) this.manager).Translate(tx, ty, tz);
             this.boundBox.Translate(tx, ty, tz);
         }
-        public void Translate(Vector3D translateVector)
-        {
+
+        public void Translate(Vector3D translateVector) {
             this.Translate(translateVector.X, translateVector.Y, translateVector.Z);
         }
+
         #endregion
 
         public event ElementLoadEventHandler OnElementLoaded;
         public event InitBuildEventHandler OnInitBuild;
         public event EndBuildEventHandler OnEndBuild;
-        public override bool FindIntersection(Ray ray, out Intersection intersect)
-        {
+
+        public override bool FindIntersection(Ray ray, out Intersection intersect) {
             intersect = new Intersection();
             //if (!this.BoundBox.Intersect(ray)) {
             //    return false;
             //}
-            if(this.manager != null && this.manager.FindIntersection(ray, out intersect)){
-                if(this.shadeType == ShadeType.Phong){
-                    Triangle t = (Triangle)intersect.HitPrimitive;
+            if (this.manager != null && this.manager.FindIntersection(ray, out intersect)) {
+                if (this.shadeType == ShadeType.Phong) {
+                    Triangle t = (Triangle) intersect.HitPrimitive;
                     BarycentricCoordinate bary = t.CurrentBarycentricCoordinate;
                     Vector3D v1 = bary.Alpha * t.NormalOnVertex1;
                     Vector3D v2 = bary.Beta * t.NormalOnVertex2;
@@ -233,7 +231,7 @@ namespace DrawEngine.Renderer.RenderObjects
                     intersect.Normal = (v1 + v2 + v3);
                     intersect.Normal.Normalize();
                 }
-                if(intersect.Normal * ray.Direction > 0){
+                if (intersect.Normal * ray.Direction > 0) {
                     intersect.Normal.Flip();
                 }
                 intersect.HitPrimitive = this;
@@ -242,10 +240,10 @@ namespace DrawEngine.Renderer.RenderObjects
             }
             return false;
         }
-        public override Vector3D NormalOnPoint(Point3D pointInPrimitive)
-        {
-            foreach(Triangle tri in this.triangles){
-                if(tri.PointInTriangle(pointInPrimitive)){
+
+        public override Vector3D NormalOnPoint(Point3D pointInPrimitive) {
+            foreach (Triangle tri in this.triangles) {
+                if (tri.PointInTriangle(pointInPrimitive)) {
                     BarycentricCoordinate bary = tri.CurrentBarycentricCoordinate;
                     Vector3D v1 = bary.Alpha * tri.NormalOnVertex1;
                     Vector3D v2 = bary.Beta * tri.NormalOnVertex2;
@@ -255,49 +253,49 @@ namespace DrawEngine.Renderer.RenderObjects
             }
             return Vector3D.Zero;
         }
-        public void Load()
-        {
+
+        public void Load() {
             this.loader = AbstractLoaderModel.GetLoader(this.path);
             //throw new IOException(String.Format("O Arquivo {0} tem o formato inválido ou está corrompido!",
             //                                    this.path));
-            if(this.loader != null){
+            if (this.loader != null) {
                 this.loader.OnElementLoaded += this.TriangleModel_OnElementLoaded;
                 this.triangles = this.loader.Load();
                 this.loader.Dispose();
                 this.boundBox = this.loader.BoundBox;
                 float len = Math.Abs(this.boundBox.PMax.Y - this.boundBox.PMin.Y);
                 this.boundBox.Scale(50 / len);
-                foreach(Triangle t in this.triangles){
+                foreach (Triangle t in this.triangles) {
                     t.Scale(50 / len);
                     //t.Translate(-this.boundBox.Center.ToVector3D());
                 }
                 //this.manager = new NoAccerelationStructure<Triangle>(this.triangles);
                 this.manager = new Octree<Triangle>(this.boundBox, this.triangles);
                 //this.manager = new TriangleKDTree(new List<Triangle>(triangles));
-                if(this.OnInitBuild != null){
+                if (this.OnInitBuild != null) {
                     this.OnInitBuild();
                 }
                 DateTime antes = DateTime.Now;
                 this.manager.Optimize();
                 //((ITransformable3D)this.manager).Translate(-(this.boundBox.Center.X), -(this.boundBox.Center.Y), -(this.boundBox.Center.Z));
                 //this.manager.Optimize();
-                if(this.OnEndBuild != null){
+                if (this.OnEndBuild != null) {
                     this.OnEndBuild(DateTime.Now.Subtract(antes));
                 }
             }
         }
-        private void TriangleModel_OnElementLoaded(int percentageOfTotal, ElementMesh element)
-        {
-            if(this.OnElementLoaded != null){
+
+        private void TriangleModel_OnElementLoaded(int percentageOfTotal, ElementMesh element) {
+            if (this.OnElementLoaded != null) {
                 this.OnElementLoaded(percentageOfTotal, element);
             }
         }
-        public override bool IsInside(Point3D point)
-        {
+
+        public override bool IsInside(Point3D point) {
             throw new Exception("The method or operation is not implemented.");
         }
-        public override bool IsOverlap(BoundBox boundBox)
-        {
+
+        public override bool IsOverlap(BoundBox boundBox) {
             throw new NotImplementedException();
         }
     }

@@ -1,7 +1,5 @@
-﻿namespace Alsing.SourceCode.SyntaxDocumentParsers
-{
-    public class ScanResultWord
-    {
+﻿namespace Alsing.SourceCode.SyntaxDocumentParsers {
+    public class ScanResultWord {
         public bool HasContent;
         public PatternList ParentList;
         public Pattern Pattern;

@@ -10,91 +10,88 @@
  * Feel free to copy, modify and  give fixes 
  * suggestions. Keep the credits!
  */
- using System;
-using DrawEngine.Renderer.Algebra;
+
+using System;
+using System.Runtime.InteropServices;
 using DrawEngine.Renderer.Mathematics.Algebra;
 using DrawEngine.Renderer.RenderObjects;
-using System.Runtime.InteropServices;
 
-namespace DrawEngine.Renderer.BasicStructures
-{
+namespace DrawEngine.Renderer.BasicStructures {
     [Serializable, StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct Ray : ITransformable3D
-    {
+    public struct Ray : ITransformable3D {
         private Vector3D direction;
-        private Vector3D inv_direction;
+        private Vector3D invertedDirection;
         public Point3D Origin;
         public float PrevRefractIndex;
         public IPrimitive PrevPrimitive;
-        public Ray(Point3D origin, Vector3D direction)
-        {
+
+        public Ray(Point3D origin, Vector3D direction) {
             this.direction = direction;
             this.direction.Normalize();
-            this.inv_direction.X = 1.0f / this.direction.X;
-            this.inv_direction.Y = 1.0f / this.direction.Y;
-            this.inv_direction.Z = 1.0f / this.direction.Z;
+            this.invertedDirection.X = 1.0f / this.direction.X;
+            this.invertedDirection.Y = 1.0f / this.direction.Y;
+            this.invertedDirection.Z = 1.0f / this.direction.Z;
             this.Origin = origin;
             this.PrevRefractIndex = -1;
             this.PrevPrimitive = null;
         }
-        public Vector3D Direction
-        {
+
+        public Vector3D Direction {
             get { return this.direction; }
-            set
-            {
+            set {
                 this.direction = value;
                 this.direction.Normalize();
-                //this.inv_direction.X = this.direction.X != 0f ? 1.0f / this.direction.X : 1f;
-                //this.inv_direction.Y = this.direction.Y != 0f ? 1.0f / this.direction.Y : 1f;
-                //this.inv_direction.Z = this.direction.Z != 0f ? 1.0f / this.direction.Z : 1f;
-                this.inv_direction.X = 1.0f / this.direction.X;
-                this.inv_direction.Y = 1.0f / this.direction.Y;
-                this.inv_direction.Z = 1.0f / this.direction.Z;
+                //this.invertedDirection.X = this.direction.X != 0f ? 1.0f / this.direction.X : 1f;
+                //this.invertedDirection.Y = this.direction.Y != 0f ? 1.0f / this.direction.Y : 1f;
+                //this.invertedDirection.Z = this.direction.Z != 0f ? 1.0f / this.direction.Z : 1f;
+                this.invertedDirection.X = 1.0f / this.direction.X;
+                this.invertedDirection.Y = 1.0f / this.direction.Y;
+                this.invertedDirection.Z = 1.0f / this.direction.Z;
             }
         }
-        public Vector3D Inv_Direction
-        {
-            get { return this.inv_direction; }
+
+        public Vector3D InvertedDirection {
+            get { return this.invertedDirection; }
         }
 
         #region ITransformable3D Members BUGADO
-        public void Rotate(float angle, Vector3D axis)
-        {
+
+        public void Rotate(float angle, Vector3D axis) {
             this.Origin.Rotate(angle, axis);
             this.direction.Rotate(angle, axis);
             this.Direction = this.direction;
         }
-        public void RotateAxisX(float angle)
-        {
+
+        public void RotateAxisX(float angle) {
             this.Rotate(angle, Vector3D.UnitX);
         }
-        public void RotateAxisY(float angle)
-        {
+
+        public void RotateAxisY(float angle) {
             this.Rotate(angle, Vector3D.UnitY);
         }
-        public void RotateAxisZ(float angle)
-        {
+
+        public void RotateAxisZ(float angle) {
             this.Rotate(angle, Vector3D.UnitZ);
         }
-        public void Scale(float factor)
-        {
+
+        public void Scale(float factor) {
             this.Direction = direction * factor;
         }
-        public void Translate(float tx, float ty, float tz)
-        {
+
+        public void Translate(float tx, float ty, float tz) {
             this.Origin.Translate(tx, ty, tz);
             this.direction.Translate(tx, ty, tz);
             this.Direction = this.direction;
         }
-        public void Translate(Vector3D translateVector)
-        {
+
+        public void Translate(Vector3D translateVector) {
             this.Translate(translateVector.X, translateVector.Y, translateVector.Z);
         }
+
         #endregion
 
-        public override string ToString()
-        {
-            return "[O: " + this.Origin+ " D: " + this.direction+ "]";
+        public override string ToString() {
+            return "[O: " + this.Origin + " D: " + this.direction + "]";
         }
     }
 }

@@ -1,10 +1,8 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace AviFile
-{
-    public class Avi
-    {
+namespace AviFile {
+    public class Avi {
         public const int AVICOMPRESSF_DATARATE = 0x00000002; // use a data rate
         public const int AVICOMPRESSF_INTERLEAVE = 0x00000001; // interleave
         public const int AVICOMPRESSF_KEYFRAMES = 0x00000004; // use keyframes
@@ -24,17 +22,16 @@ namespace AviFile
         public static readonly int streamtypeVIDEO = mmioFOURCC('v', 'i', 'd', 's');
         public static int PALETTE_SIZE = 4 * 256; //RGBQUAD * 256 colours
         //macro mmioFOURCC
-        public static Int32 mmioFOURCC(char ch0, char ch1, char ch2, char ch3)
-        {
-            return ((Int32)(byte)(ch0) | ((byte)(ch1) << 8) | ((byte)(ch2) << 16) | ((byte)(ch3) << 24));
+        public static Int32 mmioFOURCC(char ch0, char ch1, char ch2, char ch3) {
+            return ((Int32) (byte) (ch0) | ((byte) (ch1) << 8) | ((byte) (ch2) << 16) | ((byte) (ch3) << 24));
         }
 
         #region structure declarations
 
         #region Nested type: AVICOMPRESSOPTIONS
+
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        public struct AVICOMPRESSOPTIONS
-        {
+        public struct AVICOMPRESSOPTIONS {
             public UInt32 fccType;
             public UInt32 fccHandler;
             public UInt32 dwKeyFrameEvery; // only used with AVICOMRPESSF_KEYFRAMES
@@ -47,13 +44,14 @@ namespace AviFile
             public UInt32 cbParms;
             public UInt32 dwInterleaveEvery;
         }
+
         #endregion
 
         #region Nested type: AVICOMPRESSOPTIONS_CLASS
+
         /// <summary>AviSaveV needs a pointer to a pointer to an AVICOMPRESSOPTIONS structure</summary>
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        public class AVICOMPRESSOPTIONS_CLASS
-        {
+        public class AVICOMPRESSOPTIONS_CLASS {
             public UInt32 fccType;
             public UInt32 fccHandler;
             public UInt32 dwKeyFrameEvery; // only used with AVICOMRPESSF_KEYFRAMES
@@ -65,8 +63,8 @@ namespace AviFile
             public IntPtr lpParms;
             public UInt32 cbParms;
             public UInt32 dwInterleaveEvery;
-            public AVICOMPRESSOPTIONS ToStruct()
-            {
+
+            public AVICOMPRESSOPTIONS ToStruct() {
                 AVICOMPRESSOPTIONS returnVar = new AVICOMPRESSOPTIONS();
                 returnVar.fccType = this.fccType;
                 returnVar.fccHandler = this.fccHandler;
@@ -82,12 +80,13 @@ namespace AviFile
                 return returnVar;
             }
         }
+
         #endregion
 
         #region Nested type: AVIFILEINFO
+
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        public struct AVIFILEINFO
-        {
+        public struct AVIFILEINFO {
             public Int32 dwMaxBytesPerSecond;
             public Int32 dwFlags;
             public Int32 dwCaps;
@@ -99,15 +98,15 @@ namespace AviFile
             public Int32 dwRate;
             public Int32 dwLength;
             public Int32 dwEditCount;
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 64)]
-            public char[] szFileType;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 64)] public char[] szFileType;
         }
+
         #endregion
 
         #region Nested type: AVISTREAMINFO
+
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        public struct AVISTREAMINFO
-        {
+        public struct AVISTREAMINFO {
             public Int32 fccType;
             public Int32 fccHandler;
             public Int32 dwFlags;
@@ -125,27 +124,28 @@ namespace AviFile
             public RECT rcFrame;
             public Int32 dwEditCount;
             public Int32 dwFormatChangeCount;
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 64)]
-            public UInt16[] szName;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 64)] public UInt16[] szName;
         }
+
         #endregion
 
         #region Nested type: BITMAPFILEHEADER
+
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        public struct BITMAPFILEHEADER
-        {
+        public struct BITMAPFILEHEADER {
             public Int16 bfType; //"magic cookie" - must be "BM"
             public Int32 bfSize;
             public Int16 bfReserved1;
             public Int16 bfReserved2;
             public Int32 bfOffBits;
         }
+
         #endregion
 
         #region Nested type: BITMAPINFOHEADER
+
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        public struct BITMAPINFOHEADER
-        {
+        public struct BITMAPINFOHEADER {
             public Int32 biSize;
             public Int32 biWidth;
             public Int32 biHeight;
@@ -158,12 +158,13 @@ namespace AviFile
             public Int32 biClrUsed;
             public Int32 biClrImportant;
         }
+
         #endregion
 
         #region Nested type: PCMWAVEFORMAT
+
         [StructLayout(LayoutKind.Sequential)]
-        public struct PCMWAVEFORMAT
-        {
+        public struct PCMWAVEFORMAT {
             public short wFormatTag;
             public short nChannels;
             public int nSamplesPerSec;
@@ -172,122 +173,157 @@ namespace AviFile
             public short wBitsPerSample;
             public short cbSize;
         }
+
         #endregion
 
         #region Nested type: RECT
+
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        public struct RECT
-        {
+        public struct RECT {
             public UInt32 left;
             public UInt32 top;
             public UInt32 right;
             public UInt32 bottom;
         }
+
         #endregion
 
         #endregion structure declarations
 
         #region method declarations
+
         //Initialize the AVI library
         [DllImport("avifil32.dll")]
         public static extern void AVIFileInit();
+
         //Open an AVI file
         [DllImport("avifil32.dll", PreserveSig = true)]
         public static extern int AVIFileOpen(ref int ppfile, String szFile, int uMode, int pclsidHandler);
+
         //Get a stream from an open AVI file
         [DllImport("avifil32.dll")]
         public static extern int AVIFileGetStream(int pfile, out IntPtr ppavi, int fccType, int lParam);
+
         //Get the start position of a stream
         [DllImport("avifil32.dll", PreserveSig = true)]
         public static extern int AVIStreamStart(int pavi);
+
         //Get the length of a stream in frames
         [DllImport("avifil32.dll", PreserveSig = true)]
         public static extern int AVIStreamLength(int pavi);
+
         //Get information about an open stream
         [DllImport("avifil32.dll")]
         public static extern int AVIStreamInfo(IntPtr pAVIStream, ref AVISTREAMINFO psi, int lSize);
+
         //Get a pointer to a GETFRAME object (returns 0 on error)
         [DllImport("avifil32.dll")]
         public static extern int AVIStreamGetFrameOpen(IntPtr pAVIStream, ref BITMAPINFOHEADER bih);
+
         //Get a pointer to a packed DIB (returns 0 on error)
         [DllImport("avifil32.dll")]
         public static extern int AVIStreamGetFrame(int pGetFrameObj, int lPos);
+
         //Create a new stream in an open AVI file
         [DllImport("avifil32.dll")]
         public static extern int AVIFileCreateStream(int pfile, out IntPtr ppavi, ref AVISTREAMINFO ptr_streaminfo);
+
         //Create an editable stream
         [DllImport("avifil32.dll")]
         public static extern int CreateEditableStream(ref IntPtr ppsEditable, IntPtr psSource);
+
         //Cut samples from an editable stream
         [DllImport("avifil32.dll")]
         public static extern int EditStreamCut(IntPtr pStream, ref Int32 plStart, ref Int32 plLength,
                                                ref IntPtr ppResult);
+
         //Copy a part of an editable stream
         [DllImport("avifil32.dll")]
         public static extern int EditStreamCopy(IntPtr pStream, ref Int32 plStart, ref Int32 plLength,
                                                 ref IntPtr ppResult);
+
         //Paste an editable stream into another editable stream
         [DllImport("avifil32.dll")]
         public static extern int EditStreamPaste(IntPtr pStream, ref Int32 plPos, ref Int32 plLength, IntPtr pstream,
                                                  Int32 lStart, Int32 lLength);
+
         //Change a stream's header values
         [DllImport("avifil32.dll")]
         public static extern int EditStreamSetInfo(IntPtr pStream, ref AVISTREAMINFO lpInfo, Int32 cbInfo);
+
         [DllImport("avifil32.dll")]
         public static extern int AVIMakeFileFromStreams(ref IntPtr ppfile, int nStreams, ref IntPtr papStreams);
+
         //Set the format for a new stream
         [DllImport("avifil32.dll")]
         public static extern int AVIStreamSetFormat(IntPtr aviStream, Int32 lPos, ref BITMAPINFOHEADER lpFormat,
                                                     Int32 cbFormat);
+
         //Set the format for a new stream
         [DllImport("avifil32.dll")]
         public static extern int AVIStreamSetFormat(IntPtr aviStream, Int32 lPos, ref PCMWAVEFORMAT lpFormat,
                                                     Int32 cbFormat);
+
         //Read the format for a stream
         [DllImport("avifil32.dll")]
         public static extern int AVIStreamReadFormat(IntPtr aviStream, Int32 lPos, ref BITMAPINFOHEADER lpFormat,
                                                      ref Int32 cbFormat);
+
         //Read the size of the format for a stream
         [DllImport("avifil32.dll")]
         public static extern int AVIStreamReadFormat(IntPtr aviStream, Int32 lPos, int empty, ref Int32 cbFormat);
+
         //Read the format for a stream
         [DllImport("avifil32.dll")]
         public static extern int AVIStreamReadFormat(IntPtr aviStream, Int32 lPos, ref PCMWAVEFORMAT lpFormat,
                                                      ref Int32 cbFormat);
+
         //Write a sample to a stream
         [DllImport("avifil32.dll")]
         public static extern int AVIStreamWrite(IntPtr aviStream, Int32 lStart, Int32 lSamples, IntPtr lpBuffer,
                                                 Int32 cbBuffer, Int32 dwFlags, Int32 dummy1, Int32 dummy2);
+
         //Release the GETFRAME object
         [DllImport("avifil32.dll")]
         public static extern int AVIStreamGetFrameClose(int pGetFrameObj);
+
         //Release an open AVI stream
         [DllImport("avifil32.dll")]
         public static extern int AVIStreamRelease(IntPtr aviStream);
+
         //Release an open AVI file
         [DllImport("avifil32.dll")]
         public static extern int AVIFileRelease(int pfile);
+
         //Close the AVI library
         [DllImport("avifil32.dll")]
         public static extern void AVIFileExit();
+
         [DllImport("avifil32.dll")]
         public static extern int AVIMakeCompressedStream(out IntPtr ppsCompressed, IntPtr aviStream,
                                                          ref AVICOMPRESSOPTIONS ao, int dummy);
+
         [DllImport("avifil32.dll")]
         public static extern bool AVISaveOptions(IntPtr hwnd, UInt32 uiFlags, Int32 nStreams, ref IntPtr ppavi,
                                                  ref AVICOMPRESSOPTIONS_CLASS plpOptions);
+
         [DllImport("avifil32.dll")]
         public static extern long AVISaveOptionsFree(int nStreams, ref AVICOMPRESSOPTIONS_CLASS plpOptions);
+
         [DllImport("avifil32.dll")]
         public static extern int AVIFileInfo(int pfile, ref AVIFILEINFO pfi, int lSize);
+
         [DllImport("winmm.dll", EntryPoint = "mmioStringToFOURCCA")]
         public static extern int mmioStringToFOURCC(String sz, int uFlags);
+
         [DllImport("avifil32.dll")]
         public static extern int AVIStreamRead(IntPtr pavi, Int32 lStart, Int32 lSamples, IntPtr lpBuffer,
                                                Int32 cbBuffer, Int32 plBytes, Int32 plSamples);
+
         [DllImport("avifil32.dll")]
         public static extern int AVISaveV(String szFile, Int16 empty, Int16 lpfnCallback, Int16 nStreams,
                                           ref IntPtr ppavi, ref AVICOMPRESSOPTIONS_CLASS plpOptions);
+
         #endregion method declarations
     }
 }

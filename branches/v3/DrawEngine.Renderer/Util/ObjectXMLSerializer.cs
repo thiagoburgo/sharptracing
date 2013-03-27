@@ -10,7 +10,8 @@
  * Feel free to copy, modify and  give fixes 
  * suggestions. Keep the credits!
  */
- using System;
+
+using System;
 using System.IO;
 using System.IO.IsolatedStorage;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -21,23 +22,24 @@ using System.Xml.Serialization;
 // For reading/writing data to an XML file.
 // For accessing user isolated data.
 
-namespace DrawEngine.Renderer.Util
-{
+namespace DrawEngine.Renderer.Util {
     /// <summary>
     /// Serialization format types.
     /// </summary>
-    public enum SerializedFormats
-    {
+    public enum SerializedFormats {
         /// <summary>
         /// Binary serialization format.
         /// </summary>
         Binary,
+
         /// <summary>
         /// Document serialization format.
         /// </summary>
         Document
     }
+
     public delegate void SerializationHandler<T>(T obj);
+
     /// <summary>
     /// Facade to XML serialization and deserialization of strongly typed objects to/from an XML file.
     /// 
@@ -50,6 +52,7 @@ namespace DrawEngine.Renderer.Util
         public static event SerializationHandler<T> OnSerialized;
 
         #region Load methods
+
         /// <summary>
         /// Loads an object from an XML file in Document format.
         /// </summary>
@@ -64,10 +67,10 @@ namespace DrawEngine.Renderer.Util
         /// <param name="serializableObject">Serializable object to be loaded from file.</param>
         /// <param name="path">Path of the file to load the object from.</param>
         /// <returns>Object loaded from an XML file in Document format.</returns>
-        public static T Load(string path)
-        {
+        public static T Load(string path) {
             return LoadFromDocumentFormat(null, path, null);
         }
+
         /// <summary>
         /// Loads an object from an XML file using a specified serialized format.
         /// </summary>
@@ -83,10 +86,9 @@ namespace DrawEngine.Renderer.Util
         /// <param name="path">Path of the file to load the object from.</param>
         /// <param name="serializedFormat">XML serialized format used to load the object.</param>
         /// <returns>Object loaded from an XML file using the specified serialized format.</returns>
-        public static T Load(string path, SerializedFormats serializedFormat)
-        {
+        public static T Load(string path, SerializedFormats serializedFormat) {
             T serializableObject = default(T);
-            switch(serializedFormat){
+            switch (serializedFormat) {
                 case SerializedFormats.Binary:
                     serializableObject = LoadFromBinaryFormat(path, null);
                     break;
@@ -97,6 +99,7 @@ namespace DrawEngine.Renderer.Util
             }
             return serializableObject;
         }
+
         /// <summary>
         /// Loads an object from an XML file in Document format, supplying extra data types to enable deserialization of custom types within the object.
         /// </summary>
@@ -112,10 +115,10 @@ namespace DrawEngine.Renderer.Util
         /// <param name="path">Path of the file to load the object from.</param>
         /// <param name="extraTypes">Extra data types to enable deserialization of custom types within the object.</param>
         /// <returns>Object loaded from an XML file in Document format.</returns>
-        public static T Load(string path, Type[] extraTypes)
-        {
+        public static T Load(string path, Type[] extraTypes) {
             return LoadFromDocumentFormat(extraTypes, path, null);
         }
+
         /// <summary>
         /// Loads an object from an XML file in Document format, located in a specified isolated storage area.
         /// </summary>
@@ -131,10 +134,10 @@ namespace DrawEngine.Renderer.Util
         /// <param name="fileName">Name of the file in the isolated storage area to load the object from.</param>
         /// <param name="isolatedStorageDirectory">Isolated storage area directory containing the XML file to load the object from.</param>
         /// <returns>Object loaded from an XML file in Document format located in a specified isolated storage area.</returns>
-        public static T Load(string fileName, IsolatedStorageFile isolatedStorageDirectory)
-        {
+        public static T Load(string fileName, IsolatedStorageFile isolatedStorageDirectory) {
             return LoadFromDocumentFormat(null, fileName, isolatedStorageDirectory);
         }
+
         /// <summary>
         /// Loads an object from an XML file located in a specified isolated storage area, using a specified serialized format.
         /// </summary>
@@ -152,10 +155,9 @@ namespace DrawEngine.Renderer.Util
         /// <param name="serializedFormat">XML serialized format used to load the object.</param>        
         /// <returns>Object loaded from an XML file located in a specified isolated storage area, using a specified serialized format.</returns>
         public static T Load(string fileName, IsolatedStorageFile isolatedStorageDirectory,
-                             SerializedFormats serializedFormat)
-        {
+                             SerializedFormats serializedFormat) {
             T serializableObject = default(T);
-            switch(serializedFormat){
+            switch (serializedFormat) {
                 case SerializedFormats.Binary:
                     serializableObject = LoadFromBinaryFormat(fileName, isolatedStorageDirectory);
                     break;
@@ -166,6 +168,7 @@ namespace DrawEngine.Renderer.Util
             }
             return serializableObject;
         }
+
         /// <summary>
         /// Loads an object from an XML file in Document format, located in a specified isolated storage area, and supplying extra data types to enable deserialization of custom types within the object.
         /// </summary>
@@ -183,13 +186,14 @@ namespace DrawEngine.Renderer.Util
         /// <param name="extraTypes">Extra data types to enable deserialization of custom types within the object.</param>
         /// <returns>Object loaded from an XML file located in a specified isolated storage area, using a specified serialized format.</returns>
         public static T Load(T serializableObject, string fileName, IsolatedStorageFile isolatedStorageDirectory,
-                             Type[] extraTypes)
-        {
+                             Type[] extraTypes) {
             return LoadFromDocumentFormat(null, fileName, isolatedStorageDirectory);
         }
+
         #endregion
 
         #region Save methods
+
         /// <summary>
         /// Saves an object to an XML file in Document format.
         /// </summary>
@@ -202,10 +206,10 @@ namespace DrawEngine.Renderer.Util
         /// </example>
         /// <param name="serializableObject">Serializable object to be saved to file.</param>
         /// <param name="path">Path of the file to save the object to.</param>
-        public static void Save(T serializableObject, string path)
-        {
+        public static void Save(T serializableObject, string path) {
             SaveToDocumentFormat(serializableObject, null, path, null);
         }
+
         /// <summary>
         /// Saves an object to an XML file using a specified serialized format.
         /// </summary>
@@ -219,9 +223,8 @@ namespace DrawEngine.Renderer.Util
         /// <param name="serializableObject">Serializable object to be saved to file.</param>
         /// <param name="path">Path of the file to save the object to.</param>
         /// <param name="serializedFormat">XML serialized format used to save the object.</param>
-        public static void Save(T serializableObject, string path, SerializedFormats serializedFormat)
-        {
-            switch(serializedFormat){
+        public static void Save(T serializableObject, string path, SerializedFormats serializedFormat) {
+            switch (serializedFormat) {
                 case SerializedFormats.Binary:
                     SaveToBinaryFormat(serializableObject, path, null);
                     break;
@@ -231,6 +234,7 @@ namespace DrawEngine.Renderer.Util
                     break;
             }
         }
+
         /// <summary>
         /// Saves an object to an XML file in Document format, supplying extra data types to enable serialization of custom types within the object.
         /// </summary>
@@ -244,10 +248,10 @@ namespace DrawEngine.Renderer.Util
         /// <param name="serializableObject">Serializable object to be saved to file.</param>
         /// <param name="path">Path of the file to save the object to.</param>
         /// <param name="extraTypes">Extra data types to enable serialization of custom types within the object.</param>
-        public static void Save(T serializableObject, string path, Type[] extraTypes)
-        {
+        public static void Save(T serializableObject, string path, Type[] extraTypes) {
             SaveToDocumentFormat(serializableObject, extraTypes, path, null);
         }
+
         /// <summary>
         /// Saves an object to an XML file in Document format, located in a specified isolated storage area.
         /// </summary>
@@ -261,10 +265,10 @@ namespace DrawEngine.Renderer.Util
         /// <param name="serializableObject">Serializable object to be saved to file.</param>
         /// <param name="fileName">Name of the file in the isolated storage area to save the object to.</param>
         /// <param name="isolatedStorageDirectory">Isolated storage area directory containing the XML file to save the object to.</param>
-        public static void Save(T serializableObject, string fileName, IsolatedStorageFile isolatedStorageDirectory)
-        {
+        public static void Save(T serializableObject, string fileName, IsolatedStorageFile isolatedStorageDirectory) {
             SaveToDocumentFormat(serializableObject, null, fileName, isolatedStorageDirectory);
         }
+
         /// <summary>
         /// Saves an object to an XML file located in a specified isolated storage area, using a specified serialized format.
         /// </summary>
@@ -280,9 +284,8 @@ namespace DrawEngine.Renderer.Util
         /// <param name="isolatedStorageDirectory">Isolated storage area directory containing the XML file to save the object to.</param>
         /// <param name="serializedFormat">XML serialized format used to save the object.</param>        
         public static void Save(T serializableObject, string fileName, IsolatedStorageFile isolatedStorageDirectory,
-                                SerializedFormats serializedFormat)
-        {
-            switch(serializedFormat){
+                                SerializedFormats serializedFormat) {
+            switch (serializedFormat) {
                 case SerializedFormats.Binary:
                     SaveToBinaryFormat(serializableObject, fileName, isolatedStorageDirectory);
                     break;
@@ -292,6 +295,7 @@ namespace DrawEngine.Renderer.Util
                     break;
             }
         }
+
         /// <summary>
         /// Saves an object to an XML file in Document format, located in a specified isolated storage area, and supplying extra data types to enable serialization of custom types within the object.
         /// </summary>
@@ -307,107 +311,107 @@ namespace DrawEngine.Renderer.Util
         /// <param name="isolatedStorageDirectory">Isolated storage area directory containing the XML file to save the object to.</param>
         /// <param name="extraTypes">Extra data types to enable serialization of custom types within the object.</param>
         public static void Save(T serializableObject, string fileName, IsolatedStorageFile isolatedStorageDirectory,
-                                Type[] extraTypes)
-        {
+                                Type[] extraTypes) {
             SaveToDocumentFormat(serializableObject, null, fileName, isolatedStorageDirectory);
         }
+
         #endregion
 
         #region Private
-        private static FileStream CreateFileStream(IsolatedStorageFile isolatedStorageFolder, string path)
-        {
+
+        private static FileStream CreateFileStream(IsolatedStorageFile isolatedStorageFolder, string path) {
             FileStream fileStream = null;
-            if(isolatedStorageFolder == null){
+            if (isolatedStorageFolder == null) {
                 fileStream = new FileStream(path, FileMode.OpenOrCreate);
-            } else{
+            } else {
                 fileStream = new IsolatedStorageFileStream(path, FileMode.OpenOrCreate, isolatedStorageFolder);
             }
             return fileStream;
         }
-        private static T LoadFromBinaryFormat(string path, IsolatedStorageFile isolatedStorageFolder)
-        {
+
+        private static T LoadFromBinaryFormat(string path, IsolatedStorageFile isolatedStorageFolder) {
             T serializableObject = default(T);
-            using(FileStream fileStream = CreateFileStream(isolatedStorageFolder, path)){
+            using (FileStream fileStream = CreateFileStream(isolatedStorageFolder, path)) {
                 BinaryFormatter binaryFormatter = new BinaryFormatter();
                 //serializableObject = binaryFormatter.Deserialize(fileStream) as T;
-                serializableObject = (T)binaryFormatter.Deserialize(fileStream);
+                serializableObject = (T) binaryFormatter.Deserialize(fileStream);
             }
-            if(OnDeserialized != null){
-                OnDeserialized(serializableObject);    
-            }
-            return serializableObject;
-        }
-        private static T LoadFromDocumentFormat(Type[] extraTypes, string path,
-                                                IsolatedStorageFile isolatedStorageFolder)
-        {
-            T serializableObject = default(T);
-            using(TextReader textReader = CreateTextReader(isolatedStorageFolder, path)){
-                XmlSerializer xmlSerializer = CreateXmlSerializer(extraTypes);
-                
-                //serializableObject = xmlSerializer.Deserialize(textReader) as T;
-                serializableObject = (T)xmlSerializer.Deserialize(textReader);
-            }
-            if(OnDeserialized != null) {
+            if (OnDeserialized != null) {
                 OnDeserialized(serializableObject);
             }
             return serializableObject;
         }
-        private static TextReader CreateTextReader(IsolatedStorageFile isolatedStorageFolder, string path)
-        {
+
+        private static T LoadFromDocumentFormat(Type[] extraTypes, string path,
+                                                IsolatedStorageFile isolatedStorageFolder) {
+            T serializableObject = default(T);
+            using (TextReader textReader = CreateTextReader(isolatedStorageFolder, path)) {
+                XmlSerializer xmlSerializer = CreateXmlSerializer(extraTypes);
+
+                //serializableObject = xmlSerializer.Deserialize(textReader) as T;
+                serializableObject = (T) xmlSerializer.Deserialize(textReader);
+            }
+            if (OnDeserialized != null) {
+                OnDeserialized(serializableObject);
+            }
+            return serializableObject;
+        }
+
+        private static TextReader CreateTextReader(IsolatedStorageFile isolatedStorageFolder, string path) {
             TextReader textReader = null;
-            if(isolatedStorageFolder == null){
+            if (isolatedStorageFolder == null) {
                 textReader = new StreamReader(path);
-            } else{
+            } else {
                 textReader = new StreamReader(new IsolatedStorageFileStream(path, FileMode.Open, isolatedStorageFolder));
             }
             return textReader;
         }
-        private static TextWriter CreateTextWriter(IsolatedStorageFile isolatedStorageFolder, string path)
-        {
+
+        private static TextWriter CreateTextWriter(IsolatedStorageFile isolatedStorageFolder, string path) {
             TextWriter textWriter = null;
-            if(isolatedStorageFolder == null){
+            if (isolatedStorageFolder == null) {
                 textWriter = new StreamWriter(path);
-            } else{
+            } else {
                 textWriter =
-                        new StreamWriter(new IsolatedStorageFileStream(path, FileMode.OpenOrCreate,
-                                                                       isolatedStorageFolder));
+                    new StreamWriter(new IsolatedStorageFileStream(path, FileMode.OpenOrCreate, isolatedStorageFolder));
             }
             return textWriter;
         }
-        private static XmlSerializer CreateXmlSerializer(Type[] extraTypes)
-        {
-            Type ObjectType = typeof(T);
+
+        private static XmlSerializer CreateXmlSerializer(Type[] extraTypes) {
+            Type ObjectType = typeof (T);
             XmlSerializer xmlSerializer = null;
             //extraTypes = new Type[] { typeof(Color)};
-            if(extraTypes != null){
+            if (extraTypes != null) {
                 xmlSerializer = new XmlSerializer(ObjectType, extraTypes);
-            } else{
+            } else {
                 xmlSerializer = new XmlSerializer(ObjectType);
             }
             return xmlSerializer;
         }
+
         private static void SaveToDocumentFormat(T serializableObject, Type[] extraTypes, string path,
-                                                 IsolatedStorageFile isolatedStorageFolder)
-        {
-            using(TextWriter textWriter = CreateTextWriter(isolatedStorageFolder, path)){
+                                                 IsolatedStorageFile isolatedStorageFolder) {
+            using (TextWriter textWriter = CreateTextWriter(isolatedStorageFolder, path)) {
                 XmlSerializer xmlSerializer = CreateXmlSerializer(extraTypes);
                 xmlSerializer.Serialize(textWriter, serializableObject);
-                if(OnSerialized != null) {
+                if (OnSerialized != null) {
                     OnSerialized(serializableObject);
                 }
             }
         }
+
         private static void SaveToBinaryFormat(T serializableObject, string path,
-                                               IsolatedStorageFile isolatedStorageFolder)
-        {
-            using(FileStream fileStream = CreateFileStream(isolatedStorageFolder, path)){
+                                               IsolatedStorageFile isolatedStorageFolder) {
+            using (FileStream fileStream = CreateFileStream(isolatedStorageFolder, path)) {
                 BinaryFormatter binaryFormatter = new BinaryFormatter();
                 binaryFormatter.Serialize(fileStream, serializableObject);
-                if(OnSerialized != null) {
+                if (OnSerialized != null) {
                     OnSerialized(serializableObject);
                 }
             }
         }
+
         #endregion
     }
 }

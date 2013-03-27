@@ -10,13 +10,11 @@
 
 using System;
 
-namespace Alsing.Windows.Forms.FormatLabel
-{
+namespace Alsing.Windows.Forms.FormatLabel {
     /// <summary>
     /// 
     /// </summary>
-    public class ClickLinkEventArgs : EventArgs
-    {
+    public class ClickLinkEventArgs : EventArgs {
         /// <summary>
         /// 
         /// </summary>
@@ -26,8 +24,7 @@ namespace Alsing.Windows.Forms.FormatLabel
         /// 
         /// </summary>
         /// <param name="Link"></param>
-        public ClickLinkEventArgs(string Link)
-        {
+        public ClickLinkEventArgs(string Link) {
             this.Link = Link;
         }
     }

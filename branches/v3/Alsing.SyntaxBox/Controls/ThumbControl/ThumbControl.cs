@@ -10,12 +10,9 @@
 
 using System.Windows.Forms;
 
-namespace Alsing.Windows.Forms.CoreLib
-{
-    public partial class ThumbControl : Control
-    {
-        public ThumbControl()
-        {
+namespace Alsing.Windows.Forms.CoreLib {
+    public partial class ThumbControl : Control {
+        public ThumbControl() {
             InitializeComponent();
         }
 
@@ -23,8 +20,7 @@ namespace Alsing.Windows.Forms.CoreLib
         /// Draws a 2px Raised Border for the ThumbControl
         /// </summary>
         /// <param name="e"></param>
-        protected override void OnPaint(PaintEventArgs e)
-        {
+        protected override void OnPaint(PaintEventArgs e) {
             ControlPaint.DrawBorder3D(e.Graphics, 0, 0, Width, Height, Border3DStyle.Raised);
         }
     }

@@ -12,8 +12,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace Alsing.SourceCode
-{
+namespace Alsing.SourceCode {
     /// <summary>
     /// spanDefinition class
     /// </summary>
@@ -57,8 +56,7 @@ namespace Alsing.SourceCode
     ///<br/>
     /// <br/>
     ///</remarks>
-    public class SpanDefinition
-    {
+    public class SpanDefinition {
         private readonly List<Pattern> tmpSimplePatterns = new List<Pattern>();
 
         /// <summary>
@@ -122,14 +120,12 @@ namespace Alsing.SourceCode
         /// <summary>
         /// Default spanDefinition constructor
         /// </summary>
-        public SpanDefinition(SyntaxDefinition parent) : this()
-        {
+        public SpanDefinition(SyntaxDefinition parent) : this() {
             Parent = parent;
             Parent.ChangeVersion();
         }
 
-        public SpanDefinition()
-        {
+        public SpanDefinition() {
             KeywordsList = new PatternListList(this);
             OperatorsList = new PatternListList(this);
 
@@ -150,90 +146,88 @@ namespace Alsing.SourceCode
         /// <summary>
         /// Returns false if any color has been assigned to the backcolor property
         /// </summary>
-        public bool Transparent
-        {
+        public bool Transparent {
             get { return (BackColor.A == 0); }
         }
 
-        public void ResetLookupTable()
-        {
+        public void ResetLookupTable() {
             LookupTable.Clear();
             tmpSimplePatterns.Clear();
             ComplexPatterns.Clear();
         }
 
-        public void AddToLookupTable(Pattern pattern)
-        {
-            if (pattern.IsComplex)
-            {
+        public void AddToLookupTable(Pattern pattern) {
+            if (pattern.IsComplex) {
                 ComplexPatterns.Add(pattern);
                 return;
             }
             tmpSimplePatterns.Add(pattern);
         }
 
-        public void BuildLookupTable()
-        {
+        public void BuildLookupTable() {
             tmpSimplePatterns.Sort(new PatternComparer());
-            foreach (Pattern p in tmpSimplePatterns)
-            {
-                if (p.StringPattern.Length <= 2)
-                {
+            foreach (Pattern p in tmpSimplePatterns) {
+                if (p.StringPattern.Length <= 2) {
                     char c = p.StringPattern[0];
 
-                    if (!p.Parent.CaseSensitive)
-                    {
+                    if (!p.Parent.CaseSensitive) {
                         char c1 = char.ToLowerInvariant(c);
-                        if (LookupTable[c1] == null)
+                        if (LookupTable[c1] == null) {
                             LookupTable[c1] = new PatternCollection();
+                        }
 
                         var patterns = LookupTable[c1] as PatternCollection;
-                        if (patterns != null)
-                            if (!patterns.Contains(p))
+                        if (patterns != null) {
+                            if (!patterns.Contains(p)) {
                                 patterns.Add(p);
+                            }
+                        }
 
                         char c2 = char.ToUpper(c);
-                        if (LookupTable[c2] == null)
+                        if (LookupTable[c2] == null) {
                             LookupTable[c2] = new PatternCollection();
+                        }
 
                         patterns = LookupTable[c2] as PatternCollection;
-                        if (patterns != null)
-                            if (!patterns.Contains(p))
+                        if (patterns != null) {
+                            if (!patterns.Contains(p)) {
                                 patterns.Add(p);
-                    }
-                    else
-                    {
-                        if (LookupTable[c] == null)
+                            }
+                        }
+                    } else {
+                        if (LookupTable[c] == null) {
                             LookupTable[c] = new PatternCollection();
+                        }
 
                         var patterns = LookupTable[c] as PatternCollection;
-                        if (patterns != null)
-                            if (!patterns.Contains(p))
+                        if (patterns != null) {
+                            if (!patterns.Contains(p)) {
                                 patterns.Add(p);
+                            }
+                        }
                     }
-                }
-                else
-                {
+                } else {
                     string c = p.StringPattern.Substring(0, 3).ToLowerInvariant();
 
-                    if (LookupTable[c] == null)
+                    if (LookupTable[c] == null) {
                         LookupTable[c] = new PatternCollection();
+                    }
 
                     var patterns = LookupTable[c] as PatternCollection;
-                    if (patterns != null)
-                        if (!patterns.Contains(p))
+                    if (patterns != null) {
+                        if (!patterns.Contains(p)) {
                             patterns.Add(p);
+                        }
+                    }
                 }
             }
         }
     }
 
-    public class PatternComparer : IComparer<Pattern>
-    {
+    public class PatternComparer : IComparer<Pattern> {
         #region IComparer<Pattern> Members
 
-        public int Compare(Pattern x, Pattern y)
-        {
+        public int Compare(Pattern x, Pattern y) {
             return y.StringPattern.Length.CompareTo(x.StringPattern.Length);
         }
 

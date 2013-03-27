@@ -10,13 +10,11 @@
 
 using System.Collections;
 
-namespace Alsing.SourceCode
-{
+namespace Alsing.SourceCode {
     /// <summary>
     /// 
     /// </summary>
-    public sealed class PatternListList : IEnumerable
-    {
+    public sealed class PatternListList : IEnumerable {
         private readonly ArrayList mGroups = new ArrayList();
 
         /// <summary>
@@ -39,16 +37,14 @@ namespace Alsing.SourceCode
         /// </summary>
         public PatternListList() {}
 
-        public PatternListList(SpanDefinition parent)
-        {
+        public PatternListList(SpanDefinition parent) {
             Parent = parent;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public PatternList this[int index]
-        {
+        public PatternList this[int index] {
             get { return (PatternList) mGroups[index]; }
 
             set { mGroups[index] = value; }
@@ -60,8 +56,7 @@ namespace Alsing.SourceCode
         /// 
         /// </summary>
         /// <returns></returns>
-        public IEnumerator GetEnumerator()
-        {
+        public IEnumerator GetEnumerator() {
             return mGroups.GetEnumerator();
         }
 
@@ -72,12 +67,12 @@ namespace Alsing.SourceCode
         /// </summary>
         /// <param name="Group"></param>
         /// <returns></returns>
-        public PatternList Add(PatternList Group)
-        {
+        public PatternList Add(PatternList Group) {
             mGroups.Add(Group);
             Group.Parent = this;
-            if (Parent != null && Parent.Parent != null)
+            if (Parent != null && Parent.Parent != null) {
                 Parent.Parent.ChangeVersion();
+            }
 
             return Group;
         }
@@ -85,8 +80,7 @@ namespace Alsing.SourceCode
         /// <summary>
         /// 
         /// </summary>
-        public void Clear()
-        {
+        public void Clear() {
             mGroups.Clear();
         }
     }
