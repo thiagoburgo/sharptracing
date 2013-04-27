@@ -137,7 +137,7 @@ namespace DrawEngine.Renderer.Mathematics.Algebra {
             float sin = (float) Math.Sin(angle);
             float oneMinusCos = (float) (1.0 - Math.Cos(angle));
             axis.Normalize();
-            this = this *
+            Point3D result = this *
                    new Matrix3D(1 + oneMinusCos * ((axis.X * axis.X) - 1),
                                 (oneMinusCos * axis.X * axis.Y) - axis.Z * sin,
                                 (oneMinusCos * axis.X * axis.Z) + axis.Y * sin,
@@ -147,28 +147,43 @@ namespace DrawEngine.Renderer.Mathematics.Algebra {
                                 (oneMinusCos * axis.X * axis.Z) - axis.Y * sin,
                                 (oneMinusCos * axis.Y * axis.Z) + axis.X * sin,
                                 1 + oneMinusCos * ((axis.Z * axis.Z) - 1));
+            this.X = result.X;
+            this.Y = result.Y;
+            this.Z = result.Z;
         }
 
         public void RotateAxisX(float angle) {
             float sin = (float) Math.Sin(angle);
             float cos = (float) Math.Cos(angle);
-            this = this * new Matrix3D(1, 0, 0, 0, cos, -sin, 0, sin, cos);
+            Point3D result = this * new Matrix3D(1, 0, 0, 0, cos, -sin, 0, sin, cos);
+            this.X = result.X;
+            this.Y = result.Y;
+            this.Z = result.Z;
         }
 
         public void RotateAxisY(float angle) {
             float sin = (float) Math.Sin(angle);
             float cos = (float) Math.Cos(angle);
-            this = this * new Matrix3D(cos, 0, sin, 0, 1, 0, -sin, 0, cos);
+            Point3D result = this * new Matrix3D(cos, 0, sin, 0, 1, 0, -sin, 0, cos);
+            this.X = result.X;
+            this.Y = result.Y;
+            this.Z = result.Z;
         }
 
         public void RotateAxisZ(float angle) {
             float sin = (float) Math.Sin(angle);
             float cos = (float) Math.Cos(angle);
-            this = this * new Matrix3D(cos, -sin, 0, sin, cos, 0, 0, 0, 1);
+            Point3D result = this * new Matrix3D(cos, -sin, 0, sin, cos, 0, 0, 0, 1);
+            this.X = result.X;
+            this.Y = result.Y;
+            this.Z = result.Z;
         }
 
         public void Scale(float factor) {
-            this = this * factor;
+            this.X *= factor;
+            this.Y *= factor;
+            this.Z *= factor;
+            //this = this * factor;
         }
 
         public void Translate(float tx, float ty, float tz) {
@@ -176,7 +191,10 @@ namespace DrawEngine.Renderer.Mathematics.Algebra {
         }
 
         public void Translate(Vector3D translateVector) {
-            this = this + translateVector;
+            Point3D result = this + translateVector;
+            this.X = result.X;
+            this.Y = result.Y;
+            this.Z = result.Z;
         }
 
         #endregion

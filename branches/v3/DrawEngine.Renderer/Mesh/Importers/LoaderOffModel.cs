@@ -132,9 +132,9 @@ namespace DrawEngine.Renderer.Importers {
                 this.triangles[i].NormalOnVertex2.Normalize();
                 this.triangles[i].NormalOnVertex3 = normalsPerVertex[pointersToVertex[i].Vertex3];
                 this.triangles[i].NormalOnVertex3.Normalize();
-                int percent = (int) (((float) i / this.triangles.Length) * 100.0f);
+                int percent = (int) (( i / (float)this.triangles.Length) * 100.0f);
                 if ((percent % 20) == 0) {
-                    this.OnElementLoaded(percent / 2 + 50, ElementMesh.VertexNormal);
+                    this.OnElementLoaded((percent / 2) + 50, ElementMesh.VertexNormal);
                 }
             }
             pointersToVertex = null;

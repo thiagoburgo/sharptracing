@@ -13,6 +13,7 @@
 
 using System;
 using System.Drawing;
+using System.Runtime.CompilerServices;
 using System.Xml.Serialization;
 using DrawEngine.Renderer.BasicStructures;
 using DrawEngine.Renderer.Collections;
@@ -177,7 +178,7 @@ namespace DrawEngine.Renderer.Cameras {
         public Ray CreateRayFromScreen(PointF pointOnScreen) {
             return CreateRayFromScreen(pointOnScreen.X, pointOnScreen.Y);
         }
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public abstract Ray CreateRayFromScreen(float x, float y);
 
         public override string ToString() {

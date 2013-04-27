@@ -38,7 +38,7 @@ namespace DrawEngine.Renderer.RenderObjects.Design {
         private void triangleModel_OnEndBuild(TimeSpan timeToBuild) {
             this.DialogResult = DialogResult.OK;
             if (this.InvokeRequired) {
-                this.Invoke(new Action(delegate { this.Close(); }));
+                this.Invoke(new Action(this.Close));
             }
         }
 
@@ -46,7 +46,7 @@ namespace DrawEngine.Renderer.RenderObjects.Design {
             if (this.InvokeRequired) {
                 this.Invoke(new Action(delegate {
                                            this.lblInfo.Text =
-                                               string.Format("Optimize Model for fast intersections... Wait.. ");
+                                               string.Format("Optimize Model for fast intersections... Wait...");
                                            this.lblTrianglesInfo.Text = "Triangles: " + this.triangleModel.TriangleCount;
                                        }));
             }

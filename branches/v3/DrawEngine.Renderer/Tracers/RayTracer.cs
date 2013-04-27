@@ -11,23 +11,27 @@
  * suggestions. Keep the credits!
  */
 
+using System.Runtime.CompilerServices;
 using DrawEngine.Renderer.BasicStructures;
 using DrawEngine.Renderer.Materials;
 using DrawEngine.Renderer.Mathematics.Algebra;
 using DrawEngine.Renderer.Renderers;
+using DrawEngine.Renderer.Shaders;
 
 namespace DrawEngine.Renderer.Tracers {
     public sealed class RayTracer : RayCasting {
         public RayTracer(Scene scene, RenderStrategy renderStrategy) : base(scene, renderStrategy) {}
-        public RayTracer() {}
+        public RayTracer() {
+        }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override RGBColor Trace(Ray ray, int depth) {
             Intersection intersection;
-            RGBColor color = RGBColor.Black;
+            RGBColor color = this.scene.BackgroundColor;
             if (this.scene.FindIntersection(ray, out intersection)) {
                 Material material = intersection.HitPrimitive.Material;
-                this.scene.Shader = material.CreateShader(this.scene);
-                color = this.scene.Shader.Shade(ray, intersection);
+                Shader shader = material.CreateShader(this.scene);
+                color = shader.Shade(ray, intersection);
                 Ray rRay = new Ray();
                 if (depth < this.maxDepth) {
                     float n1 = this.scene.RefractIndex;
@@ -64,7 +68,7 @@ namespace DrawEngine.Renderer.Tracers {
                         }
                     }
 
-                    if (kSpec > 0) {
+                    if (kSpec > 0 || specFromRefract) {
                         rRay.Origin = intersection.HitPoint;
                         rRay.Direction = Vector3D.Reflected(intersection.Normal, ray.Direction);
                         if (!specFromRefract) {
@@ -79,6 +83,10 @@ namespace DrawEngine.Renderer.Tracers {
                 return color;
             }
             return this.scene.IsEnvironmentMapped ? this.scene.EnvironmentMap.GetColor(ray) : color;
+        }
+
+        public override RayCasting Clone() {
+            return new RayTracer(this.scene, this.renderStrategy);
         }
     }
 }

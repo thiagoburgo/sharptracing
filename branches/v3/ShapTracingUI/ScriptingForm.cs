@@ -102,7 +102,7 @@ namespace DrawEngine.SharpTracingUI {
             cp.ReferencedAssemblies.Add("DrawEngine.PluginEngine.dll");
             cp.ReferencedAssemblies.Add("WeifenLuo.WinFormsUI.Docking.dll");
             cp.ReferencedAssemblies.Add("System.Windows.Forms.dll");
-            cp.ReferencedAssemblies.Add("DrawEngine.SharpTracingUI.exe");
+            cp.ReferencedAssemblies.Add("SharpTracing.exe");
             // Invoke compilation of the source file.
             CompilerResults cr = cs.CompileAssemblyFromSource(cp, this.syntaxBoxControl1.Document.Text);
             if (cr.Errors.Count > 0) {

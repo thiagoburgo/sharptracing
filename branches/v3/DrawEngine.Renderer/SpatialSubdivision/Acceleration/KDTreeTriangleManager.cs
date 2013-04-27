@@ -19,7 +19,7 @@ using DrawEngine.Renderer.RenderObjects;
 namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration {
     public class KDTreeTriangleManager : KDTreeIntersectableManager<Triangle>, ITransformable3D {
         public KDTreeTriangleManager() : base() {}
-        public KDTreeTriangleManager(List<Triangle> content) : base(content) {}
+        public KDTreeTriangleManager(IList<Triangle> content) : base(content) {}
 
         #region ITransformable3D Members
 

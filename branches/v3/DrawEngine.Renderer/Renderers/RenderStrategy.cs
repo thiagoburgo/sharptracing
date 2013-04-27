@@ -16,26 +16,17 @@ using System.Collections.Generic;
 using DrawEngine.Renderer.BasicStructures;
 using DrawEngine.Renderer.Mathematics.Algebra;
 using DrawEngine.Renderer.Tracers;
+using DrawEngine.Renderer.Util;
 
 namespace DrawEngine.Renderer.Renderers {
-    public struct PixelInfo {
-        public RGBColor Color;
-        public float Width;
-        public float Heigth;
-        public float X;
-        public float Y;
-
-        public PixelInfo(RGBColor color, float x, float y, float width, float heigth)
-        {
-            this.Color = color;
-            this.X = x;
-            this.Y = y;
-            this.Width = width;
-            this.Heigth = heigth;
-        }
-    }
+    
     [Serializable]
     public abstract class RenderStrategy {
-        public abstract void Render(Action<PixelInfo> executeForeachXy, RayCasting caster);
+        protected volatile bool cancelRender = false;
+        public abstract void Render(RayCasting rayCasting, IEnumerable<TiledBitmap.Tile> tiles);
+        public virtual void CancelRender() {
+            this.cancelRender = true;
+        }
+
     }
 }

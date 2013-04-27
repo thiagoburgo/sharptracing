@@ -12,6 +12,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using DrawEngine.Renderer.BasicStructures;
 using DrawEngine.Renderer.Collections;
@@ -21,6 +22,8 @@ using DrawEngine.Renderer.Mathematics.Algebra;
 using DrawEngine.Renderer.PhotonMapping;
 using DrawEngine.Renderer.RenderObjects;
 using DrawEngine.Renderer.Renderers;
+using DrawEngine.Renderer.Shaders;
+using DrawEngine.Renderer.Util;
 
 namespace DrawEngine.Renderer.Tracers {
     public enum EnlightenmentType {
@@ -104,7 +107,7 @@ namespace DrawEngine.Renderer.Tracers {
             this.IndirectEnlightenment.Balance();
         }
 
-        public override void Render(Graphics g) {
+        public override void Render(IEnumerable<TiledBitmap.Tile> tiles) {
             if (buildPhotonMaps) {
                 this.ScatterPhotons();
                 buildPhotonMaps = false;
@@ -144,7 +147,7 @@ namespace DrawEngine.Renderer.Tracers {
                             this.indirectEnlightenment.IrradianceEstimate(intersection.HitPoint, intersection.Normal,
                                                                           this.IrradianceArea,
                                                                           this.IrradiancePhotonNumber).ToColor();
-                        g.FillRectangle(brush, x, y, (resX / pMax), (resY / pMax));
+                        //TODO: g.FillRectangle(brush, x, y, (resX / pMax), (resY / pMax));
                     }
                 }
             }
@@ -154,8 +157,8 @@ namespace DrawEngine.Renderer.Tracers {
             Intersection intersection;
             if (this.scene.FindIntersection(ray, out intersection)) {
                 Material material = intersection.HitPrimitive.Material;
-                this.scene.Shader = material.CreateShader(this.scene);
-                RGBColor color = this.scene.Shader.Shade(ray, intersection);
+                Shader shader = material.CreateShader(this.scene);
+                RGBColor color = shader.Shade(ray, intersection);
                 Ray rRay = new Ray();
                 if (depth < 5) {
                     if (material.IsReflective) {
@@ -191,6 +194,10 @@ namespace DrawEngine.Renderer.Tracers {
                 return color;
             }
             return this.scene.IsEnvironmentMapped ? this.scene.EnvironmentMap.GetColor(ray) : this.scene.BackgroundColor;
+        }
+
+        public override RayCasting Clone() {
+            return new DistributedRayTracer(this.scene, this.renderStrategy);
         }
 
         private static float Max(float v1, float v2, float v3) {

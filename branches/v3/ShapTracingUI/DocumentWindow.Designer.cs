@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Windows.Forms;
+using DrawEngine.Renderer.Util;
 
 namespace DrawEngine.SharpTracingUI {
     partial class DocumentWindow
@@ -54,17 +55,25 @@ namespace DrawEngine.SharpTracingUI {
             this.progressBarRendering = new System.Windows.Forms.ToolStripProgressBar();
             this.lblPercentRend = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblTimeElapsed = new System.Windows.Forms.ToolStripStatusLabel();
-            this.pictureView = new System.Windows.Forms.PictureBox();
             this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
+            this.tiledPictureViewControlView = new DrawEngine.SharpTracingUI.Controls.TiledPictureViewControl();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripRenderer = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripStrategy = new System.Windows.Forms.ToolStripComboBox();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
+            this.txtXParallel = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripLabel4 = new System.Windows.Forms.ToolStripLabel();
+            this.txtYParallel = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripLabel5 = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripTextBoxRenderByTiles = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripLabel7 = new System.Windows.Forms.ToolStripLabel();
             this.contextMenuTabPage.SuspendLayout();
             this.statusBar.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureView)).BeginInit();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
             this.toolStripContainer1.SuspendLayout();
@@ -195,7 +204,7 @@ namespace DrawEngine.SharpTracingUI {
             this.statusBar.Location = new System.Drawing.Point(0, 450);
             this.statusBar.Name = "statusBar";
             this.statusBar.RenderMode = System.Windows.Forms.ToolStripRenderMode.ManagerRenderMode;
-            this.statusBar.Size = new System.Drawing.Size(528, 22);
+            this.statusBar.Size = new System.Drawing.Size(816, 22);
             this.statusBar.TabIndex = 2;
             // 
             // lblRenderStatus
@@ -221,43 +230,42 @@ namespace DrawEngine.SharpTracingUI {
             this.lblTimeElapsed.Size = new System.Drawing.Size(49, 17);
             this.lblTimeElapsed.Text = "00:00:00";
             // 
-            // pictureView
-            // 
-            this.pictureView.BackColor = System.Drawing.Color.Black;
-            this.pictureView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pictureView.Location = new System.Drawing.Point(0, 0);
-            this.pictureView.Name = "pictureView";
-            this.pictureView.Size = new System.Drawing.Size(528, 421);
-            this.pictureView.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.pictureView.TabIndex = 3;
-            this.pictureView.TabStop = false;
-            this.pictureView.SizeChanged += new System.EventHandler(this.panelRender_SizeChanged);
-            this.pictureView.Click += new System.EventHandler(this.DocumentWindow_Click);
-            this.pictureView.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.pictureView_MouseDoubleClick);
-            this.pictureView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureView_MouseDown);
-            this.pictureView.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureView_MouseMove);
-            this.pictureView.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureView_MouseUp);
-            // 
             // toolStripContainer1
             // 
             this.toolStripContainer1.BottomToolStripPanelVisible = false;
             // 
             // toolStripContainer1.ContentPanel
             // 
-            this.toolStripContainer1.ContentPanel.Controls.Add(this.pictureView);
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(528, 421);
+            this.toolStripContainer1.ContentPanel.Controls.Add(this.tiledPictureViewControlView);
+            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(816, 421);
             this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolStripContainer1.LeftToolStripPanelVisible = false;
             this.toolStripContainer1.Location = new System.Drawing.Point(0, 4);
             this.toolStripContainer1.Name = "toolStripContainer1";
             this.toolStripContainer1.RightToolStripPanelVisible = false;
-            this.toolStripContainer1.Size = new System.Drawing.Size(528, 446);
+            this.toolStripContainer1.Size = new System.Drawing.Size(816, 446);
             this.toolStripContainer1.TabIndex = 0;
             this.toolStripContainer1.Text = "toolStripContainer1";
             // 
             // toolStripContainer1.TopToolStripPanel
             // 
             this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.toolStrip1);
+            // 
+            // tiledPictureViewControlView
+            // 
+            this.tiledPictureViewControlView.AutoScroll = true;
+            this.tiledPictureViewControlView.BackColor = System.Drawing.SystemColors.Control;
+            this.tiledPictureViewControlView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tiledPictureViewControlView.Location = new System.Drawing.Point(0, 0);
+            this.tiledPictureViewControlView.Margin = new System.Windows.Forms.Padding(0);
+            this.tiledPictureViewControlView.Name = "tiledPictureViewControlView";
+            this.tiledPictureViewControlView.Size = new System.Drawing.Size(816, 421);
+            this.tiledPictureViewControlView.TabIndex = 0;
+            this.tiledPictureViewControlView.TiledBitmap = null;
+            this.tiledPictureViewControlView.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tiledPictureViewControlView_MouseClick);
+            this.tiledPictureViewControlView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureView_MouseDown);
+            this.tiledPictureViewControlView.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureView_MouseMove);
+            this.tiledPictureViewControlView.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureView_MouseUp);
             // 
             // toolStrip1
             // 
@@ -267,10 +275,19 @@ namespace DrawEngine.SharpTracingUI {
             this.toolStripRenderer,
             this.toolStripSeparator1,
             this.toolStripLabel2,
-            this.toolStripStrategy});
+            this.toolStripStrategy,
+            this.toolStripSeparator2,
+            this.toolStripLabel3,
+            this.txtXParallel,
+            this.toolStripLabel4,
+            this.txtYParallel,
+            this.toolStripSeparator3,
+            this.toolStripLabel5,
+            this.toolStripTextBoxRenderByTiles,
+            this.toolStripLabel7});
             this.toolStrip1.Location = new System.Drawing.Point(3, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(407, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(625, 25);
             this.toolStrip1.TabIndex = 0;
             // 
             // toolStripLabel1
@@ -304,11 +321,74 @@ namespace DrawEngine.SharpTracingUI {
             this.toolStripStrategy.Size = new System.Drawing.Size(121, 25);
             this.toolStripStrategy.SelectedIndexChanged += new System.EventHandler(this.toolStripRenderer_SelectedIndexChanged);
             // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripLabel3
+            // 
+            this.toolStripLabel3.Name = "toolStripLabel3";
+            this.toolStripLabel3.Size = new System.Drawing.Size(34, 22);
+            this.toolStripLabel3.Text = "Tiles:";
+            // 
+            // txtXParallel
+            // 
+            this.txtXParallel.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.txtXParallel.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
+            this.txtXParallel.MaxLength = 3;
+            this.txtXParallel.Name = "txtXParallel";
+            this.txtXParallel.Size = new System.Drawing.Size(25, 25);
+            this.txtXParallel.Text = "3";
+            this.txtXParallel.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtParallel_KeyPress);
+            // 
+            // toolStripLabel4
+            // 
+            this.toolStripLabel4.Name = "toolStripLabel4";
+            this.toolStripLabel4.Size = new System.Drawing.Size(12, 22);
+            this.toolStripLabel4.Text = "x";
+            // 
+            // txtYParallel
+            // 
+            this.txtYParallel.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.txtYParallel.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
+            this.txtYParallel.MaxLength = 3;
+            this.txtYParallel.Name = "txtYParallel";
+            this.txtYParallel.Size = new System.Drawing.Size(25, 25);
+            this.txtYParallel.Text = "3";
+            this.txtYParallel.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtParallel_KeyPress);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripLabel5
+            // 
+            this.toolStripLabel5.Name = "toolStripLabel5";
+            this.toolStripLabel5.Size = new System.Drawing.Size(73, 22);
+            this.toolStripLabel5.Text = "  1 Render to";
+            // 
+            // toolStripTextBoxRenderByTiles
+            // 
+            this.toolStripTextBoxRenderByTiles.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.toolStripTextBoxRenderByTiles.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
+            this.toolStripTextBoxRenderByTiles.MaxLength = 3;
+            this.toolStripTextBoxRenderByTiles.Name = "toolStripTextBoxRenderByTiles";
+            this.toolStripTextBoxRenderByTiles.Size = new System.Drawing.Size(25, 25);
+            this.toolStripTextBoxRenderByTiles.Text = "1";
+            // 
+            // toolStripLabel7
+            // 
+            this.toolStripLabel7.Name = "toolStripLabel7";
+            this.toolStripLabel7.Size = new System.Drawing.Size(39, 22);
+            this.toolStripLabel7.Text = "Tile(s)";
+            // 
             // DocumentWindow
             // 
             this.AllowDrop = true;
             this.AutoScroll = true;
-            this.ClientSize = new System.Drawing.Size(528, 472);
+            this.ClientSize = new System.Drawing.Size(816, 472);
             this.ContextMenuStrip = this.contextMenuTabPage;
             this.Controls.Add(this.toolStripContainer1);
             this.Controls.Add(this.statusBar);
@@ -322,14 +402,12 @@ namespace DrawEngine.SharpTracingUI {
             this.Activated += new System.EventHandler(this.DocumentWindow_Click);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DocumentWindow_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.DocumentWindow_FormClosed);
-            this.SizeChanged += new System.EventHandler(this.panelRender_SizeChanged);
             this.Click += new System.EventHandler(this.DocumentWindow_Click);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.DocumentWindow_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.DocumentWindow_DragEnter);
             this.contextMenuTabPage.ResumeLayout(false);
             this.statusBar.ResumeLayout(false);
             this.statusBar.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureView)).EndInit();
             this.toolStripContainer1.ContentPanel.ResumeLayout(false);
             this.toolStripContainer1.TopToolStripPanel.ResumeLayout(false);
             this.toolStripContainer1.TopToolStripPanel.PerformLayout();
@@ -349,7 +427,6 @@ namespace DrawEngine.SharpTracingUI {
         private ToolStripStatusLabel lblPercentRend;
         private ToolStripStatusLabel lblTimeElapsed;
         private ToolStripMenuItem menuItemClose;
-        private PictureBox pictureView;
         private ToolStripSeparator toolStripMenuItem1;
         private ToolStripSeparator toolStripMenuItem2;
         private ToolStripMenuItem fullScreenToolStripMenuItem;
@@ -363,6 +440,16 @@ namespace DrawEngine.SharpTracingUI {
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripLabel toolStripLabel2;
         private ToolStripComboBox toolStripStrategy;
+        private ToolStripSeparator toolStripSeparator2;
+        private ToolStripLabel toolStripLabel3;
+        private ToolStripLabel toolStripLabel4;
+        private ToolStripTextBox txtYParallel;
+        private ToolStripTextBox txtXParallel;
+        private Controls.TiledPictureViewControl tiledPictureViewControlView;
+        private ToolStripLabel toolStripLabel5;
+        private ToolStripSeparator toolStripSeparator3;
+        private ToolStripTextBox toolStripTextBoxRenderByTiles;
+        private ToolStripLabel toolStripLabel7;
 
 
 

@@ -11,10 +11,13 @@
  * suggestions. Keep the credits!
  */
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Runtime.CompilerServices;
 using DrawEngine.Renderer.BasicStructures;
 using DrawEngine.Renderer.Mathematics.Algebra;
 using DrawEngine.Renderer.Renderers;
+using DrawEngine.Renderer.Util;
 
 namespace DrawEngine.Renderer.Tracers
 {
@@ -64,14 +67,12 @@ namespace DrawEngine.Renderer.Tracers
             set { this.renderStrategy = value; }
         }
 
-        public virtual void Render(Graphics g)
-        {   
-            SolidBrush solidBrush = new SolidBrush(Color.Black);
-            this.RenderStrategy.Render(pixelInfo =>
-            {
-                solidBrush.Color = pixelInfo.Color.ToColor();
-                g.FillRectangle(solidBrush, pixelInfo.X, pixelInfo.Y, pixelInfo.Width, pixelInfo.Heigth);
-            }, this);
+        public virtual void Render(IEnumerable<TiledBitmap.Tile> tiledBitmap) {
+            this.RenderStrategy.Render(this, tiledBitmap);
+        }
+
+        public void CancelRender() {
+            this.renderStrategy.CancelRender();
         }
 
         float srgbEncode(float c)
@@ -85,6 +86,7 @@ namespace DrawEngine.Renderer.Tracers
                 return 1.055f * (float)(Math.Pow(c, 0.4166667) - 0.055); // Inverse gamma 2.4
             }
         }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public abstract RGBColor Trace(Ray ray, int depth);
         protected static RGBColor AverageColors(params RGBColor[] colors)
         {
@@ -99,6 +101,7 @@ namespace DrawEngine.Renderer.Tracers
             return new RGBColor((r * len_inv), (g * len_inv), (b * len_inv));
         }
 
+        public abstract RayCasting Clone();
 
     }
 

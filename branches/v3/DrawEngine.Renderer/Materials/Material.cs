@@ -50,6 +50,7 @@ namespace DrawEngine.Renderer.Materials {
             this.refractIndex = 1.51f;
             this.shiness = 64;
             this.isTexturized = false;
+            this.texture = new Texture();
         }
 
         protected Material(float kdiff, float kspec, float kamb, float refractIndex, float ktrans, float glossy,
@@ -241,7 +242,7 @@ namespace DrawEngine.Renderer.Materials {
             return this.Name;
         }
 
-        public Material Copy() {
+        public Material Clone() {
             Material ret = (Material) this.MemberwiseClone();
             if (!String.IsNullOrEmpty(this.texture.TexturePath)) {
                 ret.texture.TexturePath = this.texture.TexturePath;
