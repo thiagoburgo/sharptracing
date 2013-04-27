@@ -12,6 +12,7 @@
  */
 
 using System;
+using System.Runtime.CompilerServices;
 using DrawEngine.Renderer.BasicStructures;
 using DrawEngine.Renderer.Mathematics.Algebra;
 
@@ -23,6 +24,7 @@ namespace DrawEngine.Renderer.Cameras {
         public PinholeCamera(Point3D eye, Point3D lookAt, Vector3D up, float fov, float resX, float resY)
             : base(eye, lookAt, up, fov, resX, resY) {}
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override Ray CreateRayFromScreen(float x, float y) {
             float du = -this.au + ((2.0f * this.au * x) * 1f / (this.resX));
             float dv = -this.av + ((2.0f * this.av * y) * 1f / (this.resY));

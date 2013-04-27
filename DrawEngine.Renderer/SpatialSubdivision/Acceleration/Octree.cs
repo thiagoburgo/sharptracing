@@ -14,6 +14,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using DrawEngine.Renderer.BasicStructures;
 using DrawEngine.Renderer.Mathematics.Algebra;
 using DrawEngine.Renderer.RenderObjects;
@@ -108,7 +110,7 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
             {
                 bb.Scale(factor);
             }
-            foreach (ITransformable3D accu in this.accelerationUnits)
+            foreach (T accu in this.accelerationUnits)
             {
                 accu.Scale(factor);
             }
@@ -122,7 +124,7 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
             {
                 bb.Translate(tx, ty, tz);
             }
-            foreach (ITransformable3D accu in this.accelerationUnits)
+            foreach (T accu in this.accelerationUnits)
             {
                 accu.Translate(tx, ty, tz);
             }
@@ -158,7 +160,7 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
         //    this.accelerationUnits = trs;
         //    Build(1);
         //}
-        private void Build(int depth, List<BoundBox> allBoundBoxes)
+        private void Build(int depth, ICollection<BoundBox> allBoundBoxes)
         {
             if (depth > maxBuildDepth || this.accelerationUnits.Count < this.maxUnitsInBox)
             {
@@ -235,20 +237,19 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
             }
             this.accelerationUnits = list.ToArray();
         }
-
+        //[MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.Synchronized)]
         public override bool FindIntersection(Ray ray, out Intersection intersect)
         {
-            intersect = new Intersection();
+            intersect = new Intersection { TMin = float.MaxValue };
             //if (!this.BoxIntersect(ray))
             //{
             //    return false;
             //}
-            intersect.TMin = float.MaxValue;
             bool hit = false;
             if (this.isLeaf)
             {
                 Intersection intersect_comp;
-                foreach (IIntersectable tri in this.accelerationUnits)
+                foreach (T tri in this.accelerationUnits)
                 {
                     if (tri.FindIntersection(ray, out intersect_comp) && intersect_comp.TMin < intersect.TMin)
                     {
@@ -258,18 +259,54 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
                 }
                 return hit && intersect.TMin <= this.ltmax;
             }
-            int counter = this.octrees.Count(o => o.BoxIntersect(ray));
-            if (counter > 0)
+            //int counter = this.octrees.Count(o => o.BoxIntersect(ray));
+            //if (counter > 0)
+            //{
+            //    this.octrees.InsertionSort();
+            //}
+            //for (int i = 0; i < counter; i++)
+            //{
+            //    if (this.octrees[i].FindIntersection(ray, out intersect))
+            //    {
+            //        return true;
+            //    }
+            //}
+            //Octree<T>[] octreesInterBox;
+            SortedSet<Octree<T>> octreesInterBox = new SortedSet<Octree<T>>();
+
+            lock (this)
             {
-                this.octrees.InsertionSort();
+                for (int i = 0; i < this.octrees.Length; i++)
+                {
+
+                    if (this.octrees[i].BoxIntersect(ray))
+                    {
+                        octreesInterBox.Add(this.octrees[i]);
+                    }
+                }
             }
-            for (int i = 0; i < counter; i++)
+            //octreesInterBox = this.octrees.Where(o => o.BoxIntersect(ray)).ToArray();
+
+            foreach (Octree<T> octree in octreesInterBox)
             {
-                if (this.octrees[i].FindIntersection(ray, out intersect))
+                if (octree.FindIntersection(ray, out intersect))
                 {
                     return true;
                 }
             }
+            //if (octreesInterBox.Length > 0)
+            //{
+
+            //    octreesInterBox.InsertionSort();
+            //    foreach (Octree<T> octree in octreesInterBox)
+            //    {
+
+            //        if (octree.FindIntersection(ray, out intersect))
+            //        {
+            //            return true;
+            //        }
+            //    }
+            //}
             return false;
         }
 
@@ -355,7 +392,7 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
                 //    }
                 //}
             }
-            foreach (ITransformable3D unit in oct.accelerationUnits)
+            foreach (T unit in oct.accelerationUnits)
             {
                 unit.Translate(tx, ty, tz);
             }

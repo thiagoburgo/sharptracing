@@ -22,22 +22,19 @@ namespace DrawEngine.Renderer.RenderObjects {
     [Serializable, StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct BoundBox : ITransformable3D {
         private Point3D center;
-        private Vector3D halfVector;
         private Point3D pMax;
         private Point3D pMin;
-        public static readonly BoundBox Zero = new BoundBox();
+        public static readonly BoundBox Zero;
 
         public BoundBox(float xMin, float yMin, float zMin, float xMax, float yMax, float zMax) {
             this.pMin = new Point3D(xMin, yMin, zMin);
             this.pMax = new Point3D(xMax, yMax, zMax);
-            this.halfVector = (this.pMax - this.pMin) * 0.5f;
             this.center = (this.pMax + this.pMin) * 0.5f;
         }
 
         public BoundBox(Point3D pMin, Point3D pMax) {
             this.pMin = pMin;
             this.pMax = pMax;
-            this.halfVector = (pMax - pMin) * 0.5f;
             this.center = (pMax + pMin) * 0.5f;
         }
 
@@ -45,7 +42,6 @@ namespace DrawEngine.Renderer.RenderObjects {
             get { return this.pMin; }
             set {
                 this.pMin = value;
-                this.halfVector = (this.pMax - this.pMin) * 0.5f;
                 this.center = (this.pMax + this.pMin) * 0.5f;
             }
         }
@@ -54,7 +50,6 @@ namespace DrawEngine.Renderer.RenderObjects {
             get { return this.pMax; }
             set {
                 this.pMax = value;
-                this.halfVector = (this.pMax - this.pMin) * 0.5f;
                 this.center = (this.pMax + this.pMin) * 0.5f;
             }
         }
@@ -81,7 +76,7 @@ namespace DrawEngine.Renderer.RenderObjects {
         }
 
         public Vector3D HalfVector {
-            get { return this.halfVector; }
+            get { return (this.pMax - this.pMin) * 0.5f; }
         }
 
         #region ITransformable3D Members
@@ -114,7 +109,6 @@ namespace DrawEngine.Renderer.RenderObjects {
             this.pMax.Translate(tx, ty, tz);
             //this.pMin = pMin;
             //this.pMax = pMax;
-            this.halfVector = (this.pMax - this.pMin) * 0.5f;
             this.center = (this.pMax + this.pMin) * 0.5f;
             //this.PMax = this.pMax;
             //this.PMin = this.pMin;

@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 
 namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration {
-    public abstract class AccelerationStructure<T> : IDisposable {
+    public abstract class AccelerationStructure<T> : IDisposable, IAccelerationStructure
+    {
         protected IList<T> accelerationUnits;
 
-        public AccelerationStructure(IList<T> accelerationUnits) {
+        protected AccelerationStructure(IList<T> accelerationUnits) {
             this.AccelerationUnits = accelerationUnits;
         }
 
@@ -23,8 +24,7 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration {
             }
         }
 
-        public abstract void Optimize();
-
+      
         #region IDisposable Members
 
         public virtual void Dispose() {
@@ -34,5 +34,7 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration {
         }
 
         #endregion
+
+        public abstract void Optimize();
     }
 }

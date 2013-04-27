@@ -14,6 +14,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using DrawEngine.Renderer.BasicStructures;
 using DrawEngine.Renderer.Mathematics.Algebra;
 
@@ -37,6 +38,7 @@ namespace DrawEngine.Renderer.RenderObjects {
             this.AdjustTriangle();
         }
 
+        public bool Wireframed { get; set; }
         public Vector3D Normal {
             get { return this.normal; }
         }
@@ -210,23 +212,21 @@ namespace DrawEngine.Renderer.RenderObjects {
         //From http://jgt.akpeters.com/papers/GuigueDevillers03/ray_triangle_intersection.html
         public override bool FindIntersection(Ray ray, out Intersection intersect) {
             intersect = new Intersection();
-            Vector3D vect0, vect1, nvect;
-            float det, inv_det;
             /* orientation of the ray with respect to the triangle's normal, 
                also used to calculate output parameters*/
-            det = -(ray.Direction * this.normalNonNormalized);
+            float det = -(ray.Direction * this.normalNonNormalized);
             /* the non-culling branch */
             /* if determinant is near zero, ray is parallel to the plane of triangle */
-            if (det > -0.000001f && det < 0.000001f) {
+            if ( det.NearZero()) {
                 return false;
             }
             /* calculate vector from ray origin to this.vertex1 */
-            vect0 = this.vertex1 - ray.Origin;
+            Vector3D vect0 = this.vertex1 - ray.Origin;
             /* normal vector used to calculate u and v parameters */
-            nvect = ray.Direction ^ vect0;
-            inv_det = 1.0f / det;
+            Vector3D nvect = ray.Direction ^ vect0;
+            float inv_det = 1.0f / det;
             /* calculate vector from ray origin to this.vertex2*/
-            vect1 = this.vertex2 - ray.Origin;
+            Vector3D vect1 = this.vertex2 - ray.Origin;
             /* calculate v parameter and test bounds */
             float v = -(vect1 * nvect) * inv_det;
             if (v < 0.0f || v > 1.0f) {
@@ -239,17 +239,26 @@ namespace DrawEngine.Renderer.RenderObjects {
             if (u < 0.0f || u + v > 1.0f) {
                 return false;
             }
+
+            const double epslon = 2.5E-2;
+            float alpha = 1.0f - (u + v);
+            if (this.Wireframed && (!u.NearZero(epslon) && !v.NearZero(epslon) && !alpha.NearZero(epslon)))
+            {
+                return false;
+            }
+
             /* calculate t, ray intersects triangle */
             float t = -(vect0 * this.normalNonNormalized) * inv_det;
             //if (t < 100)
             //    return false;
             // return 1;
-            if (t >= 100) {
+            if (t >= 0.000001) 
+            {
                 intersect.Normal = this.normal;
                 intersect.TMin = t;
 
                 intersect.HitPoint = ray.Origin + (t * ray.Direction);
-                this.CurrentBarycentricCoordinate = new BarycentricCoordinate(1.0f - (u + v), u, v);
+                this.CurrentBarycentricCoordinate = new BarycentricCoordinate(alpha, u, v);
                 intersect.HitPrimitive = this;
                 if (this.material != null && this.material.IsTexturized) {
                     //int widthTex = this.material.Texture.Width - 1;
@@ -514,9 +523,8 @@ namespace DrawEngine.Renderer.RenderObjects {
                 SameSide(p, this.vertex2, this.vertex1, this.vertex3) &&
                 SameSide(p, this.vertex3, this.vertex1, this.vertex2)) {
                 return true;
-            } else {
-                return false;
             }
+            return false;
         }
 
         public override Vector3D NormalOnPoint(Point3D pointInPrimitive) {
@@ -540,7 +548,6 @@ namespace DrawEngine.Renderer.RenderObjects {
         private static Vector3D vmin;
 
         public override bool IsOverlap(BoundBox bb) {
-            float d, fex, fey, fez;
             v0 = (this.Vertex1 - bb.Center);
             v1 = (this.Vertex2 - bb.Center);
             v2 = (this.Vertex3 - bb.Center);
@@ -550,9 +557,9 @@ namespace DrawEngine.Renderer.RenderObjects {
             e0 = this.Edge1;
             e1 = this.Edge3;
             e2 = this.Edge2;
-            fex = Math.Abs(e0.X);
-            fey = Math.Abs(e0.Y);
-            fez = Math.Abs(e0.Z);
+            float fex = Math.Abs(e0.X);
+            float fey = Math.Abs(e0.Y);
+            float fez = Math.Abs(e0.Z);
             if (!AXISTEST_X01(e0.Z, e0.Y, fez, fey, bb.HalfVector)) {
                 return false;
             }
@@ -603,7 +610,7 @@ namespace DrawEngine.Renderer.RenderObjects {
             }
             /* test if the box intersects the plane of the triangle */
             //normal = (e0 ^ e1);
-            d = -this.Normal * v0;
+            float d = -this.Normal * v0;
             return PlaneBoxOverlap(this.Normal, bb.HalfVector, d);
         }
 

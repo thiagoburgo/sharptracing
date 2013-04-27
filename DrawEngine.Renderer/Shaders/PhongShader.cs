@@ -12,6 +12,7 @@
  */
 
 using System;
+using System.Runtime.CompilerServices;
 using DrawEngine.Renderer.BasicStructures;
 using DrawEngine.Renderer.Filters;
 using DrawEngine.Renderer.Lights;
@@ -87,7 +88,7 @@ namespace DrawEngine.Renderer.Shaders {
                     return -.10 * PerlinNoiseFilter.Turbulence(x, y, z, w, 1);
             }
         }
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override RGBColor Shade(Ray ray, Intersection intersection) {
             Material material = intersection.HitPrimitive.Material;
             RGBColor color = this.Scene.IAmb * material.KAmb; //Contribuicao ambiental                                  

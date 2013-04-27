@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using DrawEngine.Renderer.BasicStructures;
 
 namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration {
@@ -29,6 +30,5 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration {
 
         #endregion
 
-        public abstract override void Optimize();
     }
 }

@@ -9,7 +9,7 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DrawEngine.SharpTracingUI</RootNamespace>
-    <AssemblyName>DrawEngine.SharpTracingUI</AssemblyName>
+    <AssemblyName>SharpTracing</AssemblyName>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
@@ -73,14 +73,37 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ICSharpCode.NRefactory, Version=3.0.0.3437, Culture=neutral, PublicKeyToken=efe927acf176eea2, processorArchitecture=MSIL" />
+    <Reference Include="ICSharpCode.NRefactory, Version=5.0.0.0, Culture=neutral, PublicKeyToken=d4bfe873e7598c49, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ICSharpCode.NRefactory.5.3.0\lib\Net40\ICSharpCode.NRefactory.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.NRefactory.CSharp">
+      <HintPath>..\packages\ICSharpCode.NRefactory.5.3.0\lib\Net40\ICSharpCode.NRefactory.CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.NRefactory.Xml">
+      <HintPath>..\packages\ICSharpCode.NRefactory.5.3.0\lib\Net40\ICSharpCode.NRefactory.Xml.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Mdb">
+      <HintPath>..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.Mdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Pdb">
+      <HintPath>..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.Pdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Rocks">
+      <HintPath>..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.Rocks.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data" />
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
     <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=2.7.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\DockPanelSuite.2.7.0.0\lib\net40\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
@@ -104,6 +127,15 @@
     </Compile>
     <Compile Include="Components\FrameView.designer.cs">
       <DependentUpon>FrameView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TiledPictureViewControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\TiledPictureViewControl.Designer.cs">
+      <DependentUpon>TiledPictureViewControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ToolStripMaskedTextBox.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="DocumentWindow.cs">
       <SubType>Form</SubType>
@@ -142,6 +174,9 @@
     <EmbeddedResource Include="Components\FrameView.resx">
       <DependentUpon>FrameView.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\TiledPictureViewControl.resx">
+      <DependentUpon>TiledPictureViewControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DocumentWindow.resx">
       <DependentUpon>DocumentWindow.cs</DependentUpon>
@@ -253,6 +288,7 @@
       <DependentUpon>TreeViewSceneWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="UndoEngineImpl.cs" />
+    <Compile Include="Util\EventsExtensions.cs" />
     <Compile Include="Util\NativeMethods.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -447,7 +483,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Alsing.SyntaxBox\Alsing.SyntaxBox.NET.csproj">
-      <Project>{19EF75B2-B414-4EB0-9486-160FAF93E62C}</Project>
+      <Project>{19ef75b2-b414-4eb0-9486-160faf93e62c}</Project>
       <Name>Alsing.SyntaxBox.NET</Name>
     </ProjectReference>
     <ProjectReference Include="..\AviFile\AviFile.csproj">

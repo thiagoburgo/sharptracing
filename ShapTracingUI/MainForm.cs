@@ -248,7 +248,7 @@ namespace DrawEngine.SharpTracingUI {
                 if (this.dockPanel.ActiveDocument is ScriptingForm) {
                     ((ScriptingForm) this.dockPanel.ActiveDocument).Run();
                 } else if (this.dockPanel.ActiveDocument is DocumentWindow) {
-                    ((DocumentWindow) this.dockPanel.ActiveDocument).RenderScene();
+                    ((DocumentWindow) this.dockPanel.ActiveDocument).SetUpAndRenderScene();
                 }
             }
         }

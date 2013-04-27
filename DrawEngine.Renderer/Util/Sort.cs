@@ -69,10 +69,9 @@ namespace DrawEngine.Renderer.Util {
         #region InsertionSort
 
         public static void InsertionSort<T>(this T[] a) where T : IComparable<T> {
-            int i;
             int j;
             T val;
-            for (i = 1; i < a.Length; i++) {
+            for (int i = 1; i < a.Length; i++) {
                 val = a[i];
                 j = i;
                 while ((j > 0) && (a[j - 1].CompareTo(val) > 0)) {

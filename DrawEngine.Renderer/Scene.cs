@@ -181,12 +181,6 @@ namespace DrawEngine.Renderer {
         }
 
         [XmlIgnore, Category("Viewer")]
-        public Shader Shader {
-            get { return this.shader; }
-            set { this.shader = value; }
-        }
-
-        [XmlIgnore, Category("Viewer")]
         public RenderStrategy RenderStrategy {
             get { return this.renderStrategy; }
             set { this.renderStrategy = value; }

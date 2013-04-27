@@ -1,5 +1,5 @@
 ﻿namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration {
-    public interface IAccelerationStructure<T> {
+    public interface IAccelerationStructure {
         void Optimize();
     }
 }

@@ -19,7 +19,6 @@ using DrawEngine.Renderer.Shaders;
 namespace DrawEngine.Renderer.Materials {
     [Serializable]
     public class CookTorranceMaterial : Material {
-        private readonly CookTorranceShader shader = new CookTorranceShader();
         private float roughness;
 
         public CookTorranceMaterial() : base() {
@@ -51,8 +50,7 @@ namespace DrawEngine.Renderer.Materials {
         }
 
         public override Shader CreateShader(Scene scene) {
-            this.shader.Scene = scene;
-            return this.shader;
+            return new CookTorranceShader(scene);
         }
     }
 }
