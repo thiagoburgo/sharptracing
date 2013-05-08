@@ -113,7 +113,7 @@ namespace DrawEngine.Renderer.RenderObjects {
                 return false;
             }
             float t = -(this.normal * ray.Origin + this.d) / NRd;
-            if (t < 0.000001f) {
+            if (t < MathUtil.Epsilon) {
                 return false;
             }
             intersect.Normal = this.normal;

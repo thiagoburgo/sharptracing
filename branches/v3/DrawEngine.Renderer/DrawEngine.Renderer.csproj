@@ -132,6 +132,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\FixedSizedQueue.cs" />
+    <Compile Include="Materials\ProceduralMaterial.cs" />
     <Compile Include="Mathematics\Algebra\Design\VectorOrPointTypeConverter.cs" />
     <Compile Include="Mathematics\Algebra\MathUtil.cs" />
     <Compile Include="Mathematics\Algebra\UVCoordinate.cs" />
@@ -181,6 +182,9 @@
     <Compile Include="Materials\Design\MaterialTypeEditor.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Samplers\HammersleySampler.cs" />
+    <Compile Include="Samplers\JitteredSampler.cs" />
+    <Compile Include="Util\RandomUtil.cs" />
     <Compile Include="Util\TiledBitmap.cs" />
     <None Include="Migrated rules for DrawEngine.Renderer.ruleset" />
     <None Include="PhotonMapping\PhotonMap.cs__" />
@@ -493,6 +497,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Samplers\Design\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

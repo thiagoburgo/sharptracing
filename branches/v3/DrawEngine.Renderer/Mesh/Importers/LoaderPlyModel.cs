@@ -303,7 +303,6 @@ namespace DrawEngine.Renderer.Importers {
 
 
             Point3D[] vertices = new Point3D[header.Elements["vertex"].Count];
-            ;
             PointerToVertex[] pointersToVertex = new PointerToVertex[header.Elements["face"].Count];
             //int headerLength = header.Count + 1;
             //while (sr.ReadLine().ToLower() != "end_header") { } //Pass header...
@@ -398,7 +397,6 @@ namespace DrawEngine.Renderer.Importers {
 
         private void ParserBinary(PlyObjectHeader header, BinaryReader ebr) {
             Point3D[] vertices = new Point3D[header.Elements["vertex"].Count];
-            ;
             PointerToVertex[] pointersToVertex = new PointerToVertex[header.Elements["face"].Count];
             for (int i = 0; i < header.Elements.Count; i++) {
                 ElementDescription element = header.Elements[i];
