@@ -12,10 +12,9 @@
  */
 
 using System;
-
 namespace DrawEngine.Renderer.Mathematics.Algebra {
     public static class MathUtil {
-        private const double Epsilon = 1.0e-7;
+        public const double Epsilon = 0.5e-5;
 
         public static bool IsEqual(this double x, double y) {
             return (x - y).NearZero();

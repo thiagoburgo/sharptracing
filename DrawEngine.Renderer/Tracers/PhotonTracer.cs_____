@@ -81,10 +81,10 @@ namespace DrawEngine.Renderer.Tracers
             //float resY = this.scene.DefaultCamera.ResY; //g.VisibleClipBounds.Height;
             //float x, y;
             //int iterations = 0;
-            //RGBColor[] colors = new RGBColor[this.scene.Sampler.SamplesPerPixel + 1];
+            //RGBColor[] colors = new RGBColor[this.scene.Sampler.NumberOfSamples + 1];
             //int pCol = 0, pRow = 0, pIteration = 1, pMax = 2;
             //SolidBrush brush = new SolidBrush(Color.Black);
-            //float resTotal = resX * resY * this.scene.Sampler.SamplesPerPixel;
+            //float resTotal = resX * resY * this.scene.Sampler.NumberOfSamples;
             //while (iterations <= resTotal)
             //{
             //    //Render Pixels Out of Order With Increasing Resolution: 2x2, 4x4, 16x16... 512x512
@@ -107,7 +107,7 @@ namespace DrawEngine.Renderer.Tracers
             //    {
             //        iterations++;
             //        Ray ray;
-            //        if (this.scene.Sampler.SamplesPerPixel > 1)
+            //        if (this.scene.Sampler.NumberOfSamples > 1)
             //        {
             //            int i = 0;
             //            foreach (Point2D sample in this.scene.Sampler.GenerateSamples(x, y))
@@ -133,11 +133,11 @@ namespace DrawEngine.Renderer.Tracers
             //float resX = this.scene.DefaultCamera.ResX; //g.VisibleClipBounds.Width; 
             //float resY = this.scene.DefaultCamera.ResY; //g.VisibleClipBounds.Height;
             //SolidBrush brush = new SolidBrush(Color.Black);
-            //RGBColor[] colors = new RGBColor[this.scene.Sampler.SamplesPerPixel];
+            //RGBColor[] colors = new RGBColor[this.scene.Sampler.NumberOfSamples];
             //for(int y = 0; y < resY; y++) {
             //    for(int x = 0; x < resX; x++) {
             //        Ray ray;
-            //        if(this.scene.Sampler.SamplesPerPixel > 1) {
+            //        if(this.scene.Sampler.NumberOfSamples > 1) {
             //            int i = 0;
             //            foreach(Point2D sample in this.scene.Sampler.GenerateSamples(x, y)) {
             //                ray = this.scene.DefaultCamera.CreateRayFromScreen(sample.X, sample.Y);

@@ -82,7 +82,7 @@ namespace DrawEngine.Renderer.Mesh {
             det = -(ray.Direction * normalNonNormalized);
 #if TEST_CULL
     /* define TEST_CULL if culling is desired */
-            if (det < 0.000001f) return false;
+            if (det < MathUtil.Epsilon) return false;
 
             /* calculate vector from ray origin to this.vertex1 */
             vect0 = this.Vertex1.Position - ray.Origin;
@@ -116,7 +116,7 @@ namespace DrawEngine.Renderer.Mesh {
             /* the non-culling branch */
 
             /* if determinant is near zero, ray is parallel to the plane of triangle */
-            if (det > -0.000001f && det < 0.000001f) {
+            if (det.NearZero()) {
                 return false;
             }
 
@@ -184,7 +184,6 @@ namespace DrawEngine.Renderer.Mesh {
         }
 
         public bool IsOverlap(BoundBox bb) {
-            float d, fex, fey, fez;
             v0 = (this.Vertex1.Position - bb.Center);
             v1 = (this.Vertex2.Position - bb.Center);
             v2 = (this.Vertex3.Position - bb.Center);
@@ -194,9 +193,9 @@ namespace DrawEngine.Renderer.Mesh {
             //e0 = this.Edge1;
             //e1 = this.Edge3;
             //e2 = this.Edge2;
-            fex = Math.Abs(e0.X);
-            fey = Math.Abs(e0.Y);
-            fez = Math.Abs(e0.Z);
+            float fex = Math.Abs(e0.X);
+            float fey = Math.Abs(e0.Y);
+            float fez = Math.Abs(e0.Z);
             if (!AXISTEST_X01(e0.Z, e0.Y, fez, fey, bb.HalfVector)) {
                 return false;
             }
@@ -247,7 +246,7 @@ namespace DrawEngine.Renderer.Mesh {
             }
             /* test if the box intersects the plane of the triangle */
             //normal = (e0 ^ e1);
-            d = -this.Normal * v0;
+            float d = -this.Normal * v0;
             return PlaneBoxOverlap(this.Normal, bb.HalfVector, d);
         }
 

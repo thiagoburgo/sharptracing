@@ -258,17 +258,17 @@ namespace DrawEngine.Renderer.Mathematics.Algebra
             float len = this.Length;
             if (!len.IsEqual(1.0f))
             {
-                if (len.NearZero())
+                //if (len.NearZero())
+                //{
+                //    this.X = 0.0f;
+                //    this.Y = 0.0f;
+                //    this.Z = 0.0f;
+                //}
+                //else
                 {
-                    this.X = 0.0f;
-                    this.Y = 0.0f;
-                    this.Z = 0.0f;
-                }
-                else
-                {
-                    this.X = this.X * 1 / len;
-                    this.Y = this.Y * 1 / len;
-                    this.Z = this.Z * 1 / len;
+                    this.X /= len;
+                    this.Y /= len;
+                    this.Z /= len;
                 }
             }
         }

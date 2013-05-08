@@ -188,7 +188,7 @@ namespace DrawEngine.Renderer.RenderObjects {
         //    }
         //    float tMin = (ray.Origin * this.normal) - this.coefQuadrangle;
         //    tMin = -tMin * 1.0f / NRd;
-        //    if(tMin < 0.0001f) {
+        //    if(tMin < MathUtil.Epsilon) {
         //        return false;
         //    }
         //    Point3D hitPoint = ray.Origin + (tMin * ray.Direction);

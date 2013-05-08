@@ -252,7 +252,7 @@ namespace DrawEngine.Renderer.RenderObjects {
             //if (t < 100)
             //    return false;
             // return 1;
-            if (t >= 0.000001) 
+            if (t >= MathUtil.Epsilon) 
             {
                 intersect.Normal = this.normal;
                 intersect.TMin = t;
@@ -314,7 +314,7 @@ namespace DrawEngine.Renderer.RenderObjects {
 
         //    pvec = ray.Direction ^ edge2;
         //    det = edge1 * pvec;
-        //    if (det > -0.000001f && det < 0.000001f)
+        //    if (det.NearZero())
         //        return false;
 
         //    inv_det = 1.0f / det;
@@ -390,7 +390,7 @@ namespace DrawEngine.Renderer.RenderObjects {
         //                   v *= inv_det;
         //#else
         //            /* the non-culling branch */
-        //            if (det > -0.000001f && det < 0.000001f)
+        //            if (det.NearZero())
         //            {
         //                return false;
         //            }
