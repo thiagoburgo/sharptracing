@@ -1,29 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
-using DrawEngine.Renderer.Util.IO;
-using DrawEngine.Renderer.Mathematics.Algebra;
 using System.Globalization;
+using System.IO;
+using System.Linq;
+using DrawEngine.Renderer.Mathematics.Algebra;
 using DrawEngine.Renderer.RenderObjects;
+using DrawEngine.Renderer.Util.IO;
 
-namespace DrawEngine.Renderer.Mesh.Importers
-{
-    public enum ElementMesh
-    {
+namespace DrawEngine.Renderer.Mesh.Importers {
+    public enum ElementMesh {
         Vertex,
         VextexIndice,
         VertexNormal
     }
-    public enum PlyFormat
-    {
+
+    public enum PlyFormat {
         ascii,
         binary_big_endian,
         binary_little_endian
     }
-    public enum PropertyType
-    {
+
+    public enum PropertyType {
         @char,
         uchar,
         @short,
@@ -43,128 +40,124 @@ namespace DrawEngine.Renderer.Mesh.Importers
         float64,
         list
     }
-    public class NamedList<T> : List<T> where T : IName
-    {
-        public NamedList() : base() { }
-        public NamedList(int capacity) : base(capacity) { }
-        public NamedList(IEnumerable<T> collection) : base(collection) { }
-        public T this[string name]
-        {
+
+    public class NamedList<T> : List<T> where T : IName {
+        public NamedList() : base() {}
+        public NamedList(int capacity) : base(capacity) {}
+        public NamedList(IEnumerable<T> collection) : base(collection) {}
+
+        public T this[string name] {
             get { return (from element in this where element.Name == name select element).First(); }
         }
     }
-    public interface IName
-    {
+
+    public interface IName {
         String Name { get; set; }
     }
-    public class ElementDescription : IName
-    {
-        public ElementDescription(String name, int count)
-        {
+
+    public class ElementDescription : IName {
+        public ElementDescription(String name, int count) {
             this.Name = name;
             this.Count = count;
             this.Properties = new NamedList<PropertyDescription>();
         }
+
         public string Name { get; set; }
         public int Count { get; set; }
         public NamedList<PropertyDescription> Properties { get; set; }
     }
-    public class PropertyDescription : IName
-    {
-        public PropertyDescription(PropertyType type, String name)
-        {
+
+    public class PropertyDescription : IName {
+        public PropertyDescription(PropertyType type, String name) {
             this.Type = type;
             this.Name = name;
         }
+
         public PropertyType Type { get; set; }
         public string Name { get; set; }
+
         /// <summary>
         /// Only if Type is a list
         /// </summary>
-        public bool IsList { get { return Type == PropertyType.list; } }
+        public bool IsList {
+            get { return Type == PropertyType.list; }
+        }
+
         /// <summary>
         /// Only if Type is a list
         /// </summary>
         public PropertyType CountType { get; set; }
+
         /// <summary>
         /// Only if Type is a list
         /// </summary>
         public PropertyType TypeOfList { get; set; }
     }
-    public class PlyObjectHeader
-    {
-        public PlyObjectHeader()
-        {
+
+    public class PlyObjectHeader {
+        public PlyObjectHeader() {
             this.Comments = new List<string>();
             this.Elements = new NamedList<ElementDescription>();
         }
+
         public PlyFormat Format { get; set; }
         public float Vesion { get; set; }
         public List<String> Comments { get; set; }
         public NamedList<ElementDescription> Elements { get; set; }
-
     }
-    public static class Extensions
-    {
-        public static string ReadLine(this Stream sr)
-        {
+
+    public static class Extensions {
+        public static string ReadLine(this Stream sr) {
             int byteCount;
             return ReadLine(sr, out byteCount);
         }
-        public static string ReadLine(this Stream sr, out int byteCount)
-        {
+
+        public static string ReadLine(this Stream sr, out int byteCount) {
             String line = null;
             byteCount = 0;
             int c;
-            while ((c = sr.ReadByte()) != -1)
-            {
+            while ((c = sr.ReadByte()) != -1) {
                 byteCount++;
-                if (c == 10 || c == 13) { break; }
-                line += ((char)c);
+                if (c == 10 || c == 13) {
+                    break;
+                }
+                line += ((char) c);
             }
             long posB = sr.Position;
             c = sr.ReadByte();
-            if (c == 10 || c == 13)
-            {
+            if (c == 10 || c == 13) {
                 byteCount++;
-            }
-            else
-            {
+            } else {
                 sr.Position = posB;
             }
             return line;
         }
     }
-    public class PlyMeshImporter : AbstractMeshImporter
-    {
+
+    public class PlyMeshImporter : AbstractMeshImporter {
         public override event MeshModel.ElementLoadEventHandler OnElementLoaded;
 
-        public override List<String> RegisteredExtensions
-        {
-            get { return new List<String> { ".ply" }; }
+        public override List<String> RegisteredExtensions {
+            get { return new List<String> {".ply"}; }
         }
-        public override void Import(ref MeshModel mesh)
-        {
-            using (BufferedStream sr = new BufferedStream(File.OpenRead(mesh.FilePath)))
-            {
+
+        public override void Import(ref MeshModel mesh) {
+            using (BufferedStream sr = new BufferedStream(File.OpenRead(mesh.FilePath))) {
                 int byteCount;
                 PlyObjectHeader headerObj = this.GetPlyObjectHeader(sr, out byteCount);
 
                 sr.Position = byteCount;
-                switch (headerObj.Format)
-                {
+                switch (headerObj.Format) {
                     case PlyFormat.ascii:
                         this.ParserASCII(headerObj, sr, ref mesh);
                         break;
                     case PlyFormat.binary_big_endian:
-                        using (EndianessBinaryReader br = new EndianessBinaryReader(sr, Endianess.BigEndian))
-                        {
+                        using (EndianessBinaryReader br = new EndianessBinaryReader(sr, Endianess.BigEndian)) {
                             this.ParserBinary(headerObj, br, ref mesh);
                         }
                         break;
                     case PlyFormat.binary_little_endian:
-                        using (EndianessBinaryReader br = new EndianessBinaryReader(sr, Endianess.LittleEndian))
-                        {
+                        using (EndianessBinaryReader br = new EndianessBinaryReader(sr, Endianess.LittleEndian)) {
                             this.ParserBinary(headerObj, br, ref mesh);
                         }
                         break;
@@ -175,27 +168,23 @@ namespace DrawEngine.Renderer.Mesh.Importers
             }
         }
 
-        private PlyObjectHeader GetPlyObjectHeader(Stream sr, out int byteCount)
-        {
+        private PlyObjectHeader GetPlyObjectHeader(Stream sr, out int byteCount) {
             PlyObjectHeader headerObj = new PlyObjectHeader();
             int lineByteCount;
             string line = Extensions.ReadLine(sr, out lineByteCount);
             byteCount = lineByteCount;
-            if (line.ToLower() != "ply")
-            {
+            if (line.ToLower() != "ply") {
                 throw new ArgumentException("Invalid file format. PLY indentifier expected in header file.");
             }
             String[] lineSplits;
-            while (line.ToLower() != "end_header")
-            {
+            while (line.ToLower() != "end_header") {
                 line = Extensions.ReadLine(sr, out lineByteCount);
                 byteCount += lineByteCount;
-                lineSplits = line.Trim().Split(new char[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
-                switch (lineSplits[0])
-                {
+                lineSplits = line.Trim().Split(new char[] {' '}, 2, StringSplitOptions.RemoveEmptyEntries);
+                switch (lineSplits[0]) {
                     case "format":
                         lineSplits = lineSplits[1].Split(' ');
-                        headerObj.Format = (PlyFormat)Enum.Parse(typeof(PlyFormat), lineSplits[0]);
+                        headerObj.Format = (PlyFormat) Enum.Parse(typeof (PlyFormat), lineSplits[0]);
                         NumberFormatInfo nfi = new NumberFormatInfo();
                         nfi.NumberDecimalSeparator = ".";
                         nfi.NumberGroupSeparator = ",";
@@ -206,19 +195,18 @@ namespace DrawEngine.Renderer.Mesh.Importers
                         break;
                     case "element":
                         lineSplits = lineSplits[1].Split(' ');
-                        ElementDescription element =
-                            new ElementDescription(lineSplits[0].ToLower(), Convert.ToInt32(lineSplits[1]));
+                        ElementDescription element = new ElementDescription(lineSplits[0].ToLower(),
+                                                                            Convert.ToInt32(lineSplits[1]));
                         headerObj.Elements.Add(element);
                         break;
                     case "property":
                         lineSplits = lineSplits[1].Split(' ');
-                        PropertyType pType = (PropertyType)Enum.Parse(typeof(PropertyType), lineSplits[0]);
+                        PropertyType pType = (PropertyType) Enum.Parse(typeof (PropertyType), lineSplits[0]);
                         String pName = lineSplits[lineSplits.Length - 1];
                         PropertyDescription property = new PropertyDescription(pType, pName);
-                        if (pType == PropertyType.list)
-                        {
-                            property.CountType = (PropertyType)Enum.Parse(typeof(PropertyType), lineSplits[1]);
-                            property.TypeOfList = (PropertyType)Enum.Parse(typeof(PropertyType), lineSplits[2]);
+                        if (pType == PropertyType.list) {
+                            property.CountType = (PropertyType) Enum.Parse(typeof (PropertyType), lineSplits[1]);
+                            property.TypeOfList = (PropertyType) Enum.Parse(typeof (PropertyType), lineSplits[2]);
                         }
                         headerObj.Elements[headerObj.Elements.Count - 1].Properties.Add(property);
                         break;
@@ -226,9 +214,8 @@ namespace DrawEngine.Renderer.Mesh.Importers
             }
             return headerObj;
         }
-        private void ParserASCII(PlyObjectHeader header, Stream sr, ref MeshModel mesh)
-        {
 
+        private void ParserASCII(PlyObjectHeader header, Stream sr, ref MeshModel mesh) {
             MeshVertex[] vertices = new MeshVertex[header.Elements["vertex"].Count];
             int[] indices = new int[header.Elements["face"].Count * 3];
             NumberFormatInfo nfi = new NumberFormatInfo();
@@ -238,20 +225,17 @@ namespace DrawEngine.Renderer.Mesh.Importers
             String[] str;
             //for number of vertices readed in header do...
             BoundBox boundBox = new BoundBox();
-            for (int i = 0; i < vertices.Length; i++)
-            {
-                str = sr.ReadLine().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            for (int i = 0; i < vertices.Length; i++) {
+                str = sr.ReadLine().Split(new char[] {' '}, StringSplitOptions.RemoveEmptyEntries);
 
 
-                vertices[i].Position = new Point3D(float.Parse(str[0], nfi),
-                                                   float.Parse(str[1], nfi),
+                vertices[i].Position = new Point3D(float.Parse(str[0], nfi), float.Parse(str[1], nfi),
                                                    float.Parse(str[2], nfi));
                 //Adjusting BoundBox...
                 boundBox.Include(vertices[i].Position);
                 //Reporting progress
-                int percent = (int)(((float)i / vertices.Length) * 100.0f);
-                if ((percent % 20) == 0)
-                {
+                int percent = (int) (((float) i / vertices.Length) * 100.0f);
+                if ((percent % 20) == 0) {
                     this.OnElementLoaded(percent, ElementMesh.Vertex);
                 }
             }
@@ -260,9 +244,8 @@ namespace DrawEngine.Renderer.Mesh.Importers
             mesh.Triangles = new MeshTriangle[header.Elements["face"].Count];
             mesh.BoundBox = boundBox;
 
-            for (int i = 0, ptr = 0; i < mesh.Triangles.Length; i++)
-            {
-                str = sr.ReadLine().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            for (int i = 0, ptr = 0; i < mesh.Triangles.Length; i++) {
+                str = sr.ReadLine().Split(new char[] {' '}, StringSplitOptions.RemoveEmptyEntries);
 
                 indices[ptr++] = Int32.Parse(str[1], nfi);
                 mesh.Triangles[i].Vertex1 = vertices[indices[ptr - 1]];
@@ -271,9 +254,8 @@ namespace DrawEngine.Renderer.Mesh.Importers
                 indices[ptr++] = Int32.Parse(str[3], nfi);
                 mesh.Triangles[i].Vertex3 = vertices[indices[ptr - 1]];
 
-                int percent = (int)(((float)i / indices.Length) * 100.0f);
-                if ((percent % 20) == 0)
-                {
+                int percent = (int) (((float) i / indices.Length) * 100.0f);
+                if ((percent % 20) == 0) {
                     this.OnElementLoaded(percent, ElementMesh.VextexIndice);
                 }
             }
@@ -286,8 +268,8 @@ namespace DrawEngine.Renderer.Mesh.Importers
             GC.Collect();
             GC.WaitForPendingFinalizers();
         }
-        private MeshModel ParserBinary(PlyObjectHeader header, BinaryReader ebr, ref MeshModel mesh)
-        {
+
+        private MeshModel ParserBinary(PlyObjectHeader header, BinaryReader ebr, ref MeshModel mesh) {
             //MeshModel mesh = new MeshModel(header.Elements["face"].Count * 3, header.Elements["vertex"].Count);
             //for (int i = 0; i < header.Elements.Count; i++)
             //{
@@ -449,27 +431,24 @@ namespace DrawEngine.Renderer.Mesh.Importers
             //return mesh;
             return null;
         }
-        protected void ProcessNormalsPerVertex(int[] indices, ref MeshModel mesh, int verticesCount)
-        {
+
+        protected void ProcessNormalsPerVertex(int[] indices, ref MeshModel mesh, int verticesCount) {
             Vector3D[] normalsPerVertex = new Vector3D[verticesCount];
             int ptr = 0;
-            for (int i = 0; i < mesh.Triangles.Length; i++)
-            {
+            for (int i = 0; i < mesh.Triangles.Length; i++) {
                 normalsPerVertex[indices[ptr++]] += mesh.Triangles[i].Normal;
                 normalsPerVertex[indices[ptr++]] += mesh.Triangles[i].Normal;
                 normalsPerVertex[indices[ptr++]] += mesh.Triangles[i].Normal;
 
-                int percent = (int)(((float)i / mesh.Triangles.Length) * 100.0f);
+                int percent = (int) (((float) i / mesh.Triangles.Length) * 100.0f);
 
 
-                if ((percent % 20) == 0)
-                {
+                if ((percent % 20) == 0) {
                     this.OnElementLoaded(percent, ElementMesh.VertexNormal);
                 }
             }
             ptr = 0;
-            for (int i = 0; i < mesh.Triangles.Length; i++)
-            {
+            for (int i = 0; i < mesh.Triangles.Length; i++) {
                 mesh.Triangles[i].Vertex1.Normal = normalsPerVertex[indices[ptr++]];
                 mesh.Triangles[i].Vertex1.Normal.Normalize();
 
@@ -479,9 +458,8 @@ namespace DrawEngine.Renderer.Mesh.Importers
                 mesh.Triangles[i].Vertex3.Normal = normalsPerVertex[indices[ptr++]];
                 mesh.Triangles[i].Vertex3.Normal.Normalize();
 
-                int percent = (int)(((float)i / mesh.Triangles.Length) * 100.0f);
-                if ((percent % 20) == 0)
-                {
+                int percent = (int) (((float) i / mesh.Triangles.Length) * 100.0f);
+                if ((percent % 20) == 0) {
                     this.OnElementLoaded(percent / 2 + 50, ElementMesh.VertexNormal);
                 }
             }
@@ -590,8 +568,5 @@ namespace DrawEngine.Renderer.Mesh.Importers
         //        Vertices[i] = v;
         //    }
         //}
-
-
-
     }
 }

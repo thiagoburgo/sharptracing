@@ -1,142 +1,123 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using DrawEngine.Renderer.RenderObjects;
-using DrawEngine.Renderer.Algebra;
-using DrawEngine.Renderer.SpatialSubdivision.Acceleration;
-using DrawEngine.Renderer.Importers;
-using System.Xml.Serialization;
 using System.ComponentModel;
-using DrawEngine.Renderer.RenderObjects.Design;
 using System.Drawing.Design;
-using DrawEngine.Renderer.Mathematics.Algebra;
-using DrawEngine.Renderer.BasicStructures;
 using System.IO;
+using DrawEngine.Renderer.BasicStructures;
+using DrawEngine.Renderer.Mathematics.Algebra;
 using DrawEngine.Renderer.Mesh.Importers;
-using System.Runtime.InteropServices;
+using DrawEngine.Renderer.RenderObjects;
+using DrawEngine.Renderer.RenderObjects.Design;
+using DrawEngine.Renderer.SpatialSubdivision.Acceleration;
 
-namespace DrawEngine.Renderer.Mesh
-{
-    public enum ShadeType
-    {
+namespace DrawEngine.Renderer.Mesh {
+    public enum ShadeType {
         Phong,
         Flat
     }
 
     [Serializable]
-    public class MeshModel : Primitive, IDisposable, ITransformable3D
-    {
+    public class MeshModel : Primitive, IDisposable, ITransformable3D {
         public MeshTriangle[] Triangles;
         private IntersectableAccelerationStructure<MeshTriangle> accelerationManager;
 
         private ShadeType shadeType;
         private string filePath;
+
         #region Delegates
-        public delegate void ElementLoadEventHandler(int percentageOfTotal, DrawEngine.Renderer.Mesh.Importers.ElementMesh element);
+
+        public delegate void ElementLoadEventHandler(int percentageOfTotal, ElementMesh element);
+
         #endregion
-        public MeshModel(){}
-        public MeshModel(int numTriangles)
-        {
+
+        public MeshModel() {}
+
+        public MeshModel(int numTriangles) {
             Triangles = new MeshTriangle[numTriangles];
         }
-        public IntersectableAccelerationStructure<MeshTriangle> AccelerationManager
-        {
+
+        public IntersectableAccelerationStructure<MeshTriangle> AccelerationManager {
             get { return accelerationManager; }
             set { accelerationManager = value; }
         }
-        [Editor(typeof(ModelFileEditor), typeof(UITypeEditor)), RefreshProperties(RefreshProperties.All)]
+
+        [Editor(typeof (ModelFileEditor), typeof (UITypeEditor)), RefreshProperties(RefreshProperties.All)]
         public String FilePath {
-            get {
-                return this.filePath;
-            }
+            get { return this.filePath; }
             set {
                 this.filePath = value;
-                this.Name = System.IO.Path.GetFileNameWithoutExtension(value);
+                this.Name = Path.GetFileNameWithoutExtension(value);
             }
         }
-        
+
         [DefaultValue(ShadeType.Phong)]
-        public ShadeType ShadeType
-        {
+        public ShadeType ShadeType {
             get { return this.shadeType; }
             set { this.shadeType = value; }
         }
+
         #region IDisposable Members
-        public void Dispose()
-        {
-            if (this.Triangles != null)
-            {  
+
+        public void Dispose() {
+            if (this.Triangles != null) {
                 this.Triangles = null;
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
             }
         }
+
         #endregion
 
         #region ITransformable3D Members
-        public void Rotate(float angle, Vector3D axis)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-        public void RotateAxisX(float angle)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-        public void RotateAxisY(float angle)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-        public void RotateAxisZ(float angle)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-        public void Scale(float factor)
-        {
 
-            if (this.accelerationManager == null)
-            {
-                foreach (MeshTriangle tri in this.Triangles)
-                {
+        public void Rotate(float angle, Vector3D axis) {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void RotateAxisX(float angle) {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void RotateAxisY(float angle) {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void RotateAxisZ(float angle) {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void Scale(float factor) {
+            if (this.accelerationManager == null) {
+                foreach (MeshTriangle tri in this.Triangles) {
                     tri.Scale(factor);
                 }
                 this.boundBox.Scale(factor);
+            } else {
+                ((ITransformable3D) this.accelerationManager).Scale(factor);
             }
-            else
-            {
-                ((ITransformable3D)this.accelerationManager).Scale(factor);
-            }
-            
         }
-        public void Translate(float tx, float ty, float tz)
-        {   
-            if (this.accelerationManager == null)
-            {
-                foreach (MeshTriangle tri in Triangles)
-                {
+
+        public void Translate(float tx, float ty, float tz) {
+            if (this.accelerationManager == null) {
+                foreach (MeshTriangle tri in Triangles) {
                     tri.Translate(tx, ty, tz);
                 }
                 this.boundBox.Translate(tx, ty, tz);
-            }
-            else
-            {
-                ((ITransformable3D)this.accelerationManager).Translate(tx, ty, tz);
+            } else {
+                ((ITransformable3D) this.accelerationManager).Translate(tx, ty, tz);
             }
         }
-        public void Translate(Vector3D translateVector)
-        {
+
+        public void Translate(Vector3D translateVector) {
             this.Translate(translateVector.X, translateVector.Y, translateVector.Z);
         }
+
         #endregion
 
-        public override bool FindIntersection(Ray ray, out Intersection intersect)
-        {
+        public override bool FindIntersection(Ray ray, out Intersection intersect) {
             intersect = new Intersection();
-            if (this.accelerationManager != null && this.accelerationManager.FindIntersection(ray, out intersect))
-            {
-                if (this.shadeType == ShadeType.Phong)
-                {
-                    MeshTriangle t = (MeshTriangle)intersect.HitPrimitive;
+            if (this.accelerationManager != null && this.accelerationManager.FindIntersection(ray, out intersect)) {
+                if (this.shadeType == ShadeType.Phong) {
+                    MeshTriangle t = (MeshTriangle) intersect.HitPrimitive;
                     BarycentricCoordinate bary = t.CurrentBarycentricCoordinate;
                     Vector3D v1 = bary.Alpha * t.Vertex1.Normal;
                     Vector3D v2 = bary.Beta * t.Vertex2.Normal;
@@ -144,8 +125,7 @@ namespace DrawEngine.Renderer.Mesh
                     intersect.Normal = (v1 + v2 + v3);
                     intersect.Normal.Normalize();
                 }
-                if (intersect.Normal * ray.Direction > 0)
-                {
+                if (intersect.Normal * ray.Direction > 0) {
                     intersect.Normal.Flip();
                 }
                 intersect.HitPrimitive = this;
@@ -154,8 +134,8 @@ namespace DrawEngine.Renderer.Mesh
             }
             return false;
         }
-        public override Vector3D NormalOnPoint(Point3D pointInPrimitive)
-        {
+
+        public override Vector3D NormalOnPoint(Point3D pointInPrimitive) {
             //foreach (Triangle tri in this.triangles)
             //{
             //    if (tri.PointInTriangle(pointInPrimitive))
@@ -232,12 +212,11 @@ namespace DrawEngine.Renderer.Mesh
         //        this.OnElementLoaded(percentageOfTotal, element);
         //    }
         //}
-        public override bool IsInside(Point3D point)
-        {
+        public override bool IsInside(Point3D point) {
             throw new NotImplementedException();
         }
-        public override bool IsOverlap(BoundBox boundBox)
-        {
+
+        public override bool IsOverlap(BoundBox boundBox) {
             throw new NotImplementedException();
         }
     }
