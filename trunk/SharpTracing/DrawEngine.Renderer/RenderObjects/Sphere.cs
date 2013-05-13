@@ -16,14 +16,17 @@ using System.ComponentModel;
 using DrawEngine.Renderer.BasicStructures;
 using DrawEngine.Renderer.Mathematics.Algebra;
 
-namespace DrawEngine.Renderer.RenderObjects {
+namespace DrawEngine.Renderer.RenderObjects
+{
     [Serializable]
-    public class Sphere : Primitive, ITransformable3D {
+    public class Sphere : Primitive, ITransformable3D
+    {
         private float radius;
         private float radius2;
-        public Sphere() : this(20.0f, new Point3D()) {}
+        public Sphere() : this(20.0f, new Point3D()) { }
 
-        public Sphere(float radius, Point3D center) {
+        public Sphere(float radius, Point3D center)
+        {
             this.radius = radius;
             this.radius2 = radius * radius;
             this.center = center;
@@ -84,18 +87,22 @@ namespace DrawEngine.Renderer.RenderObjects {
         //    return hit;
         //}
         [RefreshProperties(RefreshProperties.All)]
-        public float Radius {
+        public float Radius
+        {
             get { return this.radius; }
-            set {
+            set
+            {
                 this.radius = value;
                 this.radius2 = this.radius * this.radius;
                 this.RecalcBoundBox();
             }
         }
 
-        public Point3D Center {
+        public Point3D Center
+        {
             get { return base.center; }
-            set {
+            set
+            {
                 base.center = value;
                 this.RecalcBoundBox();
             }
@@ -103,100 +110,91 @@ namespace DrawEngine.Renderer.RenderObjects {
 
         #region ITransformable3D Members
 
-        public void Rotate(float angle, Vector3D axis) {
+        public void Rotate(float angle, Vector3D axis)
+        {
             this.center.Rotate(angle, axis);
             this.RecalcBoundBox();
         }
 
-        public void RotateAxisX(float angle) {
+        public void RotateAxisX(float angle)
+        {
             this.center.RotateAxisX(angle);
             this.RecalcBoundBox();
         }
 
-        public void RotateAxisY(float angle) {
+        public void RotateAxisY(float angle)
+        {
             this.center.RotateAxisY(angle);
             this.RecalcBoundBox();
         }
 
-        public void RotateAxisZ(float angle) {
+        public void RotateAxisZ(float angle)
+        {
             this.center.RotateAxisZ(angle);
             this.RecalcBoundBox();
         }
 
-        public void Scale(float factor) {
+        public void Scale(float factor)
+        {
             this.radius = this.radius * factor;
             this.radius2 = this.radius * this.radius;
             this.RecalcBoundBox();
         }
 
-        public void Translate(float tx, float ty, float tz) {
+        public void Translate(float tx, float ty, float tz)
+        {
             this.center.Translate(tx, ty, tz);
             this.RecalcBoundBox();
         }
 
-        public void Translate(Vector3D translateVector) {
+        public void Translate(Vector3D translateVector)
+        {
             this.Translate(translateVector.X, translateVector.Y, translateVector.Z);
             this.RecalcBoundBox();
         }
 
         #endregion
 
-        private void RecalcBoundBox() {
+        private void RecalcBoundBox()
+        {
             this.boundBox = new BoundBox((this.center.X - this.radius), (this.center.Y - this.radius),
                                          (this.center.Z - this.radius), (this.center.X + this.radius),
                                          (this.center.Y + this.radius), (this.center.Z + this.radius));
         }
 
-        public override bool FindIntersection(Ray ray, out Intersection intersect) {
+        public override bool FindIntersection(Ray ray, out Intersection intersect)
+        {
             intersect = new Intersection();
-            if (!this.boundBox.Intersect(ray)) {
-                return false;
-            }
-            Vector3D toCenter = this.center - ray.Origin; // Vector view position to the center
-            // D = Distance to pt on view line closest to sphere
-            // v = vector from sphere center to the closest pt on view line
-            // ASq = the distance from v to sphere center squared
-            float D = (ray.Direction * toCenter);
-            Vector3D v = ray.Direction * D - toCenter;
-            float ASq = v.Length;
-            ASq = ASq * ASq;
-            // Ray-line completely misses sphere, or just grazes it.
-            if (ASq >= this.radius2) {
-                return false;
-            }
-            float BSq = this.radius2 - ASq;
-            if (D > 0.0 || D * D > BSq) {
-                // Return the point where view intersects with the outside of the sphere.
-                intersect.TMin = D - (float) Math.Sqrt(BSq);
-                intersect.TMax = D + (float) Math.Sqrt(BSq);
-                intersect.HitFromInSide = false;
-            } else if ((D > 0.0 || D * D < BSq)) {
-                // return the point where view exits the sphere
-                intersect.TMin = D + (float) Math.Sqrt(BSq);
-                intersect.TMax = D - (float) Math.Sqrt(BSq);
-                intersect.HitFromInSide = true;
-            } else {
-                return false;
-            }
-            if (intersect.TMin < 0.01) {
-                return false;
-            }
+            // geometric solution
+            Vector3D L = this.center - ray.Origin;
+            float tca = L * ray.Direction;
+            if (tca < 0) return false;
+            float d2 = L * L - tca * tca;
+            if (d2 > radius2) return false;
+            float thc = (float)Math.Sqrt(radius2 - d2);
+            float t0 = tca - thc;
+            float t1 = tca + thc;
+            intersect.TMin = t0;
+            intersect.TMax = t1;
             intersect.HitPoint = ray.Origin + ray.Direction * intersect.TMin;
             intersect.Normal = intersect.HitPoint - this.center;
             intersect.HitPrimitive = this;
             intersect.Normal.Normalize();
-            if (this.material != null && this.material.IsTexturized) {
+
+            if (this.material != null && this.material.IsTexturized)
+            {
                 double uCoord, vCoord;
                 double theta = Math.Atan2(-intersect.Normal.X, intersect.Normal.Z);
                 double temp = -intersect.Normal.Y;
                 double phi = Math.Acos(temp);
                 uCoord = theta * (1.0 / (Math.PI + Math.PI));
                 vCoord = 1.0 - phi * (1.0 / Math.PI);
-                if (uCoord < 0.0) {
+                if (uCoord < 0.0)
+                {
                     uCoord++;
                 }
-                intersect.CurrentTextureCoordinate.U = (float) uCoord;
-                intersect.CurrentTextureCoordinate.V = (float) vCoord;
+                intersect.CurrentTextureCoordinate.U = (float)uCoord;
+                intersect.CurrentTextureCoordinate.V = (float)vCoord;
                 //int w = this.material.Texture.Width;
                 //int h = this.material.Texture.Height;
                 //this.material.Color = this.material.Texture.GetPixel((int)(w * uCoord), (int)(h * vCoord));
@@ -204,26 +202,31 @@ namespace DrawEngine.Renderer.RenderObjects {
             return true;
         }
 
-        public override string ToString() {
+        public override string ToString()
+        {
             return base.ToString() + "[" + this.Center + "," + " R=" + this.radius + "]";
         }
 
-        public override Vector3D NormalOnPoint(Point3D pointInPrimitive) {
+        public override Vector3D NormalOnPoint(Point3D pointInPrimitive)
+        {
             Vector3D normal = (pointInPrimitive - this.center);
             normal.Normalize();
             return normal;
         }
 
-        public override bool IsInside(Point3D point) {
+        public override bool IsInside(Point3D point)
+        {
             Vector3D hitToCenter = (point - this.center);
             float distanceToCenter = hitToCenter.Length;
-            if (distanceToCenter > this.radius + 0.001f) {
+            if (distanceToCenter > this.radius + 0.001f)
+            {
                 return false;
             }
             return true;
         }
 
-        public override bool IsOverlap(BoundBox boundBox) {
+        public override bool IsOverlap(BoundBox boundBox)
+        {
             throw new NotImplementedException();
         }
     }
