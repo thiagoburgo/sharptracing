@@ -13,13 +13,11 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Alsing.SourceCode
-{
+namespace Alsing.SourceCode {
     /// <summary>
     /// Summary description for TextStyleDesignerDialog.
     /// </summary>
-    public class TextStyleDesignerDialog : Form
-    {
+    public class TextStyleDesignerDialog : Form {
         private readonly TextStyle _Style;
         private readonly TextStyle _TmpStyle;
         private Button btnCancel;
@@ -37,8 +35,7 @@ namespace Alsing.SourceCode
         private Panel panel3;
         private PropertyGrid pgStyles;
 
-        public TextStyleDesignerDialog(TextStyle Style)
-        {
+        public TextStyleDesignerDialog(TextStyle Style) {
             _Style = Style;
             _TmpStyle = (TextStyle) Style.Clone();
 
@@ -58,56 +55,54 @@ namespace Alsing.SourceCode
 
         public static event EventHandler Change;
 
-        protected static void OnChange()
-        {
-            if (Change != null)
+        protected static void OnChange() {
+            if (Change != null) {
                 Change(null, EventArgs.Empty);
+            }
         }
 
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (components != null)
-                {
+        protected override void Dispose(bool disposing) {
+            if (disposing) {
+                if (components != null) {
                     components.Dispose();
                 }
             }
             base.Dispose(disposing);
         }
 
-        private void pgStyles_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
-        {
+        private void pgStyles_PropertyValueChanged(object s, PropertyValueChangedEventArgs e) {
             PreviewStyle();
         }
 
-        private void PreviewStyle()
-        {
+        private void PreviewStyle() {
             TextStyle s = _TmpStyle;
 
             lblPreview.ForeColor = s.ForeColor;
-            if (s.BackColor != Color.Transparent)
+            if (s.BackColor != Color.Transparent) {
                 lblPreview.BackColor = s.BackColor;
-            else
+            } else {
                 lblPreview.BackColor = Color.White;
+            }
 
 
             FontStyle fs = FontStyle.Regular;
-            if (s.Bold)
+            if (s.Bold) {
                 fs |= FontStyle.Bold;
-            if (s.Italic)
+            }
+            if (s.Italic) {
                 fs |= FontStyle.Italic;
-            if (s.Underline)
+            }
+            if (s.Underline) {
                 fs |= FontStyle.Underline;
+            }
 
             lblPreview.Font = new Font("Courier New", 11f, fs);
         }
 
-        private void btnOK_Click(object sender, EventArgs e)
-        {
+        private void btnOK_Click(object sender, EventArgs e) {
             _Style.BackColor = _TmpStyle.BackColor;
             _Style.ForeColor = _TmpStyle.ForeColor;
             _Style.Bold = _TmpStyle.Bold;
@@ -117,8 +112,7 @@ namespace Alsing.SourceCode
             DialogResult = DialogResult.OK;
         }
 
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
+        private void btnCancel_Click(object sender, EventArgs e) {
             DialogResult = DialogResult.Cancel;
         }
 
@@ -130,8 +124,7 @@ namespace Alsing.SourceCode
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
-        private void InitializeComponent()
-        {
+        private void InitializeComponent() {
             this.panel2 = new System.Windows.Forms.Panel();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();

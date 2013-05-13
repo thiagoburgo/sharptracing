@@ -10,8 +10,7 @@
 
 using System.Collections.Generic;
 
-namespace Alsing.Windows.Forms.SyntaxBox
-{
+namespace Alsing.Windows.Forms.SyntaxBox {
     /// <summary>
     /// Collection of KeyboardActions
     /// </summary>

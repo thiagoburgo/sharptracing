@@ -10,19 +10,17 @@
  * Feel free to copy, modify and  give fixes 
  * suggestions. Keep the credits!
  */
- using System;
-using DrawEngine.Renderer.Algebra;
+
+using System;
 using DrawEngine.Renderer.BasicStructures;
 using DrawEngine.Renderer.Mathematics.Algebra;
 
-namespace DrawEngine.Renderer.RenderObjects
-{
+namespace DrawEngine.Renderer.RenderObjects {
     /// <summary>
     /// Ax2 + 2Bxy + 2Cxz + 2Dx + Ey2 +2Fyz +26y + Hz2 + 2Iz +J = 0
     /// </summary>
     [Serializable]
-    public class Quadric : Primitive
-    {
+    public class Quadric : Primitive {
         private float a;
         protected float b;
         protected float c;
@@ -34,8 +32,8 @@ namespace DrawEngine.Renderer.RenderObjects
         protected float i;
         protected float j;
         public Quadric() : this(36.0f, 9.0f, -4.0f, 0.0f, 0.0f, 0f, 0f, 0.0f, 0.0f, -36.0f) {}
-        public Quadric(float a, float b, float c, float d, float e, float f, float g, float h, float i, float j)
-        {
+
+        public Quadric(float a, float b, float c, float d, float e, float f, float g, float h, float i, float j) {
             this.a = a;
             this.b = b;
             this.c = c;
@@ -48,58 +46,58 @@ namespace DrawEngine.Renderer.RenderObjects
             this.j = j;
             this.boundBox = new BoundBox(new Point3D(-20, -20, -20), new Point3D(-20, -20, -20));
         }
-        public float A
-        {
+
+        public float A {
             get { return this.a; }
             set { this.a = value; }
         }
-        public float B
-        {
+
+        public float B {
             get { return this.b; }
             set { this.b = value; }
         }
-        public float C
-        {
+
+        public float C {
             get { return this.c; }
             set { this.c = value; }
         }
-        public float D
-        {
+
+        public float D {
             get { return this.d; }
             set { this.d = value; }
         }
-        public float E
-        {
+
+        public float E {
             get { return this.e; }
             set { this.e = value; }
         }
-        public float F
-        {
+
+        public float F {
             get { return this.f; }
             set { this.f = value; }
         }
-        public float G
-        {
+
+        public float G {
             get { return this.g; }
             set { this.g = value; }
         }
-        public float H
-        {
+
+        public float H {
             get { return this.h; }
             set { this.h = value; }
         }
-        public float I
-        {
+
+        public float I {
             get { return this.i; }
             set { this.i = value; }
         }
-        public float J
-        {
+
+        public float J {
             get { return this.j; }
             set { this.j = value; }
         }
-        public override bool FindIntersection(Ray ray, out Intersection intersect)
-        {
+
+        public override bool FindIntersection(Ray ray, out Intersection intersect) {
             intersect = new Intersection();
             Vector3D rayDir = ray.Direction;
             Point3D rayPoint = ray.Origin;
@@ -140,16 +138,16 @@ namespace DrawEngine.Renderer.RenderObjects
             float Cq = Cq_1 + Cq_2 + Cq_3 + Cq_4 + Cq_5 + Cq_6 + Cq_7 + Cq_8 + Cq_9 + this.j;
             //quadratic equation:   Aqt² + Bqt + Cq = 0
             float t, t0, t1, tMin, tMax;
-            if(EquationSolver.SolveQuadric(Aq, Bq, Cq, out t0, out t1) == 0){
+            if (EquationSolver.SolveQuadric(Aq, Bq, Cq, out t0, out t1) == 0) {
                 return false;
             }
-            tMin = (float)Math.Min(t0, t1);
-            tMax = (float)Math.Max(t0, t1);
-            if(tMin > 0.01f){
+            tMin = (float) Math.Min(t0, t1);
+            tMax = (float) Math.Max(t0, t1);
+            if (tMin > 0.01f) {
                 t = tMin;
-            } else if(tMax > 0.01f){
+            } else if (tMax > 0.01f) {
                 t = tMax;
-            } else{
+            } else {
                 return false;
             }
             Point3D tempP = rayPoint + rayDir * t;
@@ -189,6 +187,7 @@ namespace DrawEngine.Renderer.RenderObjects
             return true;
             //}
         }
+
         //public override bool FindIntersection(out DrawEngine.Renderer.Algebra.Intersection intersect, DrawEngine.Renderer.Algebra.Ray ray)
         //{
         //    intersect = new Intersection();
@@ -241,16 +240,15 @@ namespace DrawEngine.Renderer.RenderObjects
         //    intersect.TMin = t;
         //    return true;
         //}
-        public override bool IsInside(Point3D point)
-        {
+        public override bool IsInside(Point3D point) {
             throw new Exception("The method or operation is not implemented.");
         }
-        public override Vector3D NormalOnPoint(Point3D pointInPrimitive)
-        {
+
+        public override Vector3D NormalOnPoint(Point3D pointInPrimitive) {
             throw new Exception("The method or operation is not implemented.");
         }
-        public override bool IsOverlap(BoundBox boundBox)
-        {
+
+        public override bool IsOverlap(BoundBox boundBox) {
             throw new NotImplementedException();
         }
     }

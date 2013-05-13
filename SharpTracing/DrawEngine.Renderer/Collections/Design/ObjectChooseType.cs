@@ -10,36 +10,37 @@
  * Feel free to copy, modify and  give fixes 
  * suggestions. Keep the credits!
  */
- using System;
+
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 
-namespace DrawEngine.Renderer.Collections.Design
-{
-    public partial class ObjectChooseType : Form
-    {
+namespace DrawEngine.Renderer.Collections.Design {
+    public partial class ObjectChooseType : Form {
         private Type selectedType;
-        private Type type;
-        public ObjectChooseType(Type type)
-        {
+        private readonly Type type;
+
+        public ObjectChooseType(Type type) {
             this.InitializeComponent();
             this.type = type;
         }
-        public Type SelectedType
-        {
+
+        public Type SelectedType {
             get { return this.selectedType; }
             set { this.selectedType = value; }
         }
-        private void ChooseObjectType_Load(object sender, EventArgs e)
-        {
-            Assembly[] assembliesLoaded = AppDomain.CurrentDomain.GetAssemblies();
+
+        private void ChooseObjectType_Load(object sender, EventArgs e) {
+            IEnumerable<Assembly> assembliesLoaded = from asm in AppDomain.CurrentDomain.GetAssemblies()
+                                                     where !asm.IsDynamic
+                                                     select asm;
             List<KeyValuePair<string, Type>> listType = new List<KeyValuePair<string, Type>>();
-            foreach(Assembly loaded in assembliesLoaded){
-                //Assembly ass = Assembly.GetAssembly(this.type);
-                foreach(Type typeTemp in loaded.GetExportedTypes()){
-                    if(!typeTemp.IsAbstract){
-                        if(typeTemp.IsSubclassOf(this.type)){
+            foreach (Assembly loaded in assembliesLoaded) {
+                foreach (Type typeTemp in loaded.GetExportedTypes()) {
+                    if (!typeTemp.IsAbstract) {
+                        if (typeTemp.IsSubclassOf(this.type)) {
                             listType.Add(new KeyValuePair<string, Type>(typeTemp.Name, typeTemp));
                         }
                     }
@@ -51,13 +52,13 @@ namespace DrawEngine.Renderer.Collections.Design
             this.ddlObjectType.DataSource = listType;
             this.ddlObjectType.SelectedIndex = 0;
         }
-        private void btnOk_Click(object sender, EventArgs e)
-        {
+
+        private void btnOk_Click(object sender, EventArgs e) {
             this.DialogResult = DialogResult.OK;
             this.selectedType = this.ddlObjectType.SelectedValue as Type;
         }
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
+
+        private void btnCancel_Click(object sender, EventArgs e) {
             this.DialogResult = DialogResult.Cancel;
             this.selectedType = null;
         }

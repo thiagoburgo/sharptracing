@@ -14,10 +14,8 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Alsing.Windows.Forms.CoreLib
-{
-    public class SplitViewParentControl : BaseControl
-    {
+namespace Alsing.Windows.Forms.CoreLib {
+    public class SplitViewParentControl : BaseControl {
         protected SplitViewChildControl _ActiveView;
         private long _ticks; //splitter doubleclick timer
         public bool DisableScrollBars;
@@ -32,16 +30,14 @@ namespace Alsing.Windows.Forms.CoreLib
 
         private List<SplitViewChildControl> _Views;
 
-        protected List<SplitViewChildControl> Views
-        {
+        protected List<SplitViewChildControl> Views {
             get { return _Views; }
             set { _Views = value; }
         }
 
         #endregion
 
-        public SplitViewParentControl()
-        {
+        public SplitViewParentControl() {
             OnCreate();
 
             InitializeComponent();
@@ -81,43 +77,47 @@ namespace Alsing.Windows.Forms.CoreLib
         /// Gets or Sets the active view
         /// </summary>
         [Browsable(false)]
-        public ActiveView ActiveView
-        {
-            get
-            {
-                if (_ActiveView == UpperLeft)
+        public ActiveView ActiveView {
+            get {
+                if (_ActiveView == UpperLeft) {
                     return ActiveView.TopLeft;
+                }
 
-                if (_ActiveView == UpperRight)
+                if (_ActiveView == UpperRight) {
                     return ActiveView.TopRight;
+                }
 
-                if (_ActiveView == LowerLeft)
+                if (_ActiveView == LowerLeft) {
                     return ActiveView.BottomLeft;
+                }
 
-                if (_ActiveView == LowerRight)
+                if (_ActiveView == LowerRight) {
                     return ActiveView.BottomRight;
+                }
 
                 return 0;
             }
-            set
-            {
-                if (value != ActiveView.BottomRight)
-                {
+            set {
+                if (value != ActiveView.BottomRight) {
                     ActivateSplits();
                 }
 
 
-                if (value == ActiveView.TopLeft)
+                if (value == ActiveView.TopLeft) {
                     _ActiveView = UpperLeft;
+                }
 
-                if (value == ActiveView.TopRight)
+                if (value == ActiveView.TopRight) {
                     _ActiveView = UpperRight;
+                }
 
-                if (value == ActiveView.BottomLeft)
+                if (value == ActiveView.BottomLeft) {
                     _ActiveView = LowerLeft;
+                }
 
-                if (value == ActiveView.BottomRight)
+                if (value == ActiveView.BottomRight) {
                     _ActiveView = LowerRight;
+                }
             }
         }
 
@@ -126,31 +126,25 @@ namespace Alsing.Windows.Forms.CoreLib
         /// <summary>
         /// Resets the Splitview.
         /// </summary>
-        public void ResetSplitview()
-        {
+        public void ResetSplitview() {
             splitView.ResetSplitview();
         }
 
-        private void SplitView_Resizing(object sender, EventArgs e)
-        {
+        private void SplitView_Resizing(object sender, EventArgs e) {
             LowerRight.TopThumbVisible = false;
             LowerRight.LeftThumbVisible = false;
         }
 
-        private void SplitView_HideTop(object sender, EventArgs e)
-        {
+        private void SplitView_HideTop(object sender, EventArgs e) {
             LowerRight.TopThumbVisible = true;
         }
 
-        private void SplitView_HideLeft(object sender, EventArgs e)
-        {
+        private void SplitView_HideLeft(object sender, EventArgs e) {
             LowerRight.LeftThumbVisible = true;
         }
 
-        protected virtual void ActivateSplits()
-        {
-            if (UpperLeft == null)
-            {
+        protected virtual void ActivateSplits() {
+            if (UpperLeft == null) {
                 UpperLeft = GetNewView();
                 UpperRight = GetNewView();
                 LowerLeft = GetNewView();
@@ -166,89 +160,74 @@ namespace Alsing.Windows.Forms.CoreLib
         }
 
 
-        protected void TopThumb_MouseDown(object sender, MouseEventArgs e)
-        {
+        protected void TopThumb_MouseDown(object sender, MouseEventArgs e) {
             ActivateSplits();
 
             long t = DateTime.Now.Ticks - _ticks;
             _ticks = DateTime.Now.Ticks;
 
 
-            if (t < 3000000)
-            {
+            if (t < 3000000) {
                 splitView.Split5050h();
-            }
-            else
-            {
+            } else {
                 splitView.InvokeMouseDownh();
             }
         }
 
-        protected void LeftThumb_MouseDown(object sender, MouseEventArgs e)
-        {
+        protected void LeftThumb_MouseDown(object sender, MouseEventArgs e) {
             ActivateSplits();
 
             long t = DateTime.Now.Ticks - _ticks;
             _ticks = DateTime.Now.Ticks;
 
 
-            if (t < 3000000)
-            {
+            if (t < 3000000) {
                 splitView.Split5050v();
-            }
-            else
-            {
+            } else {
                 splitView.InvokeMouseDownv();
             }
         }
 
         protected virtual void OnCreate() {}
 
-        protected virtual void CreateViews()
-        {
-            if (UpperRight != null)
-            {
+        protected virtual void CreateViews() {
+            if (UpperRight != null) {
                 Views.Add(UpperRight);
                 Views.Add(UpperLeft);
                 Views.Add(LowerLeft);
             }
         }
 
-        protected virtual SplitViewChildControl GetNewView()
-        {
+        protected virtual SplitViewChildControl GetNewView() {
             return null;
         }
 
-        protected void View_Enter(object sender, EventArgs e)
-        {
+        protected void View_Enter(object sender, EventArgs e) {
             _ActiveView = (SplitViewChildControl) sender;
         }
 
-        protected void View_Leave(object sender, EventArgs e)
-        {
+        protected void View_Leave(object sender, EventArgs e) {
             //	((EditViewControl)sender).RemoveFocus ();
         }
 
-        protected override void WndProc(ref Message m)
-        {
+        protected override void WndProc(ref Message m) {
             base.WndProc(ref m);
-            if (m.Msg == (int) WindowMessage.WM_SETFOCUS)
-            {
-                if (_ActiveView != null)
+            if (m.Msg == (int) WindowMessage.WM_SETFOCUS) {
+                if (_ActiveView != null) {
                     _ActiveView.Focus();
+                }
             }
         }
 
         #region PUBLIC PROPERTY SPLITVIEWV
 
         [Browsable(false)]
-        public int SplitviewV
-        {
+        public int SplitviewV {
             get { return splitView.SplitviewV; }
-            set
-            {
-                if (splitView == null)
+            set {
+                if (splitView == null) {
                     return;
+                }
 
                 splitView.SplitviewV = value;
             }
@@ -259,13 +238,12 @@ namespace Alsing.Windows.Forms.CoreLib
         #region PUBLIC PROPERTY SPLITVIEWH
 
         [Browsable(false)]
-        public int SplitviewH
-        {
+        public int SplitviewH {
             get { return splitView.SplitviewH; }
-            set
-            {
-                if (splitView == null)
+            set {
+                if (splitView == null) {
                     return;
+                }
                 splitView.SplitviewH = value;
             }
         }
@@ -278,20 +256,19 @@ namespace Alsing.Windows.Forms.CoreLib
 
         [Category("Appearance"), Description("Determines what Scrollbars should be visible")]
         [DefaultValue(ScrollBars.Both)]
-        public ScrollBars ScrollBars
-        {
+        public ScrollBars ScrollBars {
             get { return _ScrollBars; }
 
-            set
-            {
-                if (_Views == null)
+            set {
+                if (_Views == null) {
                     return;
+                }
 
-                if (DisableScrollBars)
+                if (DisableScrollBars) {
                     value = ScrollBars.None;
+                }
 
-                foreach (SplitViewChildControl evc in _Views)
-                {
+                foreach (SplitViewChildControl evc in _Views) {
                     evc.ScrollBars = value;
                 }
                 _ScrollBars = value;
@@ -307,26 +284,22 @@ namespace Alsing.Windows.Forms.CoreLib
 
         [Category("Appearance"), Description("Determines if the controls should use splitviews")]
         [DefaultValue(true)]
-        public bool SplitView
-        {
+        public bool SplitView {
             get { return _SplitView; }
 
-            set
-            {
+            set {
                 _SplitView = value;
 
-                if (splitView == null)
+                if (splitView == null) {
                     return;
+                }
 
-                if (!SplitView)
-                {
+                if (!SplitView) {
                     splitView.Visible = false;
                     Controls.Add(LowerRight);
                     LowerRight.HideThumbs();
                     LowerRight.Dock = DockStyle.Fill;
-                }
-                else
-                {
+                } else {
                     splitView.Visible = true;
                     splitView.LowerRight = LowerRight;
                     LowerRight.Dock = DockStyle.None;
@@ -345,13 +318,10 @@ namespace Alsing.Windows.Forms.CoreLib
         [Category("Appearance - Borders")]
         [Description("Gets or Sets the border styles of the split views.")]
         [DefaultValue(BorderStyle.FixedSingle)]
-        public BorderStyle ChildBorderStyle
-        {
+        public BorderStyle ChildBorderStyle {
             get { return (Views[0]).BorderStyle; }
-            set
-            {
-                foreach (SplitViewChildControl ev in Views)
-                {
+            set {
+                foreach (SplitViewChildControl ev in Views) {
                     ev.BorderStyle = value;
                 }
             }
@@ -367,15 +337,11 @@ namespace Alsing.Windows.Forms.CoreLib
         [Category("Appearance - Borders")]
         [Description("Gets or Sets the border color of the split views.")]
         [DefaultValue(typeof (Color), "ControlDark")]
-        public Color ChildBorderColor
-        {
+        public Color ChildBorderColor {
             get { return (Views[0]).BorderColor; }
-            set
-            {
-                foreach (SplitViewChildControl ev in Views)
-                {
-                    if (ev != null)
-                    {
+            set {
+                foreach (SplitViewChildControl ev in Views) {
+                    if (ev != null) {
                         ev.BorderColor = value;
                     }
                 }
@@ -386,8 +352,7 @@ namespace Alsing.Windows.Forms.CoreLib
 
         #region roger generated code
 
-        private void InitializeComponentInternal()
-        {
+        private void InitializeComponentInternal() {
             splitView = new SplitViewControl();
             SuspendLayout();
             // 
@@ -418,13 +383,11 @@ namespace Alsing.Windows.Forms.CoreLib
     }
 }
 
-namespace Alsing.Windows.Forms
-{
+namespace Alsing.Windows.Forms {
     /// <summary>
     /// Represents which split view is currently active in the syntaxbox
     /// </summary>
-    public enum ActiveView
-    {
+    public enum ActiveView {
         TopLeft,
         TopRight,
         BottomLeft,

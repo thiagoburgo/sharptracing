@@ -4,48 +4,47 @@ using System.Windows.Forms;
 using DrawEngine.Renderer;
 using DrawEngine.Renderer.PhotonMapping;
 using DrawEngine.Renderer.RenderObjects;
+using DrawEngine.Renderer.Renderers;
 using DrawEngine.Renderer.Tracers;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 
-namespace PhotonVisualization
-{
-    public partial class RenderForm : Form
-    {
+namespace PhotonVisualization {
+    public partial class RenderForm : Form {
         // The Direct3D device.
         private Device m_Device;
 
         #region "D3D Setup Code"
+
         // Data variables.
         // The vertex buffer that holds drawing data.
         private VertexBuffer m_VertexBuffer = null;
         private int NUM_POINTS = 0;
         // Initialize the graphics device. Return True if successful.
-        public bool InitializeGraphics()
-        {
+        public bool InitializeGraphics() {
             PresentParameters parms = new PresentParameters();
             parms.Windowed = true;
             parms.SwapEffect = SwapEffect.Discard;
             parms.EnableAutoDepthStencil = true; // Depth stencil on.
             parms.AutoDepthStencilFormat = DepthFormat.D16;
             // Best: Hardware device and hardware vertex processing.
-            try{
+            try {
                 this.m_Device = new Device(0, DeviceType.Hardware, this.pic3d, CreateFlags.HardwareVertexProcessing,
                                            parms);
-            } catch{}
+            } catch {}
             // Good: Hardware device and software vertex processing.
-            if(this.m_Device == null){
-                try{
+            if (this.m_Device == null) {
+                try {
                     this.m_Device = new Device(0, DeviceType.Hardware, this.pic3d, CreateFlags.SoftwareVertexProcessing,
                                                parms);
-                } catch{}
+                } catch {}
             }
             // Adequate?: Software device and software vertex processing.
-            if(this.m_Device == null){
-                try{
+            if (this.m_Device == null) {
+                try {
                     this.m_Device = new Device(0, DeviceType.Hardware, this.pic3d, CreateFlags.HardwareVertexProcessing,
                                                parms);
-                } catch(Exception ex){
+                } catch (Exception ex) {
                     // If we still can't make a device, give up.
                     MessageBox.Show("Error initializing Direct3D\n\n" + ex.Message, "Direct3D Error",
                                     MessageBoxButtons.OK);
@@ -68,38 +67,37 @@ namespace PhotonVisualization
             // We succeeded.
             return true;
         }
+
         // Create a vertex buffer for the device.
-        public void CreateVertexBuffer()
-        {
+        public void CreateVertexBuffer() {
             //String sceneName = @"D:\Models & Textures\CornellBox5_Sphere_SphereFlake2.xml";
-            String sceneName = @"D:\Models & Textures\CornellBox5_Sphere_SphereFlake2.xml"; 
+            String sceneName = @"D:\Models & Textures\CornellBox5_Sphere_SphereFlake2.xml";
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.Filter = "Scene Files|*.xml;*.scn";
-            if (dialog.ShowDialog() == DialogResult.OK)
-            {
+            if (dialog.ShowDialog() == DialogResult.OK) {
                 sceneName = dialog.FileName;
-            } else{
+            } else {
                 return;
             }
             Scene scene = Scene.Load(sceneName);
-            
-            foreach(Primitive primitive in scene.Primitives){
-                if(primitive is TriangleModel){
-                    ((TriangleModel)primitive).Load();
+
+            foreach (Primitive primitive in scene.Primitives) {
+                if (primitive is TriangleModel) {
+                    ((TriangleModel) primitive).Load();
                 }
             }
-            PhotonTracer tracer = new PhotonTracer(scene, 1000000);
+            PhotonTracer tracer = new PhotonTracer(scene,new ProgressiveRenderStrategy(), 1000000);
             tracer.ScatterPhotons();
 
             Photon[] photons = tracer.IndirectEnlightenment.Photons;
             this.NUM_POINTS = photons.Length;
             // Create a buffer.
-            this.m_VertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionColored), this.NUM_POINTS, this.m_Device,
+            this.m_VertexBuffer = new VertexBuffer(typeof (CustomVertex.PositionColored), this.NUM_POINTS, this.m_Device,
                                                    0, CustomVertex.PositionColored.Format, Pool.Default);
             // Lock the vertex buffer. 
             // Lock returns an array of positionColored objects.
-            CustomVertex.PositionColored[] vertices = (CustomVertex.PositionColored[])this.m_VertexBuffer.Lock(0, 0);
-            for(int i = 1; i < photons.Length && photons[i] != null; i++){
+            CustomVertex.PositionColored[] vertices = (CustomVertex.PositionColored[]) this.m_VertexBuffer.Lock(0, 0);
+            for (int i = 1; i < photons.Length && photons[i] != null; i++) {
                 vertices[i].X = photons[i].Position.X;
                 vertices[i].Y = photons[i].Position.Y;
                 vertices[i].Z = photons[i].Position.Z;
@@ -116,16 +114,19 @@ namespace PhotonVisualization
             }
             this.m_VertexBuffer.Unlock();
         }
+
         #endregion // D3D Setup Code
+
         protected override void OnPaint(PaintEventArgs e) {
             this.Render();
             Application.DoEvents();
             base.OnPaint(e);
         }
+
         #region "D3D Drawing Code"
+
         // Draw.
-        public void Render()
-        {
+        public void Render() {
             // Clear the back buffer and the Z-buffer.
             this.m_Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1, 0);
             // Make a scene.
@@ -143,9 +144,9 @@ namespace PhotonVisualization
             this.m_Device.EndScene();
             this.m_Device.Present();
         }
+
         // Setup the world, view, and projection matrices.
-        private void SetupMatrices()
-        {
+        private void SetupMatrices() {
             // World Matrix:
             //const int TICKS_PER_REV = 4000;
             //double angle = Environment.TickCount * (2 * Math.PI) / TICKS_PER_REV;
@@ -161,14 +162,14 @@ namespace PhotonVisualization
             //       Far clipping plane      Z = 100
             this.m_Device.Transform.Projection = Matrix.PerspectiveFovLH(1f, 1, 0, 300);
         }
+
         #endregion // D3D Drawing Code
 
-        public RenderForm()
-        {
+        public RenderForm() {
             this.InitializeComponent();
         }
-        private void RenderForm_Resize(object sender, EventArgs e)
-        {
+
+        private void RenderForm_Resize(object sender, EventArgs e) {
             this.InitializeGraphics();
         }
     }

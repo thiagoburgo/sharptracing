@@ -10,113 +10,110 @@
  * Feel free to copy, modify and  give fixes 
  * suggestions. Keep the credits!
  */
- using System;
+
+using System;
 using System.ComponentModel;
-using DrawEngine.Renderer.Algebra;
 using DrawEngine.Renderer.BasicStructures;
 using DrawEngine.Renderer.Mathematics.Algebra;
 
-namespace DrawEngine.Renderer.RenderObjects
-{
+namespace DrawEngine.Renderer.RenderObjects {
     [Serializable]
-    public class Plane : Primitive, ITransformable3D, IPreprocess
-    {
+    public class Plane : Primitive, ITransformable3D, IPreprocess {
         private float d;
         private Vector3D normal;
         private Point3D pointOnPlane;
         //Equação do plano ax+by+cz+d=0        
         public Plane(Vector3D normal, Point3D pointOnPlane) : this(normal, pointOnPlane, null) {}
         public Plane() : this(Vector3D.UnitY, Point3D.Zero) {}
-        public Plane(Vector3D normal, Point3D pointOnPlane, string name)
-        {
+
+        public Plane(Vector3D normal, Point3D pointOnPlane, string name) {
             this.PointOnPlane = pointOnPlane;
             this.Normal = normal;
             //this.normal.Normalize();
             //this.BoundBox = new BoundBox(0.0f, 0.0f, float.PositiveInfinity, 0.0f, 0.0f, float.PositiveInfinity);
             this.Name = name;
         }
+
         [Browsable(false)]
-        public float D
-        {
+        public float D {
             get { return this.d; }
         }
+
         [RefreshProperties(RefreshProperties.All)]
-        public Point3D PointOnPlane
-        {
+        public Point3D PointOnPlane {
             get { return this.pointOnPlane; }
-            set
-            {
+            set {
                 this.pointOnPlane = value;
                 this.Preprocess();
             }
         }
+
         [RefreshProperties(RefreshProperties.All)]
-        public Vector3D Normal
-        {
+        public Vector3D Normal {
             get { return this.normal; }
-            set
-            {
+            set {
                 this.normal = value;
                 this.Preprocess();
             }
         }
+
         [Browsable(false)]
-        public override BoundBox BoundBox
-        {
+        public override BoundBox BoundBox {
             get { return base.BoundBox; }
             set { base.BoundBox = value; }
         }
 
         #region IPreprocess Members
-        public void Preprocess()
-        {
-            this.d = -(this.normal.X * this.pointOnPlane.X) - (this.normal.Y * this.pointOnPlane.Y)
-                     - (this.normal.Z * this.pointOnPlane.Z);
+
+        public void Preprocess() {
+            this.d = -(this.normal.X * this.pointOnPlane.X) - (this.normal.Y * this.pointOnPlane.Y) -
+                     (this.normal.Z * this.pointOnPlane.Z);
         }
+
         #endregion
 
         #region ITransformable3D Members
-        public void Rotate(float angle, Vector3D axis)
-        {
+
+        public void Rotate(float angle, Vector3D axis) {
             this.pointOnPlane.Rotate(angle, axis);
             this.Preprocess();
         }
-        public void RotateAxisX(float angle)
-        {
+
+        public void RotateAxisX(float angle) {
             this.Rotate(angle, Vector3D.UnitX);
         }
-        public void RotateAxisY(float angle)
-        {
+
+        public void RotateAxisY(float angle) {
             this.Rotate(angle, Vector3D.UnitY);
         }
-        public void RotateAxisZ(float angle)
-        {
+
+        public void RotateAxisZ(float angle) {
             this.Rotate(angle, Vector3D.UnitZ);
         }
+
         public void Scale(float factor) {}
-        public void Translate(float tx, float ty, float tz)
-        {
+
+        public void Translate(float tx, float ty, float tz) {
             this.pointOnPlane.Translate(tx, ty, tz);
             this.Preprocess();
         }
-        public void Translate(Vector3D translateVector)
-        {
+
+        public void Translate(Vector3D translateVector) {
             this.Translate(translateVector.X, translateVector.Y, translateVector.Z);
         }
+
         #endregion
 
-        public override bool FindIntersection(Ray ray, out Intersection intersect)
-        {
+        public override bool FindIntersection(Ray ray, out Intersection intersect) {
             intersect = new Intersection();
             //t = -(N • Ro + D) / (N • Rd)	
             //Vector3D origin = ray.Origin.ToVector3D();
             float NRd = this.normal * ray.Direction;
-            if(NRd == 0.0f){
+            if (NRd.NearZero()) {
                 return false;
             }
             float t = -(this.normal * ray.Origin + this.d) / NRd;
-            if (t < 0.000001f)
-            {
+            if (t < MathUtil.Epsilon) {
                 return false;
             }
             intersect.Normal = this.normal;
@@ -141,16 +138,16 @@ namespace DrawEngine.Renderer.RenderObjects
             //}
             return true;
         }
-        public override Vector3D NormalOnPoint(Point3D pointInPrimitive)
-        {
+
+        public override Vector3D NormalOnPoint(Point3D pointInPrimitive) {
             return this.normal;
         }
-        public override bool IsInside(Point3D point)
-        {
+
+        public override bool IsInside(Point3D point) {
             throw new Exception("The method or operation is not implemented.");
         }
-        public override bool IsOverlap(BoundBox boundBox)
-        {
+
+        public override bool IsOverlap(BoundBox boundBox) {
             throw new NotImplementedException();
         }
     }

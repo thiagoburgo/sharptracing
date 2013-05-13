@@ -10,114 +10,110 @@
  * Feel free to copy, modify and  give fixes 
  * suggestions. Keep the credits!
  */
- using System;
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing.Design;
 using DrawEngine.Renderer.Collections.Design;
 
-namespace DrawEngine.Renderer.Collections
-{
-    [Serializable, Editor(typeof(CustomCollectionEditor), typeof(UITypeEditor))]
-    public class NameableCollection<T> : NotifyList<T> where T : INameable
-    {
+namespace DrawEngine.Renderer.Collections {
+    [Serializable, Editor(typeof (CustomCollectionEditor), typeof (UITypeEditor))]
+    public class NameableCollection<T> : NotifyList<T> where T : INameable {
         public NameableCollection() : base() {}
         public NameableCollection(IEnumerable<T> list) : base(list) {}
         public NameableCollection(int capacity) : base(capacity) {}
-        public override T this[int index]
-        {
+
+        public override T this[int index] {
             get { return base[index]; }
-            set
-            {
-                if(String.IsNullOrEmpty(value.Name)){
+            set {
+                if (String.IsNullOrEmpty(value.Name)) {
                     value.Name = this.CreateName(value.GetType());
                 }
-                if(!this.ContainsName(value.Name)){
+                if (!this.ContainsName(value.Name)) {
                     base[index] = value;
-                } else{
+                } else {
                     throw new DuplicateNameException("Alredy exists a object with name \"" + value.Name + "\"!");
                 }
             }
         }
-        public T this[string name]
-        {
-            get
-            {
+
+        public T this[string name] {
+            get {
                 int index = this.IndexOf(name);
                 return index > -1 ? base[index] : default(T);
             }
-            set
-            {
-                if(String.IsNullOrEmpty(value.Name)){
+            set {
+                if (String.IsNullOrEmpty(value.Name)) {
                     value.Name = this.CreateName(value.GetType());
                 }
                 int index = this.IndexOf(name);
-                if(index > -1){
+                if (index > -1) {
                     base[index] = value;
-                } else{
+                } else {
                     throw new DuplicateNameException("Alredy exists a object with name \"" + value.Name + "\"!");
                 }
             }
         }
-        public void Remove(string name)
-        {
+
+        public void Remove(string name) {
             int index = this.IndexOf(name);
-            if(index > -1){
+            if (index > -1) {
                 this[index] = default(T);
                 this.RemoveAt(index);
             }
         }
-        public override void Add(T item)
-        {
-            if(String.IsNullOrEmpty(item.Name)){
+
+        public override void Add(T item) {
+            if (String.IsNullOrEmpty(item.Name)) {
                 item.Name = this.CreateName(item.GetType());
             }
-            if(!this.ContainsName(item.Name)){
+            if (!this.ContainsName(item.Name)) {
                 base.Add(item);
-            } else{
+            } else {
                 throw new DuplicateNameException("Alredy exists a object with name \"" + item.Name + "\"!");
             }
         }
-        public override void Insert(int index, T item)
-        {
-            if(String.IsNullOrEmpty(item.Name)){
+
+        public override void Insert(int index, T item) {
+            if (String.IsNullOrEmpty(item.Name)) {
                 item.Name = this.CreateName(item.GetType());
             }
-            if(!this.ContainsName(item.Name)){
+            if (!this.ContainsName(item.Name)) {
                 base.Insert(index, item);
-            } else{
+            } else {
                 throw new DuplicateNameException("Alredy exists a object with name \"" + item.Name + "\"!");
             }
         }
-        public string CreateName(Type type)
-        {
+
+        public string CreateName(Type type) {
             int uniqueID = 1;
             // Create a basic type name string.
             string baseName = type.Name + uniqueID;
             // Continue to increment uniqueID numeral until a 
             // unique ID is located.
-            while(this.ContainsName(baseName)){
+            while (this.ContainsName(baseName)) {
                 baseName = type.Name + uniqueID++;
             }
             return baseName;
         }
-        public bool ContainsName(String name)
-        {
-            if(!String.IsNullOrEmpty(name)){
-                foreach(var item in this){
-                    if(item.Name == name){
+
+        public bool ContainsName(String name) {
+            if (!String.IsNullOrEmpty(name)) {
+                foreach (var item in this) {
+                    if (item.Name == name) {
                         return true;
                     }
                 }
             }
             return false;
         }
-        public int IndexOf(string name)
-        {
-            if(!String.IsNullOrEmpty(name)){
-                for(int i = 0; i < this.Count; i++){
-                    if(this[i].Name == name){
+
+        public int IndexOf(string name) {
+            if (!String.IsNullOrEmpty(name)) {
+                for (int i = 0; i < this.Count; i++) {
+                    if (this[i].Name == name) {
                         return i;
                     }
                 }

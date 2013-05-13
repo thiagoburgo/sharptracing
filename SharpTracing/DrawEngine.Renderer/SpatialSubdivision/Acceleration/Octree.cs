@@ -10,12 +10,12 @@
  * Feel free to copy, modify and  give fixes 
  * suggestions. Keep the credits!
  */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
-using System.Windows.Forms;
-using DrawEngine.Renderer.Algebra;
 using DrawEngine.Renderer.BasicStructures;
 using DrawEngine.Renderer.Mathematics.Algebra;
 using DrawEngine.Renderer.RenderObjects;
@@ -23,8 +23,7 @@ using DrawEngine.Renderer.Util;
 
 namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
 {
-    public class Octree<T> : IntersectableAccelerationStructure<T>, IComparable<Octree<T>>, ITransformable3D,
-                             IDisposable where T : IIntersectable, IBoundBox, ITransformable3D
+    public class Octree<T> : IntersectableAccelerationStructure<T>, IComparable<Octree<T>>, ITransformable3D where T : IIntersectable, IBoundBox, ITransformable3D
     {
         private const int maxBuildDepth = 9;
         private readonly int maxUnitsInBox = 4;
@@ -33,8 +32,9 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
         private float ltmax;
         private float ltmin;
         private Octree<T>[] octrees;
-        public  List<BoundBox> AllBoundBoxes = new List<BoundBox>();
-        public Octree(BoundBox box, T[] acceleationUnits)
+        public readonly List<BoundBox> AllBoundBoxes = new List<BoundBox>();
+
+        public Octree(BoundBox box, T[] acceleationUnits = null)
             : base(acceleationUnits)
         {
             this.box = box;
@@ -43,20 +43,19 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
                 this.maxUnitsInBox = acceleationUnits.Length;
             }
         }
-        public Octree(BoundBox box)
-            : this(box, null)
-        {
-        }
+
         public BoundBox BoundBox
         {
             get { return this.box; }
         }
+
         public Octree<T>[] Octrees
         {
             get { return this.octrees; }
         }
 
         #region IComparable<Octree<T>> Members
+
         public int CompareTo(Octree<T> other)
         {
             if (this.ltmin < other.ltmin)
@@ -69,33 +68,41 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
             }
             return 0;
         }
+
         #endregion
 
         #region IDisposable Members
-        public void Dispose()
+
+        public override void Dispose()
         {
             this.octrees = null;
-            this.accelerationUnits = null;
+            base.Dispose();
         }
+
         #endregion
 
         #region ITransformable3D Members
+
         public void Rotate(float angle, Vector3D axis)
         {
             throw new Exception("The method or operation is not implemented.");
         }
+
         public void RotateAxisX(float angle)
         {
             throw new Exception("The method or operation is not implemented.");
         }
+
         public void RotateAxisY(float angle)
         {
             throw new Exception("The method or operation is not implemented.");
         }
+
         public void RotateAxisZ(float angle)
         {
             throw new Exception("The method or operation is not implemented.");
         }
+
         public void Scale(float factor)
         {
             //ScaleAllBoundBoxes(this, factor);
@@ -103,11 +110,12 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
             {
                 bb.Scale(factor);
             }
-            foreach (ITransformable3D accu in this.accelerationUnits)
+            foreach (T accu in this.accelerationUnits)
             {
                 accu.Scale(factor);
             }
         }
+
         public void Translate(float tx, float ty, float tz)
         {
             //TranslateAllBoundBoxes(this, tx, ty, tz);
@@ -116,16 +124,18 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
             {
                 bb.Translate(tx, ty, tz);
             }
-            foreach (ITransformable3D accu in this.accelerationUnits)
+            foreach (T accu in this.accelerationUnits)
             {
                 accu.Translate(tx, ty, tz);
             }
         }
+
         public void Translate(Vector3D translateVector)
         {
             //TranslateAllBoundBoxes(this, translateVector.X, translateVector.Y, translateVector.Z);
-            Translate(translateVector.X,translateVector.Y, translateVector.Z);
+            Translate(translateVector.X, translateVector.Y, translateVector.Z);
         }
+
         #endregion
 
         ~Octree()
@@ -133,21 +143,24 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
             this.octrees = null;
             this.accelerationUnits = null;
         }
+
         public override void Optimize()
         {
             this.Build(1, this.AllBoundBoxes);
         }
+
         public void Optimize(T[] units)
         {
             this.accelerationUnits = units;
             this.Build(1, this.AllBoundBoxes);
         }
+
         //private void Build(T[] trs)
         //{
         //    this.accelerationUnits = trs;
         //    Build(1);
         //}
-        private void Build(int depth, List<BoundBox> allBoundBoxes)
+        private void Build(int depth, ICollection<BoundBox> allBoundBoxes)
         {
             if (depth > maxBuildDepth || this.accelerationUnits.Count < this.maxUnitsInBox)
             {
@@ -211,7 +224,8 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
             //this.accelerationUnits = null;
             this.octrees = list.ToArray();
         }
-        private void PickAccelUnits(IList<T> trs)
+
+        private void PickAccelUnits(IEnumerable<T> trs)
         {
             List<T> list = new List<T>();
             foreach (T tr in trs)
@@ -223,19 +237,19 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
             }
             this.accelerationUnits = list.ToArray();
         }
+        //[MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.Synchronized)]
         public override bool FindIntersection(Ray ray, out Intersection intersect)
         {
-            intersect = new Intersection();
+            intersect = new Intersection { TMin = float.MaxValue };
             //if (!this.BoxIntersect(ray))
             //{
             //    return false;
             //}
-            intersect.TMin = float.MaxValue;
             bool hit = false;
             if (this.isLeaf)
             {
                 Intersection intersect_comp;
-                foreach (IIntersectable tri in this.accelerationUnits)
+                foreach (T tri in this.accelerationUnits)
                 {
                     if (tri.FindIntersection(ray, out intersect_comp) && intersect_comp.TMin < intersect.TMin)
                     {
@@ -245,51 +259,81 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
                 }
                 return hit && intersect.TMin <= this.ltmax;
             }
-            int counter = 0;
-            foreach (Octree<T> o in this.octrees)
+            //int counter = this.octrees.Count(o => o.BoxIntersect(ray));
+            //if (counter > 0)
+            //{
+            //    this.octrees.InsertionSort();
+            //}
+            //for (int i = 0; i < counter; i++)
+            //{
+            //    if (this.octrees[i].FindIntersection(ray, out intersect))
+            //    {
+            //        return true;
+            //    }
+            //}
+            //Octree<T>[] octreesInterBox;
+            SortedSet<Octree<T>> octreesInterBox = new SortedSet<Octree<T>>();
+
+            lock (this)
             {
-                if (o.BoxIntersect(ray))
+                for (int i = 0; i < this.octrees.Length; i++)
                 {
-                    counter++;
+
+                    if (this.octrees[i].BoxIntersect(ray))
+                    {
+                        octreesInterBox.Add(this.octrees[i]);
+                    }
                 }
             }
-            if (counter > 0)
+            //octreesInterBox = this.octrees.Where(o => o.BoxIntersect(ray)).ToArray();
+
+            foreach (Octree<T> octree in octreesInterBox)
             {
-                this.octrees.InsertionSort();
-            }
-            for (int i = 0; i < counter; i++)
-            {
-                if (this.octrees[i].FindIntersection(ray, out intersect))
+                if (octree.FindIntersection(ray, out intersect))
                 {
                     return true;
                 }
             }
+            //if (octreesInterBox.Length > 0)
+            //{
+
+            //    octreesInterBox.InsertionSort();
+            //    foreach (Octree<T> octree in octreesInterBox)
+            //    {
+
+            //        if (octree.FindIntersection(ray, out intersect))
+            //        {
+            //            return true;
+            //        }
+            //    }
+            //}
             return false;
         }
+
         public bool BoxIntersect(Ray ray)
         {
             this.ltmin = float.MaxValue;
             this.ltmax = float.MaxValue;
             float tmin, tmax, tymin, tymax, tzmin, tzmax;
-            if (ray.Inv_Direction.X > 0)
+            if (ray.InvertedDirection.X > 0)
             {
-                tmin = (this.box.PMin.X - ray.Origin.X) * ray.Inv_Direction.X;
-                tmax = (this.box.PMax.X - ray.Origin.X) * ray.Inv_Direction.X;
+                tmin = (this.box.PMin.X - ray.Origin.X) * ray.InvertedDirection.X;
+                tmax = (this.box.PMax.X - ray.Origin.X) * ray.InvertedDirection.X;
             }
             else
             {
-                tmin = (this.box.PMax.X - ray.Origin.X) * ray.Inv_Direction.X;
-                tmax = (this.box.PMin.X - ray.Origin.X) * ray.Inv_Direction.X;
+                tmin = (this.box.PMax.X - ray.Origin.X) * ray.InvertedDirection.X;
+                tmax = (this.box.PMin.X - ray.Origin.X) * ray.InvertedDirection.X;
             }
-            if (ray.Inv_Direction.Y > 0)
+            if (ray.InvertedDirection.Y > 0)
             {
-                tymin = (this.box.PMin.Y - ray.Origin.Y) * ray.Inv_Direction.Y;
-                tymax = (this.box.PMax.Y - ray.Origin.Y) * ray.Inv_Direction.Y;
+                tymin = (this.box.PMin.Y - ray.Origin.Y) * ray.InvertedDirection.Y;
+                tymax = (this.box.PMax.Y - ray.Origin.Y) * ray.InvertedDirection.Y;
             }
             else
             {
-                tymin = (this.box.PMax.Y - ray.Origin.Y) * ray.Inv_Direction.Y;
-                tymax = (this.box.PMin.Y - ray.Origin.Y) * ray.Inv_Direction.Y;
+                tymin = (this.box.PMax.Y - ray.Origin.Y) * ray.InvertedDirection.Y;
+                tymax = (this.box.PMin.Y - ray.Origin.Y) * ray.InvertedDirection.Y;
             }
             if ((tmin > tymax) || (tymin > tmax))
             {
@@ -303,15 +347,15 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
             {
                 tmax = tymax;
             }
-            if (ray.Inv_Direction.Z > 0)
+            if (ray.InvertedDirection.Z > 0)
             {
-                tzmin = (this.box.PMin.Z - ray.Origin.Z) * ray.Inv_Direction.Z;
-                tzmax = (this.box.PMax.Z - ray.Origin.Z) * ray.Inv_Direction.Z;
+                tzmin = (this.box.PMin.Z - ray.Origin.Z) * ray.InvertedDirection.Z;
+                tzmax = (this.box.PMax.Z - ray.Origin.Z) * ray.InvertedDirection.Z;
             }
             else
             {
-                tzmin = (this.box.PMax.Z - ray.Origin.Z) * ray.Inv_Direction.Z;
-                tzmax = (this.box.PMin.Z - ray.Origin.Z) * ray.Inv_Direction.Z;
+                tzmin = (this.box.PMax.Z - ray.Origin.Z) * ray.InvertedDirection.Z;
+                tzmax = (this.box.PMin.Z - ray.Origin.Z) * ray.InvertedDirection.Z;
             }
             if ((tmin > tzmax) || (tzmin > tmax))
             {
@@ -333,6 +377,7 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
             }
             return false;
         }
+
         private static void TranslateAllBoundBoxes(Octree<T> oct, float tx, float ty, float tz)
         {
             List<Octree<T>> octs = GetAllOctrees(oct);
@@ -347,11 +392,12 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
                 //    }
                 //}
             }
-            foreach (ITransformable3D unit in oct.accelerationUnits)
+            foreach (T unit in oct.accelerationUnits)
             {
                 unit.Translate(tx, ty, tz);
             }
         }
+
         private static void ScaleAllBoundBoxes(Octree<T> oct, float factor)
         {
             if (oct != null)
@@ -370,10 +416,12 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
                 }
             }
         }
+
         public List<BoundBox> GetAllBoundBoxes()
         {
             return GetAllBoundBoxes(this);
         }
+
         private static List<BoundBox> GetAllBoundBoxes(Octree<T> oct)
         {
             List<BoundBox> ret = new List<BoundBox>(32);
@@ -387,10 +435,12 @@ namespace DrawEngine.Renderer.SpatialSubdivision.Acceleration
             }
             return ret;
         }
+
         public List<Octree<T>> GetAllOctrees()
         {
             return GetAllOctrees(this);
         }
+
         private static List<Octree<T>> GetAllOctrees(Octree<T> oct)
         {
             List<Octree<T>> ret = new List<Octree<T>>(32);

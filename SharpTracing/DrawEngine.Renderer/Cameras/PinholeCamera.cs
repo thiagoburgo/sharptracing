@@ -10,27 +10,27 @@
  * Feel free to copy, modify and  give fixes 
  * suggestions. Keep the credits!
  */
- using System;
-using System.Drawing;
+
+using System;
+using System.Runtime.CompilerServices;
 using DrawEngine.Renderer.BasicStructures;
 using DrawEngine.Renderer.Mathematics.Algebra;
 
-namespace DrawEngine.Renderer.Cameras
-{
+namespace DrawEngine.Renderer.Cameras {
     [Serializable]
-    public class PinholeCamera : Camera
-    {
-        public PinholeCamera() : base() {}
+    public class PinholeCamera : Camera {
+        public PinholeCamera() {}
+
         public PinholeCamera(Point3D eye, Point3D lookAt, Vector3D up, float fov, float resX, float resY)
-                : base(eye, lookAt, up, fov, resX, resY) {}
-       
-        public override Ray CreateRayFromScreen(float x, float y)
-        {
+            : base(eye, lookAt, up, fov, resX, resY) {}
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override Ray CreateRayFromScreen(float x, float y) {
             float du = -this.au + ((2.0f * this.au * x) * 1f / (this.resX));
             float dv = -this.av + ((2.0f * this.av * y) * 1f / (this.resY));
             return new Ray(this.eye, this.basis.Transform(new Vector3D(du, dv, -1)));
-            
         }
+
         //public PinholeCamera() { }
         //public PinholeCamera(Point3D eye, Point3D lookAt, Vector3D viewUp, float fov, float resX, float resY) {
         //    this.eye = eye;

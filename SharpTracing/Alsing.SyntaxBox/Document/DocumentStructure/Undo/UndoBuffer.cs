@@ -10,15 +10,12 @@
 
 using System.Collections.Generic;
 
-namespace Alsing.SourceCode
-{
+namespace Alsing.SourceCode {
     /// <summary>
     /// 
     /// </summary>
-    public sealed class UndoBuffer : List<UndoBlockCollection>
-    {
-        public UndoBuffer()
-        {
+    public sealed class UndoBuffer : List<UndoBlockCollection> {
+        public UndoBuffer() {
             MaxSize = 1000;
         }
 
@@ -28,10 +25,10 @@ namespace Alsing.SourceCode
         /// 
         /// </summary>
         /// <param name="index"></param>
-        public void ClearFrom(int index)
-        {
-            while (index <= Count - 1)
+        public void ClearFrom(int index) {
+            while (index <= Count - 1) {
                 RemoveAt(index);
+            }
         }
     }
 }

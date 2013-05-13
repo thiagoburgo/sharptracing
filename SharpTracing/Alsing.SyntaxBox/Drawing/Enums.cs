@@ -8,10 +8,8 @@
 // *
 // *
 
-namespace Alsing.Windows.Forms
-{
-    public enum BorderStyle
-    {
+namespace Alsing.Windows.Forms {
+    public enum BorderStyle {
         None = 0,
         Sunken = 1,
         SunkenThin = 2,
@@ -25,8 +23,7 @@ namespace Alsing.Windows.Forms
         Dashed = 10,
     }
 
-    public enum BorderStyle2
-    {
+    public enum BorderStyle2 {
         None = 0,
         Sunken = 1,
         SunkenThin = 2,

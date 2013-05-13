@@ -10,8 +10,7 @@
 
 using System.Windows.Forms;
 
-namespace Alsing.Windows.Forms.SyntaxBox
-{
+namespace Alsing.Windows.Forms.SyntaxBox {
     /// <summary>
     /// Delegate used when triggering keyboard actions
     /// </summary>
@@ -20,8 +19,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
     /// <summary>
     /// Instances of this class represents a relation between pressed keys and a delegate
     /// </summary>
-    public class KeyboardAction
-    {
+    public class KeyboardAction {
         /// <summary>
         /// Determines what key to associate with the action
         /// </summary>
@@ -30,8 +28,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
         public KeyboardAction() {}
 
         public KeyboardAction(Keys key, bool shift, bool control, bool alt, bool allowreadonly,
-                              ActionDelegate actionDelegate)
-        {
+                              ActionDelegate actionDelegate) {
             Key = key;
             Control = control;
             Alt = alt;
@@ -48,8 +45,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
 
         public bool AllowReadOnly { get; set; }
 
-        public Keys Key
-        {
+        public Keys Key {
             get { return _Key; }
             set { _Key = value; }
         }

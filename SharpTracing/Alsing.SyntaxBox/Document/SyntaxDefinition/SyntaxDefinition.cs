@@ -10,13 +10,11 @@
 
 using System.Collections.Generic;
 
-namespace Alsing.SourceCode
-{
+namespace Alsing.SourceCode {
     /// <summary>
     /// File type struct
     /// </summary>
-    public class FileType
-    {
+    public class FileType {
         /// <summary>
         /// The file type extension
         /// </summary>
@@ -39,14 +37,12 @@ namespace Alsing.SourceCode
     /// SyntaxBoxControl1.Document.SyntaxFile="C#.syn";
     /// </code>
     /// </example>
-    public class SyntaxDefinition
-    {
+    public class SyntaxDefinition {
         #region PUBLIC PROPERTY SEPARATORS
 
         private string _Separators = ".,:;{}()[]+-*/\\ \t=&%$#@!|&";
 
-        public string Separators
-        {
+        public string Separators {
             get { return _Separators; }
             set { _Separators = value; }
         }
@@ -57,8 +53,7 @@ namespace Alsing.SourceCode
 
         private long _Version = long.MinValue;
 
-        public long Version
-        {
+        public long Version {
             get { return _Version; }
             set { _Version = value; }
         }
@@ -88,16 +83,13 @@ namespace Alsing.SourceCode
         /// <summary>
         /// Gets all BlockTypes in a given syntax.
         /// </summary>
-        public SpanDefinition[] SpanDefinitions
-        {
-            get
-            {
+        public SpanDefinition[] SpanDefinitions {
+            get {
                 spanDefinitionLookup.Clear();
                 FillBlocks(mainSpanDefinition);
                 var blocks = new SpanDefinition[spanDefinitionLookup.Values.Count];
                 int i = 0;
-                foreach (SpanDefinition bt in spanDefinitionLookup.Values)
-                {
+                foreach (SpanDefinition bt in spanDefinitionLookup.Values) {
                     blocks[i] = bt;
                     i++;
                 }
@@ -106,39 +98,35 @@ namespace Alsing.SourceCode
             }
         }
 
-        public TextStyle[] Styles
-        {
-            get
-            {
+        public TextStyle[] Styles {
+            get {
                 styleLookup.Clear();
                 SpanDefinition[] spanDefinitions = SpanDefinitions;
-                foreach (SpanDefinition bt in spanDefinitions)
-                {
+                foreach (SpanDefinition bt in spanDefinitions) {
                     styleLookup[bt.Style] = bt.Style;
 
-                    foreach (Scope sc in bt.ScopePatterns)
-                    {
-                        if (sc.Style != null)
+                    foreach (Scope sc in bt.ScopePatterns) {
+                        if (sc.Style != null) {
                             styleLookup[sc.Style] = sc.Style;
+                        }
                     }
 
-                    foreach (PatternList pl in bt.KeywordsList)
-                    {
-                        if (pl.Style != null)
+                    foreach (PatternList pl in bt.KeywordsList) {
+                        if (pl.Style != null) {
                             styleLookup[pl.Style] = pl.Style;
+                        }
                     }
 
-                    foreach (PatternList pl in bt.OperatorsList)
-                    {
-                        if (pl.Style != null)
+                    foreach (PatternList pl in bt.OperatorsList) {
+                        if (pl.Style != null) {
                             styleLookup[pl.Style] = pl.Style;
+                        }
                     }
                 }
 
                 var styles = new TextStyle[styleLookup.Values.Count];
                 int i = 0;
-                foreach (TextStyle st in styleLookup.Values)
-                {
+                foreach (TextStyle st in styleLookup.Values) {
                     styles[i] = st;
                     i++;
                 }
@@ -146,32 +134,26 @@ namespace Alsing.SourceCode
             }
         }
 
-        public void UpdateLists()
-        {
+        public void UpdateLists() {
             SpanDefinition[] spanDefinitions = SpanDefinitions;
-            foreach (SpanDefinition block in spanDefinitions)
-            {
+            foreach (SpanDefinition block in spanDefinitions) {
                 block.Parent = this;
                 block.ResetLookupTable();
 
                 block.KeywordsList.Parent = block;
-                foreach (PatternList patterns in block.KeywordsList)
-                {
+                foreach (PatternList patterns in block.KeywordsList) {
                     patterns.Parent = block.KeywordsList;
 
-                    foreach (Pattern pattern in patterns)
-                    {
+                    foreach (Pattern pattern in patterns) {
                         block.AddToLookupTable(pattern);
                     }
                 }
 
                 block.OperatorsList.Parent = block;
-                foreach (PatternList patterns in block.OperatorsList)
-                {
+                foreach (PatternList patterns in block.OperatorsList) {
                     patterns.Parent = block.OperatorsList;
 
-                    foreach (Pattern pattern in patterns)
-                    {
+                    foreach (Pattern pattern in patterns) {
                         block.AddToLookupTable(pattern);
                     }
                 }
@@ -179,41 +161,34 @@ namespace Alsing.SourceCode
             }
         }
 
-        public void ChangeVersion()
-        {
+        public void ChangeVersion() {
             Version++;
-            if (Version > long.MaxValue - 10)
+            if (Version > long.MaxValue - 10) {
                 Version = long.MinValue;
+            }
         }
 
-        public static SyntaxDefinition FromSyntaxXml(string xml)
-        {
+        public static SyntaxDefinition FromSyntaxXml(string xml) {
             var sl = new SyntaxDefinitionLoader();
             return sl.LoadXML(xml);
         }
 
-        public static SyntaxDefinition FromSyntaxFile(string filename)
-        {
+        public static SyntaxDefinition FromSyntaxFile(string filename) {
             var sl = new SyntaxDefinitionLoader();
             return sl.Load(filename);
         }
 
-        public void MergeByMainBlock(SyntaxDefinition Target)
-        {
+        public void MergeByMainBlock(SyntaxDefinition Target) {
             SpanDefinition[] spanDefinitions = SpanDefinitions;
-            foreach (SpanDefinition bt in spanDefinitions)
-            {
+            foreach (SpanDefinition bt in spanDefinitions) {
                 bt.childSpanDefinitions.Insert(0, Target.mainSpanDefinition);
             }
         }
 
-        public void MergeByChildBlocks(SyntaxDefinition Target)
-        {
+        public void MergeByChildBlocks(SyntaxDefinition Target) {
             SpanDefinition[] spanDefinitions = SpanDefinitions;
-            foreach (SpanDefinition bt in spanDefinitions)
-            {
-                for (int i = Target.mainSpanDefinition.childSpanDefinitions.Count - 1; i >= 0; i--)
-                {
+            foreach (SpanDefinition bt in spanDefinitions) {
+                for (int i = Target.mainSpanDefinition.childSpanDefinitions.Count - 1; i >= 0; i--) {
                     SpanDefinition child = Target.mainSpanDefinition.childSpanDefinitions[i];
                     bt.childSpanDefinitions.Insert(0, child);
                 }
@@ -221,22 +196,21 @@ namespace Alsing.SourceCode
         }
 
 
-        private void FillBlocks(SpanDefinition bt)
-        {
-            if (bt == null)
+        private void FillBlocks(SpanDefinition bt) {
+            if (bt == null) {
                 return;
+            }
 
-            if (spanDefinitionLookup.ContainsKey(bt))
+            if (spanDefinitionLookup.ContainsKey(bt)) {
                 return;
+            }
 
             spanDefinitionLookup.Add(bt, bt);
 
-            foreach (SpanDefinition btc in bt.childSpanDefinitions)
-            {
+            foreach (SpanDefinition btc in bt.childSpanDefinitions) {
                 FillBlocks(btc);
             }
-            foreach (Scope sc in bt.ScopePatterns)
-            {
+            foreach (Scope sc in bt.ScopePatterns) {
                 FillBlocks(sc.spawnSpanOnEnd);
                 FillBlocks(sc.spawnSpanOnStart);
             }

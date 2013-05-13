@@ -12,10 +12,8 @@ using System;
 using System.Drawing;
 using Alsing.Windows;
 
-namespace Alsing.Globalization
-{
-    public class IMEWindow
-    {
+namespace Alsing.Globalization {
+    public class IMEWindow {
         private const int CFS_POINT = 0x0002;
         private const byte FF_MODERN = 48;
         private const byte FIXED_PITCH = 1;
@@ -25,8 +23,7 @@ namespace Alsing.Globalization
 
         #region ctor
 
-        public IMEWindow(IntPtr hWnd, string fontname, float fontsize)
-        {
+        public IMEWindow(IntPtr hWnd, string fontname, float fontsize) {
             hIMEWnd = NativeMethods.ImmGetDefaultIMEWnd(hWnd);
             SetFont(fontname, fontsize);
         }
@@ -37,21 +34,17 @@ namespace Alsing.Globalization
 
         private Font _Font;
 
-        public Font Font
-        {
+        public Font Font {
             get { return _Font; }
-            set
-            {
-                if (_Font.Equals(value) == false)
-                {
+            set {
+                if (_Font.Equals(value) == false) {
                     SetFont(value);
                     _Font = value;
                 }
             }
         }
 
-        public void SetFont(Font font)
-        {
+        public void SetFont(Font font) {
             var lf = new LogFont();
             font.ToLogFont(lf);
             lf.lfPitchAndFamily = FIXED_PITCH | FF_MODERN;
@@ -59,20 +52,18 @@ namespace Alsing.Globalization
             NativeMethods.SendMessage(hIMEWnd, (int) WindowMessage.WM_IME_CONTROL, IMC_SETCOMPOSITIONFONT, lf);
         }
 
-        public void SetFont(string fontname, float fontsize)
-        {
-            var tFont = new LogFont
-                        {
-                            lfItalic = 0,
-                            lfStrikeOut = 0,
-                            lfUnderline = 0,
-                            lfWeight = 400,
-                            lfWidth = 0,
-                            lfHeight = ((int) (-fontsize*1.3333333333333)),
-                            lfCharSet = 1,
-                            lfPitchAndFamily = (FIXED_PITCH | FF_MODERN),
-                            lfFaceName = fontname
-                        };
+        public void SetFont(string fontname, float fontsize) {
+            var tFont = new LogFont {
+                                        lfItalic = 0,
+                                        lfStrikeOut = 0,
+                                        lfUnderline = 0,
+                                        lfWeight = 400,
+                                        lfWidth = 0,
+                                        lfHeight = ((int) (-fontsize * 1.3333333333333)),
+                                        lfCharSet = 1,
+                                        lfPitchAndFamily = (FIXED_PITCH | FF_MODERN),
+                                        lfFaceName = fontname
+                                    };
 
             LogFont lf = tFont;
 
@@ -85,11 +76,9 @@ namespace Alsing.Globalization
 
         private Point _Loation;
 
-        public Point Loation
-        {
+        public Point Loation {
             get { return _Loation; }
-            set
-            {
+            set {
                 _Loation = value;
 
                 var p = new APIPoint {x = value.X, y = value.Y};

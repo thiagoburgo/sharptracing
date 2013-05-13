@@ -12,18 +12,15 @@ using System;
 using System.ComponentModel;
 using System.Windows.Forms;
 
-namespace Alsing.Windows.Forms.SyntaxBox
-{
+namespace Alsing.Windows.Forms.SyntaxBox {
     [ToolboxItem(false)]
-    public class TabListBox : ListBox
-    {
+    public class TabListBox : ListBox {
         /// <summary>
         /// For public use only.
         /// </summary>
         /// <param name="keyData"></param>
         /// <returns></returns>
-        protected override bool IsInputKey(Keys keyData)
-        {
+        protected override bool IsInputKey(Keys keyData) {
             return true;
         }
 
@@ -32,8 +29,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// </summary>
         /// <param name="charCode"></param>
         /// <returns></returns>
-        protected override bool IsInputChar(char charCode)
-        {
+        protected override bool IsInputChar(char charCode) {
             return true;
         }
     }
@@ -41,8 +37,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
     /// <summary>
     /// Summary description for ListItem.
     /// </summary>
-    public class ListItem : IComparable
-    {
+    public class ListItem : IComparable {
         /// <summary>
         /// The insert text of a ListItem
         /// </summary>
@@ -68,8 +63,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// </summary>
         /// <param name="text">The text that should be assigned to the ListItem</param>
         /// <param name="type">The type of the ListItem</param>
-        public ListItem(string text, int type)
-        {
+        public ListItem(string text, int type) {
             Text = text;
             Type = type;
             ToolTip = "";
@@ -81,8 +75,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// <param name="text">The text that should be assigned to the ListItem</param>
         /// <param name="type">The type of the ListItem</param>
         /// <param name="tooltip">The tooltip text that should be assigned to the ListItem</param>
-        public ListItem(string text, int type, string tooltip)
-        {
+        public ListItem(string text, int type, string tooltip) {
             Text = text;
             Type = type;
             ToolTip = tooltip;
@@ -95,8 +88,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// <param name="type">The type of the ListItem</param>
         /// <param name="tooltip">The tooltip text that should be assigned to the ListItem</param>
         /// <param name="inserttext">The text that should be inserted into the text when this item is selected</param>
-        public ListItem(string text, int type, string tooltip, string inserttext)
-        {
+        public ListItem(string text, int type, string tooltip, string inserttext) {
             Text = text;
             Type = type;
             ToolTip = tooltip;
@@ -110,8 +102,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public int CompareTo(object obj)
-        {
+        public int CompareTo(object obj) {
             var li = (ListItem) obj;
             return Text.CompareTo(li.Text);
         }
@@ -122,8 +113,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
+        public override string ToString() {
             return Text;
         }
     }

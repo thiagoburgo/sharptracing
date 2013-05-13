@@ -12,13 +12,11 @@ using System;
 using System.ComponentModel;
 using System.Windows.Forms;
 
-namespace Alsing.Windows.Forms.SyntaxBox
-{
+namespace Alsing.Windows.Forms.SyntaxBox {
     /// <summary>
     /// Summary description for FindReplace.
     /// </summary>
-    public class FindReplaceForm : Form
-    {
+    public class FindReplaceForm : Form {
         private WeakReference _Control;
         private string _Last = "";
         private Button btnClose;
@@ -54,8 +52,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// <summary>
         /// Default constructor for the FindReplaceForm.
         /// </summary>
-        public FindReplaceForm()
-        {
+        public FindReplaceForm() {
             //
             // Required for Windows Form Designer support
             //
@@ -66,8 +63,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// Creates a FindReplaceForm that will be assigned to a specific Owner control.
         /// </summary>
         /// <param name="Owner">The SyntaxBox that will use the FindReplaceForm</param>
-        public FindReplaceForm(EditViewControl Owner)
-        {
+        public FindReplaceForm(EditViewControl Owner) {
             //
             // Required for Windows Form Designer support
             //
@@ -80,22 +76,19 @@ namespace Alsing.Windows.Forms.SyntaxBox
             mOwner = Owner;
         }
 
-        private EditViewControl mOwner
-        {
-            get
-            {
-                if (_Control != null)
+        private EditViewControl mOwner {
+            get {
+                if (_Control != null) {
                     return (EditViewControl) _Control.Target;
-                else
+                } else {
                     return null;
+                }
             }
             set { _Control = new WeakReference(value); }
         }
 
-        protected override CreateParams CreateParams
-        {
-            get
-            {
+        protected override CreateParams CreateParams {
+            get {
                 CreateParams cp = base.CreateParams;
                 //				unchecked
                 //				{
@@ -109,12 +102,9 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (components != null)
-                {
+        protected override void Dispose(bool disposing) {
+            if (disposing) {
+                if (components != null) {
                     components.Dispose();
                 }
             }
@@ -124,8 +114,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// <summary>
         /// Displays the FindReplaceForm and sets it in "Find" mode.
         /// </summary>
-        public void ShowFind()
-        {
+        public void ShowFind() {
             pnlReplace.Visible = false;
             pnlReplaceButtons.Visible = false;
             Text = "Find";
@@ -140,8 +129,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// <summary>
         /// Displays the FindReplaceForm and sets it in "Replace" mode.
         /// </summary>
-        public void ShowReplace()
-        {
+        public void ShowReplace() {
             pnlReplace.Visible = true;
             pnlReplaceButtons.Visible = true;
             Text = "Replace";
@@ -153,59 +141,52 @@ namespace Alsing.Windows.Forms.SyntaxBox
             cboFind.Focus();
         }
 
-        private void btnReplace_Click(object sender, EventArgs e)
-        {
+        private void btnReplace_Click(object sender, EventArgs e) {
             ShowReplace();
         }
 
-        private void FindReplace_Closing(object sender, CancelEventArgs e)
-        {
+        private void FindReplace_Closing(object sender, CancelEventArgs e) {
             e.Cancel = true;
             Hide();
         }
 
-        private void btnFind_Click(object sender, EventArgs e)
-        {
+        private void btnFind_Click(object sender, EventArgs e) {
             FindNext();
             cboFind.Focus();
         }
 
-        private void btnClose_Click(object sender, EventArgs e)
-        {
+        private void btnClose_Click(object sender, EventArgs e) {
             mOwner.Focus();
             Hide();
         }
 
-        private void btnDoReplace_Click(object sender, EventArgs e)
-        {
+        private void btnDoReplace_Click(object sender, EventArgs e) {
             mOwner.ReplaceSelection(cboReplace.Text);
             btnFind_Click(null, null);
         }
 
-        private void btnReplaceAll_Click(object sender, EventArgs e)
-        {
+        private void btnReplaceAll_Click(object sender, EventArgs e) {
             string text = cboFind.Text;
-            if (text == "")
+            if (text == "") {
                 return;
+            }
 
             bool found = false;
-            foreach (string s in cboFind.Items)
-            {
-                if (s == text)
-                {
+            foreach (string s in cboFind.Items) {
+                if (s == text) {
                     found = true;
                     break;
                 }
             }
-            if (!found)
+            if (!found) {
                 cboFind.Items.Add(text);
+            }
 
             int x = mOwner.Caret.Position.X;
             int y = mOwner.Caret.Position.Y;
             mOwner.Caret.Position.X = 0;
             mOwner.Caret.Position.Y = 0;
-            while (mOwner.SelectNext(cboFind.Text, chkMatchCase.Checked, chkWholeWord.Checked, chkRegEx.Checked))
-            {
+            while (mOwner.SelectNext(cboFind.Text, chkMatchCase.Checked, chkWholeWord.Checked, chkRegEx.Checked)) {
                 mOwner.ReplaceSelection(cboReplace.Text);
             }
 
@@ -217,30 +198,28 @@ namespace Alsing.Windows.Forms.SyntaxBox
             cboFind.Focus();
         }
 
-        private void btnMarkAll_Click(object sender, EventArgs e)
-        {
+        private void btnMarkAll_Click(object sender, EventArgs e) {
             string text = cboFind.Text;
-            if (text == "")
+            if (text == "") {
                 return;
+            }
 
             bool found = false;
-            foreach (string s in cboFind.Items)
-            {
-                if (s == text)
-                {
+            foreach (string s in cboFind.Items) {
+                if (s == text) {
                     found = true;
                     break;
                 }
             }
-            if (!found)
+            if (!found) {
                 cboFind.Items.Add(text);
+            }
 
             int x = mOwner.Caret.Position.X;
             int y = mOwner.Caret.Position.Y;
             mOwner.Caret.Position.X = 0;
             mOwner.Caret.Position.Y = 0;
-            while (mOwner.SelectNext(cboFind.Text, chkMatchCase.Checked, chkWholeWord.Checked, chkRegEx.Checked))
-            {
+            while (mOwner.SelectNext(cboFind.Text, chkMatchCase.Checked, chkWholeWord.Checked, chkRegEx.Checked)) {
                 mOwner.Caret.CurrentRow.Bookmarked = true;
             }
 
@@ -252,12 +231,10 @@ namespace Alsing.Windows.Forms.SyntaxBox
             cboFind.Focus();
         }
 
-        public void FindNext()
-        {
+        public void FindNext() {
             string text = cboFind.Text;
 
-            if (_Last != "" && _Last != text)
-            {
+            if (_Last != "" && _Last != text) {
                 mOwner.Caret.Position.X = 0;
                 mOwner.Caret.Position.Y = 0;
                 mOwner.ScrollIntoView();
@@ -265,20 +242,20 @@ namespace Alsing.Windows.Forms.SyntaxBox
 
             _Last = text;
 
-            if (text == "")
+            if (text == "") {
                 return;
+            }
 
             bool found = false;
-            foreach (string s in cboFind.Items)
-            {
-                if (s == text)
-                {
+            foreach (string s in cboFind.Items) {
+                if (s == text) {
                     found = true;
                     break;
                 }
             }
-            if (!found)
+            if (!found) {
                 cboFind.Items.Add(text);
+            }
 
             mOwner.SelectNext(cboFind.Text, chkMatchCase.Checked, chkWholeWord.Checked, chkRegEx.Checked);
         }
@@ -289,8 +266,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
-        private void InitializeComponent()
-        {
+        private void InitializeComponent() {
             var resources = new System.Resources.ResourceManager(typeof (FindReplaceForm));
             this.pnlButtons = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();

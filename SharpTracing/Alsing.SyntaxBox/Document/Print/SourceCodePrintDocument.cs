@@ -12,8 +12,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Printing;
 
-namespace Alsing.SourceCode
-{
+namespace Alsing.SourceCode {
     /// <summary>
     /// Printer document class.
     /// </summary>
@@ -37,8 +36,7 @@ namespace Alsing.SourceCode
     /// </code>
     /// </example>
     [ToolboxItem(true)]
-    public class SourceCodePrintDocument : PrintDocument
-    {
+    public class SourceCodePrintDocument : PrintDocument {
         private Font fontBreak;
         private Font fontNormal;
 
@@ -48,16 +46,14 @@ namespace Alsing.SourceCode
 
         public SourceCodePrintDocument() {}
 
-        public SourceCodePrintDocument(SyntaxDocument document)
-        {
+        public SourceCodePrintDocument(SyntaxDocument document) {
             Document = document;
         }
 
         public SyntaxDocument Document { get; set; }
 
         //Override OnBeginPrint to set up the font we are going to use
-        protected override void OnBeginPrint(PrintEventArgs ev)
-        {
+        protected override void OnBeginPrint(PrintEventArgs ev) {
             base.OnBeginPrint(ev);
             fontNormal = new Font("Courier new", 8, FontStyle.Regular);
             fontBreak = new Font("Symbol", 8, FontStyle.Bold);
@@ -72,48 +68,45 @@ namespace Alsing.SourceCode
         }
 
         //Override the OnPrintPage to provide the printing logic for the document
-        protected override void OnPrintPage(PrintPageEventArgs ev)
-        {
+        protected override void OnPrintPage(PrintPageEventArgs ev) {
             int count = 0;
             float leftMargin = ev.MarginBounds.Left;
             float rightMargin = ev.MarginBounds.Right;
             float topMargin = ev.MarginBounds.Top;
             //ev.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
 
-            if (rc == null)
-            {
+            if (rc == null) {
                 Document.ParseAll();
                 Document.ParseAll(true);
 
 
                 rc = new RowList();
-                foreach (Row r in Document)
-                {
+                foreach (Row r in Document) {
                     bool hasbreak = false;
                     float x = leftMargin;
                     var newRow = new Row();
                     rc.Add(newRow);
-                    foreach (Word w in r)
-                    {
+                    foreach (Word w in r) {
                         Font f = fontNormal;
-                        if (w.Style != null)
-                        {
+                        if (w.Style != null) {
                             FontStyle fs = 0;
 
-                            if (w.Style.Bold)
+                            if (w.Style.Bold) {
                                 fs |= FontStyle.Bold;
+                            }
 
-                            if (w.Style.Italic)
+                            if (w.Style.Italic) {
                                 fs |= FontStyle.Italic;
+                            }
 
-                            if (w.Style.Underline)
+                            if (w.Style.Underline) {
                                 fs |= FontStyle.Underline;
+                            }
 
                             f = new Font("Courier new", 8, fs);
                         }
                         SizeF sf = ev.Graphics.MeasureString(w.Text, f);
-                        if (x + sf.Width > rightMargin)
-                        {
+                        if (x + sf.Width > rightMargin) {
                             var chr = (char) 0xbf;
                             var br = new Word {Text = (chr + ""), InfoTip = "break char"};
                             newRow.Add(br);
@@ -127,8 +120,7 @@ namespace Alsing.SourceCode
                         x += sf.Width;
                         newRow.Add(w);
                     }
-                    if (hasbreak)
-                    {
+                    if (hasbreak) {
                         rc.Add(new Row());
                     }
                 }
@@ -138,57 +130,51 @@ namespace Alsing.SourceCode
             base.OnPrintPage(ev);
 
 
-            float lpp = ev.MarginBounds.Height/fontNormal.GetHeight(ev.Graphics);
+            float lpp = ev.MarginBounds.Height / fontNormal.GetHeight(ev.Graphics);
 
 
-            while (count < lpp && (RowIndex < rc.Count))
-            {
+            while (count < lpp && (RowIndex < rc.Count)) {
                 float x = leftMargin;
-                float yPos = topMargin + (count*fontNormal.GetHeight(ev.Graphics));
+                float yPos = topMargin + (count * fontNormal.GetHeight(ev.Graphics));
 
                 Row r = rc[RowIndex];
 
-                foreach (Word w in r)
-                {
-                    if (w.InfoTip != null && w.InfoTip == "break char")
-                    {
+                foreach (Word w in r) {
+                    if (w.InfoTip != null && w.InfoTip == "break char") {
                         ev.Graphics.DrawString(w.Text, fontBreak, Brushes.Black, x, yPos, new StringFormat());
-                    }
-                    else
-                    {
+                    } else {
                         SizeF sf = ev.Graphics.MeasureString(w.Text, fontNormal);
 
-                        if (w.Text != null && (".,:;".IndexOf(w.Text) >= 0))
-                        {
+                        if (w.Text != null && (".,:;".IndexOf(w.Text) >= 0)) {
                             sf.Width = 6;
                             x -= 4;
                         }
-                        if (w.Text == "\t")
-                        {
+                        if (w.Text == "\t") {
                             sf.Width = ev.Graphics.MeasureString("...", fontNormal).Width;
                         }
 
 
                         Color c = Color.Black;
                         Font f = fontNormal;
-                        if (w.Style != null)
-                        {
+                        if (w.Style != null) {
                             c = w.Style.ForeColor;
                             FontStyle fs = 0;
 
-                            if (w.Style.Bold)
+                            if (w.Style.Bold) {
                                 fs |= FontStyle.Bold;
+                            }
 
-                            if (w.Style.Italic)
+                            if (w.Style.Italic) {
                                 fs |= FontStyle.Italic;
+                            }
 
-                            if (w.Style.Underline)
+                            if (w.Style.Underline) {
                                 fs |= FontStyle.Underline;
+                            }
 
                             f = new Font("Courier new", 8, fs);
 
-                            if (!w.Style.Transparent)
-                            {
+                            if (!w.Style.Transparent) {
                                 Color bg = w.Style.BackColor;
                                 ev.Graphics.FillRectangle(new SolidBrush(bg), x, yPos, sf.Width,
                                                           fontNormal.GetHeight(ev.Graphics));

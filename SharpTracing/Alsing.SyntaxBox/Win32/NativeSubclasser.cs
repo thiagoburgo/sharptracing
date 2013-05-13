@@ -11,13 +11,11 @@
 using System;
 using System.Windows.Forms;
 
-namespace Alsing.Windows.Forms
-{
+namespace Alsing.Windows.Forms {
 
     #region params
 
-    public class NativeMessageArgs : EventArgs
-    {
+    public class NativeMessageArgs : EventArgs {
         public bool Cancel;
         public Message Message;
     }
@@ -26,58 +24,49 @@ namespace Alsing.Windows.Forms
 
     #endregion
 
-    public class NativeSubclasser : NativeWindow
-    {
+    public class NativeSubclasser : NativeWindow {
         public NativeSubclasser() {}
 
-        public NativeSubclasser(Control Target)
-        {
+        public NativeSubclasser(Control Target) {
             AssignHandle(Target.Handle);
             Target.HandleCreated += Handle_Created;
             Target.HandleDestroyed += Handle_Destroyed;
         }
 
-        public NativeSubclasser(IntPtr hWnd)
-        {
+        public NativeSubclasser(IntPtr hWnd) {
             AssignHandle(hWnd);
         }
 
         public event NativeMessageHandler Message = null;
 
-        protected virtual void OnMessage(NativeMessageArgs e)
-        {
-            if (Message != null)
+        protected virtual void OnMessage(NativeMessageArgs e) {
+            if (Message != null) {
                 Message(this, e);
+            }
         }
 
-        private void Handle_Created(object o, EventArgs e)
-        {
+        private void Handle_Created(object o, EventArgs e) {
             AssignHandle(((Control) o).Handle);
         }
 
-        private void Handle_Destroyed(object o, EventArgs e)
-        {
+        private void Handle_Destroyed(object o, EventArgs e) {
             ReleaseHandle();
         }
 
-        public void Detatch()
-        {
+        public void Detatch() {
             //	this.ReleaseHandle ();
         }
 
-        protected override void WndProc(ref Message m)
-        {
-            try
-            {
+        protected override void WndProc(ref Message m) {
+            try {
                 var e = new NativeMessageArgs {Message = m, Cancel = false};
 
                 OnMessage(e);
 
-                if (!e.Cancel)
+                if (!e.Cancel) {
                     base.WndProc(ref m);
-            }
-            catch (Exception x)
-            {
+                }
+            } catch (Exception x) {
                 Console.WriteLine(x.Message);
             }
         }

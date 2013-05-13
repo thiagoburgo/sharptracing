@@ -12,21 +12,17 @@ using System;
 using System.Diagnostics;
 using Alsing.SourceCode;
 
-namespace Alsing.Windows.Forms.SyntaxBox
-{
+namespace Alsing.Windows.Forms.SyntaxBox {
     /// <summary>
     /// Caret class used by the SyntaxBoxControl
     /// </summary>
-    public sealed class Caret
-    {
+    public sealed class Caret {
         /// <summary>
         /// Gets or Sets the position of the caret.
         /// </summary>
-        public TextPoint Position
-        {
+        public TextPoint Position {
             get { return _Position; }
-            set
-            {
+            set {
                 _Position = value;
                 _Position.Change += PositionChange;
                 OnChange();
@@ -38,15 +34,14 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// </summary>
         public event EventHandler Change = null;
 
-        private void PositionChange(object s, EventArgs e)
-        {
+        private void PositionChange(object s, EventArgs e) {
             OnChange();
         }
 
-        private void OnChange()
-        {
-            if (Change != null)
+        private void OnChange() {
+            if (Change != null) {
                 Change(this, null);
+            }
         }
 
         #region General Declarations
@@ -77,8 +72,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// Caret constructor
         /// </summary>
         /// <param name="control">The control that will use the caret</param>
-        public Caret(EditViewControl control)
-        {
+        public Caret(EditViewControl control) {
             Position = new TextPoint(0, 0);
             Control = control;
         }
@@ -87,29 +81,31 @@ namespace Alsing.Windows.Forms.SyntaxBox
 
         #region Helpers
 
-        private void RememberXPos()
-        {
+        private void RememberXPos() {
             OldLogicalXPos = LogicalPosition.X;
         }
 
         /// <summary>
         /// Confines the caret to a valid position within the active document
         /// </summary>
-        public void CropPosition()
-        {
-            if (Position.X < 0)
+        public void CropPosition() {
+            if (Position.X < 0) {
                 Position.X = 0;
+            }
 
-            if (Position.Y >= Control.Document.Count)
+            if (Position.Y >= Control.Document.Count) {
                 Position.Y = Control.Document.Count - 1;
+            }
 
-            if (Position.Y < 0)
+            if (Position.Y < 0) {
                 Position.Y = 0;
+            }
 
             Row xtr = CurrentRow;
 
-            if (Position.X > xtr.Text.Length && !Control.VirtualWhitespace)
+            if (Position.X > xtr.Text.Length && !Control.VirtualWhitespace) {
                 Position.X = xtr.Text.Length;
+            }
         }
 
         #endregion
@@ -121,36 +117,29 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// if the caret is placed at the last column of a row the caret will move down one row and be placed at the first column of that row.
         /// </summary>
         /// <param name="Select">True if a selection should be created from the current caret pos to the new pos</param>
-        public void MoveRight(bool Select)
-        {
+        public void MoveRight(bool Select) {
             CropPosition();
             Position.X++;
 
-            if (CurrentRow.IsCollapsed)
-            {
-                if (Position.X > CurrentRow.Expansion_EndChar)
-                {
+            if (CurrentRow.IsCollapsed) {
+                if (Position.X > CurrentRow.Expansion_EndChar) {
                     Position.Y = CurrentRow.Expansion_EndRow.Index;
                     Position.X = CurrentRow.Expansion_EndRow.Expansion_StartChar;
                     CropPosition();
                 }
                 RememberXPos();
                 CaretMoved(Select);
-            }
-            else
-            {
+            } else {
                 Row xtr = CurrentRow;
-                if (Position.X > xtr.Text.Length && !Control.VirtualWhitespace)
-                {
-                    if (Position.Y < Control.Document.Count - 1)
-                    {
+                if (Position.X > xtr.Text.Length && !Control.VirtualWhitespace) {
+                    if (Position.Y < Control.Document.Count - 1) {
                         MoveDown(Select);
                         Position.X = 0;
                         //this.Position.Y ++;
                         CropPosition();
-                    }
-                    else
+                    } else {
                         CropPosition();
+                    }
                 }
                 RememberXPos();
                 CaretMoved(Select);
@@ -161,25 +150,18 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// Moves the caret up one row.
         /// </summary>
         /// <param name="Select">True if a selection should be created from the current caret pos to the new pos</param>
-        public void MoveUp(bool Select)
-        {
+        public void MoveUp(bool Select) {
             CropPosition();
             int x = OldLogicalXPos;
             //error here
-            try
-            {
-                if (CurrentRow != null && CurrentRow.PrevVisibleRow != null)
-                {
+            try {
+                if (CurrentRow != null && CurrentRow.PrevVisibleRow != null) {
                     Position.Y = CurrentRow.PrevVisibleRow.Index;
-                    if (CurrentRow.IsCollapsed)
-                    {
+                    if (CurrentRow.IsCollapsed) {
                         x = 0;
                     }
                 }
-            }
-            catch {}
-            finally
-            {
+            } catch {} finally {
                 CropPosition();
                 LogicalPosition = new TextPoint(x, Position.Y);
                 CropPosition();
@@ -192,16 +174,15 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// </summary>
         /// <param name="rows">Number of rows the caret should be moved up</param>
         /// <param name="Select">True if a selection should be created from the current caret pos to the new pos</param>
-        public void MoveUp(int rows, bool Select)
-        {
+        public void MoveUp(int rows, bool Select) {
             CropPosition();
             int x = OldLogicalXPos;
-            try
-            {
+            try {
                 int pos = CurrentRow.VisibleIndex;
                 pos -= rows;
-                if (pos < 0)
+                if (pos < 0) {
                     pos = 0;
+                }
                 Row r = Control.Document.VisibleRows[pos];
                 pos = r.Index;
 
@@ -212,12 +193,10 @@ namespace Alsing.Windows.Forms.SyntaxBox
                 //				{
                 //					this.Position.Y =  this.CurrentRow.PrevVisibleRow.Index;
                 //				}
-                if (CurrentRow.IsCollapsed)
-                {
+                if (CurrentRow.IsCollapsed) {
                     x = 0;
                 }
-            }
-            catch {}
+            } catch {}
             CropPosition();
             LogicalPosition = new TextPoint(x, Position.Y);
             CropPosition();
@@ -229,17 +208,16 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// </summary>
         /// <param name="rows">The number of rows the caret should be moved down</param>
         /// <param name="Select">True if a selection should be created from the current caret pos to the new pos</param>
-        public void MoveDown(int rows, bool Select)
-        {
+        public void MoveDown(int rows, bool Select) {
             int x = OldLogicalXPos;
             CropPosition();
             //this.Position.Y +=rows;
-            try
-            {
+            try {
                 int pos = CurrentRow.VisibleIndex;
                 pos += rows;
-                if (pos > Control.Document.VisibleRows.Count - 1)
+                if (pos > Control.Document.VisibleRows.Count - 1) {
                     pos = Control.Document.VisibleRows.Count - 1;
+                }
 
                 Row r = Control.Document.VisibleRows[pos];
                 pos = r.Index;
@@ -250,14 +228,10 @@ namespace Alsing.Windows.Forms.SyntaxBox
                 //					this.Position.Y =  this.CurrentRow.NextVisibleRow.Index;
                 //					
                 //				}
-                if (CurrentRow.IsCollapsed)
-                {
+                if (CurrentRow.IsCollapsed) {
                     x = 0;
                 }
-            }
-            catch {}
-            finally
-            {
+            } catch {} finally {
                 CropPosition();
                 LogicalPosition = new TextPoint(x, Position.Y);
                 CropPosition();
@@ -270,27 +244,22 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// Moves the caret down one row.
         /// </summary>
         /// <param name="Select">True if a selection should be created from the current caret pos to the new pos</param>
-        public void MoveDown(bool Select)
-        {
+        public void MoveDown(bool Select) {
             CropPosition();
             int x = OldLogicalXPos;
             //error here
-            try
-            {
+            try {
                 Row r = CurrentRow;
                 Row r2 = r.NextVisibleRow;
-                if (r2 == null)
+                if (r2 == null) {
                     return;
+                }
 
                 Position.Y = r2.Index;
-                if (CurrentRow.IsCollapsed)
-                {
+                if (CurrentRow.IsCollapsed) {
                     x = 0;
                 }
-            }
-            catch {}
-            finally
-            {
+            } catch {} finally {
                 CropPosition();
                 LogicalPosition = new TextPoint(x, Position.Y);
                 CropPosition();
@@ -303,42 +272,35 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// if the caret is placed at the first column the caret will be moved up one line and placed at the last column of the row.
         /// </summary>
         /// <param name="Select">True if a selection should be created from the current caret pos to the new pos</param>
-        public void MoveLeft(bool Select)
-        {
+        public void MoveLeft(bool Select) {
             CropPosition();
             Position.X--;
 
-            if (CurrentRow.IsCollapsedEndPart)
-            {
-                if (Position.X < CurrentRow.Expansion_StartChar)
-                {
-                    if (CurrentRow.Expansion_StartRow.Index == - 1)
+            if (CurrentRow.IsCollapsedEndPart) {
+                if (Position.X < CurrentRow.Expansion_StartChar) {
+                    if (CurrentRow.Expansion_StartRow.Index == - 1) {
                         Debugger.Break();
+                    }
                     Position.Y = CurrentRow.Expansion_StartRow.Index;
                     Position.X = CurrentRow.Expansion_StartRow.Expansion_EndChar;
                     CropPosition();
                 }
                 RememberXPos();
                 CaretMoved(Select);
-            }
-            else
-            {
-                if (Position.X < 0)
-                {
-                    if (Position.Y > 0)
-                    {
+            } else {
+                if (Position.X < 0) {
+                    if (Position.Y > 0) {
                         MoveUp(Select);
                         CropPosition();
                         Row xtr = CurrentRow;
                         Position.X = xtr.Text.Length;
-                        if (CurrentRow.IsCollapsed)
-                        {
+                        if (CurrentRow.IsCollapsed) {
                             Position.Y = CurrentRow.Expansion_EndRow.Index;
                             Position.X = CurrentRow.Text.Length;
                         }
-                    }
-                    else
+                    } else {
                         CropPosition();
+                    }
                 }
                 RememberXPos();
                 CaretMoved(Select);
@@ -350,16 +312,12 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// Moves the caret to the first non whitespace column at the active row
         /// </summary>
         /// <param name="Select">True if a selection should be created from the current caret pos to the new pos</param>
-        public void MoveHome(bool Select)
-        {
+        public void MoveHome(bool Select) {
             CropPosition();
-            if (CurrentRow.IsCollapsedEndPart)
-            {
+            if (CurrentRow.IsCollapsedEndPart) {
                 Position.Y = CurrentRow.Expansion_StartRow.Index;
                 MoveHome(Select);
-            }
-            else
-            {
+            } else {
                 int i = CurrentRow.GetLeadingWhitespace().Length;
                 Position.X = Position.X == i ? 0 : i;
                 RememberXPos();
@@ -371,15 +329,11 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// Moves the caret to the end of a row ignoring any whitespace characters at the end of the row
         /// </summary>
         /// <param name="Select">True if a selection should be created from the current caret pos to the new pos</param>
-        public void MoveEnd(bool Select)
-        {
-            if (CurrentRow.IsCollapsed)
-            {
+        public void MoveEnd(bool Select) {
+            if (CurrentRow.IsCollapsed) {
                 Position.Y = CurrentRow.Expansion_EndRow.Index;
                 MoveEnd(Select);
-            }
-            else
-            {
+            } else {
                 CropPosition();
                 Row xtr = CurrentRow;
                 Position.X = xtr.Text.Length;
@@ -388,21 +342,20 @@ namespace Alsing.Windows.Forms.SyntaxBox
             }
         }
 
-        public void CaretMoved(bool Select)
-        {
+        public void CaretMoved(bool Select) {
             Control.ScrollIntoView();
-            if (!Select)
+            if (!Select) {
                 Control.Selection.ClearSelection();
-            else
+            } else {
                 Control.Selection.MakeSelection();
+            }
         }
 
         /// <summary>
         /// Moves the caret to the first column of the active row
         /// </summary>
         /// <param name="Select">True if a selection should be created from the current caret pos to the new pos</param>
-        public void MoveAbsoluteHome(bool Select)
-        {
+        public void MoveAbsoluteHome(bool Select) {
             Position.X = 0;
             Position.Y = 0;
             RememberXPos();
@@ -413,8 +366,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// Moves the caret to the absolute end of the active row
         /// </summary>
         /// <param name="Select">True if a selection should be created from the current caret pos to the new pos</param>
-        public void MoveAbsoluteEnd(bool Select)
-        {
+        public void MoveAbsoluteEnd(bool Select) {
             Position.X = Control.Document[Control.Document.Count - 1].Text.Length;
             Position.Y = Control.Document.Count - 1;
             RememberXPos();
@@ -430,8 +382,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// This only applies if the active row is fully parsed.
         /// </summary>
         /// <returns>a Word object from the active row</returns>
-        public Word CurrentWord
-        {
+        public Word CurrentWord {
             get { return Control.Document.GetWordFromPos(Position); }
         }
 
@@ -439,8 +390,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// Returns the row that the caret is placed on
         /// </summary>
         /// <returns>a Row object from the active document</returns>
-        public Row CurrentRow
-        {
+        public Row CurrentRow {
             get { return Control.Document[Position.Y]; }
         }
 
@@ -449,8 +399,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// This only applies if the active row is fully parsed.
         /// </summary>
         /// <returns>a Word object from the active row</returns>
-        public Span CurrentSegment()
-        {
+        public Span CurrentSegment() {
             return Control.Document.GetSegmentFromPos(Position);
         }
 
@@ -461,57 +410,47 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// <summary>
         /// Gets or Sets the Logical position of the caret.
         /// </summary>
-        public TextPoint LogicalPosition
-        {
-            get
-            {
-                if (Position.X < 0)
+        public TextPoint LogicalPosition {
+            get {
+                if (Position.X < 0) {
                     return new TextPoint(0, Position.Y);
+                }
 
                 Row xtr = CurrentRow;
                 int x = 0;
-                if (xtr == null)
+                if (xtr == null) {
                     return new TextPoint(0, 0);
+                }
 
                 int Padd = Math.Max(Position.X - xtr.Text.Length, 0);
                 var PaddStr = new String(' ', Padd);
                 string TotStr = xtr.Text + PaddStr;
 
                 char[] buffer = TotStr.ToCharArray(0, Position.X);
-                foreach (char c in buffer)
-                {
-                    if (c == '\t')
-                    {
-                        x += Control.TabSize - (x%Control.TabSize);
-                    }
-                    else
-                    {
+                foreach (char c in buffer) {
+                    if (c == '\t') {
+                        x += Control.TabSize - (x % Control.TabSize);
+                    } else {
                         x++;
                     }
                 }
                 return new TextPoint(x, Position.Y);
             }
-            set
-            {
+            set {
                 Row xtr = CurrentRow;
                 int x = 0;
                 int xx = 0;
-                if (value.X > 0)
-                {
+                if (value.X > 0) {
                     char[] chars = xtr.Text.ToCharArray();
 
                     int i = 0;
 
-                    while (x < value.X)
-                    {
+                    while (x < value.X) {
                         char c = i < chars.Length ? chars[i] : ' ';
                         xx++;
-                        if (c == '\t')
-                        {
-                            x += Control.TabSize - (x%Control.TabSize);
-                        }
-                        else
-                        {
+                        if (c == '\t') {
+                            x += Control.TabSize - (x % Control.TabSize);
+                        } else {
                             x++;
                         }
                         i++;
@@ -528,8 +467,7 @@ namespace Alsing.Windows.Forms.SyntaxBox
         /// Sets the position of the caret
         /// </summary>
         /// <param name="pos">Point containing the new x and y positions</param>
-        public void SetPos(TextPoint pos)
-        {
+        public void SetPos(TextPoint pos) {
             Position = pos;
             RememberXPos();
         }

@@ -10,66 +10,80 @@
  * Feel free to copy, modify and  give fixes 
  * suggestions. Keep the credits!
  */
- using System;
 
-namespace DrawEngine.Renderer.Mathematics.Algebra
-{
-    public static class MathUtil
-    {
-        public static bool NearZero(double x)
-        {
-            return (x >= -1.0e-5 && x <= 1.0e-5);
+using System;
+namespace DrawEngine.Renderer.Mathematics.Algebra {
+    public static class MathUtil {
+        public const double Epsilon = 1e-5;
+
+        public static bool IsEqual(this double x, double y) {
+            return (x - y).NearZero();
         }
-        public static bool NearZero(double x, double tolerance)
-        {
+
+        public static bool IsEqual(this double x, float y) {
+            return (x - y).NearZero();
+        }
+
+        public static bool IsEqual(this float x, float y) {
+            return (x - y).NearZero();
+        }
+
+        public static bool IsEqual(this float x, double y) {
+            return (x - y).NearZero();
+        }
+
+        public static bool NearZero(this double x) {
+            return (x >= -Epsilon && x <= Epsilon);
+        }
+
+        public static bool NearZero(this double x, double tolerance) {
             return (x >= -tolerance && x <= tolerance);
         }
-        public static bool NearZero(float x)
-        {
-            return (x >= -1.0e-5 && x <= 1.0e-5);
+
+        public static bool NearZero(this float x) {
+            return (x >= -Epsilon && x <= Epsilon);
         }
-        public static bool NearZero(float x, float tolerance)
-        {
+
+        public static bool NearZero(this float x, double tolerance) {
             return (x >= -tolerance && x <= tolerance);
         }
-        public static float ConvertDegreeToRadians(float degree)
-        {
-            return (float)(Math.PI * 1.0 / 180.0) * degree;
+
+        public static float ConvertDegreeToRadians(this float degree) {
+            return (float) (Math.PI * 1.0 / 180.0) * degree;
         }
-        public static float ConvertRadiansToDegree(float rad)
-        {
-            return (float)(180.0 / Math.PI) * rad;
+
+        public static float ConvertRadiansToDegree(this float rad) {
+            return (float) (180.0 / Math.PI) * rad;
         }
-        public static float Lerp(float t, float v1, float v2)
-        {
+
+        public static float Lerp(float t, float v1, float v2) {
             return (1.0f - t) * v1 + t * v2;
         }
-        public static float Clamp(float val, float low, float high)
-        {
-            if(val < low){
-                return low;
-            } else if(val > high){
-                return high;
-            } else{
-                return val;
-            }
-        }
-        public static int Clamp(int val, int low, int high)
-        {
-            if(val < low){
+
+        public static float Clamp(float val, float low, float high) {
+            if (val < low) {
                 return low;
             }
-            if(val > high){
+            if (val > high) {
                 return high;
             }
             return val;
         }
 
-        public static int Mod(int a, int b)
-        {
+        public static int Clamp(int val, int low, int high) {
+            if (val < low) {
+                return low;
+            }
+            if (val > high) {
+                return high;
+            }
+            return val;
+        }
+
+        public static int Mod(int a, int b) {
             int n = a / b;
             a -= n * b;
-            if(a < 0){
+            if (a < 0) {
                 a += b;
             }
             return a;

@@ -12,13 +12,13 @@
  * Feel free to copy, modify and  give fixes 
  * suggestions. Keep the credits!
  */
- using System;
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace DrawEngine.Renderer.SpatialSubdivision.KDTree
-{
+namespace DrawEngine.Renderer.SpatialSubdivision.KDTree {
     /// <summary>
     /// Provides a queue where the element with the lowest value is always at the front of the queue.
     /// </summary>
@@ -35,10 +35,10 @@ namespace DrawEngine.Renderer.SpatialSubdivision.KDTree
     /// </para>
     /// </remarks>
     /// <threadsafety static="true" instance="false" />
-    public sealed class PriorityQueue<T> : IEnumerable<T>, ICollection where T : IComparable<T>
-    {
+    public sealed class PriorityQueue<T> : IEnumerable<T>, ICollection where T : IComparable<T> {
         private readonly List<T> _heap; // List that stores the binary heap tree.
         private object _syncRoot;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PriorityQueue{T}"/> class that is empty, 
         /// has the default initial capacity, and uses the default <see cref="IComparer{T}"/>
@@ -58,11 +58,13 @@ namespace DrawEngine.Renderer.SpatialSubdivision.KDTree
         ///   This constructor is an O(1) operation.
         /// </para>
         /// </remarks>
-        public PriorityQueue() : this((IComparer<T>)null) {}
+        public PriorityQueue() : this((IComparer<T>) null) {}
+
         /// <summary>
         /// 
         /// </summary>
         public PriorityQueue(int initialCapacity) : this(initialCapacity, null) {}
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PriorityQueue{T}"/> that contains elements
         /// copied from the specified <see cref="IEnumerable{T}"/> and that uses the specified 
@@ -87,21 +89,21 @@ namespace DrawEngine.Renderer.SpatialSubdivision.KDTree
         /// </para>
         /// </remarks>
         /// <exception cref="ArgumentNullException"><paramref name="collection"/> is <see langword="null"/>.</exception>
-        public PriorityQueue(IEnumerable<T> collection, IComparer<T> comparer) : this(null, comparer)
-        {
-            if(collection == null){
+        public PriorityQueue(IEnumerable<T> collection, IComparer<T> comparer) : this(null, comparer) {
+            if (collection == null) {
                 throw new ArgumentNullException("collection");
             }
             this._heap = new List<T>(collection);
-            if(this._heap.Count > 1){
+            if (this._heap.Count > 1) {
                 // Starting at the parent of the last element (which is the last non-leaf node in the tree), perform the
                 // down-heap operation to establish the heap property. This provides O(n) initialization, faster than calling
                 // Enqueue for each item which would be O(n log n)
-                for(int index = (this._heap.Count - 1) >> 1; index >= 0; --index){
+                for (int index = (this._heap.Count - 1) >> 1; index >= 0; --index) {
                     this.DownHeap(index);
                 }
             }
         }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PriorityQueue{T}"/> that contains elements copied from the specified <see cref="IEnumerable{T}"/>
         /// and uses the default <see cref="IComparer{T}"/> implementation for the element type.
@@ -124,6 +126,7 @@ namespace DrawEngine.Renderer.SpatialSubdivision.KDTree
         /// </remarks>
         /// <exception cref="ArgumentNullException"><paramref name="collection"/> is <see langword="null"/>.</exception>
         public PriorityQueue(IEnumerable<T> collection) : this(collection, null) {}
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PriorityQueue{T}"/> class that is empty, 
         /// has the specified initial capacity, and uses the specified <see cref="IComparer{T}"/>
@@ -147,6 +150,7 @@ namespace DrawEngine.Renderer.SpatialSubdivision.KDTree
         /// </remarks>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="capacity"/> is less than 0.</exception>
         public PriorityQueue(int capacity, IComparer<T> comparer) : this(new List<T>(capacity), comparer) {}
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PriorityQueue{T}"/> class that is empty, has the default initial capacity, and uses the
         /// specified <see cref="IComparer{T}"/> implementation to compare elements.
@@ -167,11 +171,12 @@ namespace DrawEngine.Renderer.SpatialSubdivision.KDTree
         /// </para>
         /// </remarks>
         public PriorityQueue(IComparer<T> comparer) : this(new List<T>(), comparer) {}
-        private PriorityQueue(List<T> heap, IComparer<T> comparer)
-        {
+
+        private PriorityQueue(List<T> heap, IComparer<T> comparer) {
             this.Comparer = comparer ?? Comparer<T>.Default;
             this._heap = heap;
         }
+
         /// <summary>
         /// Gets the <see cref="IComparer{T}"/> that is used to compare the elements of the
         /// priority queue.
@@ -186,6 +191,7 @@ namespace DrawEngine.Renderer.SpatialSubdivision.KDTree
         /// </para>
         /// </remarks>
         public IComparer<T> Comparer { get; private set; }
+
         /// <summary>
         /// Gets or sets the total number of elements the internal data structure can hold without resizing.
         /// </summary>
@@ -212,13 +218,13 @@ namespace DrawEngine.Renderer.SpatialSubdivision.KDTree
         /// </para>
         /// </remarks>
         /// <exception cref="ArgumentOutOfRangeException"><see cref="Capacity"/> is set to a value that is less than count.</exception>
-        public int Capacity
-        {
+        public int Capacity {
             get { return this._heap.Capacity; }
             set { this._heap.Capacity = value; }
         }
 
         #region ICollection Members
+
         /// <summary>
         /// Gets the number of elements contained in the <see cref="PriorityQueue{T}"/>. 
         /// </summary>
@@ -239,31 +245,31 @@ namespace DrawEngine.Renderer.SpatialSubdivision.KDTree
         ///   Retrieving the value of this property is an O(1) operation.
         /// </para>
         /// </remarks>
-        public int Count
-        {
+        public int Count {
             get { return this._heap.Count; }
         }
-        void ICollection.CopyTo(Array array, int index)
-        {
-            ((ICollection)this._heap).CopyTo(array, index);
+
+        void ICollection.CopyTo(Array array, int index) {
+            ((ICollection) this._heap).CopyTo(array, index);
         }
-        bool ICollection.IsSynchronized
-        {
+
+        bool ICollection.IsSynchronized {
             get { return false; }
         }
-        object ICollection.SyncRoot
-        {
-            get
-            {
-                if(this._syncRoot == null){
+
+        object ICollection.SyncRoot {
+            get {
+                if (this._syncRoot == null) {
                     Interlocked.CompareExchange(ref this._syncRoot, new object(), null);
                 }
                 return this._syncRoot;
             }
         }
+
         #endregion
 
         #region IEnumerable<T> Members
+
         /// <summary>
         /// Returns an enumerator that iterates through the values in the <see cref="PriorityQueue{T}"/>.
         /// </summary>
@@ -281,8 +287,7 @@ namespace DrawEngine.Renderer.SpatialSubdivision.KDTree
         ///   This method is an O(<em>n</em> log <em>n</em>) operation, where <em>n</em> is <see cref="Count"/>.
         /// </para>
         /// </remarks>
-        public IEnumerator<T> GetEnumerator()
-        {
+        public IEnumerator<T> GetEnumerator() {
             // We want to enumerate in the order you would get if calling Dequeue until the queue is empty.
             // A simple way to achieve that is to simple sort the heap, and to return an iterator over
             // the sorted copy.
@@ -290,10 +295,11 @@ namespace DrawEngine.Renderer.SpatialSubdivision.KDTree
             heapCopy.Sort(this.Comparer);
             return heapCopy.GetEnumerator();
         }
-        IEnumerator IEnumerable.GetEnumerator()
-        {
+
+        IEnumerator IEnumerable.GetEnumerator() {
             return this.GetEnumerator();
         }
+
         #endregion
 
         /// <summary>
@@ -319,11 +325,11 @@ namespace DrawEngine.Renderer.SpatialSubdivision.KDTree
         ///   If the capacity needs to be increased to accommodate the new element, this method becomes an O(<em>n</em>) operation, where <em>n</em> is <see cref="Count"/>.
         /// </para>
         /// </remarks>
-        public void Enqueue(T item)
-        {
+        public void Enqueue(T item) {
             this._heap.Add(item);
             this.UpHeap();
         }
+
         /// <summary>
         /// Removes and returns the element with the lowest value from the <see cref="PriorityQueue{T}"/>.
         /// </summary>
@@ -340,20 +346,20 @@ namespace DrawEngine.Renderer.SpatialSubdivision.KDTree
         /// </para>
         /// </remarks>
         /// <exception cref="InvalidOperationException">The <see cref="PriorityQueue{T}"/> is empty.</exception>
-        public T Dequeue()
-        {
-            if(this._heap.Count == 0){
+        public T Dequeue() {
+            if (this._heap.Count == 0) {
                 throw new InvalidOperationException("The priority queue is empty.");
             }
             T result = this._heap[0];
             int lastIndex = this._heap.Count - 1;
             this._heap[0] = this._heap[lastIndex];
             this._heap.RemoveAt(lastIndex);
-            if(this._heap.Count > 0){
+            if (this._heap.Count > 0) {
                 this.DownHeap(0);
             }
             return result;
         }
+
         /// <summary>
         /// Returns the object with the lowest value in the <see cref="PriorityQueue{T}"/> without removing it.
         /// </summary>
@@ -370,13 +376,13 @@ namespace DrawEngine.Renderer.SpatialSubdivision.KDTree
         /// </para>
         /// </remarks>
         /// <exception cref="InvalidOperationException">The <see cref="PriorityQueue{T}"/> is empty.</exception>
-        public T Peek()
-        {
-            if(this._heap.Count == 0){
+        public T Peek() {
+            if (this._heap.Count == 0) {
                 throw new InvalidOperationException("The priority queue is empty.");
             }
             return this._heap[0];
         }
+
         /// <summary>
         /// Indicates that the current first item of the <see cref="PriorityQueue{T}"/> was modified and its priority has to be re-evaluated.
         /// </summary>
@@ -406,13 +412,13 @@ namespace DrawEngine.Renderer.SpatialSubdivision.KDTree
         /// </para>
         /// </remarks>
         /// <exception cref="InvalidOperationException">The <see cref="PriorityQueue{T}"/> is empty.</exception>
-        public void AdjustFirstItem()
-        {
-            if(this._heap.Count == 0){
+        public void AdjustFirstItem() {
+            if (this._heap.Count == 0) {
                 throw new InvalidOperationException("The priority queue is empty.");
             }
             this.DownHeap(0);
         }
+
         /// <summary>
         /// Removes all objects from the <see cref="PriorityQueue{T}"/>.
         /// </summary>
@@ -428,10 +434,10 @@ namespace DrawEngine.Renderer.SpatialSubdivision.KDTree
         ///   This method is an O(<em>n</em>) operation, where <em>n</em> is <see cref="Count"/>.
         /// </para>
         /// </remarks>
-        public void Clear()
-        {
+        public void Clear() {
             this._heap.Clear();
         }
+
         /// <summary>
         /// Sets the capacity to the actual number of elements in the <see cref="PriorityQueue{T}"/>, if that number is less than a threshold value.
         /// </summary>
@@ -456,10 +462,10 @@ namespace DrawEngine.Renderer.SpatialSubdivision.KDTree
         ///   The capacity can also be set using the <see cref="Capacity"/> property.
         /// </para>
         /// </remarks>
-        public void TrimExcess()
-        {
+        public void TrimExcess() {
             this._heap.TrimExcess();
         }
+
         /// <summary>
         /// Determines whether an element is in the <see cref="PriorityQueue{T}"/>.
         /// </summary>
@@ -473,10 +479,10 @@ namespace DrawEngine.Renderer.SpatialSubdivision.KDTree
         ///   This method performs a linear search; therefore, this method is an O(<em>n</em>) operation, where <em>n</em> is <see cref="Count"/>.
         /// </para>
         /// </remarks>
-        public bool Contains(T item)
-        {
+        public bool Contains(T item) {
             return this._heap.Contains(item);
         }
+
         /// <summary>
         /// Copies the <see cref="PriorityQueue{T}"/> elements to a new array. 
         /// </summary>
@@ -489,13 +495,13 @@ namespace DrawEngine.Renderer.SpatialSubdivision.KDTree
         ///   This method is an O(<em>n</em> log <em>n</em>) operation, where <em>n</em> is <see cref="Count"/>.
         /// </para>
         /// </remarks>
-        public T[] ToArray()
-        {
+        public T[] ToArray() {
             T[] result = this._heap.ToArray();
             // We want to return the elements in the same order in which they are enumerated, which is sorted order, so we simply sort.
             Array.Sort(result, this.Comparer);
             return result;
         }
+
         /// <summary>
         /// Copies the <see cref="PriorityQueue{T}"/> elements to an existing one-dimensional <see cref="Array"/>, starting at the specified array index.
         /// </summary>
@@ -516,44 +522,43 @@ namespace DrawEngine.Renderer.SpatialSubdivision.KDTree
         /// number of elements in the source <see cref="PriorityQueue{T}"/> is greater than the available space from <paramref name="arrayIndex"/> to
         /// the end of the destination array. 
         /// </exception>
-        public void CopyTo(T[] array, int arrayIndex)
-        {
+        public void CopyTo(T[] array, int arrayIndex) {
             this._heap.CopyTo(array, arrayIndex);
             // We want to return the elements in the same order in which they are enumerated, which is sorted order, so we simply sort.
             Array.Sort(array, arrayIndex, this._heap.Count, this.Comparer);
         }
-        private void UpHeap()
-        {
+
+        private void UpHeap() {
             int index = this._heap.Count - 1;
             T item = this._heap[index];
             int parentIndex = (index - 1) >> 1;
             // Because we can't easily tell when parentIndex goes beyond 0, we check index instead; if that was already zero, then we're at the top
-            while(index > 0 && this.Comparer.Compare(item, this._heap[parentIndex]) < 0){
+            while (index > 0 && this.Comparer.Compare(item, this._heap[parentIndex]) < 0) {
                 this._heap[index] = this._heap[parentIndex];
                 index = parentIndex;
                 parentIndex = (index - 1) >> 1;
             }
             this._heap[index] = item;
         }
-        private void DownHeap(int index)
-        {
+
+        private void DownHeap(int index) {
             T item = this._heap[index];
             int count = this._heap.Count;
             int firstChild = (index << 1) + 1;
             int secondChild = firstChild + 1;
-            int smallestChild = (secondChild < count
-                                 && this.Comparer.Compare(this._heap[secondChild], this._heap[firstChild]) < 0)
-                                        ? secondChild
-                                        : firstChild;
-            while(smallestChild < count && this.Comparer.Compare(this._heap[smallestChild], item) < 0){
+            int smallestChild = (secondChild < count &&
+                                 this.Comparer.Compare(this._heap[secondChild], this._heap[firstChild]) < 0)
+                                    ? secondChild
+                                    : firstChild;
+            while (smallestChild < count && this.Comparer.Compare(this._heap[smallestChild], item) < 0) {
                 this._heap[index] = this._heap[smallestChild];
                 index = smallestChild;
                 firstChild = (index << 1) + 1;
                 secondChild = firstChild + 1;
-                smallestChild = (secondChild < count
-                                 && this.Comparer.Compare(this._heap[secondChild], this._heap[firstChild]) < 0)
-                                        ? secondChild
-                                        : firstChild;
+                smallestChild = (secondChild < count &&
+                                 this.Comparer.Compare(this._heap[secondChild], this._heap[firstChild]) < 0)
+                                    ? secondChild
+                                    : firstChild;
             }
             this._heap[index] = item;
         }

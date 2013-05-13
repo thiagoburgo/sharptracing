@@ -10,8 +10,7 @@
 
 using System.Text.RegularExpressions;
 
-namespace Alsing.SourceCode
-{
+namespace Alsing.SourceCode {
     /// <summary>
     /// A Pattern is a specific string or a RegEx pattern that is used by the parser.
     /// There are two types of patterns , Simple and Complex.
@@ -19,8 +18,7 @@ namespace Alsing.SourceCode
     /// Simple Patterns are patterns that consists of a simple fixed string eg. "void" or "for".
     /// Complex Patterns are patterns that consists of RegEx patterns , eg hex numbers or urls can be described as regex patterns.
     /// </summary>
-    public sealed partial class Pattern
-    {
+    public sealed partial class Pattern {
         public static readonly string DefaultSeparators = ".,+-*^\\/()[]{}@:;'?£$#%& \t=<>";
 
         private string _StringPattern = "";
@@ -72,8 +70,7 @@ namespace Alsing.SourceCode
 
         private string _Separators = DefaultSeparators;
 
-        public string Separators
-        {
+        public string Separators {
             get { return _Separators; }
             set { _Separators = value; }
         }
@@ -85,16 +82,12 @@ namespace Alsing.SourceCode
         /// </summary>
         /// <param name="pattern"></param>
         /// <param name="iscomplex"></param>
-        public Pattern(string pattern, bool iscomplex)
-        {
+        public Pattern(string pattern, bool iscomplex) {
             StringPattern = pattern;
-            if (iscomplex)
-            {
+            if (iscomplex) {
                 IsComplex = true;
                 rx = new Regex(StringPattern, RegexOptions.Compiled);
-            }
-            else
-            {
+            } else {
                 IsComplex = false;
             }
         }
@@ -107,8 +100,7 @@ namespace Alsing.SourceCode
         /// <param name="iscomplex"></param>
         /// <param name="separator"></param>
         /// <param name="keyword"></param>
-        public Pattern(string pattern, bool iscomplex, bool separator, bool keyword)
-        {
+        public Pattern(string pattern, bool iscomplex, bool separator, bool keyword) {
             Init(pattern, iscomplex, separator, keyword);
         }
 
@@ -119,8 +111,7 @@ namespace Alsing.SourceCode
         /// <param name="separator"></param>
         /// <param name="keyword"></param>
         /// <param name="escapeChar"></param>
-        public Pattern(string pattern, bool separator, bool keyword, string escapeChar)
-        {
+        public Pattern(string pattern, bool separator, bool keyword, string escapeChar) {
             escapeChar = Regex.Escape(escapeChar);
             string escapePattern = string.Format("(?<=((?<!{0})({0}{0})*))({1})", escapeChar, pattern);
             Init(escapePattern, true, separator, keyword);
@@ -130,11 +121,9 @@ namespace Alsing.SourceCode
         /// Gets or Sets the the text of the pattern
         /// this only applies if the pattern is a simple pattern.
         /// </summary>
-        public string StringPattern
-        {
+        public string StringPattern {
             get { return _StringPattern; }
-            set
-            {
+            set {
                 _StringPattern = value;
                 LowerStringPattern = _StringPattern.ToLowerInvariant();
             }
@@ -144,27 +133,25 @@ namespace Alsing.SourceCode
         /// Returns true if the pattern contains separator chars<br/>
         /// (This is used by the parser)
         /// </summary>
-        public bool ContainsSeparator
-        {
-            get
-            {
-                foreach (char c in StringPattern)
-                {
-                    if (Separators.IndexOf(c) >= 0)
+        public bool ContainsSeparator {
+            get {
+                foreach (char c in StringPattern) {
+                    if (Separators.IndexOf(c) >= 0) {
                         return true;
+                    }
                 }
                 return false;
             }
         }
 
-        private void Init(string pattern, bool isComplex, bool separator, bool keyword)
-        {
+        private void Init(string pattern, bool isComplex, bool separator, bool keyword) {
             StringPattern = pattern;
             IsSeparator = separator;
             IsKeyword = keyword;
             IsComplex = isComplex;
-            if (isComplex)
+            if (isComplex) {
                 rx = new Regex(StringPattern, RegexOptions.Compiled);
+            }
         }
     }
 }

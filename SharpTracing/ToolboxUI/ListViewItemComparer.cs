@@ -2,20 +2,17 @@ using System;
 using System.Collections;
 using System.Windows.Forms;
 
-namespace TooboxUI.Components
-{
+namespace TooboxUI.Components {
     // This class is an implementation of the 'IComparer' interface.
-    public class ListViewItemComparer : IComparer
-    {
+    public class ListViewItemComparer : IComparer {
         // Specifies the column to be sorted
         private int ColumnToSort;
         // Specifies the order in which to sort (i.e. 'Ascending').
         // Case insensitive comparer object
-        private CaseInsensitiveComparer ObjectCompare;
+        private readonly CaseInsensitiveComparer ObjectCompare;
         private SortOrder OrderOfSort;
         // Class constructor, initializes various elements
-        public ListViewItemComparer()
-        {
+        public ListViewItemComparer() {
             // Initialize the column to '0'
             this.ColumnToSort = 0;
             // Initialize the sort order to 'none'
@@ -23,18 +20,19 @@ namespace TooboxUI.Components
             // Initialize the CaseInsensitiveComparer object
             this.ObjectCompare = new CaseInsensitiveComparer();
         }
-        public int SortColumn
-        {
+
+        public int SortColumn {
             set { this.ColumnToSort = value; }
             get { return this.ColumnToSort; }
         }
+
         // Gets or sets the order of sorting to apply
         // (for example, 'Ascending' or 'Descending').
-        public SortOrder Order
-        {
+        public SortOrder Order {
             set { this.OrderOfSort = value; }
             get { return this.OrderOfSort; }
         }
+
         // This method is inherited from the IComparer interface.
         // 
         // x: First object to be compared
@@ -45,20 +43,20 @@ namespace TooboxUI.Components
         // positive if 'x' is greater than 'y'
 
         #region IComparer Members
-        public int Compare(object x, object y)
-        {
+
+        public int Compare(object x, object y) {
             int compareResult;
             ListViewItem listviewX, listviewY;
             // Cast the objects to be compared to ListViewItem objects
-            listviewX = (ListViewItem)x;
-            listviewY = (ListViewItem)y;
+            listviewX = (ListViewItem) x;
+            listviewY = (ListViewItem) y;
             // Determine the type being compared
-            try{
+            try {
                 compareResult = this.CompareDateTime(listviewX, listviewY);
-            } catch{
-                try{
+            } catch {
+                try {
                     compareResult = this.CompareDecimal(listviewX, listviewY);
-                } catch{
+                } catch {
                     compareResult = this.CompareString(listviewX, listviewY);
                 }
             }
@@ -68,21 +66,21 @@ namespace TooboxUI.Components
             // 	listviewY.SubItems[ColumnToSort].Text
             // );
             // Calculate correct return value based on object comparison
-            if(this.OrderOfSort == SortOrder.Ascending){
+            if (this.OrderOfSort == SortOrder.Ascending) {
                 // Ascending sort is selected, return normal result of compare operation
                 return compareResult;
-            } else if(this.OrderOfSort == SortOrder.Descending){
+            } else if (this.OrderOfSort == SortOrder.Descending) {
                 // Descending sort is selected, return negative result of compare operation
                 return (-compareResult);
-            } else{
+            } else {
                 // Return '0' to indicate they are equal
                 return 0;
             }
         }
+
         #endregion
 
-        public int CompareDateTime(ListViewItem listviewX, ListViewItem listviewY)
-        {
+        public int CompareDateTime(ListViewItem listviewX, ListViewItem listviewY) {
             // Parse the two objects passed as a parameter as a DateTime.
             DateTime firstDate = DateTime.Parse(listviewX.SubItems[this.ColumnToSort].Text);
             DateTime secondDate = DateTime.Parse(listviewY.SubItems[this.ColumnToSort].Text);
@@ -90,8 +88,8 @@ namespace TooboxUI.Components
             int compareResult = DateTime.Compare(firstDate, secondDate);
             return compareResult;
         }
-        public int CompareDecimal(ListViewItem listviewX, ListViewItem listviewY)
-        {
+
+        public int CompareDecimal(ListViewItem listviewX, ListViewItem listviewY) {
             // Parse the two objects passed as a parameter as a DateTime.
             Decimal firstValue = Decimal.Parse(listviewX.SubItems[this.ColumnToSort].Text);
             Decimal secondValue = Decimal.Parse(listviewY.SubItems[this.ColumnToSort].Text);
@@ -99,13 +97,14 @@ namespace TooboxUI.Components
             int compareResult = Decimal.Compare(firstValue, secondValue);
             return compareResult;
         }
-        public int CompareString(ListViewItem listviewX, ListViewItem listviewY)
-        {
+
+        public int CompareString(ListViewItem listviewX, ListViewItem listviewY) {
             // Case Insensitive Compare
             int compareResult = this.ObjectCompare.Compare(listviewX.SubItems[this.ColumnToSort].Text,
                                                            listviewY.SubItems[this.ColumnToSort].Text);
             return compareResult;
         }
+
         // Gets or sets the number of the column to which to
         // apply the sorting operation (Defaults to '0').
     }

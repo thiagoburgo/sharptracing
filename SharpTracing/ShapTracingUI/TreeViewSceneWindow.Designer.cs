@@ -56,7 +56,7 @@ namespace DrawEngine.SharpTracingUI
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem18 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem19 = new System.Windows.Forms.ToolStripMenuItem();
-            this.treeViewScene = new SharpTracingUI.TreeViewScenes();
+            this.treeViewScene = new DrawEngine.SharpTracingUI.TreeViewScenes();
             this.contextMenuPrimitive.SuspendLayout();
             this.contextMenuStripScene.SuspendLayout();
             this.SuspendLayout();
@@ -262,14 +262,15 @@ namespace DrawEngine.SharpTracingUI
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(256, 415);
             this.Controls.Add(this.treeViewScene);
-            this.DockAreas = ((WeifenLuo.WinFormsUI.Docking.DockAreas)(((((WeifenLuo.WinFormsUI.Docking.DockAreas.Float | WeifenLuo.WinFormsUI.Docking.DockAreas.DockLeft)
-                        | WeifenLuo.WinFormsUI.Docking.DockAreas.DockRight)
-                        | WeifenLuo.WinFormsUI.Docking.DockAreas.DockTop)
-                        | WeifenLuo.WinFormsUI.Docking.DockAreas.DockBottom)));
+            this.DockAreas = ((WeifenLuo.WinFormsUI.Docking.DockAreas)(((((WeifenLuo.WinFormsUI.Docking.DockAreas.Float | WeifenLuo.WinFormsUI.Docking.DockAreas.DockLeft) 
+            | WeifenLuo.WinFormsUI.Docking.DockAreas.DockRight) 
+            | WeifenLuo.WinFormsUI.Docking.DockAreas.DockTop) 
+            | WeifenLuo.WinFormsUI.Docking.DockAreas.DockBottom)));
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "TreeViewSceneWindow";
             this.ShowHint = WeifenLuo.WinFormsUI.Docking.DockState.DockLeft;
-            this.TabText = "Scene Tree View";
-            this.Text = "Scene Tree View";
+            this.TabText = "Scene Tree";
+            this.Text = "Scene Tree";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.TreeViewSceneWindow_FormClosing);
             this.contextMenuPrimitive.ResumeLayout(false);
             this.contextMenuStripScene.ResumeLayout(false);

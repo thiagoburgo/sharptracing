@@ -12,13 +12,11 @@ using System;
 using System.Collections;
 using T = Alsing.SourceCode.UndoBlock;
 
-namespace Alsing.SourceCode
-{
+namespace Alsing.SourceCode {
     /// <summary>
     /// 
     /// </summary>
-    public sealed class UndoBlockCollection : IList, ICloneable
-    {
+    public sealed class UndoBlockCollection : IList, ICloneable {
         private const int DefaultMinimumCapacity = 16;
 
         private UndoBlock[] m_array = new UndoBlock[DefaultMinimumCapacity];
@@ -35,16 +33,13 @@ namespace Alsing.SourceCode
         /// <summary>
         /// 
         /// </summary>
-        public UndoBlockCollection()
-        {
-        }
+        public UndoBlockCollection() {}
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="collection"></param>
-        public UndoBlockCollection(UndoBlockCollection collection)
-        {
+        public UndoBlockCollection(UndoBlockCollection collection) {
             AddRange(collection);
         }
 
@@ -52,23 +47,19 @@ namespace Alsing.SourceCode
         /// 
         /// </summary>
         /// <param name="array"></param>
-        public UndoBlockCollection(UndoBlock[] array)
-        {
+        public UndoBlockCollection(UndoBlock[] array) {
             AddRange(array);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public UndoBlock this[int index]
-        {
-            get
-            {
+        public UndoBlock this[int index] {
+            get {
                 ValidateIndex(index); // throws
                 return m_array[index];
             }
-            set
-            {
+            set {
                 ValidateIndex(index); // throws
 
                 ++m_version;
@@ -79,18 +70,19 @@ namespace Alsing.SourceCode
         /// <summary>
         /// 
         /// </summary>
-        public int Capacity
-        {
+        public int Capacity {
             get { return m_array.Length; }
-            set
-            {
-                if (value < m_count)
+            set {
+                if (value < m_count) {
                     value = m_count;
-                if (value < DefaultMinimumCapacity)
+                }
+                if (value < DefaultMinimumCapacity) {
                     value = DefaultMinimumCapacity;
+                }
 
-                if (m_array.Length == value)
+                if (m_array.Length == value) {
                     return;
+                }
 
                 ++m_version;
 
@@ -103,8 +95,7 @@ namespace Alsing.SourceCode
 
         #region ICloneable Members
 
-        object ICloneable.Clone()
-        {
+        object ICloneable.Clone() {
             return (Clone());
         }
 
@@ -117,28 +108,23 @@ namespace Alsing.SourceCode
         /// <summary>
         /// 
         /// </summary>
-        public int Count
-        {
+        public int Count {
             get { return m_count; }
         }
 
-        bool ICollection.IsSynchronized
-        {
+        bool ICollection.IsSynchronized {
             get { return m_array.IsSynchronized; }
         }
 
-        object ICollection.SyncRoot
-        {
+        object ICollection.SyncRoot {
             get { return m_array.SyncRoot; }
         }
 
-        void ICollection.CopyTo(Array array, int start)
-        {
+        void ICollection.CopyTo(Array array, int start) {
             CopyTo((UndoBlock[]) array, start);
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
+        IEnumerator IEnumerable.GetEnumerator() {
             return (GetEnumerator());
         }
 
@@ -149,8 +135,7 @@ namespace Alsing.SourceCode
         /// <summary>
         /// 
         /// </summary>
-        public void Clear()
-        {
+        public void Clear() {
             ++m_version;
             m_array = new UndoBlock[DefaultMinimumCapacity];
             m_count = 0;
@@ -160,8 +145,7 @@ namespace Alsing.SourceCode
         /// 
         /// </summary>
         /// <param name="index"></param>
-        public void RemoveAt(int index)
-        {
+        public void RemoveAt(int index) {
             ValidateIndex(index); // throws
 
             ++m_version;
@@ -169,28 +153,25 @@ namespace Alsing.SourceCode
             // for (int i=index; i < m_count; ++i) m_array[i] = m_array[i+1];
             Array.Copy(m_array, index + 1, m_array, index, m_count - index);
 
-            if (NeedsTrimming())
+            if (NeedsTrimming()) {
                 Trim();
+            }
         }
 
-        bool IList.IsFixedSize
-        {
+        bool IList.IsFixedSize {
             get { return false; }
         }
 
-        bool IList.IsReadOnly
-        {
+        bool IList.IsReadOnly {
             get { return false; }
         }
 
-        object IList.this[int index]
-        {
+        object IList.this[int index] {
             get { return this[index]; }
             set { this[index] = (UndoBlock) value; }
         }
 
-        int IList.Add(object item)
-        {
+        int IList.Add(object item) {
             return Add((UndoBlock) item);
         }
 
@@ -201,23 +182,19 @@ namespace Alsing.SourceCode
     }
      */
 
-        bool IList.Contains(object item)
-        {
+        bool IList.Contains(object item) {
             return Contains((UndoBlock) item);
         }
 
-        int IList.IndexOf(object item)
-        {
+        int IList.IndexOf(object item) {
             return IndexOf((UndoBlock) item);
         }
 
-        void IList.Insert(int position, object item)
-        {
+        void IList.Insert(int position, object item) {
             Insert(position, (UndoBlock) item);
         }
 
-        void IList.Remove(object item)
-        {
+        void IList.Remove(object item) {
             Remove((UndoBlock) item);
         }
 
@@ -227,8 +204,7 @@ namespace Alsing.SourceCode
         /// 
         /// </summary>
         /// <param name="array"></param>
-        public void CopyTo(UndoBlock[] array)
-        {
+        public void CopyTo(UndoBlock[] array) {
             CopyTo(array, 0);
         }
 
@@ -237,10 +213,10 @@ namespace Alsing.SourceCode
         /// </summary>
         /// <param name="array"></param>
         /// <param name="start"></param>
-        public void CopyTo(UndoBlock[] array, int start)
-        {
-            if (m_count > array.GetUpperBound(0) + 1 - start)
+        public void CopyTo(UndoBlock[] array, int start) {
+            if (m_count > array.GetUpperBound(0) + 1 - start) {
                 throw new ArgumentException("Destination array was not long enough.");
+            }
 
             // for (int i=0; i < m_count; ++i) array[start+i] = m_array[i];
             Array.Copy(m_array, 0, array, start, m_count);
@@ -253,10 +229,10 @@ namespace Alsing.SourceCode
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public int Add(UndoBlock item)
-        {
-            if (NeedsGrowth())
+        public int Add(UndoBlock item) {
+            if (NeedsGrowth()) {
                 Grow();
+            }
 
             ++m_version;
             m_array[m_count] = item;
@@ -269,8 +245,7 @@ namespace Alsing.SourceCode
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public bool Contains(UndoBlock item)
-        {
+        public bool Contains(UndoBlock item) {
             return ((IndexOf(item) == - 1) ? false : true);
         }
 
@@ -279,11 +254,12 @@ namespace Alsing.SourceCode
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public int IndexOf(UndoBlock item)
-        {
-            for (int i = 0; i < m_count; ++i)
-                if (m_array[i] == (item))
+        public int IndexOf(UndoBlock item) {
+            for (int i = 0; i < m_count; ++i) {
+                if (m_array[i] == (item)) {
                     return i;
+                }
+            }
             return - 1;
         }
 
@@ -292,12 +268,12 @@ namespace Alsing.SourceCode
         /// </summary>
         /// <param name="position"></param>
         /// <param name="item"></param>
-        public void Insert(int position, UndoBlock item)
-        {
+        public void Insert(int position, UndoBlock item) {
             ValidateIndex(position, true); // throws
 
-            if (NeedsGrowth())
+            if (NeedsGrowth()) {
                 Grow();
+            }
 
             ++m_version;
             // for (int i=m_count; i > position; --i) m_array[i] = m_array[i-1];
@@ -311,12 +287,12 @@ namespace Alsing.SourceCode
         /// 
         /// </summary>
         /// <param name="item"></param>
-        public void Remove(UndoBlock item)
-        {
+        public void Remove(UndoBlock item) {
             int index = IndexOf(item);
-            if (index < 0)
+            if (index < 0) {
                 throw new ArgumentException(
                     "Cannot remove the specified item because it was not found in the specified Collection.");
+            }
 
             RemoveAt(index);
         }
@@ -326,8 +302,7 @@ namespace Alsing.SourceCode
         /// 
         /// </summary>
         /// <returns></returns>
-        public Enumerator GetEnumerator()
-        {
+        public Enumerator GetEnumerator() {
             return new Enumerator(this);
         }
 
@@ -336,8 +311,7 @@ namespace Alsing.SourceCode
         /// 
         /// </summary>
         /// <returns></returns>
-        public UndoBlockCollection Clone()
-        {
+        public UndoBlockCollection Clone() {
             var tc = new UndoBlockCollection();
             tc.AddRange(this);
             tc.Capacity = m_array.Length;
@@ -351,8 +325,7 @@ namespace Alsing.SourceCode
         /// 
         /// </summary>
         /// <param name="collection"></param>
-        public void AddRange(UndoBlockCollection collection)
-        {
+        public void AddRange(UndoBlockCollection collection) {
             // for (int i=0; i < collection.Count; ++i) Add(collection[i]);
 
             ++m_version;
@@ -366,8 +339,7 @@ namespace Alsing.SourceCode
         /// 
         /// </summary>
         /// <param name="array"></param>
-        public void AddRange(UndoBlock[] array)
-        {
+        public void AddRange(UndoBlock[] array) {
             // for (int i=0; i < array.Length; ++i) Add(array[i]);
 
             ++m_version;
@@ -379,40 +351,37 @@ namespace Alsing.SourceCode
 
         // Implementation (helpers)
 
-        private void ValidateIndex(int index)
-        {
+        private void ValidateIndex(int index) {
             ValidateIndex(index, false);
         }
 
-        private void ValidateIndex(int index, bool allowEqualEnd)
-        {
+        private void ValidateIndex(int index, bool allowEqualEnd) {
             int max = (allowEqualEnd) ? (m_count) : (m_count - 1);
-            if (index < 0 || index > max)
+            if (index < 0 || index > max) {
                 throw new ArgumentOutOfRangeException(
                     "Index was out of range.  Must be non-negative and less than the size of the collection.", index,
                     "Specified argument was out of the range of valid values.");
+            }
         }
 
-        private bool NeedsGrowth()
-        {
+        private bool NeedsGrowth() {
             return (m_count >= Capacity);
         }
 
-        private void Grow()
-        {
-            if (NeedsGrowth())
-                Capacity = m_count*2;
+        private void Grow() {
+            if (NeedsGrowth()) {
+                Capacity = m_count * 2;
+            }
         }
 
-        private bool NeedsTrimming()
-        {
-            return (m_count <= Capacity/2);
+        private bool NeedsTrimming() {
+            return (m_count <= Capacity / 2);
         }
 
-        private void Trim()
-        {
-            if (NeedsTrimming())
+        private void Trim() {
+            if (NeedsTrimming()) {
                 Capacity = m_count;
+            }
         }
 
         // Implementation (ICollection)
@@ -432,16 +401,14 @@ namespace Alsing.SourceCode
         /// <summary>
         /// 
         /// </summary>
-        public class Enumerator : IEnumerator
-        {
+        public class Enumerator : IEnumerator {
             private readonly UndoBlockCollection m_collection;
             private readonly int m_version;
             private int m_index;
 
             // Construction
 
-            public Enumerator(UndoBlockCollection tc)
-            {
+            public Enumerator(UndoBlockCollection tc) {
                 m_collection = tc;
                 m_index = - 1;
                 m_version = tc.m_version;
@@ -452,8 +419,7 @@ namespace Alsing.SourceCode
             /// <summary>
             /// 
             /// </summary>
-            public UndoBlock Current
-            {
+            public UndoBlock Current {
                 get { return m_collection[m_index]; }
             }
 
@@ -463,11 +429,11 @@ namespace Alsing.SourceCode
             /// 
             /// </summary>
             /// <returns></returns>
-            public bool MoveNext()
-            {
-                if (m_version != m_collection.m_version)
+            public bool MoveNext() {
+                if (m_version != m_collection.m_version) {
                     throw new InvalidOperationException(
                         "Collection was modified; enumeration operation may not execute.");
+                }
 
                 ++m_index;
                 return (m_index < m_collection.Count) ? true : false;
@@ -476,19 +442,18 @@ namespace Alsing.SourceCode
             /// <summary>
             /// 
             /// </summary>
-            public void Reset()
-            {
-                if (m_version != m_collection.m_version)
+            public void Reset() {
+                if (m_version != m_collection.m_version) {
                     throw new InvalidOperationException(
                         "Collection was modified; enumeration operation may not execute.");
+                }
 
                 m_index = - 1;
             }
 
             // Implementation (IEnumerator)
 
-            object IEnumerator.Current
-            {
+            object IEnumerator.Current {
                 get { return (Current); }
             }
 

@@ -1,19 +1,18 @@
 using DrawEngine.Renderer.Collections;
 
-namespace DrawEngine.Renderer
-{
-    public static class UnifiedScenesRepository
-    {
-        private readonly static NameableCollection<Scene> scenes = new NameableCollection<Scene>();
+namespace DrawEngine.Renderer {
+    public static class UnifiedScenesRepository {
+        public static readonly NameableCollection<Scene> Scenes = new NameableCollection<Scene>();
         private static Scene currentEditingScene;
-        public static NameableCollection<Scene> Scenes
-        {
-            get { return scenes; }
-        }
-        public static Scene CurrentEditingScene
-        {
+        private static readonly object syncObj = new object();
+
+        public static Scene CurrentEditingScene {
             get { return currentEditingScene; }
-            set { currentEditingScene = value; }
+            set {
+                lock (syncObj) {
+                    currentEditingScene = value;
+                }
+            }
         }
     }
 }
