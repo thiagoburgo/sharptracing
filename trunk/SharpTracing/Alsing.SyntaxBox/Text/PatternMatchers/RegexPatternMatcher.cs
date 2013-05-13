@@ -11,22 +11,18 @@
 using System;
 using System.Text.RegularExpressions;
 
-namespace Alsing.Text.PatternMatchers
-{
+namespace Alsing.Text.PatternMatchers {
     /// <summary>
     /// Pattern matcher that allows regex patterns to be matched
     /// </summary>
-    public class RegexPatternMatcher : PatternMatcherBase
-    {
+    public class RegexPatternMatcher : PatternMatcherBase {
         private Regex regEx;
 
-        public RegexPatternMatcher()
-        {
+        public RegexPatternMatcher() {
             PatternChanged += RegexPatternMatcher_PatternChanged;
         }
 
-        public RegexPatternMatcher(string pattern) : this()
-        {
+        public RegexPatternMatcher(string pattern) : this() {
             Pattern = pattern;
         }
 
@@ -37,14 +33,13 @@ namespace Alsing.Text.PatternMatchers
         /// <summary>
         /// Gets or Sets the <c>Pattern</c> property
         /// </summary>
-        public string Pattern
-        {
+        public string Pattern {
             get { return pattern; }
-            set
-            {
+            set {
                 //Ignore same value
-                if (pattern == value)
+                if (pattern == value) {
                     return;
+                }
 
                 //Set the new value
                 pattern = value;
@@ -65,10 +60,10 @@ namespace Alsing.Text.PatternMatchers
         /// Raises the <c>PatternChanged</c> Event
         /// </summary>
         /// <param name="e">EventArgs</param>
-        protected virtual void OnPatternChanged(EventArgs e)
-        {
-            if (PatternChanged != null)
+        protected virtual void OnPatternChanged(EventArgs e) {
+            if (PatternChanged != null) {
                 PatternChanged(this, e);
+            }
         }
 
         #endregion //END PUBLIC EVENT PATTERNCHANGED
@@ -76,23 +71,21 @@ namespace Alsing.Text.PatternMatchers
         #endregion //END PUBLIC PROPERTY PATTERN (+PATTERNCHANGED EVENT)
 
         //perform the match
-        public override int Match(string textToMatch, int matchAtIndex)
-        {
-            if (regEx == null)
+        public override int Match(string textToMatch, int matchAtIndex) {
+            if (regEx == null) {
                 return 0;
+            }
 
             Match match = regEx.Match(textToMatch, matchAtIndex);
 
-            if (match.Success)
-            {
+            if (match.Success) {
                 return match.Length;
             }
 
             return 0;
         }
 
-        private void RegexPatternMatcher_PatternChanged(object sender, EventArgs e)
-        {
+        private void RegexPatternMatcher_PatternChanged(object sender, EventArgs e) {
             const RegexOptions options = RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.Singleline;
 
             regEx = new Regex(string.Format(@"\G({0})", pattern), options);

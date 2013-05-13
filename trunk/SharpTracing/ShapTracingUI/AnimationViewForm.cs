@@ -10,7 +10,8 @@
  * Feel free to copy, modify and  give fixes 
  * suggestions. Keep the credits!
  */
- using System;
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
@@ -26,54 +27,61 @@ namespace DrawEngine.SharpTracingUI {
         private static AnimationViewForm instance;
         private Queue animationImages = new Queue();
         private Thread tAnimation;
+
         private AnimationViewForm() {
             this.InitializeComponent();
         }
+
         public static AnimationViewForm Instance {
             get {
-                if(instance == null) {
+                if (instance == null) {
                     instance = new AnimationViewForm();
                 }
                 return instance;
             }
         }
+
         public void RunAnimation(List<Bitmap> images) {
             this.animationImages = new Queue(images);
             this.animationImages = Queue.Synchronized(this.animationImages);
-            if(this.tAnimation != null) {
+            if (this.tAnimation != null) {
                 this.tAnimation.Abort();
             }
             this.tAnimation = new Thread(new ThreadStart(delegate() {
-                if(this.folderBrowserDialog1.ShowDialog()
-                   == DialogResult.OK) {
-                    DirectoryInfo di =
-                            new DirectoryInfo(
-                                    this.folderBrowserDialog1.SelectedPath);
-                    FileInfo[] fis = di.GetFiles("*.png");
-                    Array.Sort(fis,new Comparison<FileInfo>(
-                                                 (fi1,fi2) => fi1.CreationTime.CompareTo(fi2.CreationTime)));
-                    foreach(FileInfo fi in fis) {
-                        Graphics g = this.pictureBox1.CreateGraphics();
-                        g.SmoothingMode = SmoothingMode.HighQuality;
-                        g.InterpolationMode =
-                                InterpolationMode.HighQualityBicubic;
-                        g.CompositingQuality =
-                                CompositingQuality.HighQuality;
-                        Bitmap bmp = Image.FromFile(fi.FullName) as Bitmap;
-                        //this.pictureBox1.Image = bmp;
-                        g.DrawImage(bmp,
-                                    g.VisibleClipBounds.Width / 2f
-                                    - bmp.Width / 2f,
-                                    g.VisibleClipBounds.Height / 2f
-                                    - bmp.Height / 2f);
-                        Thread.Sleep(1000 / 24);
-                        bmp.Dispose();
-                    }
-                }
-            }));
+                                                             if (this.folderBrowserDialog1.ShowDialog() ==
+                                                                 DialogResult.OK) {
+                                                                 DirectoryInfo di =
+                                                                     new DirectoryInfo(
+                                                                         this.folderBrowserDialog1.SelectedPath);
+                                                                 FileInfo[] fis = di.GetFiles("*.png");
+                                                                 Array.Sort(fis,
+                                                                            new Comparison<FileInfo>(
+                                                                                (fi1, fi2) =>
+                                                                                fi1.CreationTime.CompareTo(
+                                                                                    fi2.CreationTime)));
+                                                                 foreach (FileInfo fi in fis) {
+                                                                     Graphics g = this.pictureBox1.CreateGraphics();
+                                                                     g.SmoothingMode = SmoothingMode.HighQuality;
+                                                                     g.InterpolationMode =
+                                                                         InterpolationMode.HighQualityBicubic;
+                                                                     g.CompositingQuality =
+                                                                         CompositingQuality.HighQuality;
+                                                                     Bitmap bmp = Image.FromFile(fi.FullName) as Bitmap;
+                                                                     //this.pictureBox1.Image = bmp;
+                                                                     g.DrawImage(bmp,
+                                                                                 g.VisibleClipBounds.Width / 2f -
+                                                                                 bmp.Width / 2f,
+                                                                                 g.VisibleClipBounds.Height / 2f -
+                                                                                 bmp.Height / 2f);
+                                                                     Thread.Sleep(1000 / 24);
+                                                                     bmp.Dispose();
+                                                                 }
+                                                             }
+                                                         }));
             this.tAnimation.SetApartmentState(ApartmentState.STA);
             this.tAnimation.Start();
         }
+
         //public void RunAnimation(List<Bitmap> images)
         //{
         //    //if (images != null && images.Count > 0)
@@ -100,7 +108,7 @@ namespace DrawEngine.SharpTracingUI {
         //    catch (IOException) { }
         //    //}
         //}
-        public void RunAnimation(VideoStream video) { }
+        public void RunAnimation(VideoStream video) {}
         //protected override void OnVisibleChanged(EventArgs e)
         //{
         //    if (!this.Visible)

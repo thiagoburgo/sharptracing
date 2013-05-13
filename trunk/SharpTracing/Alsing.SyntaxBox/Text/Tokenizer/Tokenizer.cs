@@ -2,14 +2,11 @@
 using System.Collections.Generic;
 using Alsing.Text.PatternMatchers;
 
-namespace Alsing.Text
-{
-    public class Tokenizer
-    {
+namespace Alsing.Text {
+    public class Tokenizer {
         private readonly TokenTree tree;
 
-        public Tokenizer()
-        {
+        public Tokenizer() {
             tree = new TokenTree();
         }
 
@@ -18,38 +15,34 @@ namespace Alsing.Text
         public string Text { get; set; }
 
         public Tokenizer AddPattern(IPatternMatcher matcher, bool caseSensitive, bool needsSeparators,
-                                    params object[] tags)
-        {
+                                    params object[] tags) {
             ThrowIfImmutable();
 
             tree.AddPattern(matcher, caseSensitive, needsSeparators, tags);
             return this;
         }
 
-        public Tokenizer AddToken(string token, bool caseSensitive, bool needsSeparators, params object[] tags)
-        {
+        public Tokenizer AddToken(string token, bool caseSensitive, bool needsSeparators, params object[] tags) {
             ThrowIfImmutable();
 
             tree.AddToken(token, caseSensitive, needsSeparators, tags);
             return this;
         }
 
-        public Token[] Tokenize()
-        {
-            if (Text == null)
+        public Token[] Tokenize() {
+            if (Text == null) {
                 throw new ArgumentNullException("Text");
+            }
 
             MakeImmutable();
 
             var tokens = new List<Token>();
 
             int index = 0;
-            while (index < Text.Length)
-            {
+            while (index < Text.Length) {
                 MatchResult match = tree.Match(Text, index);
 
-                if (match.Found)
-                {
+                if (match.Found) {
                     string dummyText = Text.Substring(index, match.Index - index);
                     var dummyToken = new Token(dummyText, null);
                     tokens.Add(dummyToken);
@@ -57,9 +50,7 @@ namespace Alsing.Text
                     var realToken = new Token(match.GetText(), match.Tags);
                     index = match.Index + match.Length;
                     tokens.Add(realToken);
-                }
-                else
-                {
+                } else {
                     string dummyText = Text.Substring(index);
                     var dummyToken = new Token(dummyText, null);
                     tokens.Add(dummyToken);
@@ -71,14 +62,13 @@ namespace Alsing.Text
             return tokens.ToArray();
         }
 
-        private void ThrowIfImmutable()
-        {
-            if (IsImmutable)
+        private void ThrowIfImmutable() {
+            if (IsImmutable) {
                 throw new Exception("Tokens can not be added to an immutable tokenizer");
+            }
         }
 
-        public void MakeImmutable()
-        {
+        public void MakeImmutable() {
             IsImmutable = true;
         }
     }

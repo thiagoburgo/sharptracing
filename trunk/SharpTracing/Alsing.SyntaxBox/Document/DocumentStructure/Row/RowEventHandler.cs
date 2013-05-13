@@ -1,5 +1,4 @@
-﻿namespace Alsing.SourceCode
-{
+﻿namespace Alsing.SourceCode {
     /// <summary>
     /// 
     /// </summary>

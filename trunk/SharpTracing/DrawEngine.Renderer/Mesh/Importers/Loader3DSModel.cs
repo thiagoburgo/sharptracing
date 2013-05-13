@@ -10,22 +10,20 @@
  * Feel free to copy, modify and  give fixes 
  * suggestions. Keep the credits!
  */
- using System;
+
+using System;
 using System.Collections;
 using System.IO;
-using DrawEngine.Renderer.Algebra;
 using DrawEngine.Renderer.BasicStructures;
 using DrawEngine.Renderer.Mathematics.Algebra;
 
-namespace DrawEngine.Renderer.Importers
-{
+namespace DrawEngine.Renderer.Importers {
     /// <summary>
     /// Converts a 3DS data stream into its component material and mesh definitions.
     /// This class will also write them to files that can be easily imported into the
     /// RealmForge GDK Framework.
     /// </summary>
-    public class Loader3DSModel
-    {
+    public class Loader3DSModel {
         protected MaterialData3DS currentMaterialData;
         protected MeshData3DS currentMeshData;
         protected FileStream dataFile;
@@ -35,36 +33,36 @@ namespace DrawEngine.Renderer.Importers
         protected Hashtable meshDataStore;
         protected Stream stream;
         protected string version;
-        public Loader3DSModel(String filePath)
-        {
-            if(filePath != null && File.Exists(filePath)){
+
+        public Loader3DSModel(String filePath) {
+            if (filePath != null && File.Exists(filePath)) {
                 this.filePath = filePath;
                 this.stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
                 BinaryReader byteExtractor = new BinaryReader(this.stream);
-                this.dataReader = new DataReader3DS(byteExtractor.ReadBytes((int)this.stream.Length));
+                this.dataReader = new DataReader3DS(byteExtractor.ReadBytes((int) this.stream.Length));
                 this.meshDataStore = new Hashtable();
                 this.materialDataStore = new Hashtable();
                 this.currentMeshData = null;
                 this.currentMaterialData = null;
-            } else{
+            } else {
                 throw new FileNotFoundException();
             }
         }
 
         #region Public methods
-        public void Load()
-        {
+
+        public void Load() {
             DataReader3DS dataSubSegment = null;
             //Validate that the 3DS file is good
-            if((this.dataReader != null) && (this.dataReader.Tag == 0x4D4D)){
+            if ((this.dataReader != null) && (this.dataReader.Tag == 0x4D4D)) {
                 dataSubSegment = this.dataReader.GetNextSubSegment();
-            } else{
+            } else {
                 throw new FileLoadException("3DS file is either corrupted or otherwise not recognizable.");
             }
             // Check to see what kind of data is contained in the current data subsegment
-            while(dataSubSegment != null){
+            while (dataSubSegment != null) {
                 // Check the tag to see what sort of data is in this subsegment (or "chunk")
-                switch(dataSubSegment.Tag){
+                switch (dataSubSegment.Tag) {
                     case 0x0002: // Subsegment contains 3DS version
                         ushort version3DS = dataSubSegment.GetUShort(); //This is the 3DS version
                         this.version = version3DS.ToString();
@@ -94,37 +92,37 @@ namespace DrawEngine.Renderer.Importers
             //    }
             //}            
         }
+
         #endregion
 
-        public string Version
-        {
+        public string Version {
             get { return this.version; }
         }
-        public MeshData3DS MeshData
-        {
+
+        public MeshData3DS MeshData {
             get { return this.currentMeshData; }
         }
-        public MaterialData3DS MaterialData
-        {
+
+        public MaterialData3DS MaterialData {
             get { return this.currentMaterialData; }
         }
-        public string FilePath
-        {
+
+        public string FilePath {
             get { return this.filePath; }
         }
 
         #region Protected methods
+
         /// <summary>
         /// Parses the 3DS data stream into mesh and material information.
         /// </summary>
         /// <param name="dataSegment">
         /// Contains the data to be parsed.
         /// </param>
-        protected void ParseData(DataReader3DS dataSegment)
-        {
+        protected void ParseData(DataReader3DS dataSegment) {
             DataReader3DS subSegment = dataSegment.GetNextSubSegment();
-            while(subSegment != null){
-                switch(subSegment.Tag){
+            while (subSegment != null) {
+                switch (subSegment.Tag) {
                     case 0xafff: // Current subsegment holds material data
                         this.ParseMaterialData(subSegment);
                         break;
@@ -137,18 +135,18 @@ namespace DrawEngine.Renderer.Importers
         }
 
         #region Protected: Material-related sub-parsers
+
         /// <summary>
         /// Parses the material data from the current data segment.
         /// </summary>
         /// <param name="dataSegment">
         /// Contains the data to be parsed.
         /// </param>
-        protected void ParseMaterialData(DataReader3DS dataSegment)
-        {
+        protected void ParseMaterialData(DataReader3DS dataSegment) {
             DataReader3DS subSegment = dataSegment.GetNextSubSegment();
             this.currentMaterialData = new MaterialData3DS();
-            while(subSegment != null){
-                switch(subSegment.Tag){
+            while (subSegment != null) {
+                switch (subSegment.Tag) {
                     case 0xa000: // Subsegment holds material name
                         this.currentMaterialData.name = subSegment.GetString();
                         Console.WriteLine("Material is named: " + this.currentMaterialData.name);
@@ -169,11 +167,12 @@ namespace DrawEngine.Renderer.Importers
                 subSegment = dataSegment.GetNextSubSegment();
             }
             // Store newly created material in data store and change name if another exists with its name
-            while(this.materialDataStore.ContainsKey(this.currentMaterialData.name)){
+            while (this.materialDataStore.ContainsKey(this.currentMaterialData.name)) {
                 this.currentMaterialData.name += "X";
             }
             this.materialDataStore.Add(this.currentMaterialData.name, this.currentMaterialData);
         }
+
         /// <summary>
         /// Parses color data from the current data segment.
         /// </summary>
@@ -183,10 +182,9 @@ namespace DrawEngine.Renderer.Importers
         /// <returns>
         /// Returns the color that was parsed.
         /// </returns>
-        protected RGBColor ParseColorData(DataReader3DS dataSegment)
-        {
+        protected RGBColor ParseColorData(DataReader3DS dataSegment) {
             RGBColor result = RGBColor.Black;
-            switch(dataSegment.Tag){
+            switch (dataSegment.Tag) {
                 case 0x0010: // Color is in float format
                     result.R = dataSegment.GetFloat();
                     result.G = dataSegment.GetFloat();
@@ -202,17 +200,17 @@ namespace DrawEngine.Renderer.Importers
             }
             return result;
         }
+
         /// <summary>
         /// Parses the texture weight from the current data segment.
         /// </summary>
         /// <param name="dataSegment">
         /// Contains the data to be parsed.
         /// </param>
-        protected void ParseTextureWeight(DataReader3DS dataSegment)
-        {
-            switch(dataSegment.Tag){
+        protected void ParseTextureWeight(DataReader3DS dataSegment) {
+            switch (dataSegment.Tag) {
                 case 0x0030: // Percentage is in short format
-                    this.currentMaterialData.textureWeight = ((float)dataSegment.GetUShort()) / (float)100.0;
+                    this.currentMaterialData.textureWeight = ((float) dataSegment.GetUShort()) / (float) 100.0;
                     break;
                 case 0x0031: // Percentage is in float format
                     this.currentMaterialData.textureWeight = dataSegment.GetFloat();
@@ -221,23 +219,24 @@ namespace DrawEngine.Renderer.Importers
                     break;
             }
         }
+
         #endregion
 
         #region Protected: Mesh-related sub-parsers
+
         /// <summary>
         /// Parses the mesh data from the current data segment.
         /// </summary>
         /// <param name="dataSegment">
         /// Contains the data to be parsed.
         /// </param>
-        protected void ParseMeshData(DataReader3DS dataSegment)
-        {
+        protected void ParseMeshData(DataReader3DS dataSegment) {
             string name = dataSegment.GetString(); // mesh object name
             DataReader3DS subSegment = dataSegment.GetNextSubSegment(); // working subsegment
             this.currentMeshData = new MeshData3DS();
             this.currentMeshData.Name = name;
-            while(subSegment != null){
-                switch(subSegment.Tag){
+            while (subSegment != null) {
+                switch (subSegment.Tag) {
                     case 0x4100: // Current subsegment contains the polygonal information
                         this.ParsePolygonalData(subSegment);
                         break;
@@ -246,26 +245,26 @@ namespace DrawEngine.Renderer.Importers
                 }
                 subSegment = dataSegment.GetNextSubSegment();
             }
-            while(this.meshDataStore.ContainsKey(this.currentMeshData.Name)){
+            while (this.meshDataStore.ContainsKey(this.currentMeshData.Name)) {
                 this.currentMeshData.Name += "X";
             }
             this.meshDataStore.Add(this.currentMeshData.Name, this.currentMeshData);
         }
+
         /// <summary>
         /// Parses the polygonal data from the current data segment.
         /// </summary>
         /// <param name="dataSegment">
         /// Contains the data to be parsed.
         /// </param>
-        protected void ParsePolygonalData(DataReader3DS dataSegment)
-        {
+        protected void ParsePolygonalData(DataReader3DS dataSegment) {
             int i; // counter
             DataReader3DS subSegment = dataSegment.GetNextSubSegment(); // working data subsegment
-            while(subSegment != null){
-                switch(subSegment.Tag){
+            while (subSegment != null) {
+                switch (subSegment.Tag) {
                     case 0x4110: // Subsegment contains vertex information
                         this.currentMeshData.Vertices = new Point3D[subSegment.GetUShort()];
-                        for(i = 0; i < this.currentMeshData.Vertices.Length; i++){
+                        for (i = 0; i < this.currentMeshData.Vertices.Length; i++) {
                             this.currentMeshData.Vertices[i].X = subSegment.GetFloat();
                             this.currentMeshData.Vertices[i].Y = subSegment.GetFloat();
                             this.currentMeshData.Vertices[i].Z = subSegment.GetFloat();
@@ -280,14 +279,14 @@ namespace DrawEngine.Renderer.Importers
                         this.currentMeshData.TextureCoordinates = new Point2D[subSegment.GetUShort()];
                         //HACK: This is because the above array allocation doesn't automatically
                         //HACK: create each element.
-                        for(i = 0; i < this.currentMeshData.TextureCoordinates.Length; i++){
+                        for (i = 0; i < this.currentMeshData.TextureCoordinates.Length; i++) {
                             this.currentMeshData.TextureCoordinates[i] = new Point2D();
                         }
                         //HACK: End hack.
-                        if(this.currentMeshData.TextureCoordinates.Length != this.currentMeshData.Vertices.Length){
+                        if (this.currentMeshData.TextureCoordinates.Length != this.currentMeshData.Vertices.Length) {
                             Console.WriteLine("WARNING: Possible errors in texture coordinate mapping!");
                         }
-                        for(i = 0; i < this.currentMeshData.TextureCoordinates.Length; i++){
+                        for (i = 0; i < this.currentMeshData.TextureCoordinates.Length; i++) {
                             this.currentMeshData.TextureCoordinates[i].X = subSegment.GetFloat();
                             this.currentMeshData.TextureCoordinates[i].Y = subSegment.GetFloat();
                         }
@@ -298,19 +297,19 @@ namespace DrawEngine.Renderer.Importers
             // Also use face data to calculate vertex normals
             this.CalculateVertexNormals();
         }
+
         /// <summary>
         /// Parses the face-specific polygonal data from the current data segment.
         /// </summary>
         /// <param name="dataSegment">
         /// Contains the data to be parsed.
         /// </param>
-        protected void ParseFaceData(DataReader3DS dataSegment)
-        {
+        protected void ParseFaceData(DataReader3DS dataSegment) {
             int i; // counter
             DataReader3DS subSegment; // will be used to read other subsegments (do not initialize yet)
             this.currentMeshData.Faces = new MeshData3DS.FaceData3DS[dataSegment.GetUShort()];
             // Read face data
-            for(i = 0; i < this.currentMeshData.Faces.Length; i++){
+            for (i = 0; i < this.currentMeshData.Faces.Length; i++) {
                 this.currentMeshData.Faces[i].Vertex1 = dataSegment.GetUShort();
                 this.currentMeshData.Faces[i].Vertex2 = dataSegment.GetUShort();
                 this.currentMeshData.Faces[i].Vertex3 = dataSegment.GetUShort();
@@ -318,8 +317,8 @@ namespace DrawEngine.Renderer.Importers
             }
             // Read other subsegments
             subSegment = dataSegment.GetNextSubSegment();
-            while(subSegment != null){
-                switch(subSegment.Tag){
+            while (subSegment != null) {
+                switch (subSegment.Tag) {
                     case 0x4130: // Name of material used
                         this.currentMeshData.MaterialUsed = subSegment.GetString();
                         break;
@@ -327,11 +326,11 @@ namespace DrawEngine.Renderer.Importers
                 subSegment = dataSegment.GetNextSubSegment();
             }
         }
+
         /// <summary>
         /// Calculates the normal vector at each vertex based on their configuration.
         /// </summary>
-        protected void CalculateVertexNormals()
-        {
+        protected void CalculateVertexNormals() {
             Vector3D[] faceNormals = new Vector3D[this.currentMeshData.Faces.Length];
             this.currentMeshData.Normals = new Vector3D[this.currentMeshData.Vertices.Length];
             MeshData3DS.FaceData3DS currentFace;
@@ -345,7 +344,7 @@ namespace DrawEngine.Renderer.Importers
             int j;
             ulong faceCount;
             // Calculate face normals
-            for(i = 0; i < this.currentMeshData.Faces.Length; i++){
+            for (i = 0; i < this.currentMeshData.Faces.Length; i++) {
                 currentFace = this.currentMeshData.Faces[i];
                 faceV1 = new Point3D(this.currentMeshData.Vertices[currentFace.Vertex1].X,
                                      this.currentMeshData.Vertices[currentFace.Vertex1].Y,
@@ -362,13 +361,13 @@ namespace DrawEngine.Renderer.Importers
                 faceNormals[i].Normalize();
             }
             // Calculate vertex normals using face normal data (average of face normals)
-            for(i = 0; i < this.currentMeshData.Vertices.Length; i++){
+            for (i = 0; i < this.currentMeshData.Vertices.Length; i++) {
                 // Find faces attached to our current vertex
                 faceCount = 0;
                 vertexVectorSum = Point3D.Zero;
-                for(j = 0; j < this.currentMeshData.Faces.Length; j++){
+                for (j = 0; j < this.currentMeshData.Faces.Length; j++) {
                     currentFace = this.currentMeshData.Faces[j];
-                    if((i == currentFace.Vertex1) || (i == currentFace.Vertex2) || (i == currentFace.Vertex3)){
+                    if ((i == currentFace.Vertex1) || (i == currentFace.Vertex2) || (i == currentFace.Vertex3)) {
                         faceCount++;
                         vertexVectorSum = vertexVectorSum + faceNormals[j];
                     }
@@ -378,9 +377,11 @@ namespace DrawEngine.Renderer.Importers
                 this.currentMeshData.Normals[i].Normalize();
             }
         }
+
         #endregion
 
         #region Protected: Mesh and material file writers
+
         ///// <summary>
         ///// Attempts to write the mesh data to the .mesh.xml file
         ///// </summary>
@@ -574,32 +575,34 @@ namespace DrawEngine.Renderer.Importers
         //        }
         //    }
         //}
+
         #endregion
 
         #endregion
 
         #region Nested type: MaterialData3DS
-        public class MaterialData3DS
-        {
+
+        public class MaterialData3DS {
             public RGBColor ambient;
             public RGBColor diffuse;
             public string name;
             public string textureName;
             public float textureWeight;
-            public MaterialData3DS()
-            {
+
+            public MaterialData3DS() {
                 this.ambient = RGBColor.Black;
                 this.diffuse = RGBColor.Black;
                 this.name = "";
                 this.textureName = "";
-                this.textureWeight = (float)0.0;
+                this.textureWeight = (float) 0.0;
             }
         }
+
         #endregion
 
         #region Nested type: MeshData3DS
-        public class MeshData3DS
-        {
+
+        public class MeshData3DS {
             //PointersToVertex
             public FaceData3DS[] Faces;
             public string MaterialUsed;
@@ -607,8 +610,8 @@ namespace DrawEngine.Renderer.Importers
             public Vector3D[] Normals;
             public Point2D[] TextureCoordinates;
             public Point3D[] Vertices;
-            public MeshData3DS()
-            {
+
+            public MeshData3DS() {
                 this.MaterialUsed = "";
                 this.Faces = new FaceData3DS[0];
                 this.Normals = new Vector3D[0];
@@ -617,15 +620,17 @@ namespace DrawEngine.Renderer.Importers
             }
 
             #region Nested type: FaceData3DS
-            public struct FaceData3DS
-            {
+
+            public struct FaceData3DS {
                 public ushort Flags;
                 public ushort Vertex1;
                 public ushort Vertex2;
                 public ushort Vertex3;
             }
+
             #endregion
         }
+
         #endregion
     }
 }

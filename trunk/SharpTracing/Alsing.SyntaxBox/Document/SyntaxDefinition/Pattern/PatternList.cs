@@ -11,14 +11,12 @@
 using System;
 using System.Collections;
 
-namespace Alsing.SourceCode
-{
+namespace Alsing.SourceCode {
     /// <summary>
     /// A List containing patterns.
     /// this could be for example a list of keywords or operators
     /// </summary>
-    public sealed class PatternList : IEnumerable
-    {
+    public sealed class PatternList : IEnumerable {
         private readonly PatternCollection patterns = new PatternCollection();
 
         /// <summary>
@@ -74,8 +72,7 @@ namespace Alsing.SourceCode
         /// <summary>
         /// 
         /// </summary>
-        public PatternList()
-        {
+        public PatternList() {
             SimplePatterns = new Hashtable(CaseInsensitiveHashCodeProvider.Default, CaseInsensitiveComparer.Default);
         }
 
@@ -85,8 +82,7 @@ namespace Alsing.SourceCode
         /// 
         /// </summary>
         /// <returns></returns>
-        public IEnumerator GetEnumerator()
-        {
+        public IEnumerator GetEnumerator() {
             return patterns.GetEnumerator();
         }
 
@@ -97,53 +93,47 @@ namespace Alsing.SourceCode
         /// </summary>
         /// <param name="Pattern"></param>
         /// <returns></returns>
-        public Pattern Add(Pattern Pattern)
-        {
-            if (Parent != null && Parent.Parent != null && Parent.Parent.Parent != null)
-            {
+        public Pattern Add(Pattern Pattern) {
+            if (Parent != null && Parent.Parent != null && Parent.Parent.Parent != null) {
                 Pattern.Separators = Parent.Parent.Parent.Separators;
                 Parent.Parent.Parent.ChangeVersion();
             }
 
-            if (!Pattern.IsComplex && !Pattern.ContainsSeparator)
-            {
+            if (!Pattern.IsComplex && !Pattern.ContainsSeparator) {
                 //store pattern in lookuptable if it is a simple pattern
                 string s;
 
-                if (Pattern.StringPattern.Length >= 2)
+                if (Pattern.StringPattern.Length >= 2) {
                     s = Pattern.StringPattern.Substring(0, 2);
-                else
+                } else {
                     s = Pattern.StringPattern.Substring(0, 1) + " ";
+                }
 
                 s = s.ToLowerInvariant();
 
-                if (Pattern.StringPattern.Length == 1)
-                {
+                if (Pattern.StringPattern.Length == 1) {
                     SimplePatterns1Char[Pattern.StringPattern] = Pattern;
-                }
-                else
-                {
-                    if (SimplePatterns2Char[s] == null)
+                } else {
+                    if (SimplePatterns2Char[s] == null) {
                         SimplePatterns2Char[s] = new PatternCollection();
+                    }
                     var ar = (PatternCollection) SimplePatterns2Char[s];
                     ar.Add(Pattern);
                 }
 
-                if (CaseSensitive)
+                if (CaseSensitive) {
                     SimplePatterns[Pattern.LowerStringPattern] = Pattern;
-                else
+                } else {
                     SimplePatterns[Pattern.StringPattern] = Pattern;
-            }
-            else
-            {
+                }
+            } else {
                 ComplexPatterns.Add(Pattern);
             }
 
             patterns.Add(Pattern);
-            if (Pattern.Parent == null)
+            if (Pattern.Parent == null) {
                 Pattern.Parent = this;
-            else
-            {
+            } else {
                 throw (new Exception("Pattern already assigned to another PatternList"));
             }
             return Pattern;
@@ -152,8 +142,7 @@ namespace Alsing.SourceCode
         /// <summary>
         /// 
         /// </summary>
-        public void Clear()
-        {
+        public void Clear() {
             patterns.Clear();
         }
     }

@@ -10,17 +10,14 @@
 
 using System;
 
-namespace Alsing.SourceCode
-{
+namespace Alsing.SourceCode {
     /// <summary>
     /// A range of text
     /// </summary>
-    public class TextRange
-    {
+    public class TextRange {
         public TextRange() {}
 
-        public TextRange(int firstColumn, int firstRow, int lastColumn, int lastRow)
-        {
+        public TextRange(int firstColumn, int firstRow, int lastColumn, int lastRow) {
             this.firstColumn = firstColumn;
             this.firstRow = firstRow;
             this.lastColumn = lastColumn;
@@ -29,10 +26,10 @@ namespace Alsing.SourceCode
 
         public event EventHandler Change = null;
 
-        protected virtual void OnChange()
-        {
-            if (Change != null)
+        protected virtual void OnChange() {
+            if (Change != null) {
                 Change(this, EventArgs.Empty);
+            }
         }
 
         /// <summary>
@@ -47,8 +44,7 @@ namespace Alsing.SourceCode
         /// <summary>
         /// The end column of the range
         /// </summary>
-        public void SetBounds(int firstColumn, int firstRow, int lastColumn, int lastRow)
-        {
+        public void SetBounds(int firstColumn, int firstRow, int lastColumn, int lastRow) {
             this.firstColumn = firstColumn;
             this.firstRow = firstRow;
             this.lastColumn = lastColumn;
@@ -60,11 +56,9 @@ namespace Alsing.SourceCode
 
         private int firstRow;
 
-        public int FirstRow
-        {
+        public int FirstRow {
             get { return firstRow; }
-            set
-            {
+            set {
                 firstRow = value;
                 OnChange();
             }
@@ -76,11 +70,9 @@ namespace Alsing.SourceCode
 
         private int firstColumn;
 
-        public int FirstColumn
-        {
+        public int FirstColumn {
             get { return firstColumn; }
-            set
-            {
+            set {
                 firstColumn = value;
                 OnChange();
             }
@@ -92,11 +84,9 @@ namespace Alsing.SourceCode
 
         private int lastRow;
 
-        public int LastRow
-        {
+        public int LastRow {
             get { return lastRow; }
-            set
-            {
+            set {
                 lastRow = value;
                 OnChange();
             }
@@ -108,11 +98,9 @@ namespace Alsing.SourceCode
 
         private int lastColumn;
 
-        public int LastColumn
-        {
+        public int LastColumn {
             get { return lastColumn; }
-            set
-            {
+            set {
                 lastColumn = value;
                 OnChange();
             }

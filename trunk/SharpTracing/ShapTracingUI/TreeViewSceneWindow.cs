@@ -1,38 +1,35 @@
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace DrawEngine.SharpTracingUI
-{
-    public partial class TreeViewSceneWindow : DockContent
-    {
+namespace DrawEngine.SharpTracingUI {
+    public partial class TreeViewSceneWindow : DockContent {
         private static readonly object padlock = new object();
         private static TreeViewSceneWindow instance;
         //public NameableCollection<Scene> Scenes
         //{
         //    get { return this.treeViewScene.Scenes; }            
         //}
-        private TreeViewSceneWindow()
-        {
+        private TreeViewSceneWindow() {
             this.InitializeComponent();
             //this.DoubleBuffered = true;
         }
-        public static TreeViewSceneWindow Instance
-        {
-            get
-            {
-                lock(padlock){
-                    if(instance == null){
+
+        public static TreeViewSceneWindow Instance {
+            get {
+                lock (padlock) {
+                    if (instance == null) {
                         instance = new TreeViewSceneWindow();
                     }
                     return instance;
                 }
             }
         }
-        private void TreeViewSceneWindow_FormClosing(object sender, FormClosingEventArgs e)
-        {
+
+        private void TreeViewSceneWindow_FormClosing(object sender, FormClosingEventArgs e) {
             this.Hide();
             e.Cancel = true;
         }
+
         //public void AddScene(Scene scene) {
         //    //this.treeViewScene.AddScene(scene);
         //    /*

@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UISupport", "UISupport", "{42DD4FDB-C24F-4507-9816-7E76755A12CF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VideoSupport", "VideoSupport", "{58AECCC4-2879-40B3-939D-0C608A270F9D}"
@@ -194,5 +194,8 @@ Global
 		{19EF75B2-B414-4EB0-9486-160FAF93E62C} = {42DD4FDB-C24F-4507-9816-7E76755A12CF}
 		{206D4408-3592-436C-8CE2-7BEE5D0AA404} = {42DD4FDB-C24F-4507-9816-7E76755A12CF}
 		{ABB32A29-AF50-47FA-B243-5FD75A5ABA54} = {58AECCC4-2879-40B3-939D-0C608A270F9D}
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal

@@ -8,28 +8,21 @@
 // *
 // *
 
-namespace Alsing.Text.PatternMatchers
-{
+namespace Alsing.Text.PatternMatchers {
     /// <summary>
     /// Pattern matcher that matches culture invariant integer values
     /// </summary>
-    public class IntPatternMatcher : PatternMatcherBase
-    {
+    public class IntPatternMatcher : PatternMatcherBase {
         public static readonly IntPatternMatcher Default = new IntPatternMatcher();
 
         //perform the match
-        public override int Match(string textToMatch, int matchAtIndex)
-        {
+        public override int Match(string textToMatch, int matchAtIndex) {
             int currentIndex = matchAtIndex;
-            do
-            {
+            do {
                 char currentChar = textToMatch[currentIndex];
-                if (currentChar >= '0' && currentChar <= '9')
-                {
+                if (currentChar >= '0' && currentChar <= '9') {
                     //current char is hexchar
-                }
-                else
-                {
+                } else {
                     break;
                 }
                 currentIndex++;

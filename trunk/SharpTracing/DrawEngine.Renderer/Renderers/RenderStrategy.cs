@@ -10,32 +10,23 @@
  * Feel free to copy, modify and  give fixes 
  * suggestions. Keep the credits!
  */
- using System;
+
+using System;
 using System.Collections.Generic;
 using DrawEngine.Renderer.BasicStructures;
+using DrawEngine.Renderer.Mathematics.Algebra;
+using DrawEngine.Renderer.Tracers;
+using DrawEngine.Renderer.Util;
 
-namespace DrawEngine.Renderer.Renderers
-{
+namespace DrawEngine.Renderer.Renderers {
+    
     [Serializable]
-    public abstract class RenderStrategy
-    {
-        private Scene scene;
-        public RenderStrategy(Scene scene)
-        {
-            this.Scene = scene;
+    public abstract class RenderStrategy {
+        protected volatile bool cancelRender = false;
+        public abstract void Render(RayCasting rayCasting, IEnumerable<TiledBitmap.Tile> tiles);
+        public virtual void CancelRender() {
+            this.cancelRender = true;
         }
-        public Scene Scene
-        {
-            get { return this.scene; }
-            set
-            {
-                if(value != null){
-                    this.scene = value;
-                } else{
-                    throw new ArgumentNullException("Scene");
-                }
-            }
-        }
-        public abstract IEnumerable<Ray> GenerateRays();
+
     }
 }

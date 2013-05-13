@@ -13,14 +13,12 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Design;
 
-namespace Alsing.SourceCode
-{
+namespace Alsing.SourceCode {
     /// <summary>
     /// TextStyles are used to describe the apperance of text.
     /// </summary>
     [Editor(typeof (TextStyleUIEditor), typeof (UITypeEditor))]
-    public class TextStyle : ICloneable
-    {
+    public class TextStyle : ICloneable {
         /// <summary>
         /// Name of the style
         /// </summary>
@@ -32,11 +30,9 @@ namespace Alsing.SourceCode
 
         [Category("Font")]
         [Description("Gets or Sets if the style uses a BOLD font")]
-        public bool Bold
-        {
+        public bool Bold {
             get { return _Bold; }
-            set
-            {
+            set {
                 _Bold = value;
                 OnChange();
             }
@@ -50,11 +46,9 @@ namespace Alsing.SourceCode
 
         [Category("Font")]
         [Description("Gets or Sets if the style uses an ITALIC font")]
-        public bool Italic
-        {
+        public bool Italic {
             get { return _Italic; }
-            set
-            {
+            set {
                 _Italic = value;
                 OnChange();
             }
@@ -68,11 +62,9 @@ namespace Alsing.SourceCode
 
         [Category("Font")]
         [Description("Gets or Sets if the style uses an UNDERLINED font")]
-        public bool Underline
-        {
+        public bool Underline {
             get { return _Underline; }
-            set
-            {
+            set {
                 _Underline = value;
                 OnChange();
             }
@@ -86,11 +78,9 @@ namespace Alsing.SourceCode
 
         [Category("Color")]
         [Description("Gets or Sets the fore color of the style")]
-        public Color ForeColor
-        {
+        public Color ForeColor {
             get { return _ForeColor; }
-            set
-            {
+            set {
                 _ForeColor = value;
                 OnChange();
             }
@@ -104,11 +94,9 @@ namespace Alsing.SourceCode
 
         [Category("Color")]
         [Description("Gets or Sets the background color of the style")]
-        public Color BackColor
-        {
+        public Color BackColor {
             get { return _BackColor; }
-            set
-            {
+            set {
                 _BackColor = value;
                 OnChange();
             }
@@ -134,8 +122,7 @@ namespace Alsing.SourceCode
         /// <summary>
         /// Default constructor
         /// </summary>
-        public TextStyle()
-        {
+        public TextStyle() {
             ForeColor = Color.Black;
             BackColor = Color.Transparent;
         }
@@ -144,41 +131,38 @@ namespace Alsing.SourceCode
         /// Returns true if no color have been assigned to the backcolor
         /// </summary>
         [Browsable(false)]
-        public bool Transparent
-        {
+        public bool Transparent {
             get { return (BackColor.A == 0); }
         }
 
         public event EventHandler Change = null;
 
-        protected virtual void OnChange()
-        {
-            if (Change != null)
+        protected virtual void OnChange() {
+            if (Change != null) {
                 Change(this, EventArgs.Empty);
+            }
         }
 
-        public override string ToString()
-        {
-            if (Name == null)
+        public override string ToString() {
+            if (Name == null) {
                 return "TextStyle";
+            }
 
             return Name;
         }
 
         #region Implementation of ICloneable
 
-        public object Clone()
-        {
-            var ts = new TextStyle
-                     {
-//TODO: verify if this actually works
-                         BackColor = BackColor,
-                         Bold = Bold,
-                         ForeColor = ForeColor,
-                         Italic = Italic,
-                         Underline = Underline,
-                         Name = Name
-                     };
+        public object Clone() {
+            var ts = new TextStyle {
+                                       //TODO: verify if this actually works
+                                       BackColor = BackColor,
+                                       Bold = Bold,
+                                       ForeColor = ForeColor,
+                                       Italic = Italic,
+                                       Underline = Underline,
+                                       Name = Name
+                                   };
             return ts;
         }
 

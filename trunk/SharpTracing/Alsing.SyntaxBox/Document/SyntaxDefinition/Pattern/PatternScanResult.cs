@@ -8,13 +8,11 @@
 // *
 // *
 
-namespace Alsing.SourceCode
-{
+namespace Alsing.SourceCode {
     /// <summary>
     /// PatternScanResult struct is redurned by the Pattern class when an .IndexIn call has been performed.
     /// </summary>
-    public struct PatternScanResult
-    {
+    public struct PatternScanResult {
         /// <summary>
         /// The index on which the pattern was found in the source string
         /// </summary>

@@ -13,13 +13,11 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Alsing.Windows.Forms.CoreLib
-{
+namespace Alsing.Windows.Forms.CoreLib {
     /// <summary>
     /// Summary description for SplitViewChildControl.
     /// </summary>
-    public class SplitViewChildControl : BaseControl
-    {
+    public class SplitViewChildControl : BaseControl {
         private Container components;
         private Panel Filler;
         protected HScrollBar hScroll;
@@ -28,20 +26,17 @@ namespace Alsing.Windows.Forms.CoreLib
 
         protected VScrollBar vScroll;
 
-        public SplitViewChildControl()
-        {
+        public SplitViewChildControl() {
             InitializeComponent();
 
-//			Alsing.Windows.NativeMethods.OpenThemeData (this.Handle,"EDIT");
-//			Alsing.Windows.NativeMethods.OpenThemeData (this.vScroll.Handle,"SCROLLBAR");
-//			Alsing.Windows.NativeMethods.OpenThemeData (this.hScroll.Handle,"SCROLLBAR");
+            //			Alsing.Windows.NativeMethods.OpenThemeData (this.Handle,"EDIT");
+            //			Alsing.Windows.NativeMethods.OpenThemeData (this.vScroll.Handle,"SCROLLBAR");
+            //			Alsing.Windows.NativeMethods.OpenThemeData (this.hScroll.Handle,"SCROLLBAR");
         }
 
 
-        protected Rectangle ClientArea
-        {
-            get
-            {
+        protected Rectangle ClientArea {
+            get {
                 Rectangle r = ClientRectangle;
                 r.Width -= vScroll.Width;
                 r.Height -= hScroll.Height;
@@ -53,11 +48,9 @@ namespace Alsing.Windows.Forms.CoreLib
         /// <summary>
         /// Gets or Sets if the Left side thumb control is visible or not.
         /// </summary>
-        public bool LeftThumbVisible
-        {
+        public bool LeftThumbVisible {
             get { return LeftThumb.Visible; }
-            set
-            {
+            set {
                 LeftThumb.Visible = value;
                 DoResize();
             }
@@ -66,37 +59,33 @@ namespace Alsing.Windows.Forms.CoreLib
         /// <summary>
         /// Getd ot Sets if the Top thumb control is visible or not.
         /// </summary>
-        public bool TopThumbVisible
-        {
+        public bool TopThumbVisible {
             get { return TopThumb.Visible; }
-            set
-            {
+            set {
                 TopThumb.Visible = value;
                 DoResize();
             }
         }
 
         [Browsable(false)]
-        public int VisibleClientHeight
-        {
-            get
-            {
-                if (hScroll.Visible)
+        public int VisibleClientHeight {
+            get {
+                if (hScroll.Visible) {
                     return ClientHeight - hScroll.Height;
-                else
+                } else {
                     return ClientHeight;
+                }
             }
         }
 
         [Browsable(false)]
-        public int VisibleClientWidth
-        {
-            get
-            {
-                if (hScroll.Visible)
+        public int VisibleClientWidth {
+            get {
+                if (hScroll.Visible) {
                     return ClientWidth - vScroll.Width;
-                else
+                } else {
                     return ClientWidth;
+                }
             }
         }
 
@@ -107,49 +96,37 @@ namespace Alsing.Windows.Forms.CoreLib
 
         private bool HasThumbs;
 
-        public ScrollBars ScrollBars
-        {
+        public ScrollBars ScrollBars {
             get { return _ScrollBars; }
 
-            set
-            {
+            set {
                 _ScrollBars = value;
-                if (ScrollBars == ScrollBars.Both)
-                {
+                if (ScrollBars == ScrollBars.Both) {
                     hScroll.Visible = true;
                     vScroll.Visible = true;
                 }
-                if (ScrollBars == ScrollBars.None)
-                {
+                if (ScrollBars == ScrollBars.None) {
                     hScroll.Visible = false;
                     vScroll.Visible = false;
                 }
-                if (ScrollBars == ScrollBars.Horizontal)
-                {
+                if (ScrollBars == ScrollBars.Horizontal) {
                     hScroll.Visible = true;
                     vScroll.Visible = false;
                 }
-                if (ScrollBars == ScrollBars.Vertical)
-                {
+                if (ScrollBars == ScrollBars.Vertical) {
                     hScroll.Visible = false;
                     vScroll.Visible = true;
                 }
                 Filler.Visible = hScroll.Visible & vScroll.Visible;
 
-                if (vScroll.Visible && HasThumbs)
-                {
+                if (vScroll.Visible && HasThumbs) {
                     TopThumb.Height = 8;
-                }
-                else
-                {
+                } else {
                     TopThumb.Height = 0;
                 }
-                if (hScroll.Visible && HasThumbs)
-                {
+                if (hScroll.Visible && HasThumbs) {
                     LeftThumb.Width = 8;
-                }
-                else
-                {
+                } else {
                     LeftThumb.Width = 0;
                 }
 
@@ -159,16 +136,14 @@ namespace Alsing.Windows.Forms.CoreLib
             }
         }
 
-        public void HideThumbs()
-        {
+        public void HideThumbs() {
             TopThumb.Height = 0;
             LeftThumb.Width = 0;
             HasThumbs = false;
             DoResize();
         }
 
-        public void ShowThumbs()
-        {
+        public void ShowThumbs() {
             TopThumb.Height = 8;
             LeftThumb.Width = 8;
             HasThumbs = true;
@@ -177,68 +152,61 @@ namespace Alsing.Windows.Forms.CoreLib
 
         #endregion
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (components != null)
-                {
+        protected override void Dispose(bool disposing) {
+            if (disposing) {
+                if (components != null) {
                     components.Dispose();
                 }
             }
             base.Dispose(disposing);
         }
 
-        protected override void OnResize(EventArgs e)
-        {
+        protected override void OnResize(EventArgs e) {
             base.OnResize(e);
             DoResize();
         }
 
-        private void DoResize()
-        {
-            try
-            {
-                if (TopThumb == null)
+        private void DoResize() {
+            try {
+                if (TopThumb == null) {
                     return;
+                }
 
                 TopThumb.Width = SystemInformation.VerticalScrollBarWidth;
                 LeftThumb.Height = SystemInformation.HorizontalScrollBarHeight;
                 vScroll.Width = SystemInformation.VerticalScrollBarWidth;
                 hScroll.Height = SystemInformation.HorizontalScrollBarHeight;
 
-                if (TopThumbVisible)
-                {
+                if (TopThumbVisible) {
                     vScroll.Top = TopThumb.Height;
-                    if (hScroll.Visible)
+                    if (hScroll.Visible) {
                         vScroll.Height = ClientHeight - hScroll.Height - TopThumb.Height;
-                    else
+                    } else {
                         vScroll.Height = ClientHeight - TopThumb.Height;
-                }
-                else
-                {
-                    if (hScroll.Visible)
+                    }
+                } else {
+                    if (hScroll.Visible) {
                         vScroll.Height = ClientHeight - hScroll.Height;
-                    else
+                    } else {
                         vScroll.Height = ClientHeight;
+                    }
 
                     vScroll.Top = 0;
                 }
 
-                if (LeftThumbVisible)
-                {
+                if (LeftThumbVisible) {
                     hScroll.Left = LeftThumb.Width;
-                    if (vScroll.Visible)
+                    if (vScroll.Visible) {
                         hScroll.Width = ClientWidth - vScroll.Width - LeftThumb.Width;
-                    else
+                    } else {
                         hScroll.Width = ClientWidth - LeftThumb.Width;
-                }
-                else
-                {
-                    if (vScroll.Visible)
+                    }
+                } else {
+                    if (vScroll.Visible) {
                         hScroll.Width = ClientWidth - vScroll.Width;
-                    else
+                    } else {
                         hScroll.Width = ClientWidth;
+                    }
 
                     hScroll.Left = 0;
                 }
@@ -259,14 +227,12 @@ namespace Alsing.Windows.Forms.CoreLib
                 Filler.Top = hScroll.Top;
                 Filler.Width = vScroll.Width;
                 Filler.Height = hScroll.Height;
-            }
-            catch {}
+            } catch {}
         }
 
         #region Component Designer generated code
 
-        private void InitializeComponent()
-        {
+        private void InitializeComponent() {
             var resources = new System.Resources.ResourceManager(typeof (SplitViewChildControl));
             this.hScroll = new System.Windows.Forms.HScrollBar();
             this.vScroll = new System.Windows.Forms.VScrollBar();

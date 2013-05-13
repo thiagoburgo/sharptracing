@@ -8,13 +8,11 @@
 // *
 // *
 
-namespace Alsing.Text.PatternMatchers
-{
+namespace Alsing.Text.PatternMatchers {
     /// <summary>
     /// 
     /// </summary>
-    public interface IPatternMatcher
-    {
+    public interface IPatternMatcher {
         string[] DefaultPrefixes { get; }
         int Match(string textToMatch, int matchAtIndex);
     }

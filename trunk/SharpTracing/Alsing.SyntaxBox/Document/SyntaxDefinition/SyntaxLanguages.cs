@@ -1,7 +1,5 @@
-﻿namespace Alsing.SourceCode
-{
-    public enum SyntaxLanguages
-    {
+﻿namespace Alsing.SourceCode {
+    public enum SyntaxLanguages {
         Lang6502,
         ASP,
         CPP,

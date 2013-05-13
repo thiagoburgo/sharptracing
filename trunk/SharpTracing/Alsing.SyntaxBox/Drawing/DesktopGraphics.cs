@@ -2,16 +2,13 @@
 using System.Drawing;
 using Alsing.Windows;
 
-namespace Alsing.Drawing
-{
-    public class DesktopGraphics : IDisposable
-    {
+namespace Alsing.Drawing {
+    public class DesktopGraphics : IDisposable {
         public readonly Graphics Graphics;
         protected IntPtr handle = new IntPtr(0);
         protected IntPtr hdc = new IntPtr(0);
 
-        public DesktopGraphics()
-        {
+        public DesktopGraphics() {
             handle = NativeMethods.GetDesktopWindow();
             hdc = NativeMethods.GetWindowDC(hdc);
             Graphics = Graphics.FromHdc(hdc);
@@ -19,8 +16,7 @@ namespace Alsing.Drawing
 
         #region IDisposable Members
 
-        public void Dispose()
-        {
+        public void Dispose() {
             NativeMethods.ReleaseDC(handle, hdc);
         }
 

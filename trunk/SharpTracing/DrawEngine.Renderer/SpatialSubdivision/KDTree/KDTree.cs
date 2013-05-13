@@ -10,11 +10,11 @@
  * Feel free to copy, modify and  give fixes 
  * suggestions. Keep the credits!
  */
- using System;
+
+using System;
 using System.Collections.Generic;
 
-namespace DrawEngine.Renderer.SpatialSubdivision.KDTree
-{
+namespace DrawEngine.Renderer.SpatialSubdivision.KDTree {
     /// <summary>
     /// KDTree is a public class supporting KD-tree insertion, deletion, equality search,
     /// range search, and nearest neighbor(s) using double-precision floating-point
@@ -41,8 +41,7 @@ namespace DrawEngine.Renderer.SpatialSubdivision.KDTree
     /// </code>
     /// </summary>
     /// <typeparam name="T">Type of a kdtree values</typeparam>
-    public class KDTree<T>
-    {
+    public class KDTree<T> {
         // K = number of dimensions
         private static readonly DateTime Jan1st1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         private readonly int m_K;
@@ -52,25 +51,26 @@ namespace DrawEngine.Renderer.SpatialSubdivision.KDTree
         private int m_count;
         // root of KD-tree
         private KDNode<T> m_root;
+
         /// <summary>
         /// Creates a KD-tree with specified number of dimensions. 
         /// </summary>
         /// <param name="k">number of dimensions</param>
         public KDTree(int k) : this(k, 0) {}
-        public KDTree(int k, long timeout)
-        {
+
+        public KDTree(int k, long timeout) {
             this.m_timeout = timeout;
             this.m_K = k;
             this.m_root = null;
         }
-        public int Count
-        {
-            get
-            {
+
+        public int Count {
+            get {
                 /* added by MSL */
                 return this.m_count;
             }
         }
+
         /// <summary>
         /// Insert a node in a KD-tree. Uses algorithm translated from 352.ins.c of
         /// Book{GonnetBaezaYates1991,                                   
@@ -84,10 +84,10 @@ namespace DrawEngine.Renderer.SpatialSubdivision.KDTree
         /// <param name="value">value at that key</param>
         /// <exception cref="KeySizeException">if key.Length mismatches K</exception>
         /// <exception cref="KeyDuplicateException">if key already in tree</exception>
-        public void Insert(double[] key, T value)
-        {
+        public void Insert(double[] key, T value) {
             this.Edit(key, new Inserter<T>(value));
         }
+
         /// <summary>
         /// Edit a node in a KD-tree
         /// </summary>
@@ -95,14 +95,13 @@ namespace DrawEngine.Renderer.SpatialSubdivision.KDTree
         /// <param name="editor">object to edit the value at that key</param>
         /// <exception cref="KeySizeException">if key.Length mismatches K</exception>
         /// <exception cref="KeyDuplicateException">if key already in tree</exception>
-        public void Edit(double[] key, IEditor<T> editor)
-        {
-            if(key.Length != this.m_K){
+        public void Edit(double[] key, IEditor<T> editor) {
+            if (key.Length != this.m_K) {
                 throw new KeySizeException();
             }
-            lock(this){
+            lock (this) {
                 // the first insert has to be lock
-                if(null == this.m_root){
+                if (null == this.m_root) {
                     this.m_root = KDNode<T>.Create(new HPoint(key), editor);
                     this.m_count = this.m_root.Deleted ? 0 : 1;
                     return;
@@ -110,6 +109,7 @@ namespace DrawEngine.Renderer.SpatialSubdivision.KDTree
             }
             this.m_count += KDNode<T>.Edit(new HPoint(key), editor, this.m_root, 0, this.m_K);
         }
+
         /// <summary>
         ///Find KD-tree node whose key is identical to key. Uses algorithm
         ///translated from 352.srch.c of Gonnet & Baeza-Yates. 
@@ -117,18 +117,18 @@ namespace DrawEngine.Renderer.SpatialSubdivision.KDTree
         /// <param name="key">key for KD-tree node</param>
         /// <returns>Element associated to key</returns>
         /// <exception cref="KeySizeException">if key.Length mismatches K</exception>
-        public T Search(double[] key)
-        {
-            if(key.Length != this.m_K){
+        public T Search(double[] key) {
+            if (key.Length != this.m_K) {
                 throw new KeySizeException();
             }
             KDNode<T> kd = KDNode<T>.Search(new HPoint(key), this.m_root, this.m_K);
             return (kd == null ? default(T) : kd.Value);
         }
-        public void Delete(double[] key)
-        {
+
+        public void Delete(double[] key) {
             this.Delete(key, false);
         }
+
         /// <summary>
         /// Delete a node from a KD-tree. Instead of actually deleting node and
         /// rebuilding tree, marks node as deleted. Hence, it is up to the caller to
@@ -138,33 +138,33 @@ namespace DrawEngine.Renderer.SpatialSubdivision.KDTree
         /// <param name="optional">if false and node not found, throw an exception</param>
         /// <exception cref="KeyMissingException">if no node in tree has key</exception>
         /// <exception cref="KeySizeException">if key.Length mismatches K</exception>
-        public void Delete(double[] key, bool optional)
-        {
-            if(key.Length != this.m_K){
+        public void Delete(double[] key, bool optional) {
+            if (key.Length != this.m_K) {
                 throw new KeySizeException();
             }
             KDNode<T> t = KDNode<T>.Search(new HPoint(key), this.m_root, this.m_K);
-            if(t == null){
-                if(optional == false){
+            if (t == null) {
+                if (optional == false) {
                     throw new KeyMissingException();
                 }
-            } else{
-                if(KDNode<T>.Delete(t)){
+            } else {
+                if (KDNode<T>.Delete(t)) {
                     this.m_count--;
                 }
             }
         }
+
         /// <summary>
         /// Find KD-tree node whose key is nearest neighbor to key.
         /// </summary>
         /// <param name="key">key for KD-tree node</param>
         /// <returns>object at node nearest to key, or null on failure</returns>
         /// <exception cref="KeySizeException">if key.Length mismatches K</exception>
-        public T Nearest(double[] key)
-        {
+        public T Nearest(double[] key) {
             List<T> nbrs = this.Nearest(key, 1, null);
             return nbrs[0];
         }
+
         /// <summary>
         /// Find KD-tree nodes whose keys are <i>n</i> nearest neighbors to key.
         /// </summary>
@@ -172,10 +172,10 @@ namespace DrawEngine.Renderer.SpatialSubdivision.KDTree
         /// <param name="n">number of nodes to return</param>
         /// <returns>objects at nodes nearest to key, or null on failure</returns>
         /// <exception cref="KeySizeException">if key.Length mismatches K</exception>
-        public List<T> Nearest(double[] key, int n)
-        {
+        public List<T> Nearest(double[] key, int n) {
             return this.Nearest(key, n, null);
         }
+
         /// <summary>
         /// Find KD-tree nodes whose keys are within a given Euclidean distance (less than or equals) of a given key.
         /// </summary>
@@ -183,10 +183,10 @@ namespace DrawEngine.Renderer.SpatialSubdivision.KDTree
         /// <param name="dist">Euclidean distance</param>
         /// <returns>objects at nodes with distance of key, or null on failure</returns>
         /// <exception cref="KeySizeException">if key.Length mismatches K</exception>
-        public List<T> NearestEuclidean(double[] key, double dist)
-        {
+        public List<T> NearestEuclidean(double[] key, double dist) {
             return this.nearestDistance(key, dist, new EuclideanDistance());
         }
+
         /// <summary>
         /// Find KD-tree nodes whose keys are within a given Hamming distance (less than or equals) of a given key.
         /// </summary>
@@ -194,10 +194,10 @@ namespace DrawEngine.Renderer.SpatialSubdivision.KDTree
         /// <param name="dist">Hamming distance</param>
         /// <returns>objects at nodes with distance of key, or null on failure</returns>
         /// <exception cref="KeySizeException">if key.Length mismatches K</exception>
-        public List<T> NearestHamming(double[] key, double dist)
-        {
+        public List<T> NearestHamming(double[] key, double dist) {
             return this.nearestDistance(key, dist, new HammingDistance());
         }
+
         /// <summary>
         /// Find KD-tree nodes whose keys are <I>n</I> nearest neighbors to key. Uses
         /// algorithm above. Neighbors are returned in ascending order of distance to
@@ -208,21 +208,21 @@ namespace DrawEngine.Renderer.SpatialSubdivision.KDTree
         /// <param name="checker">an optional object to filter matches</param>
         /// <returns>objects at node nearest to key, or null on failure</returns>
         /// <exception cref="KeySizeException">if key.Length mismatches K</exception>
-        public List<T> Nearest(double[] key, int n, Predicate<T> checker)
-        {
-            if(n <= 0){
+        public List<T> Nearest(double[] key, int n, Predicate<T> checker) {
+            if (n <= 0) {
                 return new List<T>();
             }
             NearestNeighborList<KDNode<T>> nnl = this.getNbrs(key, n, checker);
             n = nnl.Count;
             List<T> nbrs = new List<T>();
-            for(int i = 0; i < n; ++i){
+            for (int i = 0; i < n; ++i) {
                 KDNode<T> kd = nnl.RemoveHighest();
                 nbrs.Add(kd.Value);
             }
             //nbrs.Reverse();
             return nbrs;
         }
+
         /// <summary>
         /// Range search in a KD-tree. Uses algorithm translated from 352.range.c of
         /// Gonnet & Baeza-Yates.
@@ -231,33 +231,32 @@ namespace DrawEngine.Renderer.SpatialSubdivision.KDTree
         /// <param name="uppk">upper-bounds for key</param>
         /// <returns>array of Objects whose keys fall in range [lowk,uppk]</returns>
         /// <exception cref="KeySizeException">on mismatch among lowk.Length, uppk.Length, or K</exception>
-        public List<T> Range(double[] lowk, double[] uppk)
-        {
-            if(lowk.Length != uppk.Length){
+        public List<T> Range(double[] lowk, double[] uppk) {
+            if (lowk.Length != uppk.Length) {
                 throw new KeySizeException();
-            } else if(lowk.Length != this.m_K){
+            } else if (lowk.Length != this.m_K) {
                 throw new KeySizeException();
-            } else{
+            } else {
                 List<KDNode<T>> found = new List<KDNode<T>>();
                 KDNode<T>.RangeSearch(new HPoint(lowk), new HPoint(uppk), this.m_root, 0, this.m_K, found);
                 List<T> o = new List<T>();
-                foreach(KDNode<T> node in found){
+                foreach (KDNode<T> node in found) {
                     o.Add(node.Value);
                 }
                 return o;
             }
         }
-        public override String ToString()
-        {
+
+        public override String ToString() {
             return this.m_root.ToString(0);
         }
-        private NearestNeighborList<KDNode<T>> getNbrs(double[] key)
-        {
+
+        private NearestNeighborList<KDNode<T>> getNbrs(double[] key) {
             return this.getNbrs(key, this.m_count, null);
         }
-        private NearestNeighborList<KDNode<T>> getNbrs(double[] key, int n, Predicate<T> checker)
-        {
-            if(key.Length != this.m_K){
+
+        private NearestNeighborList<KDNode<T>> getNbrs(double[] key, int n, Predicate<T> checker) {
+            if (key.Length != this.m_K) {
                 throw new KeySizeException();
             }
             NearestNeighborList<KDNode<T>> nnl = new NearestNeighborList<KDNode<T>>(n);
@@ -265,22 +264,22 @@ namespace DrawEngine.Renderer.SpatialSubdivision.KDTree
             HRect hr = HRect.InfiniteHRect(key.Length);
             double max_dist_sqd = Double.MaxValue;
             HPoint keyp = new HPoint(key);
-            if(this.m_count > 0){
+            if (this.m_count > 0) {
                 long timeout = (this.m_timeout > 0) ? (CurrentTimeMillis() + this.m_timeout) : 0;
                 KDNode<T>.NearestNeighbors(this.m_root, keyp, hr, max_dist_sqd, 0, this.m_K, nnl, checker, timeout);
             }
             return nnl;
         }
-        private List<T> nearestDistance(double[] key, double dist, DistanceMetric metric)
-        {
+
+        private List<T> nearestDistance(double[] key, double dist, DistanceMetric metric) {
             NearestNeighborList<KDNode<T>> nnl = this.getNbrs(key);
             int n = nnl.Count;
             List<T> nbrs = new List<T>();
-            for(int i = 0; i < n; ++i){
+            for (int i = 0; i < n; ++i) {
                 KDNode<T> kd = nnl.RemoveHighest();
                 HPoint p = kd.Key;
                 //HACK metric.Distance(kd.Key.Coord, key) < dist changed to - metric.Distance(kd.Key.Coord, key) <= dist
-                if(metric.Distance(kd.Key.Coord, key) <= dist){
+                if (metric.Distance(kd.Key.Coord, key) <= dist) {
                     nbrs.Add(kd.Value);
                 }
             }
@@ -288,9 +287,9 @@ namespace DrawEngine.Renderer.SpatialSubdivision.KDTree
             //nbrs.Reverse();
             return nbrs;
         }
-        public static long CurrentTimeMillis()
-        {
-            return (long)(DateTime.UtcNow - Jan1st1970).TotalMilliseconds;
+
+        public static long CurrentTimeMillis() {
+            return (long) (DateTime.UtcNow - Jan1st1970).TotalMilliseconds;
         }
     }
 }

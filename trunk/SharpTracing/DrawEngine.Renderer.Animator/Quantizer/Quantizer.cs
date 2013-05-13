@@ -7,23 +7,24 @@
 // See src/setup/License.rtf for complete licensing and attribution information.
 /////////////////////////////////////////////////////////////////////////////////
 // Based on: http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnaspp/html/colorquant.asp
+
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 
-namespace DrawEngine.Renderer.Animator.Quantizer
-{
+namespace DrawEngine.Renderer.Animator.Quantizer {
     /// <summary>
     /// Summary description for Class1.
     /// </summary>
-    internal unsafe abstract class Quantizer
-    {
+    internal abstract unsafe class Quantizer {
         /// <summary>
         /// Flag used to indicate whether a single pass or two passes are needed for quantization.
         /// </summary>
-        private bool _singlePass;
+        private readonly bool _singlePass;
+
         protected int ditherLevel;
         protected bool highquality;
+
         /// <summary>
         /// Construct the quantizer
         /// </summary>
@@ -33,27 +34,26 @@ namespace DrawEngine.Renderer.Animator.Quantizer
         /// only call the 'QuantizeImage' function. If two passes are required, the code will call 'InitialQuantizeImage'
         /// and then 'QuantizeImage'.
         /// </remarks>
-        public Quantizer(bool singlePass)
-        {
+        public Quantizer(bool singlePass) {
             this._singlePass = singlePass;
         }
-        public bool HighQuality
-        {
+
+        public bool HighQuality {
             get { return this.highquality; }
             set { this.highquality = value; }
         }
-        public int DitherLevel
-        {
+
+        public int DitherLevel {
             get { return this.ditherLevel; }
             set { this.ditherLevel = value; }
         }
+
         /// <summary>
         /// Quantize an image and return the resulting output bitmap
         /// </summary>
         /// <param name="source">The image to quantize</param>
         /// <returns>A quantized version of the image</returns>
-        public Bitmap Quantize(Image source)
-        {
+        public Bitmap Quantize(Image source) {
             // Get the size of the source image
             int height = source.Height;
             int width = source.Width;
@@ -61,12 +61,12 @@ namespace DrawEngine.Renderer.Animator.Quantizer
             Rectangle bounds = new Rectangle(0, 0, width, height);
             // First off take a 32bpp copy of the image
             Bitmap copy;
-            if(source is Bitmap && source.PixelFormat == PixelFormat.Format32bppArgb){
-                copy = (Bitmap)source;
-            } else{
+            if (source is Bitmap && source.PixelFormat == PixelFormat.Format32bppArgb) {
+                copy = (Bitmap) source;
+            } else {
                 copy = new Bitmap(width, height, PixelFormat.Format32bppArgb);
                 // Now lock the bitmap into memory
-                using(Graphics g = Graphics.FromImage(copy)){
+                using (Graphics g = Graphics.FromImage(copy)) {
                     g.PageUnit = GraphicsUnit.Pixel;
                     // Draw the source image onto the copy bitmap,
                     // which will effect a widening as appropriate.
@@ -77,13 +77,13 @@ namespace DrawEngine.Renderer.Animator.Quantizer
             Bitmap output = new Bitmap(width, height, PixelFormat.Format8bppIndexed);
             // Define a pointer to the bitmap data
             BitmapData sourceData = null;
-            try{
+            try {
                 // Get the source image bits and lock into memory
                 sourceData = copy.LockBits(bounds, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
                 // Call the FirstPass function if not a single pass algorithm.
                 // For something like an octree quantizer, this will run through
                 // all image pixels, build a data structure, and create a palette.
-                if(!this._singlePass){
+                if (!this._singlePass) {
                     this.FirstPass(sourceData, width, height);
                 }
                 // Then set the color palette on the output bitmap. I'm passing in the current palette 
@@ -91,40 +91,41 @@ namespace DrawEngine.Renderer.Animator.Quantizer
                 output.Palette = this.GetPalette(output.Palette);
                 // Then call the second pass which actually does the conversion
                 this.SecondPass(sourceData, output, width, height, bounds);
-            } finally{
+            } finally {
                 // Ensure that the bits are unlocked
                 copy.UnlockBits(sourceData);
             }
-            if(copy != source){
+            if (copy != source) {
                 copy.Dispose();
             }
             // Last but not least, return the output bitmap
             return output;
         }
+
         /// <summary>
         /// Execute the first pass through the pixels in the image
         /// </summary>
         /// <param name="sourceData">The source data</param>
         /// <param name="width">The width in pixels of the image</param>
         /// <param name="height">The height in pixels of the image</param>
-        protected virtual void FirstPass(BitmapData sourceData, int width, int height)
-        {
+        protected virtual void FirstPass(BitmapData sourceData, int width, int height) {
             // Define the source data pointers. The source row is a byte to
             // keep addition of the stride value easier (as this is in bytes)
-            byte* pSourceRow = (byte*)sourceData.Scan0.ToPointer();
+            byte* pSourceRow = (byte*) sourceData.Scan0.ToPointer();
             Int32* pSourcePixel;
             // Loop through each row
-            for(int row = 0; row < height; row++){
+            for (int row = 0; row < height; row++) {
                 // Set the source pixel to the first pixel in this row
-                pSourcePixel = (Int32*)pSourceRow;
+                pSourcePixel = (Int32*) pSourceRow;
                 // And loop through each column
-                for(int col = 0; col < width; col++, pSourcePixel++){
-                    this.InitialQuantizePixel((ColorBgra*)pSourcePixel);
+                for (int col = 0; col < width; col++, pSourcePixel++) {
+                    this.InitialQuantizePixel((ColorBgra*) pSourcePixel);
                 }
                 // Add the stride to the source row
                 pSourceRow += sourceData.Stride;
             }
         }
+
         /// <summary>
         /// Execute a second pass through the bitmap
         /// </summary>
@@ -133,42 +134,41 @@ namespace DrawEngine.Renderer.Animator.Quantizer
         /// <param name="width">The width in pixels of the image</param>
         /// <param name="height">The height in pixels of the image</param>
         /// <param name="bounds">The bounding rectangle</param>
-        protected virtual void SecondPass(BitmapData sourceData, Bitmap output, int width, int height, Rectangle bounds)
-        {
+        protected virtual void SecondPass(BitmapData sourceData, Bitmap output, int width, int height, Rectangle bounds) {
             BitmapData outputData = null;
             Color[] pallete = output.Palette.Entries;
             int weight = this.ditherLevel;
-            try{
+            try {
                 // Lock the output bitmap into memory
                 outputData = output.LockBits(bounds, ImageLockMode.ReadWrite, PixelFormat.Format8bppIndexed);
                 // Define the source data pointers. The source row is a byte to
                 // keep addition of the stride value easier (as this is in bytes)
-                byte* pSourceRow = (byte*)sourceData.Scan0.ToPointer();
-                Int32* pSourcePixel = (Int32*)pSourceRow;
+                byte* pSourceRow = (byte*) sourceData.Scan0.ToPointer();
+                Int32* pSourcePixel = (Int32*) pSourceRow;
                 // Now define the destination data pointers
-                byte* pDestinationRow = (byte*)outputData.Scan0.ToPointer();
+                byte* pDestinationRow = (byte*) outputData.Scan0.ToPointer();
                 byte* pDestinationPixel = pDestinationRow;
                 int[] errorThisRowR = new int[width + 1];
                 int[] errorThisRowG = new int[width + 1];
                 int[] errorThisRowB = new int[width + 1];
-                for(int row = 0; row < height; row++){
+                for (int row = 0; row < height; row++) {
                     int[] errorNextRowR = new int[width + 1];
                     int[] errorNextRowG = new int[width + 1];
                     int[] errorNextRowB = new int[width + 1];
                     int ptrInc;
-                    if((row & 1) == 0){
-                        pSourcePixel = (Int32*)pSourceRow;
+                    if ((row & 1) == 0) {
+                        pSourcePixel = (Int32*) pSourceRow;
                         pDestinationPixel = pDestinationRow;
                         ptrInc = +1;
-                    } else{
-                        pSourcePixel = (Int32*)pSourceRow + width - 1;
+                    } else {
+                        pSourcePixel = (Int32*) pSourceRow + width - 1;
                         pDestinationPixel = pDestinationRow + width - 1;
                         ptrInc = -1;
                     }
                     // Loop through each pixel on this scan line
-                    for(int col = 0; col < width; ++col){
+                    for (int col = 0; col < width; ++col) {
                         // Quantize the pixel
-                        ColorBgra srcPixel = *(ColorBgra*)pSourcePixel;
+                        ColorBgra srcPixel = *(ColorBgra*) pSourcePixel;
                         ColorBgra target = new ColorBgra();
                         //target.B = ColorBgra.Clamped(srcPixel.B - ((errorThisRowB[col] * weight) / 8));
                         //target.G = Utility.ClampToByte(srcPixel.G - ((errorThisRowG[col] * weight) / 8));
@@ -209,7 +209,7 @@ namespace DrawEngine.Renderer.Animator.Quantizer
                         errorNextRowR[width - col] += errorRb;
                         errorNextRowG[width - col] += errorGb;
                         errorNextRowB[width - col] += errorBb;
-                        if(col != 0){
+                        if (col != 0) {
                             errorNextRowR[width - (col - 1)] += errorRc;
                             errorNextRowG[width - (col - 1)] += errorGc;
                             errorNextRowB[width - (col - 1)] += errorBc;
@@ -217,7 +217,7 @@ namespace DrawEngine.Renderer.Animator.Quantizer
                         errorNextRowR[width - (col + 1)] += errorRd;
                         errorNextRowG[width - (col + 1)] += errorGd;
                         errorNextRowB[width - (col + 1)] += errorBd;
-                        unchecked{
+                        unchecked {
                             pSourcePixel += ptrInc;
                             pDestinationPixel += ptrInc;
                         }
@@ -230,11 +230,12 @@ namespace DrawEngine.Renderer.Animator.Quantizer
                     errorThisRowG = errorNextRowG;
                     errorThisRowR = errorNextRowR;
                 }
-            } finally{
+            } finally {
                 // Ensure that I unlock the output bits
                 output.UnlockBits(outputData);
             }
         }
+
         /// <summary>
         /// Override this to process the pixel in the first pass of the algorithm
         /// </summary>
@@ -244,12 +245,14 @@ namespace DrawEngine.Renderer.Animator.Quantizer
         /// such as an Octree quantizer.
         /// </remarks>
         protected virtual void InitialQuantizePixel(ColorBgra* pixel) {}
+
         /// <summary>
         /// Override this to process the pixel in the second pass of the algorithm
         /// </summary>
         /// <param name="pixel">The pixel to quantize</param>
         /// <returns>The quantized value</returns>
         protected abstract byte QuantizePixel(ColorBgra* pixel);
+
         /// <summary>
         /// Retrieve the palette for the quantized image
         /// </summary>

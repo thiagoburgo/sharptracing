@@ -8,10 +8,8 @@
 // *
 // *
 
-namespace Alsing.SourceCode
-{
-    public enum BracketType
-    {
+namespace Alsing.SourceCode {
+    public enum BracketType {
         None,
         StartBracket,
         EndBracket,

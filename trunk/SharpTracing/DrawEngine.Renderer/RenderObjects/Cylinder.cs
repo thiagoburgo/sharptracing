@@ -10,19 +10,17 @@
  * Feel free to copy, modify and  give fixes 
  * suggestions. Keep the credits!
  */
- using System;
-using DrawEngine.Renderer.Algebra;
+
+using System;
 using DrawEngine.Renderer.BasicStructures;
 using DrawEngine.Renderer.Mathematics.Algebra;
 
-namespace DrawEngine.Renderer.RenderObjects
-{
+namespace DrawEngine.Renderer.RenderObjects {
     [Serializable]
-    public class Cylinder : Primitive, ITransformable3D
-    {
+    public class Cylinder : Primitive, ITransformable3D {
         private Vector3D axisA;
         private Vector3D axisB;
-        private Plane bottom = new Plane();
+        private readonly Plane bottom = new Plane();
         private float centerDotcentralAxis;
         private Vector3D centralAxis;
         private float halfHeight;
@@ -31,12 +29,13 @@ namespace DrawEngine.Renderer.RenderObjects
         private Point3D pTop;
         private float radiusA;
         private float radiusB;
-        private Plane top = new Plane();
+        private readonly Plane top = new Plane();
         public Cylinder() : this(Point3D.Zero, new Point3D(0, 20, 0), 20) {}
+
         public Cylinder(Point3D pBase, Point3D pTop, float radius)
-                : this(pBase, pTop, radius, radius, new Vector3D(1, 0, 0), new Vector3D(0, 0, 1)) {}
-        public Cylinder(Point3D pBase, Point3D pTop, float radiusA, float radiusB, Vector3D axisA, Vector3D axisB)
-        {
+            : this(pBase, pTop, radius, radius, new Vector3D(1, 0, 0), new Vector3D(0, 0, 1)) {}
+
+        public Cylinder(Point3D pBase, Point3D pTop, float radiusA, float radiusB, Vector3D axisA, Vector3D axisB) {
             this.pBase = pBase;
             this.pTop = pTop;
             this.center = (pTop + pBase) * 0.5f;
@@ -51,20 +50,21 @@ namespace DrawEngine.Renderer.RenderObjects
             this.centerDotcentralAxis = this.center * this.centralAxis;
             this.RecalculateBoundBox();
         }
+
         public Cylinder(Point3D center, float height, Vector3D centralAxis, float radiusA, float radiusB, Vector3D axisA,
                         Vector3D axisB)
-                : this(
-                        center - height * 0.5f * centralAxis.Normalized, center + height * 0.5f * centralAxis.Normalized,
-                        radiusA, radiusB, axisA, axisB) {}
+            : this(
+                center - height * 0.5f * centralAxis.Normalized, center + height * 0.5f * centralAxis.Normalized,
+                radiusA, radiusB, axisA, axisB) {}
+
         public Cylinder(Point3D center, float height, Vector3D centralAxis, float radius)
-                : this(
-                        center - height * 0.5f * centralAxis.Normalized, center + height * 0.5f * centralAxis.Normalized,
-                        radius) {}
-        public Point3D Center
-        {
+            : this(
+                center - height * 0.5f * centralAxis.Normalized, center + height * 0.5f * centralAxis.Normalized, radius
+                ) {}
+
+        public Point3D Center {
             get { return base.center; }
-            set
-            {
+            set {
                 base.center = value;
                 this.pBase = this.center - this.halfHeight * this.centralAxis;
                 this.pTop = this.center + this.halfHeight * this.centralAxis;
@@ -72,11 +72,10 @@ namespace DrawEngine.Renderer.RenderObjects
                 this.RecalculateBoundBox();
             }
         }
-        public Point3D PointBase
-        {
+
+        public Point3D PointBase {
             get { return this.pBase; }
-            set
-            {
+            set {
                 this.pBase = value;
                 this.centralAxis = (this.pTop - this.pBase);
                 this.height = this.centralAxis.Length;
@@ -87,11 +86,10 @@ namespace DrawEngine.Renderer.RenderObjects
                 this.RecalculateBoundBox();
             }
         }
-        public Point3D PointTop
-        {
+
+        public Point3D PointTop {
             get { return this.pTop; }
-            set
-            {
+            set {
                 this.pTop = value;
                 this.centralAxis = (this.pTop - this.pBase);
                 this.height = this.centralAxis.Length;
@@ -102,67 +100,63 @@ namespace DrawEngine.Renderer.RenderObjects
                 this.RecalculateBoundBox();
             }
         }
-        public Vector3D CentralAxis
-        {
+
+        public Vector3D CentralAxis {
             get { return this.centralAxis; }
-            set
-            {
+            set {
                 this.centralAxis = value;
                 this.centralAxis.Normalize();
                 Vector3D.Orthonormalize(this.centralAxis, out this.axisA, out this.axisB);
-                if(this.radiusA != 0){
+                if (!this.radiusA.NearZero()) {
                     this.axisA /= this.radiusA;
                 }
-                if(this.radiusB != 0){
+                if (!this.radiusB.NearZero()) {
                     this.axisB /= this.radiusB;
                 }
                 this.centerDotcentralAxis = this.center * this.centralAxis;
             }
         }
-        public Vector3D AxisA
-        {
+
+        public Vector3D AxisA {
             get { return this.axisA; }
-            set
-            {
+            set {
                 this.axisA = value;
                 this.axisA = this.axisA - (this.axisA * this.centralAxis) * this.centralAxis;
                 // Make perpindicular to centralAxis
                 //assert(AxisA.Norm() != 0.0);			// Must not be parallel to centralAxis
-                if(this.axisA.Length == 0.0f){
+                if (this.axisA.Length.NearZero()) {
                     throw new Exception(
-                            "Erro: O eixo A do plano eliptico (base ou topo) tem a mesma direcao do eixo central!");
+                        "Erro: O eixo A do plano eliptico (base ou topo) tem a mesma direcao do eixo central!");
                 }
                 this.axisA.Normalize();
-                if(this.radiusA != 0){
+                if (!this.radiusA.NearZero()) {
                     this.axisA *= 1.0f / this.radiusA;
                 }
             }
         }
-        public Vector3D AxisB
-        {
+
+        public Vector3D AxisB {
             get { return this.axisB; }
-            set
-            {
+            set {
                 this.axisB = value;
                 this.axisB = this.axisB - (this.axisB * this.centralAxis) * this.centralAxis;
                 // Make perpindicular to centralAxis
                 //assert(AxisA.Norm() != 0.0);			// Must not be parallel to centralAxis
-                if(this.axisB.Length == 0.0f){
+                if (this.axisB.Length.NearZero()) {
                     throw new Exception(
-                            "Erro: O eixo B do plano eliptico (base ou topo) tem a mesma direcao do eixo central!");
+                        "Erro: O eixo B do plano eliptico (base ou topo) tem a mesma direcao do eixo central!");
                 }
                 this.axisB.Normalize();
-                if(this.radiusB != 0){
+                if (!this.radiusB.NearZero()) {
                     this.axisB *= 1.0f / this.radiusB;
                 }
             }
         }
-        public float Height
-        {
+
+        public float Height {
             get { return this.height; }
-            set
-            {
-                if(value > 0){
+            set {
+                if (value > 0) {
                     this.height = value;
                     this.halfHeight = this.height * 0.5f;
                     this.pBase = this.center - this.halfHeight * this.centralAxis;
@@ -171,14 +165,13 @@ namespace DrawEngine.Renderer.RenderObjects
                 }
             }
         }
-        public float RadiusA
-        {
+
+        public float RadiusA {
             get { return this.radiusA; }
-            set
-            {
-                if(value > 0){
+            set {
+                if (value > 0) {
                     this.radiusA = value;
-                    if(this.axisA.Length != 0.0f){
+                    if (!this.axisA.Length.NearZero()) {
                         this.axisA.Normalize();
                         this.axisA *= 1.0f / this.radiusA;
                     }
@@ -186,14 +179,13 @@ namespace DrawEngine.Renderer.RenderObjects
                 }
             }
         }
-        public float RadiusB
-        {
+
+        public float RadiusB {
             get { return this.radiusB; }
-            set
-            {
-                if(value > 0){
+            set {
+                if (value > 0) {
                     this.radiusB = value;
-                    if(this.axisB.Length != 0.0f){
+                    if (!this.axisB.Length.NearZero()) {
                         this.axisB.Normalize();
                         this.axisB *= 1.0f / this.radiusB;
                     }
@@ -203,47 +195,47 @@ namespace DrawEngine.Renderer.RenderObjects
         }
 
         #region ITransformable3D Members
-        public void Rotate(float angle, Vector3D axis)
-        {
+
+        public void Rotate(float angle, Vector3D axis) {
             this.center.Rotate(angle, axis);
             this.Center = this.center;
         }
-        public void RotateAxisX(float angle)
-        {
+
+        public void RotateAxisX(float angle) {
             this.pBase.RotateAxisX(angle);
             this.PointBase = this.pBase;
             this.pTop.RotateAxisX(angle);
             this.PointTop = this.pTop;
         }
-        public void RotateAxisY(float angle)
-        {
+
+        public void RotateAxisY(float angle) {
             this.center.RotateAxisY(angle);
             this.Center = this.center;
         }
-        public void RotateAxisZ(float angle)
-        {
+
+        public void RotateAxisZ(float angle) {
             this.center.RotateAxisZ(angle);
             this.Center = this.center;
         }
-        public void Scale(float factor)
-        {
+
+        public void Scale(float factor) {
             this.RadiusA = this.radiusA * factor;
             this.RadiusB = this.radiusB * factor;
             this.Height = this.height * factor;
         }
-        public void Translate(float tx, float ty, float tz)
-        {
+
+        public void Translate(float tx, float ty, float tz) {
             this.center.Translate(tx, ty, tz);
             this.Center = this.center;
         }
-        public void Translate(Vector3D translateVector)
-        {
+
+        public void Translate(Vector3D translateVector) {
             this.Translate(translateVector.X, translateVector.Y, translateVector.Z);
         }
+
         #endregion
 
-        public override bool FindIntersection(Ray ray, out Intersection intersect)
-        {
+        public override bool FindIntersection(Ray ray, out Intersection intersect) {
             intersect = new Intersection();
             float maxFrontDist = float.MinValue;
             float minBackDist = float.MaxValue;
@@ -251,8 +243,8 @@ namespace DrawEngine.Renderer.RenderObjects
             // Start with the bounding planes
             float pdotn = (ray.Origin * this.centralAxis) - this.centerDotcentralAxis;
             float udotn = ray.Direction * this.centralAxis;
-            if(pdotn > this.halfHeight){
-                if(udotn >= 0.0){
+            if (pdotn > this.halfHeight) {
+                if (udotn >= 0.0) {
                     return false; // Above top plane pointing up
                 }
                 // Hits top from above
@@ -260,8 +252,8 @@ namespace DrawEngine.Renderer.RenderObjects
                 frontType = HitPrimitive.TopPlane;
                 minBackDist = -(this.halfHeight + pdotn) / udotn;
                 backType = HitPrimitive.BottomPlane;
-            } else if(pdotn < -this.halfHeight){
-                if(udotn <= 0.0){
+            } else if (pdotn < -this.halfHeight) {
+                if (udotn <= 0.0) {
                     return false; // Below bottom, pointing down
                 }
                 // Hits bottom plane from below
@@ -269,16 +261,16 @@ namespace DrawEngine.Renderer.RenderObjects
                 frontType = HitPrimitive.BottomPlane;
                 minBackDist = (this.halfHeight - pdotn) / udotn;
                 backType = HitPrimitive.TopPlane;
-            } else if(udotn < 0.0){
+            } else if (udotn < 0.0) {
                 // Inside, pointing down
                 minBackDist = -(this.halfHeight + pdotn) / udotn;
                 backType = HitPrimitive.BottomPlane;
-            } else if(udotn > 0.0){
+            } else if (udotn > 0.0) {
                 // Inside, pointing up
                 minBackDist = (this.halfHeight - pdotn) / udotn;
                 backType = HitPrimitive.TopPlane;
             }
-            if(maxFrontDist < 0){
+            if (maxFrontDist < 0) {
                 return false;
             }
             // Now handle the cylinder sides
@@ -289,25 +281,25 @@ namespace DrawEngine.Renderer.RenderObjects
             float udotuB = ray.Direction * this.axisB;
             float C = pdotuA * pdotuA + pdotuB * pdotuB - 1.0f;
             float B = (pdotuA * udotuA + pdotuB * udotuB);
-            if(C >= 0.0 && B > 0.0){
+            if (C >= 0.0 && B > 0.0) {
                 return false; // Pointing away from the cylinder
             }
             B += B; // Double B for final 2.0 factor
             float A = udotuA * udotuA + udotuB * udotuB;
             float alpha1, alpha2; // The roots, in order
             int numRoots = EquationSolver.SolveQuadric(A, B, C, out alpha1, out alpha2);
-            if(numRoots == 0){
+            if (numRoots == 0) {
                 return false; // No intersection
             }
-            if(alpha1 > maxFrontDist){
-                if(alpha1 > minBackDist){
+            if (alpha1 > maxFrontDist) {
+                if (alpha1 > minBackDist) {
                     return false;
                 }
                 maxFrontDist = alpha1;
                 frontType = HitPrimitive.Cylinder;
             }
-            if(numRoots == 2 && alpha2 < minBackDist){
-                if(alpha2 < maxFrontDist){
+            if (numRoots == 2 && alpha2 < minBackDist) {
+                if (alpha2 < maxFrontDist) {
                     return false;
                 }
                 minBackDist = alpha2;
@@ -316,16 +308,16 @@ namespace DrawEngine.Renderer.RenderObjects
             // Put it all together:
             float alpha;
             HitPrimitive hitSurface;
-            if(maxFrontDist > 0.0){
+            if (maxFrontDist > 0.0) {
                 intersect.HitFromInSide = true; // Hit from outside
                 alpha = maxFrontDist;
                 hitSurface = frontType;
-            } else{
+            } else {
                 intersect.HitFromInSide = false; // Hit from inside
                 alpha = minBackDist;
                 hitSurface = backType;
             }
-            if(alpha < 0.01){
+            if (alpha < 0.01) {
                 return false;
             }
             intersect.TMin = alpha;
@@ -339,7 +331,7 @@ namespace DrawEngine.Renderer.RenderObjects
             float vdotuB = v * this.axisB;
             float uCoord = 0;
             float vCoord = 0;
-            switch(hitSurface){
+            switch (hitSurface) {
                 case HitPrimitive.TopPlane: // Top surface
                     intersect.Normal = this.top.Normal;
                     // Calculate U-V values for texture coordinates                    
@@ -356,11 +348,11 @@ namespace DrawEngine.Renderer.RenderObjects
                     intersect.Normal = ((vdotuA * this.axisA) + (vdotuB * this.axisB));
                     intersect.Normal.Normalize();
                     // Calculate u-v coordinates for texture mapping (in range[0,1]x[0,1])
-                    uCoord = (float)(Math.Atan2(vdotuB, vdotuA) / (Math.PI + Math.PI) + 0.5);
+                    uCoord = (float) (Math.Atan2(vdotuB, vdotuA) / (Math.PI + Math.PI) + 0.5);
                     vCoord = ((v * this.centralAxis) + this.halfHeight) * 1.0f / this.height;
                     break;
             }
-            if(this.material != null && this.material.IsTexturized){
+            if (this.material != null && this.material.IsTexturized) {
                 //int widthTex = this.material.Texture.Width - 1;
                 //int heightTex = this.material.Texture.Height - 1;
                 //this.material.Color = this.material.Texture.GetPixel((int)(uCoord * widthTex), (int)(vCoord * heightTex));
@@ -369,34 +361,35 @@ namespace DrawEngine.Renderer.RenderObjects
             }
             return true;
         }
-        private void RecalculateBoundBox()
-        {
-            float maxRadius = (float)Math.Max(this.radiusA, this.radiusB);
+
+        private void RecalculateBoundBox() {
+            float maxRadius = (float) Math.Max(this.radiusA, this.radiusB);
             Point3D pMin = new Point3D(this.pBase.X - maxRadius, this.pBase.Y, this.pBase.Z - maxRadius);
             Point3D pMax = new Point3D(this.pTop.X + maxRadius, this.pTop.Y, this.pTop.Z + maxRadius);
             this.boundBox = new BoundBox(pMin, pMax);
         }
-        public override Vector3D NormalOnPoint(Point3D pointInPrimitive)
-        {
+
+        public override Vector3D NormalOnPoint(Point3D pointInPrimitive) {
             throw new Exception("The method or operation is not implemented.");
         }
-        public override bool IsInside(Point3D point)
-        {
+
+        public override bool IsInside(Point3D point) {
             throw new Exception("The method or operation is not implemented.");
         }
-        public override bool IsOverlap(BoundBox boundBox)
-        {
+
+        public override bool IsOverlap(BoundBox boundBox) {
             throw new NotImplementedException();
         }
 
         #region Nested type: HitPrimitive
-        private enum HitPrimitive
-        {
+
+        private enum HitPrimitive {
             TopPlane,
             BottomPlane,
             Cylinder,
             None
         }
+
         #endregion
     }
 }

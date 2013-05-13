@@ -45,11 +45,11 @@ namespace DrawEngine.Renderer.PhotonMapping {
             float resX = this.scene.DefaultCamera.ResX; //g.VisibleClipBounds.Width; 
             float resY = this.scene.DefaultCamera.ResY; //g.VisibleClipBounds.Height;
             SolidBrush brush = new SolidBrush(Color.Black);
-            RGBColor[] colors = new RGBColor[this.scene.Sampler.SamplesPerPixel];
+            RGBColor[] colors = new RGBColor[this.scene.Sampler.NumberOfSamples];
             for(int y = 0; y < resY; y++) {
                 for(int x = 0; x < resX; x++) {
                     Ray ray;
-                    if(this.scene.Sampler.SamplesPerPixel > 1) {
+                    if(this.scene.Sampler.NumberOfSamples > 1) {
                         int i = 0;
                         foreach(Point2D sample in this.scene.Sampler.GenerateSamples(x, y)) {
                             ray = this.scene.DefaultCamera.CreateRayFromScreen(sample.X, sample.Y);

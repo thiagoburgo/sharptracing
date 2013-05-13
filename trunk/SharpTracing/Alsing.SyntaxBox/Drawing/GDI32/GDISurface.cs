@@ -13,10 +13,8 @@ using System.Drawing;
 using System.Windows.Forms;
 using Alsing.Windows;
 
-namespace Alsing.Drawing.GDI
-{
-    public class GDISurface : GDIObject
-    {
+namespace Alsing.Drawing.GDI {
+    public class GDISurface : GDIObject {
         private WeakReference _Control;
         protected IntPtr _OldBmp = IntPtr.Zero;
         protected IntPtr _OldBrush = IntPtr.Zero;
@@ -28,115 +26,100 @@ namespace Alsing.Drawing.GDI
         protected int mTabSize = 4;
         protected int mWidth;
 
-        public GDISurface(IntPtr hDC)
-        {
+        public GDISurface(IntPtr hDC) {
             mhDC = hDC;
         }
 
-        public GDISurface(int width, int height, IntPtr hdc)
-        {
+        public GDISurface(int width, int height, IntPtr hdc) {
             Init(width, height, hdc);
             Create();
         }
 
-        public GDISurface(int width, int height, GDISurface surface)
-        {
+        public GDISurface(int width, int height, GDISurface surface) {
             Init(width, height, surface.hDC);
             Create();
         }
 
 
-        public GDISurface(int width, int height, Control CompatibleControl, bool BindControl)
-        {
+        public GDISurface(int width, int height, Control CompatibleControl, bool BindControl) {
             IntPtr hDCControk = NativeMethods.ControlDC(CompatibleControl);
             Init(width, height, hDCControk);
             NativeMethods.ReleaseDC(CompatibleControl.Handle, hDCControk);
 
-            if (BindControl)
-            {
+            if (BindControl) {
                 Control = CompatibleControl;
             }
 
             Create();
         }
 
-        private Control Control
-        {
-            get
-            {
-                if (_Control != null)
+        private Control Control {
+            get {
+                if (_Control != null) {
                     return (Control) _Control.Target;
+                }
                 return null;
             }
             set { _Control = new WeakReference(value); }
         }
 
 
-        public IntPtr hDC
-        {
+        public IntPtr hDC {
             get { return mhDC; }
         }
 
-        public IntPtr hBMP
-        {
+        public IntPtr hBMP {
             get { return mhBMP; }
         }
 
-        public Color TextForeColor
-        {
+        public Color TextForeColor {
             //map get,settextcolor
             get { return NativeMethods.IntToColor(NativeMethods.GetTextColor(mhDC)); }
             set { NativeMethods.SetTextColor(mhDC, NativeMethods.ColorToInt(value)); }
         }
 
-        public Color TextBackColor
-        {
+        public Color TextBackColor {
             //map get,setbkcolor
             get { return NativeMethods.IntToColor(NativeMethods.GetBkColor(mhDC)); }
             set { NativeMethods.SetBkColor(mhDC, NativeMethods.ColorToInt(value)); }
         }
 
 
-        public bool FontTransparent
-        {
+        public bool FontTransparent {
             //map get,setbkmode
             //1=transparent , 2=solid
             get { return NativeMethods.GetBkMode(mhDC) < 2; }
             set { NativeMethods.SetBkMode(mhDC, value ? 1 : 2); }
         }
 
-        public GDIFont Font
-        {
-            get
-            {
+        public GDIFont Font {
+            get {
                 var tm = new GDITextMetric();
                 var fontname = new string(' ', 48);
 
                 NativeMethods.GetTextMetrics(mhDC, ref tm);
                 NativeMethods.GetTextFace(mhDC, 79, fontname);
 
-                var gf = new GDIFont
-                         {
-                             FontName = fontname,
-                             Bold = (tm.tmWeight > 400),
-                             Italic = (tm.tmItalic != 0),
-                             Underline = (tm.tmUnderlined != 0),
-                             Strikethrough = (tm.tmStruckOut != 0),
-                             Size = ((int) (((tm.tmMemoryHeight)/(double) tm.tmDigitizedAspectY)*72))
-                         };
+                var gf = new GDIFont {
+                                         FontName = fontname,
+                                         Bold = (tm.tmWeight > 400),
+                                         Italic = (tm.tmItalic != 0),
+                                         Underline = (tm.tmUnderlined != 0),
+                                         Strikethrough = (tm.tmStruckOut != 0),
+                                         Size = ((int) (((tm.tmMemoryHeight) / (double) tm.tmDigitizedAspectY) * 72))
+                                     };
 
                 return gf;
             }
-            set
-            {
+            set {
                 IntPtr res = NativeMethods.SelectObject(mhDC, value.hFont);
-                if (_OldFont == IntPtr.Zero)
+                if (_OldFont == IntPtr.Zero) {
                     _OldFont = res;
+                }
             }
         }
 
-        protected void Init(int width, int height, IntPtr hdc)
-        {
+        protected void Init(int width, int height, IntPtr hdc) {
             mWidth = width;
             mHeight = height;
             mhDC = NativeMethods.CreateCompatibleDC(hdc);
@@ -146,35 +129,33 @@ namespace Alsing.Drawing.GDI
             IntPtr ret = NativeMethods.SelectObject(mhDC, mhBMP);
             _OldBmp = ret;
 
-            if (mhDC == (IntPtr) 0)
+            if (mhDC == (IntPtr) 0) {
                 throw new OutOfMemoryException("hDC creation FAILED!!");
+            }
 
-            if (mhDC == (IntPtr) 0)
+            if (mhDC == (IntPtr) 0) {
                 throw new OutOfMemoryException("hBMP creation FAILED!!");
+            }
         }
 
 
-        public Size MeasureString(string Text)
-        {
+        public Size MeasureString(string Text) {
             //map GetTabbedTextExtent
             //to be implemented
             return new Size(0, 0);
         }
 
-        public Size MeasureTabbedString(string Text, int tabsize)
-        {
+        public Size MeasureTabbedString(string Text, int tabsize) {
             int ret = NativeMethods.GetTabbedTextExtent(mhDC, Text, Text.Length, 1, ref tabsize);
             return new Size(ret & 0xFFFF, (ret >> 16) & 0xFFFF);
         }
 
-        public void DrawString(string Text, int x, int y, int width, int height)
-        {
+        public void DrawString(string Text, int x, int y, int width, int height) {
             //to be implemented
             //map DrawText
         }
 
-        public Size DrawTabbedString(string Text, int x, int y, int taborigin, int tabsize)
-        {
+        public Size DrawTabbedString(string Text, int x, int y, int taborigin, int tabsize) {
             int ret = NativeMethods.TabbedTextOut(mhDC, x, y, Text, Text.Length, 1, ref tabsize, taborigin);
             return new Size(ret & 0xFFFF, (ret >> 16) & 0xFFFF);
         }
@@ -186,25 +167,21 @@ namespace Alsing.Drawing.GDI
         //render to control
         //render to gdisurface
 
-        public void RenderTo(IntPtr hdc, int x, int y)
-        {
+        public void RenderTo(IntPtr hdc, int x, int y) {
             //map bitblt
             NativeMethods.BitBlt(hdc, x, y, mWidth, mHeight, mhDC, 0, 0, (int) GDIRop.SrcCopy);
         }
 
 
-        public void RenderTo(GDISurface target, int x, int y)
-        {
+        public void RenderTo(GDISurface target, int x, int y) {
             RenderTo(target.hDC, x, y);
         }
 
-        public void RenderTo(GDISurface target, int SourceX, int SourceY, int Width, int Height, int DestX, int DestY)
-        {
+        public void RenderTo(GDISurface target, int SourceX, int SourceY, int Width, int Height, int DestX, int DestY) {
             NativeMethods.BitBlt(target.hDC, DestX, DestY, Width, Height, hDC, SourceX, SourceY, (int) GDIRop.SrcCopy);
         }
 
-        public void RenderToControl(int x, int y)
-        {
+        public void RenderToControl(int x, int y) {
             IntPtr hdc = NativeMethods.ControlDC(Control);
 
             RenderTo(hdc, x, y);
@@ -213,15 +190,13 @@ namespace Alsing.Drawing.GDI
 
         //---------------------------------------
 
-        public Graphics CreateGraphics()
-        {
+        public Graphics CreateGraphics() {
             return Graphics.FromHdc(mhDC);
         }
 
         //---------------------------------------
 
-        public void FillRect(GDIBrush brush, int x, int y, int width, int height)
-        {
+        public void FillRect(GDIBrush brush, int x, int y, int width, int height) {
             APIRect gr;
             gr.top = y;
             gr.left = x;
@@ -231,8 +206,7 @@ namespace Alsing.Drawing.GDI
             NativeMethods.FillRect(mhDC, ref gr, brush.hBrush);
         }
 
-        public void DrawFocusRect(int x, int y, int width, int height)
-        {
+        public void DrawFocusRect(int x, int y, int width, int height) {
             APIRect gr;
             gr.top = y;
             gr.left = x;
@@ -242,15 +216,13 @@ namespace Alsing.Drawing.GDI
             NativeMethods.DrawFocusRect(mhDC, ref gr);
         }
 
-        public void FillRect(Color color, int x, int y, int width, int height)
-        {
+        public void FillRect(Color color, int x, int y, int width, int height) {
             var b = new GDIBrush(color);
             FillRect(b, x, y, width, height);
             b.Dispose();
         }
 
-        public void InvertRect(int x, int y, int width, int height)
-        {
+        public void InvertRect(int x, int y, int width, int height) {
             APIRect gr;
             gr.top = y;
             gr.left = x;
@@ -260,8 +232,7 @@ namespace Alsing.Drawing.GDI
             NativeMethods.InvertRect(mhDC, ref gr);
         }
 
-        public void DrawLine(GDIPen pen, Point p1, Point p2)
-        {
+        public void DrawLine(GDIPen pen, Point p1, Point p2) {
             IntPtr oldpen = NativeMethods.SelectObject(mhDC, pen.hPen);
             APIPoint gp;
             gp.x = 0;
@@ -271,64 +242,63 @@ namespace Alsing.Drawing.GDI
             NativeMethods.SelectObject(mhDC, oldpen);
         }
 
-        public void DrawLine(Color color, Point p1, Point p2)
-        {
+        public void DrawLine(Color color, Point p1, Point p2) {
             var p = new GDIPen(color, 1);
             DrawLine(p, p1, p2);
             p.Dispose();
         }
 
-        public void DrawRect(Color color, int left, int top, int width, int height)
-        {
+        public void DrawRect(Color color, int left, int top, int width, int height) {
             var p = new GDIPen(color, 1);
             DrawRect(p, left, top, width, height);
             p.Dispose();
         }
 
-        public void DrawRect(GDIPen pen, int left, int top, int width, int height)
-        {
+        public void DrawRect(GDIPen pen, int left, int top, int width, int height) {
             DrawLine(pen, new Point(left, top), new Point(left + width, top));
             DrawLine(pen, new Point(left, top + height), new Point(left + width, top + height));
             DrawLine(pen, new Point(left, top), new Point(left, top + height));
             DrawLine(pen, new Point(left + width, top), new Point(left + width, top + height + 1));
         }
 
-        public void Clear(Color color)
-        {
+        public void Clear(Color color) {
             var b = new GDIBrush(color);
             Clear(b);
             b.Dispose();
         }
 
-        public void Clear(GDIBrush brush)
-        {
+        public void Clear(GDIBrush brush) {
             FillRect(brush, 0, 0, mWidth, mHeight);
         }
 
-        public void Flush()
-        {
+        public void Flush() {
             NativeMethods.GdiFlush();
         }
 
-        protected override void Destroy()
-        {
-            if (_OldBmp != IntPtr.Zero)
+        protected override void Destroy() {
+            if (_OldBmp != IntPtr.Zero) {
                 NativeMethods.SelectObject(hDC, _OldBmp);
+            }
 
-            if (_OldFont != IntPtr.Zero)
+            if (_OldFont != IntPtr.Zero) {
                 NativeMethods.SelectObject(hDC, _OldFont);
+            }
 
-            if (_OldPen != IntPtr.Zero)
+            if (_OldPen != IntPtr.Zero) {
                 NativeMethods.SelectObject(hDC, _OldPen);
+            }
 
-            if (_OldBrush != IntPtr.Zero)
+            if (_OldBrush != IntPtr.Zero) {
                 NativeMethods.SelectObject(hDC, _OldBrush);
+            }
 
-            if (mhBMP != (IntPtr) 0)
+            if (mhBMP != (IntPtr) 0) {
                 NativeMethods.DeleteObject(mhBMP);
+            }
 
-            if (mhDC != (IntPtr) 0)
+            if (mhDC != (IntPtr) 0) {
                 NativeMethods.DeleteDC(mhDC);
+            }
 
             mhBMP = (IntPtr) 0;
             mhDC = (IntPtr) 0;
@@ -337,8 +307,7 @@ namespace Alsing.Drawing.GDI
             base.Destroy();
         }
 
-        public void SetBrushOrg(int x, int y)
-        {
+        public void SetBrushOrg(int x, int y) {
             APIPoint p;
             p.x = 0;
             p.y = 0;
