@@ -96,7 +96,7 @@ namespace DrawEngine.Renderer {
             if (defaultCamera != null) {
                 this.Cameras.Add(defaultCamera);
             }
-            this.sampler = new RegularGridSampler();
+            this.sampler = new JitteredSampler();
             this.shader = new PhongShader(this);
             this.renderStrategy = new ScanlineRenderStrategy();
             this.isShadowActive = false;
@@ -124,7 +124,7 @@ namespace DrawEngine.Renderer {
                 this.EnvironmentMap = toCopy.environmentMap;
                 this.backgroundColor = toCopy.backgroundColor;
                 if (toCopy.sampler != null) {
-                    this.sampler = new RegularGridSampler(toCopy.sampler.SamplesX, toCopy.sampler.SamplesY);
+                    this.sampler = new JitteredSampler(toCopy.sampler.NumberOfSamples, toCopy.sampler.NumberOfSets);
                 }
             }
         }

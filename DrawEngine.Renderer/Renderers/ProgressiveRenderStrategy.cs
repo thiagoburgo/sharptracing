@@ -69,18 +69,18 @@ namespace DrawEngine.Renderer.Renderers
                                 iterations++;
                                 Ray ray;
                                 RGBColor finalColor = RGBColor.Black;
-                                if (caster1.Scene.Sampler.SamplesPerPixel > 1)
+                                if (caster1.Scene.Sampler.NumberOfSamples > 1)
                                 {
 
-                                    foreach (Point2D sample in caster1.Scene.Sampler.GenerateSamples(x, y))
+                                    foreach (Point2D sample in caster1.Scene.Sampler.GetSamplesFor(x, y))
                                     {
                                         //ray = this.scene.DefaultCamera.CreateRayFromScreen(x + sample.X, y + sample.Y);
                                         ray = caster1.Scene.DefaultCamera.CreateRayFromScreen(sample.X , sample.Y);
                                         ray.PrevRefractIndex = caster1.Scene.RefractIndex;
                                         finalColor += caster1.Trace(ray, 0);
                                     }
-                                    //brush.Color = (finalColor * (1f / this.scene.Sampler.SamplesPerPixel)).ToColor();
-                                    finalColor = (finalColor / caster1.Scene.Sampler.SamplesPerPixel);
+                                    //brush.Color = (finalColor * (1f / this.scene.Sampler.NumberOfSamples)).ToColor();
+                                    finalColor = (finalColor / caster1.Scene.Sampler.NumberOfSamples);
 
 
                                     //Graphics graphics = Graphics.FromImage(tile.Image);
