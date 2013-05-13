@@ -82,15 +82,15 @@ namespace DrawEngine.Renderer.Renderers
                                 }
                                 Ray ray;
                                 RGBColor finalColor = RGBColor.Black;
-                                if (caster1.Scene.Sampler.SamplesPerPixel > 1)
+                                if (caster1.Scene.Sampler.NumberOfSamples > 1)
                                 {
-                                    foreach (Point2D sample in caster1.Scene.Sampler.GenerateSamples(x, y))
+                                    foreach (Point2D sample in caster1.Scene.Sampler.GetSamplesFor(x, y))
                                     {
                                         ray = caster1.Scene.DefaultCamera.CreateRayFromScreen(sample.X, sample.Y);
                                         ray.PrevRefractIndex = caster1.Scene.RefractIndex;
                                         finalColor += caster1.Trace(ray, 0);
                                     }
-                                    finalColor = (finalColor * 1f / caster1.Scene.Sampler.SamplesPerPixel);
+                                    finalColor = (finalColor * 1f / caster1.Scene.Sampler.NumberOfSamples);
                                 }
                                 else
                                 {
