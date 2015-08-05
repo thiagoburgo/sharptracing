@@ -165,17 +165,44 @@ namespace DrawEngine.Renderer.RenderObjects
         public override bool FindIntersection(Ray ray, out Intersection intersect)
         {
             intersect = new Intersection();
-            // geometric solution
-            Vector3D L = this.center - ray.Origin;
-            float tca = L * ray.Direction;
-            if (tca < 0) return false;
-            float d2 = L * L - tca * tca;
-            if (d2 > radius2) return false;
-            float thc = (float)Math.Sqrt(radius2 - d2);
-            float t0 = tca - thc;
-            float t1 = tca + thc;
-            intersect.TMin = t0;
-            intersect.TMax = t1;
+            
+            Vector3D toCenter = this.center - ray.Origin; // Vector view position to the center
+            // D = Distance to pt on view line closest to sphere
+            // v = vector from sphere center to the closest pt on view line
+            // ASq = the distance from v to sphere center squared
+            float D = (ray.Direction * toCenter);
+            if (D < 0) {
+                return false;
+            }
+            Vector3D v = ray.Direction * D - toCenter;
+            float ASq = v.Length;
+            ASq = ASq * ASq;
+            // Ray-line completely misses sphere, or just grazes it.
+            if(ASq > this.radius2){
+                return false;
+            }
+            float BSq = this.radius2 - ASq;
+            if (D > 0 || D * D > BSq)
+            {
+                // Return the point where view intersects with the outside of the sphere.
+                BSq = (float) Math.Sqrt(BSq);
+                intersect.TMin = D - BSq;
+                intersect.TMax = D + BSq;
+                intersect.HitFromInSide = false;
+            }
+            else if (D > 0 || D * D < BSq)
+            {
+                // return the point where view exits the sphere
+                BSq = (float)Math.Sqrt(BSq);
+                intersect.TMin = D + BSq;
+                intersect.TMax = D - BSq;
+                intersect.HitFromInSide = true;
+            } else{
+                return false;
+            }
+            if(intersect.TMin < 0.0001){
+                return false;
+            }
             intersect.HitPoint = ray.Origin + ray.Direction * intersect.TMin;
             intersect.Normal = intersect.HitPoint - this.center;
             intersect.HitPrimitive = this;

@@ -13,6 +13,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Xml.Serialization;
 using DrawEngine.Renderer.Mathematics.Algebra;
 using DrawEngine.Renderer.Util;
@@ -254,6 +255,7 @@ namespace DrawEngine.Renderer.Samplers
 
 
 
+        [MethodImpl(MethodImplOptions.Synchronized | MethodImplOptions.AggressiveInlining)]
         public Point2D SampleUnitSquareOrDisk()
         {
             Random random = new Random();

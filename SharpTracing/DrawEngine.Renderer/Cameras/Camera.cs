@@ -79,9 +79,6 @@ namespace DrawEngine.Renderer.Cameras {
             get { return this.eye; }
             set {
                 this.eye = value;
-                if (value.Z.NearZero()) {
-                    value.Z = float.MinValue;
-                }
                 this.basis = OrthoNormalBasis.MakeFromWV(value - this.lookAt, this.up);
             }
         }

@@ -15,10 +15,12 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Text;
 using DrawEngine.Renderer.Mathematics.Algebra;
 using DrawEngine.Renderer.RenderObjects;
 
-namespace DrawEngine.Renderer.Importers {
+namespace DrawEngine.Renderer.Importers
+{
     //[Serializable]public class LoaderObjModel : AbstractLoaderModel
     //{
     //    private string path;
@@ -195,33 +197,56 @@ namespace DrawEngine.Renderer.Importers {
     //    }
     //}
     [Serializable]
-    public class LoaderObjModel : AbstractLoaderModel {
+    public class LoaderObjModel : AbstractLoaderModel
+    {
         private Dictionary<string, int> elementCount;
-        public LoaderObjModel() : base() {}
-        public LoaderObjModel(string path) : base() {}
+        private String allText;
+        private List<String[]> lines = new List<String[]>(10000);
+
+        public LoaderObjModel() : base() { }
+        public LoaderObjModel(string path) : base() { }
         public override event ElementLoadEventHandler OnElementLoaded;
 
-        private void CountElements() {
+        private void CountElements()
+        {
+
             this.elementCount = new Dictionary<string, int>();
-            using (StreamReader sr = new StreamReader(this.path)) {
-                string[] line;
-                while (!sr.EndOfStream) {
-                    line = sr.ReadLine().Split(new char[] {' '}, StringSplitOptions.RemoveEmptyEntries);
-                    if (line.Length != 0) {
-                        if (!this.elementCount.ContainsKey(line[0])) {
-                            this.elementCount.Add(line[0], 1);
-                        } else {
-                            this.elementCount[line[0]] = this.elementCount[line[0]] + 1;
+            allText = File.ReadAllText(this.path);
+            String[] lineSplits;
+            using (StringReader sr = new StringReader(allText))
+            {
+                String line;
+                while ((line = sr.ReadLine()) != null)
+                {
+                    lineSplits = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    if (line.Length != 0)
+                    {
+                        if ((line[0] == 'v' && (line[1] == ' ' || line[1] == 'n')) || line[0] == 'f')
+                        {
+                            lines.Add(lineSplits);
+                            if (!this.elementCount.ContainsKey(lineSplits[0]))
+                            {
+                                this.elementCount.Add(lineSplits[0], 1);
+                            }
+                            else
+                            {
+                                this.elementCount[lineSplits[0]] = this.elementCount[lineSplits[0]] + 1;
+                            }
                         }
                     }
                 }
+                allText = null;
+                GC.Collect();
                 sr.Close();
                 sr.Dispose();
             }
         }
 
-        public override Triangle[] Load() {
-            if (!this.Validate()) {
+        public override Triangle[] Load()
+        {
+            if (!this.Validate())
+            {
                 throw new Exception("Invalid file type!");
             }
             this.CountElements();
@@ -229,63 +254,73 @@ namespace DrawEngine.Renderer.Importers {
             return this.triangles;
         }
 
-        private bool Validate() {
+        private bool Validate()
+        {
             return Path.GetExtension(this.path).ToLower() == ".obj";
         }
 
-        public override List<string> Extensions {
-            get { return new List<string> {".obj"}; }
+        public override List<string> Extensions
+        {
+            get { return new List<string> { ".obj" }; }
         }
 
-        private void ParserObjModel() {
+        private void ParserObjModel()
+        {
             List<Point3D> vertices = new List<Point3D>(this.elementCount["v"]);
             List<Vector3D> vertexNormals = new List<Vector3D>();
             List<PointerToVertex> lPointersToVertex = new List<PointerToVertex>(this.elementCount["f"]);
             List<Triangle> triangles = new List<Triangle>(this.elementCount["f"]);
-            NumberFormatInfo nfi = new NumberFormatInfo();
-            nfi.NumberDecimalSeparator = ".";
-            nfi.NumberGroupSeparator = ",";
-            String[] line;
-            char[] separator = new char[] {' '};
+            NumberFormatInfo nfi = new NumberFormatInfo
+            {
+                NumberDecimalSeparator = ".",
+                NumberGroupSeparator = ","
+            };
             Point3D p = Point3D.Zero;
             Vector3D v = Vector3D.Zero;
 
             //foreach (String[] line in file)
             //{
-            using (StreamReader sr = new StreamReader(this.path)) {
-                while (!sr.EndOfStream) {
-                    line = sr.ReadLine().Split(separator, StringSplitOptions.RemoveEmptyEntries);
-                    if (line.Length != 0) {
-                        switch (line[0]) {
+            {
+
+                foreach (string[] lineSplited in this.lines)
+                {
+                    if (lineSplited.Length != 0)
+                    {
+                        switch (lineSplited[0])
+                        {
                             case "v": //vertex
-                                p.X = float.Parse(line[1], nfi);
-                                p.Y = float.Parse(line[2], nfi);
-                                p.Z = float.Parse(line[3], nfi);
+                                p.X = float.Parse(lineSplited[1], nfi);
+                                p.Y = float.Parse(lineSplited[2], nfi);
+                                p.Z = float.Parse(lineSplited[3], nfi);
                                 this.BoundBox.Include(p);
                                 vertices.Add(p);
-                                int percent = (int) (((float) vertices.Count / this.elementCount["v"]) * 100.0f);
-                                if ((percent % 20) == 0) {
+                                int percent = (int)(((float)vertices.Count / this.elementCount["v"]) * 100.0f);
+                                if ((percent % 20) == 0)
+                                {
                                     this.OnElementLoaded(percent, ElementMesh.Vertex);
                                 }
                                 break;
                             case "vn": //vertex normal
-                                v.X = float.Parse(line[1], nfi);
-                                v.Y = float.Parse(line[2], nfi);
-                                v.Z = float.Parse(line[3], nfi);
+                                v.X = float.Parse(lineSplited[1], nfi);
+                                v.Y = float.Parse(lineSplited[2], nfi);
+                                v.Z = float.Parse(lineSplited[3], nfi);
                                 vertexNormals.Add(v);
-                                percent = (int) (((float) vertexNormals.Count / this.elementCount["vn"]) * 100.0f);
-                                if ((percent % 20) == 0) {
+                                percent = (int)(((float)vertexNormals.Count / this.elementCount["vn"]) * 100.0f);
+                                if ((percent % 20) == 0)
+                                {
                                     this.OnElementLoaded(percent, ElementMesh.VertexNormal);
                                 }
                                 break;
-                                //case "vt": //texture
-                                //    break;
+                            //case "vt": //texture
+                            //    break;
                             case "f": //face
                                 Triangle t;
-                                if (vertexNormals.Count > 0) {
-                                    string[] pointToFaceComponet1 = line[1].Split('/');
-                                    string[] pointToFaceComponet2 = line[2].Split('/');
-                                    string[] pointToFaceComponet3 = line[3].Split('/');
+                                if (vertexNormals.Count > 0)
+                                {
+                                    //1 , 2, 3 - 1, 3, 4
+                                    string[] pointToFaceComponet1 = lineSplited[1].Split('/');
+                                    string[] pointToFaceComponet2 = lineSplited[2].Split('/');
+                                    string[] pointToFaceComponet3 = lineSplited[3].Split('/');
                                     t = new Triangle(vertices[int.Parse(pointToFaceComponet1[0]) - 1],
                                                      vertices[int.Parse(pointToFaceComponet2[0]) - 1],
                                                      vertices[int.Parse(pointToFaceComponet3[0]) - 1]);
@@ -293,62 +328,107 @@ namespace DrawEngine.Renderer.Importers {
                                     t.NormalOnVertex2 = vertexNormals[int.Parse(pointToFaceComponet2[2]) - 1];
                                     t.NormalOnVertex3 = vertexNormals[int.Parse(pointToFaceComponet3[2]) - 1];
                                     triangles.Add(t);
-                                } else {
-                                    int pToFace1 = int.Parse(line[1]) - 1;
-                                    int pToFace2 = int.Parse(line[2]) - 1;
-                                    int pToFace3 = int.Parse(line[3]) - 1;
+
+                                    if (lineSplited.Length > 4)
+                                    {
+                                        this.elementCount["f"] += 1;
+                                        pointToFaceComponet1 = lineSplited[1].Split('/');
+                                        pointToFaceComponet2 = lineSplited[3].Split('/');
+                                        pointToFaceComponet3 = lineSplited[4].Split('/');
+                                        t = new Triangle(vertices[int.Parse(pointToFaceComponet1[0]) - 1],
+                                                         vertices[int.Parse(pointToFaceComponet2[0]) - 1],
+                                                         vertices[int.Parse(pointToFaceComponet3[0]) - 1]);
+                                        t.NormalOnVertex1 = vertexNormals[int.Parse(pointToFaceComponet1[2]) - 1];
+                                        t.NormalOnVertex2 = vertexNormals[int.Parse(pointToFaceComponet2[2]) - 1];
+                                        t.NormalOnVertex3 = vertexNormals[int.Parse(pointToFaceComponet3[2]) - 1];
+                                        triangles.Add(t);
+                                    }
+
+                                }
+                                else
+                                {
+
+                                    int pToFace1 = int.Parse(lineSplited[1].Split('/')[0]) - 1;
+                                    int pToFace2 = int.Parse(lineSplited[2].Split('/')[0]) - 1;
+                                    int pToFace3 = int.Parse(lineSplited[3].Split('/')[0]) - 1;
+
+                                    pToFace1 = pToFace1 < 0 ? pToFace1 + vertices.Count + 1 : pToFace1;
+                                    pToFace2 = pToFace2 < 0 ? pToFace2 + vertices.Count + 1 : pToFace2;
+                                    pToFace3 = pToFace3 < 0 ? pToFace3 + vertices.Count + 1 : pToFace3;
+
                                     t = new Triangle(vertices[pToFace1], vertices[pToFace2], vertices[pToFace3]);
                                     lPointersToVertex.Add(new PointerToVertex(pToFace1, pToFace2, pToFace3));
                                     triangles.Add(t);
+
+                                    if (lineSplited.Length > 4)
+                                    {
+                                        this.elementCount["f"] += 1;
+                                        pToFace1 = int.Parse(lineSplited[1].Split('/')[0]) - 1;
+                                        pToFace2 = int.Parse(lineSplited[3].Split('/')[0]) - 1;
+                                        pToFace3 = int.Parse(lineSplited[4].Split('/')[0]) - 1;
+
+                                        pToFace1 = pToFace1 < 0 ? pToFace1 + vertices.Count + 1 : pToFace1;
+                                        pToFace2 = pToFace2 < 0 ? pToFace2 + vertices.Count + 1 : pToFace2;
+                                        pToFace3 = pToFace3 < 0 ? pToFace3 + vertices.Count + 1 : pToFace3;
+
+                                        t = new Triangle(vertices[pToFace1], vertices[pToFace2], vertices[pToFace3]);
+
+                                        lPointersToVertex.Add(new PointerToVertex(pToFace1, pToFace2, pToFace3));
+                                        triangles.Add(t);
+                                    }
                                 }
-                                percent = (int) (((float) triangles.Count / this.elementCount["f"]) * 100.0f);
-                                if ((percent % 20) == 0) {
+                                percent = (int)(((float)triangles.Count / this.elementCount["f"]) * 100.0f);
+                                if ((percent % 20) == 0)
+                                {
                                     this.OnElementLoaded(percent, ElementMesh.Triangle);
                                 }
-                                break;
-                            default:
                                 break;
                         }
                     }
                 }
             }
-            if (vertexNormals.Count == 0) {
+            if (vertexNormals.Count == 0)
+            {
                 this.ProcessNormalsPerVertex(lPointersToVertex, triangles, vertices.Count);
             }
             this.triangles = triangles.ToArray();
             vertices = null;
             triangles = null;
-            //this.file.Clear();
-            //this.file = null;
+            this.lines.Clear();
+            this.lines = null;
             GC.Collect();
             GC.WaitForPendingFinalizers();
         }
 
         private void ProcessNormalsPerVertex(List<PointerToVertex> pointersToVertex, List<Triangle> triangles,
-                                             int verticesCount) {
+                                             int verticesCount)
+        {
             Vector3D[] normalsPerVertex = new Vector3D[verticesCount];
-            for (int i = 0; i < triangles.Count; i++) {
+            for (int i = 0; i < triangles.Count; i++)
+            {
                 normalsPerVertex[pointersToVertex[i].Vertex1] += triangles[i].Normal;
                 normalsPerVertex[pointersToVertex[i].Vertex2] += triangles[i].Normal;
                 normalsPerVertex[pointersToVertex[i].Vertex3] += triangles[i].Normal;
-                int percent = (int) (((float) i / triangles.Count) * 100.0f);
-                if ((percent % 20) == 0) {
+                int percent = (int)(((float)i / triangles.Count) * 100.0f);
+                if ((percent % 20) == 0)
+                {
                     this.OnElementLoaded(percent / 2, ElementMesh.VertexNormal);
                 }
             }
-            for (int i = 0; i < triangles.Count; i++) {
+            for (int i = 0; i < triangles.Count; i++)
+            {
                 triangles[i].NormalOnVertex1 = normalsPerVertex[pointersToVertex[i].Vertex1];
                 triangles[i].NormalOnVertex1.Normalize();
                 triangles[i].NormalOnVertex2 = normalsPerVertex[pointersToVertex[i].Vertex2];
                 triangles[i].NormalOnVertex2.Normalize();
                 triangles[i].NormalOnVertex3 = normalsPerVertex[pointersToVertex[i].Vertex3];
                 triangles[i].NormalOnVertex3.Normalize();
-                int percent = (int) (((float) i / triangles.Count) * 100.0f);
-                if ((percent % 20) == 0) {
+                int percent = (int)(((float)i / triangles.Count) * 100.0f);
+                if ((percent % 20) == 0)
+                {
                     this.OnElementLoaded(percent / 2 + 50, ElementMesh.VertexNormal);
                 }
             }
-            pointersToVertex.Clear();
             pointersToVertex = null;
             normalsPerVertex = null;
             GC.Collect();

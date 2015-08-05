@@ -56,7 +56,6 @@ namespace DrawEngine.SharpTracingUI {
             this.lblPercentRend = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblTimeElapsed = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
-            this.tiledPictureViewControlView = new DrawEngine.SharpTracingUI.Controls.TiledPictureViewControl();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripRenderer = new System.Windows.Forms.ToolStripComboBox();
@@ -72,6 +71,8 @@ namespace DrawEngine.SharpTracingUI {
             this.toolStripLabel5 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripTextBoxRenderByTiles = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripLabel7 = new System.Windows.Forms.ToolStripLabel();
+            this.renderOnWheelTimer = new System.Windows.Forms.Timer(this.components);
+            this.tiledPictureViewControlView = new DrawEngine.SharpTracingUI.Controls.TiledPictureViewControl();
             this.contextMenuTabPage.SuspendLayout();
             this.statusBar.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
@@ -251,22 +252,6 @@ namespace DrawEngine.SharpTracingUI {
             // 
             this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.toolStrip1);
             // 
-            // tiledPictureViewControlView
-            // 
-            this.tiledPictureViewControlView.AutoScroll = true;
-            this.tiledPictureViewControlView.BackColor = System.Drawing.SystemColors.Control;
-            this.tiledPictureViewControlView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tiledPictureViewControlView.Location = new System.Drawing.Point(0, 0);
-            this.tiledPictureViewControlView.Margin = new System.Windows.Forms.Padding(0);
-            this.tiledPictureViewControlView.Name = "tiledPictureViewControlView";
-            this.tiledPictureViewControlView.Size = new System.Drawing.Size(816, 421);
-            this.tiledPictureViewControlView.TabIndex = 0;
-            this.tiledPictureViewControlView.TiledBitmap = null;
-            this.tiledPictureViewControlView.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tiledPictureViewControlView_MouseClick);
-            this.tiledPictureViewControlView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureView_MouseDown);
-            this.tiledPictureViewControlView.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureView_MouseMove);
-            this.tiledPictureViewControlView.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureView_MouseUp);
-            // 
             // toolStrip1
             // 
             this.toolStrip1.Dock = System.Windows.Forms.DockStyle.None;
@@ -384,6 +369,29 @@ namespace DrawEngine.SharpTracingUI {
             this.toolStripLabel7.Size = new System.Drawing.Size(39, 22);
             this.toolStripLabel7.Text = "Tile(s)";
             // 
+            // renderOnWheelTimer
+            // 
+            this.renderOnWheelTimer.Enabled = true;
+            this.renderOnWheelTimer.Interval = 200;
+            this.renderOnWheelTimer.Tick += new System.EventHandler(this.renderOnWheelTimer_Tick);
+            // 
+            // tiledPictureViewControlView
+            // 
+            this.tiledPictureViewControlView.AutoScroll = true;
+            this.tiledPictureViewControlView.BackColor = System.Drawing.SystemColors.Control;
+            this.tiledPictureViewControlView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tiledPictureViewControlView.Location = new System.Drawing.Point(0, 0);
+            this.tiledPictureViewControlView.Margin = new System.Windows.Forms.Padding(0);
+            this.tiledPictureViewControlView.Name = "tiledPictureViewControlView";
+            this.tiledPictureViewControlView.Size = new System.Drawing.Size(816, 421);
+            this.tiledPictureViewControlView.TabIndex = 0;
+            this.tiledPictureViewControlView.TiledBitmap = null;
+            this.tiledPictureViewControlView.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tiledPictureViewControlView_MouseClick);
+            this.tiledPictureViewControlView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureView_MouseDown);
+            this.tiledPictureViewControlView.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureView_MouseMove);
+            this.tiledPictureViewControlView.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureView_MouseUp);
+            this.tiledPictureViewControlView.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.pictureView_MouseWheel);
+            // 
             // DocumentWindow
             // 
             this.AllowDrop = true;
@@ -450,6 +458,7 @@ namespace DrawEngine.SharpTracingUI {
         private ToolStripSeparator toolStripSeparator3;
         private ToolStripTextBox toolStripTextBoxRenderByTiles;
         private ToolStripLabel toolStripLabel7;
+        private Timer renderOnWheelTimer;
 
 
 

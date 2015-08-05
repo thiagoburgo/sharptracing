@@ -238,16 +238,17 @@ namespace DrawEngine.Renderer.Mathematics.Algebra {
         /// <param name="right"></param>
         /// <returns></returns>
         public static Matrix3D operator *(Matrix3D left, Matrix3D right) {
-            Matrix3D result = new Matrix3D();
-            result.M00 = left.M00 * right.M00 + left.M01 * right.M10 + left.M02 * right.M20;
-            result.M01 = left.M00 * right.M01 + left.M01 * right.M11 + left.M02 * right.M21;
-            result.M02 = left.M00 * right.M02 + left.M01 * right.M12 + left.M02 * right.M22;
-            result.M10 = left.M10 * right.M00 + left.M11 * right.M10 + left.M12 * right.M20;
-            result.M11 = left.M10 * right.M01 + left.M11 * right.M11 + left.M12 * right.M21;
-            result.M12 = left.M10 * right.M02 + left.M11 * right.M12 + left.M12 * right.M22;
-            result.M20 = left.M20 * right.M00 + left.M21 * right.M10 + left.M22 * right.M20;
-            result.M21 = left.M20 * right.M01 + left.M21 * right.M11 + left.M22 * right.M21;
-            result.M22 = left.M20 * right.M02 + left.M21 * right.M12 + left.M22 * right.M22;
+            Matrix3D result = new Matrix3D {
+                M00 = left.M00 * right.M00 + left.M01 * right.M10 + left.M02 * right.M20,
+                M01 = left.M00 * right.M01 + left.M01 * right.M11 + left.M02 * right.M21,
+                M02 = left.M00 * right.M02 + left.M01 * right.M12 + left.M02 * right.M22,
+                M10 = left.M10 * right.M00 + left.M11 * right.M10 + left.M12 * right.M20,
+                M11 = left.M10 * right.M01 + left.M11 * right.M11 + left.M12 * right.M21,
+                M12 = left.M10 * right.M02 + left.M11 * right.M12 + left.M12 * right.M22,
+                M20 = left.M20 * right.M00 + left.M21 * right.M10 + left.M22 * right.M20,
+                M21 = left.M20 * right.M01 + left.M21 * right.M11 + left.M22 * right.M21,
+                M22 = left.M20 * right.M02 + left.M21 * right.M12 + left.M22 * right.M22
+            };
             return result;
         }
 
@@ -272,18 +273,20 @@ namespace DrawEngine.Renderer.Mathematics.Algebra {
         /// <param name="matrix"></param>
         /// <returns></returns>
         public static Vector3D operator *(Vector3D vector, Matrix3D matrix) {
-            Vector3D product = new Vector3D();
-            product.X = matrix.M00 * vector.X + matrix.M01 * vector.Y + matrix.M02 * vector.Z;
-            product.Y = matrix.M10 * vector.X + matrix.M11 * vector.Y + matrix.M12 * vector.Z;
-            product.Z = matrix.M20 * vector.X + matrix.M21 * vector.Y + matrix.M22 * vector.Z;
+            Vector3D product = new Vector3D {
+                X = matrix.M00 * vector.X + matrix.M01 * vector.Y + matrix.M02 * vector.Z,
+                Y = matrix.M10 * vector.X + matrix.M11 * vector.Y + matrix.M12 * vector.Z,
+                Z = matrix.M20 * vector.X + matrix.M21 * vector.Y + matrix.M22 * vector.Z
+            };
             return product;
         }
 
         public static Point3D operator *(Point3D point, Matrix3D matrix) {
-            Point3D product = new Point3D();
-            product.X = matrix.M00 * point.X + matrix.M01 * point.Y + matrix.M02 * point.Z;
-            product.Y = matrix.M10 * point.X + matrix.M11 * point.Y + matrix.M12 * point.Z;
-            product.Z = matrix.M20 * point.X + matrix.M21 * point.Y + matrix.M22 * point.Z;
+            Point3D product = new Point3D {
+                X = matrix.M00 * point.X + matrix.M01 * point.Y + matrix.M02 * point.Z,
+                Y = matrix.M10 * point.X + matrix.M11 * point.Y + matrix.M12 * point.Z,
+                Z = matrix.M20 * point.X + matrix.M21 * point.Y + matrix.M22 * point.Z
+            };
             return product;
         }
 
@@ -308,18 +311,20 @@ namespace DrawEngine.Renderer.Mathematics.Algebra {
         /// <param name="matrix"></param>
         /// <returns></returns>
         public static Vector3D operator *(Matrix3D matrix, Vector3D vector) {
-            Vector3D product = new Vector3D();
-            product.X = matrix.M00 * vector.X + matrix.M01 * vector.Y + matrix.M02 * vector.Z;
-            product.Y = matrix.M10 * vector.X + matrix.M11 * vector.Y + matrix.M12 * vector.Z;
-            product.Z = matrix.M20 * vector.X + matrix.M21 * vector.Y + matrix.M22 * vector.Z;
+            Vector3D product = new Vector3D {
+                X = matrix.M00 * vector.X + matrix.M01 * vector.Y + matrix.M02 * vector.Z,
+                Y = matrix.M10 * vector.X + matrix.M11 * vector.Y + matrix.M12 * vector.Z,
+                Z = matrix.M20 * vector.X + matrix.M21 * vector.Y + matrix.M22 * vector.Z
+            };
             return product;
         }
 
         public static Point3D operator *(Matrix3D matrix, Point3D point) {
-            Point3D product = new Point3D();
-            product.X = matrix.M00 * point.X + matrix.M01 * point.Y + matrix.M02 * point.Z;
-            product.Y = matrix.M10 * point.X + matrix.M11 * point.Y + matrix.M12 * point.Z;
-            product.Z = matrix.M20 * point.X + matrix.M21 * point.Y + matrix.M22 * point.Z;
+            Point3D product = new Point3D {
+                X = matrix.M00 * point.X + matrix.M01 * point.Y + matrix.M02 * point.Z,
+                Y = matrix.M10 * point.X + matrix.M11 * point.Y + matrix.M12 * point.Z,
+                Z = matrix.M20 * point.X + matrix.M21 * point.Y + matrix.M22 * point.Z
+            };
             return product;
         }
 
@@ -370,16 +375,17 @@ namespace DrawEngine.Renderer.Mathematics.Algebra {
         /// <param name="scalar"></param>
         /// <returns></returns>
         public static Matrix3D operator *(float scalar, Matrix3D matrix) {
-            Matrix3D result = new Matrix3D();
-            result.M00 = matrix.M00 * scalar;
-            result.M01 = matrix.M01 * scalar;
-            result.M02 = matrix.M02 * scalar;
-            result.M10 = matrix.M10 * scalar;
-            result.M11 = matrix.M11 * scalar;
-            result.M12 = matrix.M12 * scalar;
-            result.M20 = matrix.M20 * scalar;
-            result.M21 = matrix.M21 * scalar;
-            result.M22 = matrix.M22 * scalar;
+            Matrix3D result = new Matrix3D {
+                M00 = matrix.M00 * scalar,
+                M01 = matrix.M01 * scalar,
+                M02 = matrix.M02 * scalar,
+                M10 = matrix.M10 * scalar,
+                M11 = matrix.M11 * scalar,
+                M12 = matrix.M12 * scalar,
+                M20 = matrix.M20 * scalar,
+                M21 = matrix.M21 * scalar,
+                M22 = matrix.M22 * scalar
+            };
             return result;
         }
 
@@ -450,16 +456,17 @@ namespace DrawEngine.Renderer.Mathematics.Algebra {
         /// <param name="matrix"></param>
         /// <returns></returns>
         public static Matrix3D operator -(Matrix3D matrix) {
-            Matrix3D result = new Matrix3D();
-            result.M00 = -matrix.M00;
-            result.M01 = -matrix.M01;
-            result.M02 = -matrix.M02;
-            result.M10 = -matrix.M10;
-            result.M11 = -matrix.M11;
-            result.M12 = -matrix.M12;
-            result.M20 = -matrix.M20;
-            result.M21 = -matrix.M21;
-            result.M22 = -matrix.M22;
+            Matrix3D result = new Matrix3D {
+                M00 = -matrix.M00,
+                M01 = -matrix.M01,
+                M02 = -matrix.M02,
+                M10 = -matrix.M10,
+                M11 = -matrix.M11,
+                M12 = -matrix.M12,
+                M20 = -matrix.M20,
+                M21 = -matrix.M21,
+                M22 = -matrix.M22
+            };
             return result;
         }
 

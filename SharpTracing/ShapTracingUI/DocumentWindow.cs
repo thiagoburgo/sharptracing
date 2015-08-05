@@ -255,6 +255,15 @@ namespace DrawEngine.SharpTracingUI
             {
                 Stopwatch stopwatch = new Stopwatch();
                 stopwatch.Start();
+                if (this.tiledBitmap == null)
+                {
+                    int tilesX = Convert.ToInt32(this.txtXParallel.Text);
+                    int tilesY = Convert.ToInt32(this.txtYParallel.Text);
+
+                    this.tiledBitmap = new TiledBitmap(tilesX, tilesY, (int)this.tracer.Scene.DefaultCamera.ResX, (int)this.tracer.Scene.DefaultCamera.ResY);
+
+
+                }
                 this.tracer.Render(tiledBitmap);
                 stopwatch.Stop();
 
@@ -385,63 +394,129 @@ namespace DrawEngine.SharpTracingUI
                 PropertyWindow.Instance.PropertyGrid.SelectedObject = UnifiedScenesRepository.Scenes[this.TabText];
             }
             //Avoid MouseUp logic
-            this.intersected = null;
+            //this.intersected = null;
         }
+
+        private bool mousePressed = false;
+        private bool dragging = false;
         private void pictureView_MouseDown(object sender, MouseEventArgs e)
         {
+            this.mousePressed = true;
             if (e.Button != MouseButtons.Left)
             {
                 return;
             }
-            this.tracer.Scene = UnifiedScenesRepository.Scenes[this.TabText];
-            Ray ray = this.tracer.Scene.DefaultCamera.CreateRayFromScreen(e.X, e.Y);
-            this.intersected = this.Scene.FindIntersection(ray, out this.current_intersection);
-            this.prevPoint = new Point(e.X, e.Y);
 
+            this.tracer.Scene = UnifiedScenesRepository.Scenes[this.TabText];
+            //if (this.GetChildAtPoint(new Point(e.X, e.Y)) == this.tiledPictureViewControlView)
+            {
+                Ray ray = this.tracer.Scene.DefaultCamera.CreateRayFromScreen(e.X, e.Y);
+                this.intersected = this.Scene.FindIntersection(ray, out this.current_intersection);
+            }
+
+            this.prevPoint = e.Location;
         }
 
+        private float deltaAccumulated = 0;
+        private float previousDeltaAccumulated = 0;
+        private void pictureView_MouseWheel(object sender, MouseEventArgs e)
+        {
+            deltaAccumulated += e.Delta / 50;
+            previousDeltaAccumulated = deltaAccumulated;
+            
+            if (this.intersected.GetValueOrDefault())
+            {
+                IPrimitive primitive = this.current_intersection.HitPrimitive;
+                if (primitive is ITransformable3D)
+                {
+                    ((ITransformable3D)primitive).Translate(0, 0, e.Delta / 50);
+                }
+            } else {
+
+                if (!ModifierKeys.HasFlag(Keys.Control)) {
+                    Point3D eye = this.Scene.DefaultCamera.Eye;
+                    eye.Translate(0, 0, e.Delta / 50);
+                    this.Scene.DefaultCamera.Eye = eye;
+                }
+                else
+                {
+                    Point3D lookAt = this.Scene.DefaultCamera.LookAt;
+                    lookAt.Translate(0, 0, e.Delta / 50);
+                    this.Scene.DefaultCamera.LookAt = lookAt;
+                }    
+            }
+            renderOnWheelTimer.Start();
+        }
+        private void renderOnWheelTimer_Tick(object sender, EventArgs e)
+        {
+            if (deltaAccumulated == previousDeltaAccumulated)
+            {
+                renderOnWheelTimer.Stop();
+                previousDeltaAccumulated = 0;
+                this.StopRender();
+                this.StartRender();
+            }
+        }
         private void pictureView_MouseUp(object sender, MouseEventArgs e)
         {
             if (e.Button != MouseButtons.Left)
             {
                 return;
             }
-            if (this.objectMoved)
+            this.mousePressed = false;
+            this.dragging = false;
+            if (this.needsRender)
             {
-                this.objectMoved = false;
+                this.needsRender = false;
                 this.StopRender();
                 this.StartRender();
             }
-            //this.intersected = null;
         }
-        private bool objectMoved = false;
+        private bool needsRender = false;
         private void pictureView_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.Button != MouseButtons.Left)
             {
                 return;
             }
-            if (this.intersected.GetValueOrDefault())
+            if (this.mousePressed)
             {
-                IPrimitive primitive = this.current_intersection.HitPrimitive;
-                //Scene scene = UnifiedScenesRepository.Scenes[this.TabText];
-                if (primitive is ITransformable3D)
-                {
-                    //Ray ray = scene.DefaultCamera.CreateRayFromScreen(e.X, e.Y);
-                    float transX = (e.X - this.prevPoint.X);
-                    float transY = (e.Y - this.prevPoint.Y);
-                    //if (transX > 5 || transY > 5) 
-                    {
-                        
-                        int adjustDirection = -Math.Sign(this.tracer.Scene.DefaultCamera.Eye.Z);
-                        ((ITransformable3D)primitive).Translate(transX * adjustDirection, -transY * adjustDirection, 0);
-                        //this.RenderScene();
-                        this.prevPoint.X = e.X;
-                        this.prevPoint.Y = e.Y;
-                        this.objectMoved = true;
-                    }
+                this.dragging = true;
+            }
 
+            if (this.dragging)
+            {
+                float transX = (e.X - this.prevPoint.X) * -Math.Sign(this.tracer.Scene.DefaultCamera.Eye.Z);
+                float transY = (this.prevPoint.Y - e.Y);
+                this.prevPoint = e.Location;
+                if (this.intersected.GetValueOrDefault())
+                {
+                    IPrimitive primitive = this.current_intersection.HitPrimitive;
+                    if (primitive is ITransformable3D)
+                    {
+                        ((ITransformable3D)primitive).Translate(transX , transY , 0);
+                        this.needsRender = true;
+                    }
                 }
+                else
+                {
+                    if (!ModifierKeys.HasFlag(Keys.Control))
+                    {
+                        Point3D eye = this.Scene.DefaultCamera.Eye;
+                        eye.Translate(transX, transY, 0);
+                        this.Scene.DefaultCamera.Eye = eye;
+                    }
+                    else
+                    {
+                        Point3D lookAt = this.Scene.DefaultCamera.LookAt;
+                        lookAt.Translate(transX, transY, 0);
+                        this.Scene.DefaultCamera.LookAt = lookAt;
+
+                    }
+                    this.needsRender = true;
+                }
+                this.prevPoint.X = e.X;
+                this.prevPoint.Y = e.Y;
             }
         }
 
@@ -484,12 +559,6 @@ namespace DrawEngine.SharpTracingUI
         {
             e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
         }
-
-
-
-
-
-
 
     }
 }
